@@ -100,8 +100,9 @@ final class MarkdownRendererTest {
 
     private static Path prepareDirectory(String title) throws IOException {
         Path dir = BASE_DIR.resolve(title.replaceAll("\s", "-"));
-        Files.createDirectories(dir);
-        PathUtils.cleanDirectory(dir);
+        if (Files.exists(dir)) {
+            PathUtils.cleanDirectory(dir);
+        }
         return dir;
     }
 
@@ -115,7 +116,7 @@ final class MarkdownRendererTest {
     }
 
     private static String convertRenderedContent(String content) {
-        content = content.replaceAll("\\[\\w+\\]: https://.+", "");
+        content = content.replaceAll("\\[\\w+\\]: .+", "");
         content = content.stripTrailing();
         return content;
     }

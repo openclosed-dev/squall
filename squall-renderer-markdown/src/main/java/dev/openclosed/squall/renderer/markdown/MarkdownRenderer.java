@@ -48,6 +48,7 @@ class MarkdownRenderer implements TextRenderer {
         try (Writer writer = Files.newBufferedWriter(path)) {
             render(spec, writer);
         }
+        addAssetFiles(dir);
     }
 
     @Override
@@ -65,5 +66,15 @@ class MarkdownRenderer implements TextRenderer {
     private void render(DatabaseSpec spec, Writer writer) throws IOException {
         new MarkdownWriter(this.config, this.bundle, writer).writeSpec(spec);
         writer.flush();
+    }
+
+    private void addAssetFiles(Path dir) throws IOException {
+        Path imagesDir = dir.resolve("images");
+        Files.createDirectories(imagesDir);
+        for (Badge badge : Badge.values()) {
+            try (var in = badge.getResourceAsStream()) {
+                Files.copy(in, imagesDir.resolve(badge.filename()));
+            }
+        }
     }
 }

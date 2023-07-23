@@ -18,35 +18,34 @@ package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.spec.Component;
 
+import java.io.InputStream;
+import java.util.NoSuchElementException;
+
 enum Badge {
-    DATABASE("indigo"),
-    SCHEMA("green"),
-    TABLE("steelblue"),
-    SEQUENCE("darkorange");
+    DATABASE,
+    SCHEMA,
+    TABLE,
+    SEQUENCE;
 
-    private final String color;
-
-    private static final String BASE_URL = "https://img.shields.io/badge/";
-
-    Badge(String color) {
-        this.color = color;
-    }
+    private static final String BASE_URL = "./images/";
 
     final String label() {
         return name().toLowerCase();
     }
 
-    final String color() {
-        return color;
-    }
-
     final String url() {
         return new StringBuilder()
             .append(BASE_URL)
-            .append(label())
-            .append('-')
-            .append(color())
+            .append(filename())
             .toString();
+    }
+
+    final String filename() {
+        return label() + ".svg";
+    }
+
+    final InputStream getResourceAsStream() {
+        return getClass().getResourceAsStream(filename());
     }
 
     static Badge mapComponentType(Component.Type componentType) {
@@ -55,7 +54,7 @@ enum Badge {
             case SCHEMA -> SCHEMA;
             case TABLE -> TABLE;
             case SEQUENCE -> SEQUENCE;
-            default -> throw new IllegalArgumentException();
+            case COLUMN -> throw new NoSuchElementException();
         };
     }
 }
