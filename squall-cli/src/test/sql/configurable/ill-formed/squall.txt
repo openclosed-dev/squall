@@ -1,0 +1,15 @@
+{
+    "title": "Untitled",
+    "sources": [
+        "schema.sql"
+    ],
+    "parser": {
+        "dialect": "postgresql",
+        defaultSchema: "public"
+    },
+    "renderers": {
+        "json": {
+            "format": "json"
+        }
+    }
+}

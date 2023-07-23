@@ -1,0 +1,16 @@
+{
+    "title": "Database Specification",
+    "sources": [
+        "first.sql",
+        "second.sql"
+    ],
+    "parser": {
+        "dialect": "postgresql",
+        "defaultSchema": "public"
+    },
+    "renderers": {
+        "markdown": {
+            "format": "markdown"
+        }
+    }
+}

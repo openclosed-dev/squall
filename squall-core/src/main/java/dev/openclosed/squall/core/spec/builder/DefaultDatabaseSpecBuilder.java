@@ -1,0 +1,236 @@
+/*
+ * Copyright 2022-2023 The Squall Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package dev.openclosed.squall.core.spec.builder;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+
+import dev.openclosed.squall.api.spec.DatabaseSpec;
+import dev.openclosed.squall.api.spec.DocAnnotation;
+import dev.openclosed.squall.api.spec.Component.State;
+import dev.openclosed.squall.api.spec.DataType;
+import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.spec.IntegerDataType;
+import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
+import dev.openclosed.squall.core.spec.SimpleDatabaseSpec;
+
+/**
+ * The default implementation of {@link DatabaseSpecBuilder}.
+ */
+public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
+
+    private final Map<String, DatabaseBuilder> databaseBuilders = new LinkedHashMap<>();
+    private DatabaseBuilder currentDatabaseBuilder;
+    private TableBuilder currentTableBuilder;
+    private ColumnBuilder currentColumnBuilder;
+    private SequenceBuilder currentSequenceBuilder;
+    private final List<DocAnnotation> annotations = new ArrayList<>();
+    private String title;
+
+    @Override
+    public DatabaseSpecBuilder setTitle(String title) {
+        Objects.requireNonNull(title);
+        this.title = title;
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addDatabase(String name) {
+        Objects.requireNonNull(name);
+        addAnnotatedDatabase(name, useAnnotations(), State.DEFINED);
+        changeCurrentDatabase(name);
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder changeCurrentDatabase(String name) {
+        Objects.requireNonNull(name);
+        this.currentDatabaseBuilder = findDatabase(name);
+        return this;
+    }
+
+    public DatabaseBuilder getCurrentDatabase() {
+        if (currentDatabaseBuilder == null) {
+            currentDatabaseBuilder = addUndefinedDatabase("");
+        }
+        return currentDatabaseBuilder;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addSchema(String name) {
+        Objects.requireNonNull(name);
+        getCurrentDatabase().addSchema(name, useAnnotations());
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addTable(String schemaName, String tableName) {
+        Objects.requireNonNull(tableName);
+        SchemaBuilder schema = getCurrentDatabase().getSchema(schemaName);
+        TableBuilder tableBuilder = schema.addTable(tableName, useAnnotations());
+        this.currentTableBuilder = tableBuilder;
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder alterTable(String schemaName, String tableName) {
+        Objects.requireNonNull(tableName);
+        SchemaBuilder schema = getCurrentDatabase().getSchema(schemaName);
+        TableBuilder tableBuilder = schema.getTableToAlter(tableName);
+        this.currentTableBuilder = tableBuilder;
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addTableColumn(String name, DataType dataType) {
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(dataType);
+        ColumnBuilder builder = requireCurrentTable().addColumn(name, dataType, useAnnotations());
+        this.currentColumnBuilder = builder;
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addTablePrimaryKey(String name, List<String> columnNames) {
+        requireCurrentTable().setPrimaryKey(name, columnNames);
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addTableUniqueConstraint(String name, List<String> columnNames) {
+        requireCurrentTable().addUnique(name, columnNames);
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addColumnNullable(boolean isNullable) {
+        requireCurrentColumn().setNullable(isNullable);
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addColumnDefaultValue(Expression defaultValue) {
+        Objects.requireNonNull(defaultValue);
+        requireCurrentColumn().setDefaultValue(defaultValue);
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addSequence(String schemaName, String sequenceName) {
+        Objects.requireNonNull(sequenceName);
+        SchemaBuilder schema = getCurrentDatabase().getSchema(schemaName);
+        SequenceBuilder builder = schema.addSequence(sequenceName, useAnnotations());
+        this.currentSequenceBuilder = builder;
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addSequenceDataType(IntegerDataType dataType) {
+        Objects.requireNonNull(dataType);
+        requireCurrentSequence().setDataType(dataType);
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addSequenceStart(long start) {
+        requireCurrentSequence().setStart(start);
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addSequenceIncrement(long increment) {
+        requireCurrentSequence().setIncrement(increment);
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addSequenceMaxValue(long maxValue) {
+        requireCurrentSequence().setMaxValue(maxValue);
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addSequenceMinValue(long minValue) {
+        requireCurrentSequence().setMinValue(minValue);
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addAnnotations(List<DocAnnotation> annotations) {
+        this.annotations.addAll(annotations);
+        return this;
+    }
+
+    @Override
+    public List<DocAnnotation> useAnnotations() {
+        var result = List.copyOf(annotations);
+        this.annotations.clear();
+        return result;
+    }
+
+    @Override
+    public DatabaseSpec build() {
+        var databases = this.databaseBuilders.values().stream()
+                .map(DatabaseBuilder::build).toList();
+        return new SimpleDatabaseSpec(
+                Optional.ofNullable(title), databases);
+    }
+
+    private DatabaseBuilder findDatabase(String name) {
+        var database = databaseBuilders.get(name);
+        if (database == null) {
+            database =  addUndefinedDatabase(name);
+        }
+        return database;
+    }
+
+    private DatabaseBuilder addUndefinedDatabase(String name) {
+        return addAnnotatedDatabase(name, Collections.emptyList(), State.UNDEFINED);
+    }
+
+    private DatabaseBuilder addAnnotatedDatabase(String name, List<DocAnnotation> annotations, State state) {
+        var builder = new DatabaseBuilder(name, annotations, state);
+        databaseBuilders.put(name, builder);
+        return builder;
+    }
+
+    private TableBuilder requireCurrentTable() {
+        if (this.currentTableBuilder == null) {
+            throw new IllegalStateException("No current table");
+        }
+        return this.currentTableBuilder;
+    }
+
+    private ColumnBuilder requireCurrentColumn() {
+        if (this.currentColumnBuilder == null) {
+            throw new IllegalStateException("No current column");
+        }
+        return this.currentColumnBuilder;
+    }
+
+    private SequenceBuilder requireCurrentSequence() {
+        if (this.currentSequenceBuilder == null) {
+            throw new IllegalStateException("No current sequence");
+        }
+        return this.currentSequenceBuilder;
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "title": "Untitled",
+    "sources": [
+        // source SQL files
+    ],
+    "outDir": "output",
+    "parser": {
+        "dialect": "postgresql",
+        "defaultSchema": "public"
+    },
+    "renderers": {
+        "markdown": {
+            "format": "markdown",
+            "locale": "en",
+            "numbering": true,
+            "order": "name"
+        }
+    }
+}

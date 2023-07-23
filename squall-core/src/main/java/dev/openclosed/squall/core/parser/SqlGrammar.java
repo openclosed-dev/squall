@@ -1,0 +1,813 @@
+/*
+ * Copyright 2022-2023 The Squall Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package dev.openclosed.squall.core.parser;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.spec.DataType;
+import dev.openclosed.squall.api.spec.IntegerDataType;
+import dev.openclosed.squall.core.spec.StandardDataType;
+import dev.openclosed.squall.core.spec.expression.Expressions;
+
+/**
+ * Standard SQL grammar.
+ */
+public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredicates, SqlHandler {
+
+    @Override
+    default void statements() {
+        while (next() != Token.EOI) {
+            withRecovery(() -> statement());
+            consume();
+        }
+    }
+
+    @Override
+    default Expression expression() {
+        return expression(0);
+    }
+
+    default void statement() {
+        var token = next();
+        if (token instanceof Keyword keyword) {
+            switch (keyword.standard()) {
+                case CREATE -> createStatement();
+                case ALTER -> alterStatement();
+                default -> { }
+            }
+            find(SpecialSymbol.SEMICOLON);
+        } else if (token != SpecialSymbol.SEMICOLON) {
+            syntaxError(token);
+        }
+    }
+
+    default void createStatement() {
+        expect(StandardKeyword.CREATE);
+        consume();
+
+        Set<Keyword> modifiers = new HashSet<>();
+        Keyword keyword = expectKeyword();
+        while (testSchemaObjectModifier(keyword)) {
+            modifiers.add(keyword);
+            consume();
+            keyword = expectKeyword();
+        }
+
+        switch (keyword.standard()) {
+            case SCHEMA -> createSchema();
+            case TABLE -> createTable();
+            case SEQUENCE -> createSequence();
+            case VIEW -> { }
+            default -> createUnknownSchemaObject();
+        }
+    }
+
+    default void alterStatement() {
+        expect(StandardKeyword.ALTER);
+        consume();
+        Keyword keyword = expectKeyword();
+        switch (keyword.standard()) {
+            case TABLE -> alterTable();
+            default -> { }
+        }
+    }
+
+    default void createUnknownSchemaObject() {
+    }
+
+    default void createDatabase() {
+        consume(); // DATABASE
+        var databaseName = expectIdentifier(IdentifierType.OBJECT_NAME);
+        consume();
+        handleDatabase(databaseName);
+    }
+
+    default void createSchema() {
+        expect(StandardKeyword.SCHEMA);
+        consume();
+        if (next().isSameAs(StandardKeyword.IF)) {
+            ifNotExists();
+        }
+        var schemaName = expectIdentifier(IdentifierType.OBJECT_NAME);
+        consume();
+        handleSchema(schemaName);
+    }
+
+    default void ifExists() {
+        expect(StandardKeyword.IF);
+        consume();
+        expect(StandardKeyword.EXISTS);
+        consume();
+    }
+
+    /**
+     * Parses IF NOT EXISTS, which is optional.
+     */
+    default void ifNotExists() {
+        expect(StandardKeyword.IF);
+        consume();
+        expect(StandardKeyword.NOT);
+        consume();
+        expect(StandardKeyword.EXISTS);
+        consume();
+    }
+
+    default void createSequence() {
+        expect(StandardKeyword.SEQUENCE);
+        consume();
+        if (next().isSameAs(StandardKeyword.IF)) {
+            ifNotExists();
+        }
+        String[] name = schemaObjectName();
+        handleSequence(name[0], name[1]);
+
+        Token token = next();
+        while (token != SpecialSymbol.SEMICOLON) {
+            if (token instanceof Keyword keyword) {
+                switch (keyword.standard()) {
+                    case AS -> sequenceDataType();
+                    case INCREMENT -> sequenceIncrement();
+                    case START -> sequenceStart();
+                    case MAXVALUE -> sequenceMaxValue();
+                    case MINVALUE -> sequenceMinValue();
+                    case CYCLE -> consume();
+                    case NO -> {
+                        consume();
+                        keyword = expectKeyword();
+                        switch (keyword.standard()) {
+                            case CYCLE, MAXVALUE, MINVALUE -> consume();
+                            default -> syntaxError(keyword);
+                        }
+                    }
+                    default -> consume();
+                }
+            } else {
+                consume();
+            }
+            token = next();
+        }
+    }
+
+    default void sequenceDataType() {
+        expect(StandardKeyword.AS);
+        consume();
+        Keyword keyword = expectKeyword();
+        IntegerDataType dataType = switch (keyword.standard()) {
+            case BIGINT -> IntegerDataType.BIGINT;
+            case SMALLINT -> IntegerDataType.SMALLINT;
+            case INTEGER -> IntegerDataType.INTEGER;
+            default -> {
+                syntaxError(keyword);
+                // never reach here
+                yield null;
+            }
+        };
+        this.handleSequenceDataType(dataType);
+        consume();
+    }
+
+    default void sequenceStart() {
+        expect(StandardKeyword.START);
+        consume();
+        if (next().isSameAs(StandardKeyword.WITH)) {
+            consume();
+        }
+        handleSequenceStart(integerLiteral());
+    }
+
+    default void sequenceIncrement() {
+        expect(StandardKeyword.INCREMENT);
+        consume();
+        if (next().isSameAs(StandardKeyword.BY)) {
+            consume();
+        }
+        handleSequenceIncrement(integerLiteral());
+    }
+
+    default void sequenceMaxValue() {
+        expect(StandardKeyword.MAXVALUE);
+        consume();
+        handleSequenceMaxValue(integerLiteral());
+    }
+
+    default void sequenceMinValue() {
+        expect(StandardKeyword.MINVALUE);
+        consume();
+        handleSequenceMinValue(integerLiteral());
+    }
+
+    default void createTable() {
+        expect(StandardKeyword.TABLE);
+        consume();
+        if (next().isSameAs(StandardKeyword.IF)) {
+            ifNotExists();
+        }
+        String[] name = schemaObjectName();
+        handleTable(name[0], name[1]);
+        tableComponents();
+    }
+
+    default void alterTable() {
+        expect(StandardKeyword.TABLE);
+        consume();
+        if (next().isSameAs(StandardKeyword.IF)) {
+            ifExists();
+        }
+        if (next().isSameAs(StandardKeyword.ONLY)) {
+            consume();
+        }
+        String[] name = schemaObjectName();
+        handleTableToAlter(name[0], name[1]);
+
+        for (;;) {
+            Token token = next();
+            if (token.isSameAs(StandardKeyword.ADD)) {
+                addTableConstraint();
+            }
+            if (next() != SpecialSymbol.COMMA) {
+                break;
+            }
+            consume();
+        }
+    }
+
+    default void addTableConstraint() {
+        expect(StandardKeyword.ADD);
+        consume();
+        String constraintName = constraintName();
+        Token token = next();
+        if (token instanceof Keyword keyword) {
+            switch (keyword.standard()) {
+                case CHECK -> checkConstraint(constraintName);
+                case PRIMARY -> tablePrimaryKey(constraintName);
+                case UNIQUE -> tableUniqueConstraint(constraintName);
+                default -> {
+                }
+            }
+        }
+    }
+
+    default String[] schemaObjectName() {
+        String schemaName;
+        String tableName = expectIdentifier(IdentifierType.OBJECT_NAME);
+        consume();
+        if (next() == SpecialSymbol.PERIOD) {
+            consume();
+            schemaName = tableName;
+            tableName = expectIdentifier(IdentifierType.OBJECT_NAME);
+            consume();
+        } else {
+            schemaName = config().getDefaultSchema();
+        }
+        return new String[] {schemaName, tableName};
+     }
+
+    default void tableComponents() {
+        expect(SpecialSymbol.OPEN_PAREN);
+        consume();
+        int i = 0;
+        while (next() != SpecialSymbol.CLOSE_PAREN) {
+            if (i++ > 0) {
+                expect(SpecialSymbol.COMMA);
+                consume();
+            }
+            tableComponent();
+        }
+        consume();
+    }
+
+    default void tableComponent() {
+        String constraintName = constraintName();
+        var token = next();
+        if (next() instanceof Keyword keyword) {
+            switch (keyword.standard()) {
+                case CHECK -> {
+                    checkConstraint(constraintName);
+                    return;
+                }
+                case PRIMARY -> {
+                    tablePrimaryKey(constraintName);
+                    return;
+                }
+                case UNIQUE -> {
+                    tableUniqueConstraint(constraintName);
+                    return;
+                }
+                default -> { }
+            }
+        }
+
+        if (constraintName != null) {
+            syntaxError(token);
+        } else {
+            tableColumn();
+        }
+    }
+
+    default String constraintName() {
+        if (next().isSameAs(StandardKeyword.CONSTRAINT)) {
+            consume();
+            String constraintName = expectIdentifier(IdentifierType.OBJECT_NAME);
+            consume();
+            return constraintName;
+        } else {
+            return null;
+        }
+    }
+
+    default void tablePrimaryKey(String constraintName) {
+        expect(StandardKeyword.PRIMARY);
+        consume();
+        expect(StandardKeyword.KEY);
+        consume();
+        var columns = columnNameList();
+        handleTablePrimaryKey(constraintName, columns);
+    }
+
+    default void tableUniqueConstraint(String constraintName) {
+        expect(StandardKeyword.UNIQUE);
+        consume();
+        if (next().isSameAs(StandardKeyword.NULLS)) {
+            nullsDistinct();
+        }
+        var columns = columnNameList();
+        handleTableUniqueConstraint(constraintName, columns);
+    }
+
+    default List<String> columnNameList() {
+        var columns = new ArrayList<String>();
+        expect(SpecialSymbol.OPEN_PAREN);
+        consume();
+        columns.add(expectIdentifier(IdentifierType.OBJECT_NAME));
+        consume();
+        while (next() == SpecialSymbol.COMMA) {
+            consume();
+            columns.add(expectIdentifier(IdentifierType.OBJECT_NAME));
+            consume();
+        }
+        expect(SpecialSymbol.CLOSE_PAREN);
+        return columns;
+    }
+
+    default void tableColumn() {
+        String columnName = expectIdentifier(IdentifierType.OBJECT_NAME);
+        consume();
+        var dataType = dataType();
+        handleColumn(columnName, dataType);
+        columnConstraints(columnName);
+    }
+
+    default DataType dataType() {
+        if (next().isKeyword()) {
+            return keywordDataType();
+        } else {
+            return nonKeywordDataType();
+        }
+    }
+
+    default void columnConstraints(String columnName) {
+        var token = next();
+        while (token != SpecialSymbol.COMMA && token != SpecialSymbol.CLOSE_PAREN) {
+            columnConstraint(columnName);
+            token = next();
+        }
+    }
+
+    default void columnConstraint(String columnName) {
+        Token token = expectKeyword();
+        String constraintName = null;
+        if (token.isSameAs(StandardKeyword.CONSTRAINT)) {
+            consume();
+            token = next();
+            constraintName = token.toIdentifier();
+            consume();
+            token = expectKeyword();
+        }
+
+        Keyword keyword = expectKeyword();
+        switch (keyword.standard()) {
+            case CHECK -> {
+                checkConstraint(null);
+            }
+            case DEFAULT -> {
+                consume();
+                handleColumnDefaultValue(expression());
+            }
+            case NOT -> {
+                consume();
+                expect(StandardKeyword.NULL);
+                consume();
+                handleColumnNullable(false);
+            }
+            case NULL -> {
+                consume();
+                handleColumnNullable(true);
+            }
+            case PRIMARY -> {
+                consume();
+                expect(StandardKeyword.KEY);
+                consume();
+                handleTablePrimaryKey(constraintName, List.of(columnName));
+            }
+            case UNIQUE -> {
+                consume();
+                if (next().isSameAs(StandardKeyword.NULLS)) {
+                    nullsDistinct();
+                }
+                handleTableUniqueConstraint(constraintName, List.of(columnName));
+            }
+            default -> {
+                // keyword may be UNDEFINED
+                syntaxError(token);
+            }
+        }
+    }
+
+    default boolean nullsDistinct() {
+        boolean nullsDistinct = true;
+        expect(StandardKeyword.NULLS);
+        consume();
+        if (next().isSameAs(StandardKeyword.NOT)) {
+            consume();
+            nullsDistinct = false;
+        }
+        expect(StandardKeyword.DISTINCT);
+        consume();
+        return nullsDistinct;
+    }
+
+    default DataType keywordDataType() {
+        return switch (expectKeyword().standard()) {
+            case BIGINT -> {
+                consume();
+                yield IntegerDataType.BIGINT;
+            }
+            case BOOLEAN -> {
+                consume();
+                yield StandardDataType.BOOLEAN;
+            }
+            case CHAR -> {
+                consume();
+                yield dataTypeWithOptionalLength(StandardDataType.CHAR);
+            }
+            case CHARACTER -> {
+                consume();
+                yield characterDataType(StandardDataType.CHARACTER);
+            }
+            case DATE -> {
+                consume();
+                yield StandardDataType.DATE;
+            }
+            case DECIMAL -> {
+                consume();
+                yield numericDataType(StandardDataType.DECIMAL);
+            }
+            case DOUBLE -> {
+                consume();
+                expect(StandardKeyword.PRECISION);
+                consume();
+                yield StandardDataType.DOUBLE_PRECISION;
+            }
+            case FLOAT -> {
+                consume();
+                yield dataTypeWithOptionalPrecision(StandardDataType.FLOAT);
+            }
+            case INTEGER -> {
+                consume();
+                yield IntegerDataType.INTEGER;
+            }
+            case INTERVAL -> {
+                consume();
+                yield intervalDataType();
+            }
+            case NUMERIC -> {
+                consume();
+                yield numericDataType(StandardDataType.NUMERIC);
+            }
+            case REAL -> {
+                consume();
+                yield StandardDataType.REAL;
+            }
+            case SMALLINT -> {
+                consume();
+                yield IntegerDataType.SMALLINT;
+            }
+            case TIME -> {
+                consume();
+                yield timeDataType(StandardDataType.TIME);
+            }
+            case TIMESTAMP -> {
+                consume();
+                yield timeDataType(StandardDataType.TIMESTAMP);
+            }
+            case VARCHAR -> {
+                consume();
+                yield dataTypeWithOptionalLength(StandardDataType.VARCHAR);
+            }
+            default -> nonStandardKeywordDataType();
+        };
+    }
+
+    default DataType nonStandardKeywordDataType() {
+        syntaxError(next());
+        return null;
+    }
+
+    default DataType nonKeywordDataType() {
+        syntaxError(next());
+        return null;
+    }
+
+    default DataType characterDataType(StandardDataType baseType) {
+        assert baseType == StandardDataType.BIT || baseType == StandardDataType.CHARACTER;
+        var token = next();
+        if (token == SpecialSymbol.OPEN_PAREN) {
+            return dataTypeWithLength(baseType);
+        }
+        if (token.isSameAs(StandardKeyword.VARYING)) {
+            consume();
+            baseType = baseType.varying();
+        }
+        return dataTypeWithOptionalLength(baseType);
+    }
+
+    default DataType dataTypeWithOptionalPrecision(StandardDataType baseType) {
+        if (next() == SpecialSymbol.OPEN_PAREN) {
+            final int precision = dataTypeArgument();
+            return baseType.withPrecision(precision);
+        }
+        return baseType;
+    }
+
+    default DataType numericDataType(StandardDataType baseType) {
+        if (next() != SpecialSymbol.OPEN_PAREN) {
+            return baseType;
+        }
+        consume();
+        var firstValue = expectType(TokenType.INTEGER).value();
+        consume();
+        int precision = ((BigInteger) firstValue).intValue();
+        var token = next();
+        if (token == SpecialSymbol.CLOSE_PAREN) {
+            consume();
+            return baseType.withPrecision(precision);
+        } else if (token != SpecialSymbol.COMMA) {
+            syntaxError(token);
+            return null;
+        }
+        consume();
+
+        var secondValue = expectType(TokenType.INTEGER).value();
+        consume();
+        final int scale = ((BigInteger) secondValue).intValue();
+
+        expect(SpecialSymbol.CLOSE_PAREN);
+        consume();
+
+        return baseType.withPrecision(precision, scale);
+    }
+
+    default DataType dataTypeWithLength(StandardDataType baseType) {
+        final var length = dataTypeArgument();
+        return baseType.withLength(length);
+    }
+
+    default DataType dataTypeWithOptionalLength(StandardDataType baseType) {
+        if (next() == SpecialSymbol.OPEN_PAREN) {
+            return dataTypeWithLength(baseType);
+        }
+        return baseType;
+    }
+
+    default DataType timeDataType(StandardDataType baseType) {
+        assert baseType == StandardDataType.TIME || baseType == StandardDataType.TIMESTAMP;
+        if (next() == SpecialSymbol.OPEN_PAREN) {
+            final int precision = dataTypeArgument();
+            if (withOrWithoutTimeZone()) {
+                baseType = baseType.withTimeZone();
+            }
+            return baseType.withPrecision(precision);
+        } else if (withOrWithoutTimeZone()) {
+            return baseType.withTimeZone();
+        }
+        return baseType;
+    }
+
+    /**
+     * Parses "WITH/WITHOUT TIME ZONE".
+     * @return {@code true} if time zone was specified.
+     */
+    default boolean withOrWithoutTimeZone() {
+        var token = next();
+        if (!token.isSameAs(StandardKeyword.WITH) && !token.isSameAs(StandardKeyword.WITHOUT)) {
+            return false;
+        }
+        final boolean exists = (token.isSameAs(StandardKeyword.WITH));
+        consume();
+
+        expect(StandardKeyword.TIME);
+        consume();
+
+        expect(StandardKeyword.ZONE);
+        consume();
+
+        return exists;
+    }
+
+    default DataType intervalDataType() {
+        var dataType = intervalFields(IntervalDataType.INTERVAL);
+        if (next() == SpecialSymbol.OPEN_PAREN) {
+            return dataType.withPrecision(dataTypeArgument());
+        }
+        return dataType;
+    }
+
+    default IntervalDataType intervalFields(final IntervalDataType baseType) {
+        Token token = next();
+        if (!token.isKeyword()) {
+            return baseType;
+        }
+
+        var keyword = (Keyword) token;
+        var dataType = baseType.from(keyword);
+        if (dataType == baseType) {
+            return baseType;
+        } else {
+            consume();
+        }
+
+        token = next();
+        if (token.isSameAs(StandardKeyword.TO)) {
+            consume();
+            keyword = expectKeyword();
+            try {
+                dataType = dataType.to(keyword);
+                consume();
+            } catch (IllegalArgumentException e) {
+                syntaxError(token);
+                return null;
+            }
+        }
+        return dataType;
+    }
+
+    /**
+     * Parses a data type argument such as precision or length.
+     * @return parsed value
+     */
+    default int dataTypeArgument() {
+        expect(SpecialSymbol.OPEN_PAREN);
+        consume();
+        int value = (int) integerLiteral();
+        expect(SpecialSymbol.CLOSE_PAREN);
+        consume();
+        return value;
+    }
+
+    default long integerLiteral() {
+        var token = expectType(TokenType.INTEGER);
+        long value = ((BigInteger) token.value()).longValue();
+        consume();
+        return value;
+    }
+
+    /**
+     * Parses check constraint.
+     * @param name the name of the constraint, can be {@code null}
+     */
+    default void checkConstraint(String name) {
+        expect(StandardKeyword.CHECK);
+        consume();
+        expect(SpecialSymbol.OPEN_PAREN);
+        consume();
+
+        expression();
+
+        expect(SpecialSymbol.CLOSE_PAREN);
+        consume();
+    }
+
+    default Expression expression(int precedence) {
+        var expression = literalOrGroup();
+        for (;;) {
+            var token = next();
+            if (token.isBinaryOperator()) {
+                var op = token.toBinaryOperator();
+                if (op.precedence() < precedence) {
+                    break;
+                }
+                var text = token.text();
+                consume();
+                var right = expression(op.rightPrecedence());
+                expression = Expressions.createBinaryOperator(text, expression, right);
+                if (op.associativity() == Operator.Associativity.NONE) {
+                    break;
+                }
+            } else if (token.isPostfixOperator()) {
+                expression = postfixOperator(expression);
+            } else {
+                break;
+            }
+        }
+        return expression;
+    }
+
+    default Expression literalOrGroup() {
+        var token = next();
+        if (token.isPrefixOperator()) {
+            var op = token.toPrefixOperator();
+            var text = token.text();
+            consume();
+            var operand = expression(op.precedence());
+            return Expressions.createUnaryOperator(text, operand);
+        } else if (token == SpecialSymbol.OPEN_PAREN) {
+            consume();
+            var group = expression(0);
+            expect(SpecialSymbol.CLOSE_PAREN);
+            consume();
+            return group;
+        } else if (token.isSameAs(StandardKeyword.TRUE)) {
+            consume();
+            return Expression.TRUE;
+        } else if (token.isSameAs(StandardKeyword.FALSE)) {
+            consume();
+            return Expression.FALSE;
+        } else if (token.isSameAs(StandardKeyword.NULL)) {
+            consume();
+            return Expression.NULL;
+        } else if (token.isLiteral()) {
+            var literal = token.toLiteral();
+            consume();
+            return literal;
+        } else if (token.isFunction()) {
+            return functionCall();
+        } else if (token.isIdentifier(IdentifierType.OBJECT_NAME)
+            || token.isIdentifier(IdentifierType.FUNCTION_NAME)) {
+            return functionCallOrColumnReference();
+        }
+        syntaxError(token);
+        return null;
+    }
+
+    default Expression functionCall() {
+        Keyword keyword = expectKeyword();
+        String functionName = keyword.canonicalName();
+        consume();
+        if (next() == SpecialSymbol.OPEN_PAREN) {
+            return Expressions.createFunctionCall(functionName, functionArguments());
+        } else {
+            return Expressions.createFunctionCall(functionName);
+        }
+    }
+
+    default Expression functionCallOrColumnReference() {
+        var token = next();
+        consume();
+        if (next() == SpecialSymbol.OPEN_PAREN) {
+            return Expressions.createFunctionCall(token.toIdentifier(), functionArguments());
+        } else if (token.isIdentifier(IdentifierType.OBJECT_NAME)) {
+            return Expressions.createColumnReference(token.toIdentifier());
+        }
+        syntaxError(token);
+        return null;
+    }
+
+    default List<Expression> functionArguments() {
+        var args = new ArrayList<Expression>();
+        expect(SpecialSymbol.OPEN_PAREN);
+        consume();
+        while (next() != SpecialSymbol.CLOSE_PAREN) {
+            if (args.size() > 1) {
+                expect(SpecialSymbol.COMMA);
+                consume();
+            }
+            args.add(expression(0));
+        }
+        consume();
+        return args;
+    }
+
+    default Expression postfixOperator(Expression operand) {
+        syntaxError(next());
+        return null;
+    }
+}

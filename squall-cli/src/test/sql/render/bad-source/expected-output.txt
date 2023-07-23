@@ -1,0 +1,7 @@
+Loading the configuration "squall.json"...
+Loaded the configuration successfully.
+Parsing a SQL source file "schema.sql"...
+ERROR: Syntax error at or near "REQUIRED". [line 5, column 21]
+  name varchar(256) REQUIRED,
+                    ^
+ERROR: Found errors in 1 SQL source file(s).

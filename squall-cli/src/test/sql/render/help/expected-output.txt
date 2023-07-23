@@ -1,0 +1,7 @@
+Usage: squall render [-h] [--verbose] [-C=DIR] [-f=FILE] [NAME...]
+Generate specification documents from SQL sources.
+      [NAME...]         name of the renderer defined in configuration
+  -C, --directory=DIR   change to directory DIR
+  -f, --file=FILE       path to the configuration file
+  -h, --help            display this help message
+      --verbose

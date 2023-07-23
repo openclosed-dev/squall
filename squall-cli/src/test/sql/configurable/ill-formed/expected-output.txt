@@ -1,0 +1,5 @@
+Loading the configuration "squall.txt"...
+ERROR: Input JSON is ill-formed. [line 8, column 9]
+        defaultSchema: "public"
+        ^
+ERROR: Configuration file is invalid.

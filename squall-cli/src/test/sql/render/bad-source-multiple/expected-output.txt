@@ -1,0 +1,11 @@
+Loading the configuration "squall.json"...
+Loaded the configuration successfully.
+Parsing a SQL source file "first.sql"...
+ERROR: Syntax error at or near "col2". [line 3, column 3]
+  col2 integer
+  ^
+Parsing a SQL source file "second.sql"...
+ERROR: Syntax error at or near "REQUIRED". [line 3, column 8]
+  col2 REQUIRED
+       ^
+ERROR: Found errors in 2 SQL source file(s).
