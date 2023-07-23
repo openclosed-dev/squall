@@ -57,13 +57,14 @@ final class MarkdownRendererTest {
 
     public static Stream<RenderTest> testRenderer() {
         return Stream.of(
-                "database",
-                "schema",
-                "table",
-                "table-default-schema",
-                "hide-database-and-schema"
-                )
-            .flatMap(MarkdownRendererTest::loadTest);
+            "database",
+            "schema",
+            "table",
+            "table-default-schema",
+            "hide-database-and-schema",
+            "sequence"
+        )
+        .flatMap(MarkdownRendererTest::loadTest);
     }
 
     @ParameterizedTest

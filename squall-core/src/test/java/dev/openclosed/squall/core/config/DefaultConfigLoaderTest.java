@@ -19,7 +19,6 @@ package dev.openclosed.squall.core.config;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -28,6 +27,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -78,24 +78,27 @@ final class DefaultConfigLoaderTest {
     @Test
     public void generateRenderConfig() {
         Map<String, Object> map = Map.of(
-                "format", "markdown",
-                "locale", "ja",
-                "numbering", false,
-                "order", "definition",
-                "hide", Set.of("database", "schema"),
-                "columnAttributes", List.of("name", "description")
-                );
+            "format", "markdown",
+            "locale", "ja",
+            "numbering", false,
+            "order", "definition",
+            "hide", Set.of("database", "schema"),
+            "columnAttributes", List.of("name", "description"),
+            "sequenceAttributes", List.of("data_type", "start")
+        );
 
         var actual = sut.loadFromMap(map, RenderConfig.class);
 
         var expected = new RenderConfig(
-                "markdown",
-                "spec",
-                Locale.JAPANESE,
-                false,
-                ComponentOrder.DEFINITION,
-                Set.of(Component.Type.DATABASE, Component.Type.SCHEMA),
-                List.of(ColumnAttribute.NAME, ColumnAttribute.DESCRIPTION));
+            "markdown",
+            "spec",
+            Locale.JAPANESE,
+            false,
+            ComponentOrder.DEFINITION,
+            Set.of(Component.Type.DATABASE, Component.Type.SCHEMA),
+            List.of(ColumnAttribute.NAME, ColumnAttribute.DESCRIPTION),
+            List.of(SequenceAttribute.DATA_TYPE, SequenceAttribute.START)
+        );
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -125,7 +128,8 @@ final class DefaultConfigLoaderTest {
                         "numbering", false,
                         "order", "name",
                         "hide", Set.of("database", "schema"),
-                        "columnAttributes", List.of("name", "description")
+                        "columnAttributes", List.of("name", "description"),
+                        "sequenceAttributes", List.of("data_type", "start")
                         )
                     )
                 );
@@ -143,13 +147,15 @@ final class DefaultConfigLoaderTest {
                         "postgresql",
                         Optional.of("public")),
                 Map.of("basic", new RenderConfig(
-                        "markdown",
-                        "spec",
-                        Locale.ENGLISH,
-                        false,
-                        ComponentOrder.NAME,
-                        Set.of(Component.Type.DATABASE, Component.Type.SCHEMA),
-                        List.of(ColumnAttribute.NAME, ColumnAttribute.DESCRIPTION))
+                    "markdown",
+                    "spec",
+                    Locale.ENGLISH,
+                    false,
+                    ComponentOrder.NAME,
+                    Set.of(Component.Type.DATABASE, Component.Type.SCHEMA),
+                    List.of(ColumnAttribute.NAME, ColumnAttribute.DESCRIPTION),
+                    List.of(SequenceAttribute.DATA_TYPE, SequenceAttribute.START)
+                    )
                 ));
 
         assertThat(actual).isEqualTo(expected);
@@ -162,7 +168,7 @@ final class DefaultConfigLoaderTest {
         assertThat(actual).isEqualTo(new RootConfig());
     }
 
-    public static Stream<ConfigTestCase> invalidJson() throws IOException {
+    public static Stream<ConfigTestCase> invalidJson() {
         return ConfigTestCase.loadFrom("invalid-json.md").stream();
     }
 
@@ -177,7 +183,7 @@ final class DefaultConfigLoaderTest {
         assertThat(output).isEqualTo(testCase.output());
     }
 
-    public static Stream<ConfigTestCase> validConfigurations() throws IOException {
+    public static Stream<ConfigTestCase> validConfigurations() {
         return ConfigTestCase.loadFrom("valid-configs.md").stream();
     }
 
@@ -190,7 +196,7 @@ final class DefaultConfigLoaderTest {
         assertThat(output).isEqualTo(testCase.output());
     }
 
-    public static Stream<ConfigTestCase> invalidConfigurations() throws IOException {
+    public static Stream<ConfigTestCase> invalidConfigurations() {
         return ConfigTestCase.loadFrom("invalid-configs.md").stream();
     }
 
@@ -212,7 +218,7 @@ final class DefaultConfigLoaderTest {
                 builder.append('\n');
             }
             builder.append(problem.severity()).append(": ");
-            builder.append(problem.toString());
+            builder.append(problem);
         }
         var output = builder.toString();
         System.out.println(output);

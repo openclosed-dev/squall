@@ -31,7 +31,8 @@ public record RenderConfig(
         boolean numbering,
         ComponentOrder order,
         Set<Component.Type> hide,
-        List<ColumnAttribute> columnAttributes) {
+        List<ColumnAttribute> columnAttributes,
+        List<SequenceAttribute> sequenceAttributes) {
 
     private static final RenderConfig DEFAULT = new RenderConfig();
 
@@ -41,11 +42,13 @@ public record RenderConfig(
 
     public RenderConfig() {
         this("markdown",
-             "spec",
-             Locale.ENGLISH,
-             true,
-             ComponentOrder.NAME,
-             Collections.emptySet(),
-             ColumnAttribute.defaultList());
+            "spec",
+            Locale.ENGLISH,
+            true,
+            ComponentOrder.NAME,
+            Collections.emptySet(),
+            ColumnAttribute.defaultList(),
+            SequenceAttribute.defaultList()
+        );
     }
 }

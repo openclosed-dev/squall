@@ -21,12 +21,12 @@ import dev.openclosed.squall.api.spec.Component;
 import java.util.List;
 import java.util.ResourceBundle;
 
-final class MarkdownTableWriter<T extends Component, P extends Component> {
+final class MarkdownTableWriter<T extends Component, P> {
 
     private final List<? extends CellProvider<T, P>> providers;
     private final List<String> titles;
 
-    static <T extends Component, P extends Component> MarkdownTableWriter<T, P> withProviders(
+    static <T extends Component, P> MarkdownTableWriter<T, P> withProviders(
         List<? extends CellProvider<T, P>> providers, ResourceBundle bundle) {
         return new MarkdownTableWriter<>(providers, bundle);
     }
@@ -52,9 +52,13 @@ final class MarkdownTableWriter<T extends Component, P extends Component> {
         appender.append("|").appendNewLine();
     }
 
-    void writeDataRow(Appender appender, int rowNo, T component, P parentComponent) {
+    void writeDataRow(Appender appender, T component) {
+        writeDataRow(appender, component, null, 1);
+    }
+
+    void writeDataRow(Appender appender, T component, P parentComponent, int rowNo) {
         for (var provider : this.providers) {
-            String value = provider.getValue(rowNo, component, parentComponent);
+            String value = provider.getValue(component, parentComponent, rowNo);
             appender.append("| ").append(value).appendSpace();
         }
         appender.append("|").appendNewLine();

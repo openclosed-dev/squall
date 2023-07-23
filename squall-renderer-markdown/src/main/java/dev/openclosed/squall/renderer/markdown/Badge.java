@@ -21,7 +21,8 @@ import dev.openclosed.squall.api.spec.Component;
 enum Badge {
     DATABASE("indigo"),
     SCHEMA("green"),
-    TABLE("steelblue");
+    TABLE("steelblue"),
+    SEQUENCE("darkorange");
 
     private final String color;
 
@@ -53,6 +54,7 @@ enum Badge {
             case DATABASE ->  DATABASE;
             case SCHEMA -> SCHEMA;
             case TABLE -> TABLE;
+            case SEQUENCE -> SEQUENCE;
             default -> throw new IllegalArgumentException();
         };
     }

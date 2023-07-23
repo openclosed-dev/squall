@@ -18,6 +18,9 @@ package dev.openclosed.squall.api.renderer;
 
 import java.util.List;
 
+/**
+ * Attributes of a column.
+ */
 public enum ColumnAttribute {
     ORDINAL,
     NAME,
@@ -44,6 +47,10 @@ public enum ColumnAttribute {
         DESCRIPTION
     );
 
+    /**
+     * Returns the default list of the attributes.
+     * @return the default list of the attributes.
+     */
     public static List<ColumnAttribute> defaultList() {
         return DEFAULT_LIST;
     }

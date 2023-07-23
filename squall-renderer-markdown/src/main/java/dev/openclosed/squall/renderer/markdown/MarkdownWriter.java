@@ -26,6 +26,7 @@ import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.Database;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.Schema;
+import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.api.spec.Table;
 
@@ -37,6 +38,7 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
     private final boolean showDatabase;
     private final boolean showSchema;
     private final MarkdownTableWriter<Column, Table> columnWriter;
+    private final MarkdownTableWriter<Sequence, Void> sequenceWriter;
 
     private int level;
 
@@ -56,6 +58,7 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
         this.showDatabase = !config.hide().contains(Component.Type.DATABASE);
         this.showSchema = !config.hide().contains(Component.Type.SCHEMA);
         this.columnWriter = ColumnCellProvider.tableWriter(bundle, config.columnAttributes());
+        this.sequenceWriter = SequenceCellProvider.tableWriter(bundle, config.sequenceAttributes());
     }
 
     void writeSpec(DatabaseSpec spec) throws IOException {
@@ -120,13 +123,33 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
     }
 
     @Override
+    public void visit(Sequence sequence, int ordinal) {
+        enterLevel();
+        writeHeading(sequence, ordinal);
+
+        sequence.description().ifPresent(
+            value -> append(value).appendNewLine());
+
+        appendNewLine();
+        sequenceWriter.writeHeaderRow(this);
+        sequenceWriter.writeDelimiterRow(this);
+        sequenceWriter.writeDataRow(this, sequence);
+    }
+
+    @Override
+    public void leave(Sequence sequence) {
+        appendNewLine();
+        leaveLevel();
+    }
+
+
+    @Override
     public void visit(Table table, int ordinal) {
         enterLevel();
         writeHeading(table, ordinal);
 
-        table.description().ifPresent(value -> {
-            append(value).appendNewLine();
-        });
+        table.description().ifPresent(
+            value -> append(value).appendNewLine());
 
         if (table.hasColumns()) {
             appendNewLine();
@@ -143,7 +166,7 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
 
     @Override
     public void visit(Table table, Column column, int ordinal) {
-        this.columnWriter.writeDataRow(this, ordinal, column, table);
+        this.columnWriter.writeDataRow(this, column, table, ordinal);
     }
 
     private void enterLevel() {

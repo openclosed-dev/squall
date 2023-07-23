@@ -26,13 +26,13 @@ import java.util.ResourceBundle;
 enum ColumnCellProvider implements CellProvider<Column, Table> {
     ORDINAL(ALIGN_RIGHT) {
         @Override
-        public String getValue(int ordinal, Column column, Table table) {
+        public String getValue(Column column, Table table, int ordinal) {
             return String.valueOf(ordinal);
         }
     },
     NAME(ALIGN_LEFT) {
         @Override
-        public String getValue(int ordinal, Column column, Table table) {
+        public String getValue(Column column, Table table, int ordinal) {
             var sb = new StringBuilder();
             sb.append('`').append(column.name()).append('`');
             if (table.containsColumnInPrimaryKey(column.name())) {
@@ -43,19 +43,19 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     },
     LABEL(ALIGN_LEFT) {
         @Override
-        public String getValue(int ordinal, Column column, Table table) {
+        public String getValue(Column column, Table table, int ordinal) {
             return column.label().orElse("-");
         }
     },
     DATA_TYPE(ALIGN_LEFT) {
         @Override
-        public String getValue(int ordinal, Column column, Table table) {
+        public String getValue(Column column, Table table, int ordinal) {
             return column.dataType();
         }
     },
     PRECISION_LENGTH(ALIGN_RIGHT) {
         @Override
-        public String getValue(int ordinal, Column column, Table table) {
+        public String getValue(Column column, Table table, int ordinal) {
             var value = column.precision();
             if (value.isPresent()) {
                 return String.valueOf(value.getAsInt());
@@ -71,7 +71,7 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     },
     SCALE(ALIGN_RIGHT) {
         @Override
-        public String getValue(int ordinal, Column column, Table table) {
+        public String getValue(Column column, Table table, int ordinal) {
             var value = column.scale();
             if (value.isPresent()) {
                 return String.valueOf(value.getAsInt());
@@ -82,32 +82,32 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     },
     NULLABLE(ALIGN_CENTER) {
         @Override
-        public String getValue(int ordinal, Column column, Table table) {
+        public String getValue(Column column, Table table, int ordinal) {
             return column.nullable() ? CHECK_MARK : "-";
         }
     },
     REQUIRED(ALIGN_CENTER) {
         @Override
-        public String getValue(int ordinal, Column column, Table table) {
+        public String getValue(Column column, Table table, int ordinal) {
             return column.nullable() ? "-" : CHECK_MARK;
         }
     },
     UNIQUE(ALIGN_CENTER) {
         @Override
-        public String getValue(int ordinal, Column column, Table table) {
+        public String getValue(Column column, Table table, int ordinal) {
             return column.unique() ? CHECK_MARK : "-";
         }
     },
     DEFAULT_VALUE(ALIGN_LEFT) {
         @Override
-        public String getValue(int ordinal, Column column, Table table) {
+        public String getValue(Column column, Table table, int ordinal) {
             return column.defaultValue()
                 .map(Object::toString).orElse("-");
         }
     },
     DESCRIPTION(ALIGN_LEFT) {
         @Override
-        public String getValue(int ordinal, Column column, Table table) {
+        public String getValue(Column column, Table table, int ordinal) {
             return column.description().orElse("-");
         }
     };
@@ -115,20 +115,15 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     private static final String KEY_MARK = ":key:";
     private static final String CHECK_MARK = "&#x2713;";
 
-    private final String textAlign;
+    private final String separator;
 
-    ColumnCellProvider(String textAlign) {
-        this.textAlign = textAlign;
+    ColumnCellProvider(String separator) {
+        this.separator = separator;
     }
 
     @Override
     public String getSeparator() {
-        return textAlign;
-    }
-
-    @Override
-    public String getValue(int ordinal, Column column, Table table) {
-        return "-";
+        return this.separator;
     }
 
     static ColumnCellProvider provider(ColumnAttribute attribute) {

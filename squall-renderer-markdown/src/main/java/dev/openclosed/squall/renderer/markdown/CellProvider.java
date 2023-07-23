@@ -18,7 +18,7 @@ package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.spec.Component;
 
-public interface CellProvider<T extends Component, P extends Component> {
+public interface CellProvider<T extends Component, P> {
 
     String ALIGN_LEFT = ":--";
     String ALIGN_RIGHT = "--:";
@@ -26,7 +26,11 @@ public interface CellProvider<T extends Component, P extends Component> {
 
     String name();
 
-    String getSeparator();
+    default String getSeparator() {
+        return ALIGN_LEFT;
+    }
 
-    String getValue(int ordinal, T component, P parent);
+    default String getValue(T component, P parent, int ordinal) {
+        return "-";
+    }
 }

@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -47,18 +48,19 @@ public final class InitTest {
                     List.of(),
                     "output",
                     new ParserConfig(
-                            "postgresql",
-                            Optional.of("public")
+                        "postgresql",
+                        Optional.of("public")
                     ),
                     Map.of(
                         "markdown", new RenderConfig(
-                                "markdown",
-                                "spec",
-                                Locale.ENGLISH,
-                                true,
-                                ComponentOrder.NAME,
-                                Set.of(),
-                                ColumnAttribute.defaultList()
+                            "markdown",
+                            "spec",
+                            Locale.ENGLISH,
+                            true,
+                            ComponentOrder.NAME,
+                            Set.of(),
+                            ColumnAttribute.defaultList(),
+                            SequenceAttribute.defaultList()
                         )
                     )
             );
