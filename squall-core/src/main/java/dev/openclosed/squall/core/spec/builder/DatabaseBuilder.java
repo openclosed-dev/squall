@@ -19,7 +19,7 @@ package dev.openclosed.squall.core.spec.builder;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.Database;
 import dev.openclosed.squall.api.spec.DocAnnotation;
-import dev.openclosed.squall.core.spec.SimpleDatabase;
+import dev.openclosed.squall.core.spec.DefaultDatabase;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -39,7 +39,7 @@ class DatabaseBuilder extends ComponentBuilder {
     Database build() {
         var schemas = this.schemaBuilders.values().stream()
             .map(SchemaBuilder::build).toList();
-        return new SimpleDatabase(name(), schemas, annotations(), state);
+        return new DefaultDatabase(name(), schemas, annotations(), state);
     }
 
     void addSchema(String name, List<DocAnnotation> annotations) {

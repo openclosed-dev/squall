@@ -19,10 +19,15 @@ package dev.openclosed.squall.core.spec.builder;
 import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.DocAnnotation;
+import dev.openclosed.squall.api.spec.ForeignKey;
 import dev.openclosed.squall.api.spec.PrimaryKey;
 import dev.openclosed.squall.api.spec.Table;
+import dev.openclosed.squall.api.spec.TableRef;
 import dev.openclosed.squall.api.spec.Unique;
-import dev.openclosed.squall.core.spec.SimpleTable;
+import dev.openclosed.squall.core.spec.DefaultForeignKey;
+import dev.openclosed.squall.core.spec.DefaultPrimaryKey;
+import dev.openclosed.squall.core.spec.DefaultTable;
+import dev.openclosed.squall.core.spec.DefaultUnique;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -35,16 +40,18 @@ final class TableBuilder extends ComponentBuilder {
     private final Map<String, ColumnBuilder> columns = new LinkedHashMap<>();
     private PrimaryKey primaryKey;
     private final List<Unique> unique = new ArrayList<>();
+    private final List<ForeignKey> foreignKeys = new ArrayList<>();
 
     TableBuilder(String name, List<DocAnnotation> annotations) {
         super(name, annotations);
     }
 
     Table build() {
-        return new SimpleTable(
+        return new DefaultTable(
             name(),
             buildColumns(),
             Optional.ofNullable(primaryKey),
+            foreignKeys,
             unique,
             annotations());
     }
@@ -58,11 +65,19 @@ final class TableBuilder extends ComponentBuilder {
     }
 
     void setPrimaryKey(String name, List<String> columnNames) {
-        this.primaryKey = new PrimaryKey(name, columnNames);
+        this.primaryKey = new DefaultPrimaryKey(Optional.ofNullable(name), columnNames);
     }
 
     void addUnique(String name, List<String> columns) {
-        unique.add(new Unique(name, columns));
+        unique.add(new DefaultUnique(Optional.ofNullable(name), columns));
+    }
+
+    void addForeignKey(String name, TableRef table, Map<String, String> columnMapping) {
+        foreignKeys.add(new DefaultForeignKey(
+            Optional.ofNullable(name),
+            table,
+            columnMapping
+        ));
     }
 
     private List<Column> buildColumns() {

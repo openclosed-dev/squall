@@ -18,33 +18,30 @@ package dev.openclosed.squall.core.spec;
 
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.ComponentOrder;
+import dev.openclosed.squall.api.spec.Database;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Schema;
-import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.SpecVisitor;
-import dev.openclosed.squall.api.spec.Table;
 import dev.openclosed.squall.core.base.RecordMapSource;
 
 import java.util.List;
 
-public record SimpleSchema(
+public record DefaultDatabase(
         String name,
-        List<Sequence> sequences,
-        List<Table> tables,
+        List<Schema> schemas,
         List<DocAnnotation> annotations,
         Component.State state
-        ) implements Schema, RecordMapSource {
+        ) implements Database, RecordMapSource {
 
     @Override
     public Type type() {
-        return Type.SCHEMA;
+        return Type.DATABASE;
     }
 
     @Override
     public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal) {
         visitor.visit(this, ordinal);
-        Components.visitOrderedComponents(this.sequences, visitor, order);
-        Components.visitOrderedComponents(this.tables, visitor, order);
+        Components.visitOrderedComponents(this.schemas, visitor, order);
         visitor.leave(this);
     }
 }

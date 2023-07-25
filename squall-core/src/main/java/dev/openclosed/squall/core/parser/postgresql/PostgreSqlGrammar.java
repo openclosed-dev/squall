@@ -74,6 +74,15 @@ interface PostgreSqlGrammar extends SqlGrammar, PostgreSqlPredicates {
     }
 
     @Override
+    default void checkConstraintModifier() {
+        if (next() == PostgreSqlKeyword.NO) {
+            consume();
+            expect(PostgreSqlKeyword.INHERIT);
+            consume();
+        }
+    }
+
+    @Override
     default Expression postfixOperator(Expression operand) {
         Token token = next();
         if (token == OperatorSymbol.DOUBLE_COLON) {

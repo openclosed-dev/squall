@@ -17,28 +17,15 @@
 package dev.openclosed.squall.api.spec;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Primary key constraint.
- * @param name the name of the constraint
- * @param columns the columns composing this primary key
  */
-public record PrimaryKey(String name, List<String> columns) {
+public interface PrimaryKey extends Constraint {
 
-    public PrimaryKey {
-        Objects.requireNonNull(columns);
-        if (columns.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-        columns = List.copyOf(columns);
-    }
+    List<String> columns();
 
-    public boolean containsColumn(String name) {
-        return columns.contains(name);
-    }
+    boolean containsColumn(String name);
 
-    public boolean isComposite() {
-        return columns.size() > 1;
-    }
+    boolean isComposite();
 }

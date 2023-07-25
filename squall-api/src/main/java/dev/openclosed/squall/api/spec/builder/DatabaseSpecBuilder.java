@@ -24,6 +24,7 @@ import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.IntegerDataType;
+import dev.openclosed.squall.api.spec.TableRef;
 
 /**
  * A builder of database specification.
@@ -54,9 +55,15 @@ public interface DatabaseSpecBuilder {
 
     DatabaseSpecBuilder addTableColumn(String name, DataType dataType);
 
-    DatabaseSpecBuilder addTablePrimaryKey(String name, List<String> columnNames);
+    DatabaseSpecBuilder addTablePrimaryKey(String constraintName, List<String> columnNames);
 
-    DatabaseSpecBuilder addTableUniqueConstraint(String name, List<String> columnNames);
+    DatabaseSpecBuilder addTableForeignKey(
+        String constraintName,
+        TableRef table,
+        List<String> columns,
+        List<String> refColumns);
+
+    DatabaseSpecBuilder addTableUniqueConstraint(String constraintName, List<String> columnNames);
 
     // Column
 

@@ -25,7 +25,7 @@ import dev.openclosed.squall.core.base.RecordMapSource;
 import java.util.List;
 import java.util.Optional;
 
-public record SimpleDatabaseSpec(
+public record DefaultDatabaseSpec(
         Optional<String> title,
         List<Database> databases
         ) implements DatabaseSpec, RecordMapSource {

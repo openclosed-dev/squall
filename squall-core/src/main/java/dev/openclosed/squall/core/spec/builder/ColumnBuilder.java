@@ -20,7 +20,7 @@ import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Expression;
-import dev.openclosed.squall.core.spec.SimpleColumn;
+import dev.openclosed.squall.core.spec.DefaultColumn;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +38,7 @@ final class ColumnBuilder extends ComponentBuilder {
     }
 
     Column build() {
-        return new SimpleColumn(
+        return new DefaultColumn(
             name(),
             dataType.typeName(),
             dataType.length(),

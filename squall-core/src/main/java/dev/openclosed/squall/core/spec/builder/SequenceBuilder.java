@@ -19,7 +19,7 @@ package dev.openclosed.squall.core.spec.builder;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.IntegerDataType;
 import dev.openclosed.squall.api.spec.Sequence;
-import dev.openclosed.squall.core.spec.SimpleSequence;
+import dev.openclosed.squall.core.spec.DefaultSequence;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ final class SequenceBuilder extends ComponentBuilder {
         final long min = computeMinValue();
         final long max = computeMaxValue();
         final long start = computeStart(min, max);
-        return new SimpleSequence(name(),
+        return new DefaultSequence(name(),
             dataType.typeName(),
             start,
             this.increment,

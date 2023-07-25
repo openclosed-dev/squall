@@ -19,7 +19,7 @@ package dev.openclosed.squall.core.spec.builder;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Schema;
-import dev.openclosed.squall.core.spec.SimpleSchema;
+import dev.openclosed.squall.core.spec.DefaultSchema;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,7 +41,7 @@ final class SchemaBuilder extends ComponentBuilder {
             .map(SequenceBuilder::build).toList();
         var tables = this.tableBuilders.values().stream()
             .map(TableBuilder::build).toList();
-        return new SimpleSchema(name(), sequences, tables, annotations(), state);
+        return new DefaultSchema(name(), sequences, tables, annotations(), state);
     }
 
     TableBuilder addTable(String name, List<DocAnnotation> annotations) {

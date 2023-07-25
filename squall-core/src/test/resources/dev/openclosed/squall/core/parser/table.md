@@ -1,4 +1,4 @@
-# Create a table
+# create a table
 
 ```sql
 CREATE TABLE products (
@@ -11,31 +11,31 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "columns": [ 
+  "columns": [
     {
       "name": "product_no",
       "dataType": "integer",
       "nullable": true,
       "unique": false
-      
-    }, 
+
+    },
     {
       "name": "name",
       "dataType": "text",
       "nullable": true,
       "unique": false
-    }, 
+    },
     {
       "name": "price",
       "dataType": "numeric",
       "nullable": true,
       "unique": false
-    } 
+    }
   ]
 }
 ```
 
-# Check constraints for column
+# check constraints for column
 
 ```sql
 CREATE TABLE products (
@@ -46,18 +46,18 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "columns": [ 
+  "columns": [
     {
       "name": "price",
       "dataType": "numeric",
       "nullable": true,
       "unique": false
-    } 
+    }
   ]
 }
 ```
 
-# Unique constraint for a column
+# unique constraint for column
 
 ```sql
 CREATE TABLE products (
@@ -68,23 +68,23 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "columns": [ 
+  "columns": [
     {
       "name": "product_no",
       "dataType": "integer",
       "nullable": true,
       "unique": true
-    } 
+    }
   ],
-  "unique": [ 
+  "unique": [
     {
       "columns": [ "product_no" ]
-    } 
+    }
   ]
 }
 ```
 
-# Unique constraint with NULLS NOT DISTINCT for a column
+# unique constraint with NULLS NOT DISTINCT for column
 
 ```sql
 CREATE TABLE products (
@@ -95,23 +95,23 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "columns": [ 
+  "columns": [
     {
       "name": "product_no",
       "dataType": "integer",
       "nullable": true,
       "unique": true
-    } 
+    }
   ],
-  "unique": [ 
+  "unique": [
     {
       "columns": [ "product_no" ]
-    } 
+    }
   ]
 }
 ```
 
-# Primary key constraint for column
+# primary key constraint for column
 
 ```sql
 CREATE TABLE products (
@@ -122,13 +122,13 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "columns": [ 
+  "columns": [
     {
       "name": "product_no",
       "dataType": "integer",
       "nullable": false,
       "unique": true
-    } 
+    }
   ],
   "primaryKey": {
     "columns": [ "product_no" ]
@@ -136,7 +136,7 @@ CREATE TABLE products (
 }
 ```
 
-# Primary key constraint for table
+# primary key constraint for table
 
 ```sql
 CREATE TABLE example (
@@ -150,25 +150,25 @@ CREATE TABLE example (
 ```json
 {
   "name": "example",
-  "columns": [ 
+  "columns": [
     {
       "name": "a",
       "dataType": "integer",
       "nullable": false,
       "unique": false
-    }, 
+    },
     {
       "name": "b",
       "dataType": "integer",
       "nullable": true,
       "unique": false
-    }, 
+    },
     {
       "name": "c",
       "dataType": "integer",
       "nullable": false,
       "unique": false
-    } 
+    }
   ],
   "primaryKey": {
     "columns": [ "a", "c" ]
@@ -176,7 +176,7 @@ CREATE TABLE example (
 }
 ```
 
-# Named primary key constraint for table
+# named primary key constraint for table
 
 ```sql
 CREATE TABLE example (
@@ -190,34 +190,34 @@ CREATE TABLE example (
 ```json
 {
   "name": "example",
-  "columns": [ 
+  "columns": [
     {
       "name": "a",
       "dataType": "integer",
       "nullable": false,
       "unique": false
-    }, 
+    },
     {
       "name": "b",
       "dataType": "integer",
       "nullable": true,
       "unique": false
-    }, 
+    },
     {
       "name": "c",
       "dataType": "integer",
       "nullable": false,
       "unique": false
-    } 
+    }
   ],
   "primaryKey": {
-    "name": "unique_identifier",
+    "constraintName": "unique_identifier",
     "columns": [ "a", "c" ]
   }
 }
 ```
 
-# Unique constraint for a column in table
+# unique constraint for a column in table
 
 ```sql
 CREATE TABLE products (
@@ -231,35 +231,35 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "columns": [ 
+  "columns": [
     {
       "name": "product_no",
       "dataType": "integer",
       "nullable": true,
       "unique": true
-    }, 
+    },
     {
       "name": "name",
       "dataType": "text",
       "nullable": true,
       "unique": false
-    }, 
+    },
     {
       "name": "price",
       "dataType": "numeric",
       "nullable": true,
       "unique": false
-    } 
+    }
   ],
-  "unique" : [ 
+  "unique" : [
     {
       "columns": [ "product_no" ]
-    } 
+    }
   ]
 }
 ```
 
-# Unique constraint for a group of columns in table
+# unique constraint for a group of columns in table
 
 ```sql
 CREATE TABLE products (
@@ -273,13 +273,13 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "columns": [ 
+  "columns": [
     {
       "name": "a",
       "dataType": "integer",
       "nullable": true,
       "unique": false
-    }, 
+    },
     {
       "name": "b",
       "dataType": "integer",
@@ -291,17 +291,17 @@ CREATE TABLE products (
       "dataType": "integer",
       "nullable": true,
       "unique": false
-    } 
+    }
   ],
-  "unique": [ 
+  "unique": [
     {
       "columns": [ "a", "c" ]
-    } 
+    }
   ]
 }
 ```
 
-# Named unique constraint for a column in table
+# named unique constraint for a column in table
 
 ```sql
 CREATE TABLE products (
@@ -315,36 +315,36 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "columns": [ 
+  "columns": [
     {
       "name": "product_no",
       "dataType": "integer",
       "nullable": true,
       "unique": true
-    }, 
+    },
     {
       "name": "name",
       "dataType": "text",
       "nullable": true,
       "unique": false
-    }, 
+    },
     {
       "name": "price",
       "dataType": "numeric",
       "nullable": true,
       "unique": false
-    } 
+    }
   ],
-  "unique": [ 
+  "unique": [
     {
-      "name": "must_be_different",
+      "constraintName": "must_be_different",
       "columns": [ "product_no" ]
-    } 
+    }
   ]
 }
 ```
 
-# Unique constraint with NULLS NOT DISTINCT for a column in table 
+# unique constraint with NULLS NOT DISTINCT for a column in table
 
 ```sql
 CREATE TABLE products (
@@ -358,35 +358,35 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "columns": [ 
+  "columns": [
     {
       "name": "product_no",
       "dataType": "integer",
       "nullable": true,
       "unique": true
-    }, 
+    },
     {
       "name": "name",
       "dataType": "text",
       "nullable": true,
       "unique": false
-    }, 
+    },
     {
       "name": "price",
       "dataType": "numeric",
       "nullable": true,
       "unique": false
-    } 
+    }
   ],
-  "unique": [ 
+  "unique": [
     {
       "columns": [ "product_no" ]
-    } 
+    }
   ]
 }
 ```
 
-# Check constraint for table
+# check constraint for table
 
 ```sql
 CREATE TABLE products (
@@ -400,24 +400,24 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "columns": [ 
+  "columns": [
     {
       "name": "price",
       "dataType": "numeric",
       "nullable": true,
       "unique": false
-    }, 
+    },
     {
       "name": "discounted_price",
       "dataType": "numeric",
       "nullable": true,
       "unique": false
-    } 
+    }
   ]
 }
 ```
 
-# Named check constraint for table
+# named check constraint for table
 
 ```sql
 CREATE TABLE products (
@@ -425,25 +425,234 @@ CREATE TABLE products (
   discounted_price numeric CHECK (discounted_price > 0),
   CONSTRAINT valid_discount CHECK (price > discounted_price)
 );
-
 ```
 
 ```json
 {
   "name": "products",
-  "columns": [ 
+  "columns": [
     {
       "name": "price",
       "dataType": "numeric",
       "nullable": true,
       "unique": false
-    }, 
+    },
     {
       "name": "discounted_price",
       "dataType": "numeric",
       "nullable": true,
       "unique": false
-    } 
+    }
   ]
 }
+```
+
+# foreign key constraint for column
+
+```sql
+CREATE TABLE ta (
+  a integer
+);
+
+CREATE TABLE tb (
+  b integer REFERENCES ta(a)
+);
+```
+
+```json
+[
+  {
+    "name": "ta",
+    "columns": [
+      {
+        "name": "a",
+        "dataType": "integer",
+        "nullable": true,
+        "unique": false
+      }
+    ]
+  },
+  {
+    "name": "tb",
+    "columns": [
+      {
+        "name": "b",
+        "dataType": "integer",
+        "nullable": true,
+        "unique": false
+      }
+    ],
+    "foreignKeys": [
+      {
+        "schemaName": "public",
+        "tableName": "ta",
+        "columnMapping": {
+          "b": "a"
+        }
+      }
+    ]
+  }
+]
+```
+
+# foreign key constraint for table
+
+```sql
+CREATE TABLE ta (
+  a1 integer,
+  a2 integer
+);
+
+CREATE TABLE tb (
+  b1 integer,
+  b2 integer,
+  FOREIGN KEY(b1, b2) REFERENCES ta(a1, a2)
+);
+```
+
+```json
+[
+  {
+    "name": "ta",
+    "columns": [
+      {
+        "name": "a1",
+        "dataType": "integer",
+        "nullable": true,
+        "unique": false
+      },
+      {
+        "name": "a2",
+        "dataType": "integer",
+        "nullable": true,
+        "unique": false
+      }
+    ]
+  },
+  {
+    "name": "tb",
+    "columns": [
+      {
+        "name": "b1",
+        "dataType": "integer",
+        "nullable": true,
+        "unique": false
+      },
+      {
+        "name": "b2",
+        "dataType": "integer",
+        "nullable": true,
+        "unique": false
+      }
+    ],
+    "foreignKeys": [
+      {
+        "schemaName": "public",
+        "tableName": "ta",
+        "columnMapping": {
+          "b1": "a1",
+          "b2": "a2"
+        }
+      }
+    ]
+  }
+]
+```
+
+# foreign key with ON DELETE CASCADE
+
+```sql
+CREATE TABLE ta (
+  a integer
+);
+
+CREATE TABLE tb (
+  b integer,
+  FOREIGN KEY(b) REFERENCES ta(a) ON DELETE CASCADE
+);
+```
+
+```json
+[
+  {
+    "name": "ta",
+    "columns": [
+      {
+        "name": "a",
+        "dataType": "integer",
+        "nullable": true,
+        "unique": false
+      }
+    ]
+  },
+  {
+    "name": "tb",
+    "columns": [
+      {
+        "name": "b",
+        "dataType": "integer",
+        "nullable": true,
+        "unique": false
+      }
+    ],
+    "foreignKeys": [
+      {
+        "schemaName": "public",
+        "tableName": "ta",
+        "columnMapping": {
+          "b": "a"
+        }
+      }
+    ]
+  }
+]
+```
+
+# foreign key with ON DELETE SET NULL
+
+```sql
+CREATE TABLE ta (
+  a integer
+);
+
+CREATE TABLE tb (
+  b integer,
+  FOREIGN KEY(b) REFERENCES ta(a) ON DELETE SET NULL
+);
+```
+
+```json
+[
+  {
+    "name": "ta",
+    "columns": [
+      {
+        "name": "a",
+        "dataType": "integer",
+        "nullable": true,
+        "unique": false
+      }
+    ]
+  },
+  {
+    "name": "tb",
+    "columns": [
+      {
+        "name": "b",
+        "dataType": "integer",
+        "nullable": true,
+        "unique": false
+      }
+    ],
+    "foreignKeys": [
+      {
+        "schemaName": "public",
+        "tableName": "ta",
+        "columnMapping": {
+          "b": "a"
+        }
+      }
+    ]
+  }
+]
 ```

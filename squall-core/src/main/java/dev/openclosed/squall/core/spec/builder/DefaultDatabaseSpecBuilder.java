@@ -30,8 +30,9 @@ import dev.openclosed.squall.api.spec.Component.State;
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.IntegerDataType;
+import dev.openclosed.squall.api.spec.TableRef;
 import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
-import dev.openclosed.squall.core.spec.SimpleDatabaseSpec;
+import dev.openclosed.squall.core.spec.DefaultDatabaseSpec;
 
 /**
  * The default implementation of {@link DatabaseSpecBuilder}.
@@ -110,14 +111,33 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder addTablePrimaryKey(String name, List<String> columnNames) {
-        requireCurrentTable().setPrimaryKey(name, columnNames);
+    public DatabaseSpecBuilder addTablePrimaryKey(String constraintName, List<String> columnNames) {
+        requireCurrentTable().setPrimaryKey(constraintName, columnNames);
         return this;
     }
 
     @Override
-    public DatabaseSpecBuilder addTableUniqueConstraint(String name, List<String> columnNames) {
-        requireCurrentTable().addUnique(name, columnNames);
+    public DatabaseSpecBuilder addTableForeignKey(
+        String constraintName,
+        TableRef table,
+        List<String> columns,
+        List<String> refColumns) {
+
+        Objects.requireNonNull(table);
+        Objects.requireNonNull(columns);
+
+        var columnMapping = new LinkedHashMap<String, String>();
+        for (int i = 0; i < columns.size(); i++) {
+            columnMapping.put(columns.get(i), refColumns.get(i));
+        }
+        requireCurrentTable().addForeignKey(constraintName, table, columnMapping);
+        return this;
+    }
+
+    @Override
+    public DatabaseSpecBuilder addTableUniqueConstraint(
+        String constraintName, List<String> columnNames) {
+        requireCurrentTable().addUnique(constraintName, columnNames);
         return this;
     }
 
@@ -191,7 +211,7 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     public DatabaseSpec build() {
         var databases = this.databaseBuilders.values().stream()
                 .map(DatabaseBuilder::build).toList();
-        return new SimpleDatabaseSpec(
+        return new DefaultDatabaseSpec(
                 Optional.ofNullable(title), databases);
     }
 

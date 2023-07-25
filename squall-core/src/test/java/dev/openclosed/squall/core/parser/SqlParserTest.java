@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 import dev.openclosed.squall.api.parser.SqlSyntaxException;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.spec.Table;
 import dev.openclosed.squall.api.spi.JsonWriter;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -230,12 +231,18 @@ public abstract class SqlParserTest {
     protected final void testTable(SqlTestCase test) {
         sqlParser.parse(test.firstSql());
         var spec = builder.build();
-        var table = spec
+        List<Table> tables = spec
                 .databases().iterator().next()
                 .schemas().iterator().next()
-                .tables().iterator().next();
+                .tables();
 
-        assertThat(table.toMap()).isEqualTo(test.jsonAsMap());
+        if (tables.size() > 1) {
+            var maps = tables.stream().map(Table::toMap).toList();
+            assertThat(maps).isEqualTo(test.jsonAsMaps());
+        } else {
+            Table table = tables.iterator().next();
+            assertThat(table.toMap()).isEqualTo(test.jsonAsMap());
+        }
     }
 
     protected final void testColumn(SqlTestCase test) {

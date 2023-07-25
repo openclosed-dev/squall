@@ -19,6 +19,7 @@ package dev.openclosed.squall.core.parser;
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.IntegerDataType;
+import dev.openclosed.squall.api.spec.TableRef;
 import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 
 import java.util.List;
@@ -50,6 +51,12 @@ public interface BuildingSqlHandler extends SqlHandler {
     @Override
     default void handleTablePrimaryKey(String constraintName, List<String> columns) {
         builder().addTablePrimaryKey(constraintName, columns);
+    }
+
+    @Override
+    default void handleTableForeignKey(
+        String constraintName, TableRef table, List<String> columns, List<String> refColumns) {
+        builder().addTableForeignKey(constraintName, table, columns, refColumns);
     }
 
     @Override

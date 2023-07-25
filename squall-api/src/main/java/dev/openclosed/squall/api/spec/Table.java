@@ -30,6 +30,8 @@ public non-sealed interface Table extends Component {
 
     Optional<PrimaryKey> primaryKey();
 
+    List<ForeignKey> foreignKeys();
+
     List<Unique> unique();
 
     boolean hasColumns();

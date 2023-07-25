@@ -16,31 +16,42 @@
 
 package dev.openclosed.squall.core.spec;
 
-import dev.openclosed.squall.api.spec.ComponentOrder;
+import dev.openclosed.squall.api.spec.Component;
+import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.DocAnnotation;
-import dev.openclosed.squall.api.spec.Sequence;
-import dev.openclosed.squall.api.spec.SpecVisitor;
+import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.core.base.RecordMapSource;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 
-public record SimpleSequence(
-    String name,
-    String dataType,
-    long start,
-    long increment,
-    long maxValue,
-    long minValue,
-    List<DocAnnotation> annotations) implements Sequence, RecordMapSource {
+/**
+ * A column in table.
+ * @param name
+ * @param dataType
+ * @param length
+ * @param precision
+ * @param scale
+ * @param nullable
+ * @param unique
+ * @param defaultValue the default value for this column
+ * @param annotations
+ */
+public record DefaultColumn(
+        String name,
+        String dataType,
+        OptionalInt length,
+        OptionalInt precision,
+        OptionalInt scale,
+        boolean nullable,
+        boolean unique,
+        Optional<Expression> defaultValue,
+        List<DocAnnotation> annotations
+        ) implements Column, RecordMapSource {
 
     @Override
     public Type type() {
-        return Type.SEQUENCE;
-    }
-
-    @Override
-    public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal) {
-        visitor.visit(this, ordinal);
-        visitor.leave(this);
+        return Component.Type.COLUMN;
     }
 }

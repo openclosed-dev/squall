@@ -19,6 +19,7 @@ package dev.openclosed.squall.core.parser;
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.IntegerDataType;
+import dev.openclosed.squall.api.spec.TableRef;
 
 import java.util.List;
 
@@ -39,7 +40,14 @@ public interface SqlHandler {
     default void handleTablePrimaryKey(String constraintName, List<String> columns) {
     }
 
+    default void handleTableForeignKey(
+        String constraintName, TableRef table, List<String> columns, List<String> refColumns) {
+    }
+
     default void handleTableUniqueConstraint(String constraintName, List<String> columns) {
+    }
+
+    default void handleCheckConstraint(String constraintName, Expression expression) {
     }
 
     default void handleColumn(String name, DataType dataType) {

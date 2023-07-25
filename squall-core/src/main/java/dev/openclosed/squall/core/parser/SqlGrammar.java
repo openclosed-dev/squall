@@ -18,6 +18,7 @@ package dev.openclosed.squall.core.parser;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +26,7 @@ import java.util.Set;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.IntegerDataType;
+import dev.openclosed.squall.api.spec.TableRef;
 import dev.openclosed.squall.core.spec.StandardDataType;
 import dev.openclosed.squall.core.spec.expression.Expressions;
 
@@ -253,13 +255,14 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
     default void addTableConstraint() {
         expect(StandardKeyword.ADD);
         consume();
-        String constraintName = constraintName();
+        String constraintName = constraintNameOrNull();
         Token token = next();
         if (token instanceof Keyword keyword) {
             switch (keyword.standard()) {
                 case CHECK -> checkConstraint(constraintName);
                 case PRIMARY -> tablePrimaryKey(constraintName);
                 case UNIQUE -> tableUniqueConstraint(constraintName);
+                case FOREIGN -> tableForeignKey(constraintName);
                 default -> {
                 }
             }
@@ -296,12 +299,12 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
     }
 
     default void tableComponent() {
-        String constraintName = constraintName();
+        String constraintName = constraintNameOrNull();
         var token = next();
         if (next() instanceof Keyword keyword) {
             switch (keyword.standard()) {
                 case CHECK -> {
-                    checkConstraint(constraintName);
+                    tableCheckConstraint(constraintName);
                     return;
                 }
                 case PRIMARY -> {
@@ -310,6 +313,10 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
                 }
                 case UNIQUE -> {
                     tableUniqueConstraint(constraintName);
+                    return;
+                }
+                case FOREIGN -> {
+                    tableForeignKey(constraintName);
                     return;
                 }
                 default -> { }
@@ -323,7 +330,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         }
     }
 
-    default String constraintName() {
+    default String constraintNameOrNull() {
         if (next().isSameAs(StandardKeyword.CONSTRAINT)) {
             consume();
             String constraintName = expectIdentifier(IdentifierType.OBJECT_NAME);
@@ -334,12 +341,17 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         }
     }
 
+    default void tableCheckConstraint(String constraintName) {
+        checkConstraint(constraintName);
+    }
+
     default void tablePrimaryKey(String constraintName) {
         expect(StandardKeyword.PRIMARY);
         consume();
         expect(StandardKeyword.KEY);
         consume();
         var columns = columnNameList();
+        commonConstraintModifiers();
         handleTablePrimaryKey(constraintName, columns);
     }
 
@@ -350,7 +362,99 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
             nullsDistinct();
         }
         var columns = columnNameList();
+        commonConstraintModifiers();
         handleTableUniqueConstraint(constraintName, columns);
+    }
+
+    default void tableForeignKey(String constraintName) {
+        expect(StandardKeyword.FOREIGN);
+        consume();
+        expect(StandardKeyword.KEY);
+        consume();
+        var columns = columnNameList();
+        references(constraintName, columns);
+    }
+
+    default void commonConstraintModifiers() {
+        var token = next();
+        while (token instanceof Keyword keyword) {
+            switch (keyword.standard()) {
+                case DEFERRABLE -> consume();
+                case NOT -> {
+                    consume();
+                    expect(StandardKeyword.DEFERRABLE);
+                    consume();
+                }
+                case INITIALLY -> {
+                    consume();
+                    keyword = expectKeyword();
+                    switch (keyword.standard()) {
+                        case DEFERRED, IMMEDIATE -> {
+                            consume();
+                        }
+                        default -> syntaxError(keyword);
+                    }
+                }
+                default -> {
+                    return;
+                }
+            }
+            token = next();
+        }
+    }
+
+    default void match() {
+        expect(StandardKeyword.MATCH);
+        consume();
+        var keyword = expectKeyword();
+        switch (keyword.standard()) {
+            case FULL, PARTIAL, SIMPLE -> {
+                consume();
+            }
+            default -> syntaxError(keyword);
+        }
+    }
+
+    default void foreignKeyEvent() {
+        expect(StandardKeyword.ON);
+        consume();
+        var keyword = expectKeyword();
+        switch (keyword.standard()) {
+            case DELETE, UPDATE -> referentialAction();
+            default -> syntaxError(keyword);
+        }
+    }
+
+    default void referentialAction() {
+        consume();
+        var keyword = expectKeyword();
+        switch (keyword.standard()) {
+            case NO -> {
+                consume();
+                expect(StandardKeyword.ACTION);
+                consume();
+            }
+            case RESTRICT -> {
+                consume();
+            }
+            case CASCADE -> {
+                consume();
+            }
+            case SET -> {
+                consume();
+                keyword = expectKeyword();
+                switch (keyword.standard()) {
+                    case NULL, DEFAULT -> {
+                        consume();
+                        if (next() == SpecialSymbol.OPEN_PAREN) {
+                            columnNameList();
+                        }
+                    }
+                    default -> syntaxError(keyword);
+                }
+            }
+            default -> syntaxError(keyword);
+        }
     }
 
     default List<String> columnNameList() {
@@ -365,6 +469,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
             consume();
         }
         expect(SpecialSymbol.CLOSE_PAREN);
+        consume();
         return columns;
     }
 
@@ -406,26 +511,30 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         Keyword keyword = expectKeyword();
         switch (keyword.standard()) {
             case CHECK -> {
-                checkConstraint(null);
+                checkConstraint(constraintName);
             }
             case DEFAULT -> {
                 consume();
+                commonConstraintModifiers();
                 handleColumnDefaultValue(expression());
             }
             case NOT -> {
                 consume();
                 expect(StandardKeyword.NULL);
                 consume();
+                commonConstraintModifiers();
                 handleColumnNullable(false);
             }
             case NULL -> {
                 consume();
+                commonConstraintModifiers();
                 handleColumnNullable(true);
             }
             case PRIMARY -> {
                 consume();
                 expect(StandardKeyword.KEY);
                 consume();
+                commonConstraintModifiers();
                 handleTablePrimaryKey(constraintName, List.of(columnName));
             }
             case UNIQUE -> {
@@ -433,13 +542,53 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
                 if (next().isSameAs(StandardKeyword.NULLS)) {
                     nullsDistinct();
                 }
+                commonConstraintModifiers();
                 handleTableUniqueConstraint(constraintName, List.of(columnName));
             }
+            case REFERENCES -> references(constraintName, List.of(columnName));
             default -> {
                 // keyword may be UNDEFINED
                 syntaxError(token);
             }
         }
+    }
+
+    default void references(String constraintName, List<String> columns) {
+        expect(StandardKeyword.REFERENCES);
+        consume();
+        TableRef tableRef = tableReference();
+        List<String> refColumns = Collections.emptyList();
+        if (next() == SpecialSymbol.OPEN_PAREN) {
+            refColumns = columnNameList();
+        }
+        var token = next();
+        while (token.isKeyword()) {
+            if (token.isSameAs(StandardKeyword.MATCH)) {
+                match();
+            } else if (token.isSameAs(StandardKeyword.ON)) {
+                foreignKeyEvent();
+            } else {
+                break;
+            }
+            token = next();
+        }
+        commonConstraintModifiers();
+        handleTableForeignKey(constraintName, tableRef, columns, refColumns);
+    }
+
+    default TableRef tableReference() {
+        String firstPart;
+        String secondPart = expectIdentifier(IdentifierType.OBJECT_NAME);
+        consume();
+        if (next() == SpecialSymbol.PERIOD) {
+            consume();
+            firstPart = secondPart;
+            secondPart = expectIdentifier(IdentifierType.OBJECT_NAME);
+            consume();
+        } else {
+            firstPart = config().getDefaultSchema();
+        }
+        return TableRef.tableInSchema(secondPart, firstPart);
     }
 
     default boolean nullsDistinct() {
@@ -692,18 +841,26 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
 
     /**
      * Parses check constraint.
-     * @param name the name of the constraint, can be {@code null}
+     * @param constraintName the name of the constraint, can be {@code null}
      */
-    default void checkConstraint(String name) {
+    default void checkConstraint(String constraintName) {
         expect(StandardKeyword.CHECK);
         consume();
         expect(SpecialSymbol.OPEN_PAREN);
         consume();
 
-        expression();
+        Expression expression = expression();
 
         expect(SpecialSymbol.CLOSE_PAREN);
         consume();
+
+        checkConstraintModifier();
+        commonConstraintModifiers();
+
+        handleCheckConstraint(constraintName, expression);
+    }
+
+    default void checkConstraintModifier() {
     }
 
     default Expression expression(int precedence) {
