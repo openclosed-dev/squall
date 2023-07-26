@@ -14,22 +14,15 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "product_no",
-      "dataType": "integer",
-      "nullable": true,
-      "unique": false
-
+      "dataType": "integer"
     },
     {
       "name": "name",
-      "dataType": "text",
-      "nullable": true,
-      "unique": false
+      "dataType": "text"
     },
     {
       "name": "price",
-      "dataType": "numeric",
-      "nullable": true,
-      "unique": false
+      "dataType": "numeric"
     }
   ]
 }
@@ -49,9 +42,7 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "price",
-      "dataType": "numeric",
-      "nullable": true,
-      "unique": false
+      "dataType": "numeric"
     }
   ]
 }
@@ -72,8 +63,7 @@ CREATE TABLE products (
     {
       "name": "product_no",
       "dataType": "integer",
-      "nullable": true,
-      "unique": true
+      "isUnique": true
     }
   ],
   "unique": [
@@ -99,8 +89,7 @@ CREATE TABLE products (
     {
       "name": "product_no",
       "dataType": "integer",
-      "nullable": true,
-      "unique": true
+      "isUnique": true
     }
   ],
   "unique": [
@@ -126,8 +115,9 @@ CREATE TABLE products (
     {
       "name": "product_no",
       "dataType": "integer",
-      "nullable": false,
-      "unique": true
+      "isRequired": true,
+      "isPrimaryKey": true,
+      "isUnique": true
     }
   ],
   "primaryKey": {
@@ -154,20 +144,18 @@ CREATE TABLE example (
     {
       "name": "a",
       "dataType": "integer",
-      "nullable": false,
-      "unique": false
+      "isPrimaryKey": true,
+      "isRequired": true
     },
     {
       "name": "b",
-      "dataType": "integer",
-      "nullable": true,
-      "unique": false
+      "dataType": "integer"
     },
     {
       "name": "c",
       "dataType": "integer",
-      "nullable": false,
-      "unique": false
+      "isPrimaryKey": true,
+      "isRequired": true
     }
   ],
   "primaryKey": {
@@ -194,20 +182,18 @@ CREATE TABLE example (
     {
       "name": "a",
       "dataType": "integer",
-      "nullable": false,
-      "unique": false
+      "isRequired": true,
+      "isPrimaryKey": true
     },
     {
       "name": "b",
-      "dataType": "integer",
-      "nullable": true,
-      "unique": false
+      "dataType": "integer"
     },
     {
       "name": "c",
       "dataType": "integer",
-      "nullable": false,
-      "unique": false
+      "isRequired": true,
+      "isPrimaryKey": true
     }
   ],
   "primaryKey": {
@@ -235,20 +221,15 @@ CREATE TABLE products (
     {
       "name": "product_no",
       "dataType": "integer",
-      "nullable": true,
-      "unique": true
+      "isUnique": true
     },
     {
       "name": "name",
-      "dataType": "text",
-      "nullable": true,
-      "unique": false
+      "dataType": "text"
     },
     {
       "name": "price",
-      "dataType": "numeric",
-      "nullable": true,
-      "unique": false
+      "dataType": "numeric"
     }
   ],
   "unique" : [
@@ -276,21 +257,15 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "a",
-      "dataType": "integer",
-      "nullable": true,
-      "unique": false
+      "dataType": "integer"
     },
     {
       "name": "b",
-      "dataType": "integer",
-      "nullable": true,
-      "unique": false
+      "dataType": "integer"
     },
     {
       "name": "c",
-      "dataType": "integer",
-      "nullable": true,
-      "unique": false
+      "dataType": "integer"
     }
   ],
   "unique": [
@@ -319,20 +294,15 @@ CREATE TABLE products (
     {
       "name": "product_no",
       "dataType": "integer",
-      "nullable": true,
-      "unique": true
+      "isUnique": true
     },
     {
       "name": "name",
-      "dataType": "text",
-      "nullable": true,
-      "unique": false
+      "dataType": "text"
     },
     {
       "name": "price",
-      "dataType": "numeric",
-      "nullable": true,
-      "unique": false
+      "dataType": "numeric"
     }
   ],
   "unique": [
@@ -362,20 +332,15 @@ CREATE TABLE products (
     {
       "name": "product_no",
       "dataType": "integer",
-      "nullable": true,
-      "unique": true
+      "isUnique": true
     },
     {
       "name": "name",
-      "dataType": "text",
-      "nullable": true,
-      "unique": false
+      "dataType": "text"
     },
     {
       "name": "price",
-      "dataType": "numeric",
-      "nullable": true,
-      "unique": false
+      "dataType": "numeric"
     }
   ],
   "unique": [
@@ -403,15 +368,11 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "price",
-      "dataType": "numeric",
-      "nullable": true,
-      "unique": false
+      "dataType": "numeric"
     },
     {
       "name": "discounted_price",
-      "dataType": "numeric",
-      "nullable": true,
-      "unique": false
+      "dataType": "numeric"
     }
   ]
 }
@@ -433,15 +394,11 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "price",
-      "dataType": "numeric",
-      "nullable": true,
-      "unique": false
+      "dataType": "numeric"
     },
     {
       "name": "discounted_price",
-      "dataType": "numeric",
-      "nullable": true,
-      "unique": false
+      "dataType": "numeric"
     }
   ]
 }
@@ -466,9 +423,7 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "a",
-        "dataType": "integer",
-        "nullable": true,
-        "unique": false
+        "dataType": "integer"
       }
     ]
   },
@@ -477,9 +432,7 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "b",
-        "dataType": "integer",
-        "nullable": true,
-        "unique": false
+        "dataType": "integer"
       }
     ],
     "foreignKeys": [
@@ -517,15 +470,11 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "a1",
-        "dataType": "integer",
-        "nullable": true,
-        "unique": false
+        "dataType": "integer"
       },
       {
         "name": "a2",
-        "dataType": "integer",
-        "nullable": true,
-        "unique": false
+        "dataType": "integer"
       }
     ]
   },
@@ -534,15 +483,11 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "b1",
-        "dataType": "integer",
-        "nullable": true,
-        "unique": false
+        "dataType": "integer"
       },
       {
         "name": "b2",
-        "dataType": "integer",
-        "nullable": true,
-        "unique": false
+        "dataType": "integer"
       }
     ],
     "foreignKeys": [
@@ -579,9 +524,7 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "a",
-        "dataType": "integer",
-        "nullable": true,
-        "unique": false
+        "dataType": "integer"
       }
     ]
   },
@@ -590,9 +533,7 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "b",
-        "dataType": "integer",
-        "nullable": true,
-        "unique": false
+        "dataType": "integer"
       }
     ],
     "foreignKeys": [
@@ -628,9 +569,7 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "a",
-        "dataType": "integer",
-        "nullable": true,
-        "unique": false
+        "dataType": "integer"
       }
     ]
   },
@@ -639,9 +578,7 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "b",
-        "dataType": "integer",
-        "nullable": true,
-        "unique": false
+        "dataType": "integer"
       }
     ],
     "foreignKeys": [

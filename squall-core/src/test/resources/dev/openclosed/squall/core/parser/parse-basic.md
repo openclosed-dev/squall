@@ -4,7 +4,7 @@
 ```
 
 ```json
-{ 
+{
 }
 ```
 
@@ -19,11 +19,11 @@ CREATE TABLE example(
 
 ```json
 {
-  "databases" : [ 
+  "databases" : [
     {
       "name": "",
       "state": "undefined",
-      "schemas" : [ 
+      "schemas" : [
         {
           "name" : "public",
           "state": "undefined",
@@ -33,22 +33,18 @@ CREATE TABLE example(
               "columns": [
                 {
                   "name": "a",
-                  "dataType": "integer",
-                  "nullable": true,
-                  "unique": false
+                  "dataType": "integer"
                 },
                 {
                   "name": "b",
-                  "dataType": "integer",
-                  "nullable": true,
-                  "unique": false
+                  "dataType": "integer"
                 }
               ]
             }
           ]
-        } 
+        }
       ]
-    } 
+    }
   ]
 }
 ```
@@ -67,11 +63,11 @@ CREATE TABLE example(
 
 ```json
 {
-  "databases" : [ 
+  "databases" : [
     {
       "name": "",
       "state": "undefined",
-      "schemas" : [ 
+      "schemas" : [
         {
           "name" : "public",
           "state": "undefined",
@@ -81,22 +77,18 @@ CREATE TABLE example(
               "columns": [
                 {
                   "name": "a",
-                  "dataType": "integer",
-                  "nullable": true,
-                  "unique": false
+                  "dataType": "integer"
                 },
                 {
                   "name": "b",
-                  "dataType": "integer",
-                  "nullable": true,
-                  "unique": false
+                  "dataType": "integer"
                 }
               ]
             }
           ]
-        } 
+        }
       ]
-    } 
+    }
   ]
 }
 ```
@@ -117,11 +109,11 @@ CREATE TABLE table2(
 
 ```json
 {
-  "databases" : [ 
+  "databases" : [
     {
       "name": "",
       "state": "undefined",
-      "schemas" : [ 
+      "schemas" : [
         {
           "name" : "public",
           "state": "undefined",
@@ -131,9 +123,7 @@ CREATE TABLE table2(
               "columns": [
                 {
                   "name": "a",
-                  "dataType": "integer",
-                  "nullable": true,
-                  "unique": false
+                  "dataType": "integer"
                 }
               ]
             },
@@ -142,16 +132,14 @@ CREATE TABLE table2(
               "columns": [
                 {
                   "name": "b",
-                  "dataType": "integer",
-                  "nullable": true,
-                  "unique": false
+                  "dataType": "integer"
                 }
               ]
             }
           ]
-        } 
+        }
       ]
-    } 
+    }
   ]
 }
 ```

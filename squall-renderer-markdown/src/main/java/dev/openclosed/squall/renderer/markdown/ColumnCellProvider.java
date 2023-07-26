@@ -35,7 +35,7 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
         public String getValue(Column column, Table table, int ordinal) {
             var sb = new StringBuilder();
             sb.append('`').append(column.name()).append('`');
-            if (table.containsColumnInPrimaryKey(column.name())) {
+            if (column.isPrimaryKey()) {
                 sb.append(' ').append(KEY_MARK);
             }
             return sb.toString();
@@ -83,19 +83,19 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     NULLABLE(ALIGN_CENTER) {
         @Override
         public String getValue(Column column, Table table, int ordinal) {
-            return column.nullable() ? CHECK_MARK : "-";
+            return column.isNullable() ? CHECK_MARK : "-";
         }
     },
     REQUIRED(ALIGN_CENTER) {
         @Override
         public String getValue(Column column, Table table, int ordinal) {
-            return column.nullable() ? "-" : CHECK_MARK;
+            return column.isRequired() ? CHECK_MARK : "-";
         }
     },
     UNIQUE(ALIGN_CENTER) {
         @Override
         public String getValue(Column column, Table table, int ordinal) {
-            return column.unique() ? CHECK_MARK : "-";
+            return column.isUnique() ? CHECK_MARK : "-";
         }
     },
     DEFAULT_VALUE(ALIGN_LEFT) {

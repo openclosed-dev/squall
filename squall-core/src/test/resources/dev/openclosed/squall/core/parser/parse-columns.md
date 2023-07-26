@@ -13,9 +13,7 @@ CREATE TABLE example (
   "defaultValue" : {
     "type": "number",
     "value": "9.99"
-  },
-  "nullable": true,
-  "unique": false
+  }
 }
 ```
 
@@ -34,9 +32,7 @@ CREATE TABLE example (
   "defaultValue" : {
     "type": "string",
     "value": "hello world"
-  },
-  "nullable": true,
-  "unique": false
+  }
 }
 ```
 
@@ -55,9 +51,7 @@ CREATE TABLE example (
   "defaultValue" : {
     "type": "string",
     "value": ""
-  },
-  "nullable": true,
-  "unique": false
+  }
 }
 ```
 
@@ -76,9 +70,7 @@ CREATE TABLE example (
   "defaultValue": {
     "type": "bit_string",
     "value":"1001"
-  },
-  "nullable": true,
-  "unique": false
+  }
 }
 ```
 
@@ -97,9 +89,7 @@ CREATE TABLE example (
   "defaultValue" : {
     "type": "boolean",
     "value": "true"
-  },
-  "nullable": true,
-  "unique": false
+  }
 }
 ```
 
@@ -118,9 +108,7 @@ CREATE TABLE example (
   "defaultValue" : {
     "type": "boolean",
     "value": "false"
-  },
-  "nullable": true,
-  "unique": false
+  }
 }
 ```
 
@@ -139,9 +127,7 @@ CREATE TABLE example (
   "defaultValue" : {
     "type": "function",
     "name": "CURRENT_TIMESTAMP"
-  },
-  "nullable": true,
-  "unique": false
+  }
 }
 ```
 
@@ -159,9 +145,7 @@ CREATE TABLE example (
   "dataType" : "character varying",
   "defaultValue" : {
     "type": "null"
-  },
-  "nullable": true,
-  "unique": false
+  }
 }
 ```
 
@@ -177,8 +161,7 @@ CREATE TABLE example (
 {
   "name" : "a",
   "dataType" : "integer",
-  "nullable" : false,
-  "unique": false
+  "isRequired": true
 }
 ```
 
@@ -193,9 +176,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "text",
-  "nullable" : true,
-  "unique": false
+  "dataType" : "text"
 }
 ```
 
@@ -215,7 +196,6 @@ CREATE TABLE example (
     "type": "number",
     "value": "9.99"
   },
-  "nullable": false,
-  "unique": false
+  "isRequired": true
 }
 ```

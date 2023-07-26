@@ -121,6 +121,8 @@ final class RecordMapper {
     private static boolean shouldInclude(Object value) {
         if (value == null) {
             return false;
+        } else if (Boolean.FALSE.equals(value)) {
+            return false;
         } else if (value instanceof Collection<?> collection) {
             return !collection.isEmpty();
         }

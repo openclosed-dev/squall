@@ -94,7 +94,8 @@ final class TableBuilder extends ComponentBuilder {
         for (var column : primaryKey.columns()) {
             var builder = this.columns.get(column);
             if (builder != null) {
-                builder.setNullable(false);
+                builder.setPrimaryKey(true);
+                builder.setRequired(true);
             }
         }
         if (!primaryKey.isComposite()) {

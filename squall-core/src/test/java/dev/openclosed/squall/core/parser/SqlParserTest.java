@@ -278,8 +278,6 @@ public abstract class SqlParserTest {
                 .columns().iterator().next();
 
         var actual = column.toMap();
-        actual.remove("nullable");
-        actual.remove("unique");
 
         assertThat(actual).isEqualTo(test.jsonAsMap());
     }

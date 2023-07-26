@@ -28,8 +28,9 @@ import java.util.Optional;
 final class ColumnBuilder extends ComponentBuilder {
 
     private final DataType dataType;
-    private boolean nullable = true;
-    private boolean unique = false;
+    private boolean isPrimaryKey = false;
+    private boolean isRequired = false;
+    private boolean isUnique = false;
     private Expression defaultValue;
 
     ColumnBuilder(String name, DataType dataType, List<DocAnnotation> annotations) {
@@ -44,21 +45,29 @@ final class ColumnBuilder extends ComponentBuilder {
             dataType.length(),
             dataType.precision(),
             dataType.scale(),
-            nullable,
-            unique,
+            isRequired,
+            isPrimaryKey,
+            isUnique,
             Optional.ofNullable(defaultValue),
             annotations());
     }
 
-    void setNullable(boolean nullable) {
-        this.nullable = nullable;
+    void setPrimaryKey(boolean isPrimaryKey) {
+        this.isPrimaryKey = isPrimaryKey;
+        this.isRequired = true;
+    }
+
+    void setRequired(boolean isRequired) {
+        if (!isPrimaryKey) {
+            this.isRequired = isRequired;
+        }
+    }
+
+    void setUnique(boolean isUnique) {
+        this.isUnique = isUnique;
     }
 
     void setDefaultValue(Expression defaultValue) {
         this.defaultValue = defaultValue;
-    }
-
-    void setUnique(boolean unique) {
-        this.unique = unique;
     }
 }

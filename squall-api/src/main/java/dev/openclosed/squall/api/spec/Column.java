@@ -37,9 +37,15 @@ public non-sealed interface Column extends Component {
 
     OptionalInt scale();
 
-    boolean nullable();
+    boolean isRequired();
 
-    boolean unique();
+    default boolean isNullable() {
+        return !isRequired();
+    }
+
+    boolean isPrimaryKey();
+
+    boolean isUnique();
 
     Optional<Expression> defaultValue();
 }

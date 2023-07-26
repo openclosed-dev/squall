@@ -143,7 +143,7 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
 
     @Override
     public DatabaseSpecBuilder addColumnNullable(boolean isNullable) {
-        requireCurrentColumn().setNullable(isNullable);
+        requireCurrentColumn().setRequired(!isNullable);
         return this;
     }
 
