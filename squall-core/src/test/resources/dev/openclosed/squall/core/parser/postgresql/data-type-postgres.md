@@ -9,7 +9,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "smallserial"
+  "typeName" : "smallserial"
 }
 ```
 
@@ -24,7 +24,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "serial"
+  "typeName" : "serial"
 }
 ```
 
@@ -39,7 +39,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "bigserial"
+  "typeName" : "bigserial"
 }
 ```
 
@@ -54,7 +54,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "bytea"
+  "typeName" : "bytea"
 }
 ```
 
@@ -69,7 +69,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "uuid"
+  "typeName" : "uuid"
 }
 ```
 
@@ -84,7 +84,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "money"
+  "typeName" : "money"
 }
 ```
 
@@ -99,7 +99,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "timestamptz"
+  "typeName" : "timestamptz"
 }
 ```
 
@@ -114,7 +114,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "json"
+  "typeName" : "json"
 }
 ```
 
@@ -129,6 +129,6 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "jsonb"
+  "typeName" : "jsonb"
 }
 ```

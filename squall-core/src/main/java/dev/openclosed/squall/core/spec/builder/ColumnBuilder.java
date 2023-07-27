@@ -20,6 +20,7 @@ import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.spec.Typecast;
 import dev.openclosed.squall.core.spec.DefaultColumn;
 
 import java.util.List;
@@ -39,6 +40,7 @@ final class ColumnBuilder extends ComponentBuilder {
     }
 
     Column build() {
+        var simplifiedValue = simplifyDefaultValue(this.defaultValue, this.dataType);
         return new DefaultColumn(
             name(),
             dataType.typeName(),
@@ -48,7 +50,7 @@ final class ColumnBuilder extends ComponentBuilder {
             isRequired,
             isPrimaryKey,
             isUnique,
-            Optional.ofNullable(defaultValue),
+            Optional.ofNullable(simplifiedValue),
             annotations());
     }
 
@@ -67,7 +69,27 @@ final class ColumnBuilder extends ComponentBuilder {
         this.isUnique = isUnique;
     }
 
-    void setDefaultValue(Expression defaultValue) {
-        this.defaultValue = defaultValue;
+    void setDefaultValue(Expression value) {
+        this.defaultValue = value;
+    }
+
+    private static Expression simplifyDefaultValue(Expression value, DataType targetType) {
+        if (!(value instanceof Typecast typecast)) {
+            return value;
+        }
+        Expression source = typecast.source();
+        return switch (source.type()) {
+            case NULL -> Expression.NULL;
+            case STRING -> {
+                if (typecast.typeName().equals(targetType.typeName())
+                    && typecast.length().isEmpty()
+                    && typecast.precision().isEmpty()) {
+                    yield source;
+                } else {
+                    yield value;
+                }
+            }
+            default -> value;
+        };
     }
 }

@@ -26,7 +26,7 @@ import java.util.List;
 
 public record DefaultSequence(
     String name,
-    String dataType,
+    String typeName,
     long start,
     long increment,
     long maxValue,

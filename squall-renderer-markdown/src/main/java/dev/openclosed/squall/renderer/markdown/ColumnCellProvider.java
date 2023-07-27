@@ -50,7 +50,7 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     DATA_TYPE(ALIGN_LEFT) {
         @Override
         public String getValue(Column column, Table table, int ordinal) {
-            return column.dataType();
+            return column.typeName();
         }
     },
     PRECISION_LENGTH(ALIGN_RIGHT) {
@@ -102,7 +102,9 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
         @Override
         public String getValue(Column column, Table table, int ordinal) {
             return column.defaultValue()
-                .map(Object::toString).orElse("-");
+                .map(value -> new StringBuilder()
+                    .append('`').append(value).append('`').toString()
+                ).orElse("-");
         }
     },
     DESCRIPTION(ALIGN_LEFT) {

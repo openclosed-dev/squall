@@ -7,7 +7,7 @@ CREATE SEQUENCE seq1;
 ```json
 {
   "name": "seq1",
-  "dataType": "bigint",
+  "typeName": "bigint",
   "start": 1,
   "increment": 1,
   "minValue": 1,
@@ -24,7 +24,7 @@ CREATE SEQUENCE public.seq1;
 ```json
 {
   "name": "seq1",
-  "dataType": "bigint",
+  "typeName": "bigint",
   "start": 1,
   "increment": 1,
   "minValue": 1,
@@ -41,7 +41,7 @@ CREATE SEQUENCE IF NOT EXISTS seq1;
 ```json
 {
   "name": "seq1",
-  "dataType": "bigint",
+  "typeName": "bigint",
   "start": 1,
   "increment": 1,
   "minValue": 1,
@@ -58,7 +58,7 @@ CREATE SEQUENCE seq1 AS bigint;
 ```json
 {
   "name": "seq1",
-  "dataType": "bigint",
+  "typeName": "bigint",
   "start": 1,
   "increment": 1,
   "minValue": 1,
@@ -75,7 +75,7 @@ CREATE SEQUENCE seq1 AS integer;
 ```json
 {
   "name": "seq1",
-  "dataType": "integer",
+  "typeName": "integer",
   "start": 1,
   "increment": 1,
   "minValue": 1,
@@ -92,7 +92,7 @@ CREATE SEQUENCE seq1 AS smallint;
 ```json
 {
   "name": "seq1",
-  "dataType": "smallint",
+  "typeName": "smallint",
   "start": 1,
   "increment": 1,
   "minValue": 1,
@@ -109,7 +109,7 @@ CREATE SEQUENCE seq1 AS bigint START WITH 100 INCREMENT BY 3 MINVALUE 42 MAXVALU
 ```json
 {
   "name": "seq1",
-  "dataType": "bigint",
+  "typeName": "bigint",
   "start": 100,
   "increment": 3,
   "minValue": 42,
@@ -126,7 +126,7 @@ CREATE SEQUENCE seq1 AS bigint INCREMENT BY -1;
 ```json
 {
   "name": "seq1",
-  "dataType": "bigint",
+  "typeName": "bigint",
   "start": -1,
   "increment": -1,
   "minValue": -9223372036854775808,
@@ -143,7 +143,7 @@ CREATE SEQUENCE seq1 AS integer INCREMENT BY -1;
 ```json
 {
   "name": "seq1",
-  "dataType": "integer",
+  "typeName": "integer",
   "start": -1,
   "increment": -1,
   "minValue": -2147483648,
@@ -160,7 +160,7 @@ CREATE SEQUENCE seq1 AS smallint INCREMENT BY -1;
 ```json
 {
   "name": "seq1",
-  "dataType": "smallint",
+  "typeName": "smallint",
   "start": -1,
   "increment": -1,
   "minValue": -32768,
@@ -177,7 +177,7 @@ CREATE SEQUENCE seq1 NO MINVALUE NO MAXVALUE;
 ```json
 {
   "name": "seq1",
-  "dataType": "bigint",
+  "typeName": "bigint",
   "start": 1,
   "increment": 1,
   "minValue": 1,

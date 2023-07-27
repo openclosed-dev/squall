@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public record RunResult(int exitCode, List<String> consoleOutput, Optional<Exception> thrown) {
 
-    private static final Pattern TIME_ELAPSED = Pattern.compile("\\(\\d+ ms\\)");
+    private static final Pattern TIME_ELAPSED = Pattern.compile("\\([\\d,]+ ms\\)");
 
     public List<String> getConsoleOutputToVerify() {
         return consoleOutput().stream()

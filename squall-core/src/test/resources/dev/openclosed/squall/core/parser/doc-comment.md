@@ -30,7 +30,7 @@ CREATE TABLE customer(
               "columns": [
                 {
                   "name": "id",
-                  "dataType": "integer",
+                  "typeName": "integer",
                   "annotations": [
                     {
                       "type": "description",
@@ -85,7 +85,7 @@ CREATE SEQUENCE customer_number;
           "sequences": [
             {
               "name": "customer_number",
-              "dataType": "bigint",
+              "typeName": "bigint",
               "start": 1,
               "increment": 1,
               "minValue": 1,

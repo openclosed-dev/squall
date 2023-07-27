@@ -17,25 +17,16 @@
 package dev.openclosed.squall.api.spec;
 
 import java.util.Optional;
-import java.util.OptionalInt;
 
 /**
  * A column in table.
  */
-public non-sealed interface Column extends Component {
+public non-sealed interface Column extends Component, DataType {
 
     @Override
     default Type type() {
         return Type.COLUMN;
     }
-
-    String dataType();
-
-    OptionalInt length();
-
-    OptionalInt precision();
-
-    OptionalInt scale();
 
     boolean isRequired();
 

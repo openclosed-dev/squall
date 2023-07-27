@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 import java.util.function.Function;
 
 enum SequenceCellProvider implements CellProvider<Sequence, Void> {
-    DATA_TYPE(ALIGN_LEFT, Sequence::dataType),
+    DATA_TYPE(ALIGN_LEFT, Sequence::typeName),
     START(ALIGN_RIGHT, seq -> String.valueOf(seq.start())),
     INCREMENT(ALIGN_RIGHT, seq -> String.valueOf(seq.increment())),
     MIN_VALUE(ALIGN_RIGHT, seq -> String.valueOf(seq.minValue())),

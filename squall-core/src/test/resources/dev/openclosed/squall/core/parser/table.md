@@ -14,15 +14,15 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "product_no",
-      "dataType": "integer"
+      "typeName": "integer"
     },
     {
       "name": "name",
-      "dataType": "text"
+      "typeName": "text"
     },
     {
       "name": "price",
-      "dataType": "numeric"
+      "typeName": "numeric"
     }
   ]
 }
@@ -42,7 +42,7 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "price",
-      "dataType": "numeric"
+      "typeName": "numeric"
     }
   ]
 }
@@ -62,7 +62,7 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "product_no",
-      "dataType": "integer",
+      "typeName": "integer",
       "isUnique": true
     }
   ],
@@ -88,7 +88,7 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "product_no",
-      "dataType": "integer",
+      "typeName": "integer",
       "isUnique": true
     }
   ],
@@ -114,7 +114,7 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "product_no",
-      "dataType": "integer",
+      "typeName": "integer",
       "isRequired": true,
       "isPrimaryKey": true,
       "isUnique": true
@@ -143,17 +143,17 @@ CREATE TABLE example (
   "columns": [
     {
       "name": "a",
-      "dataType": "integer",
+      "typeName": "integer",
       "isPrimaryKey": true,
       "isRequired": true
     },
     {
       "name": "b",
-      "dataType": "integer"
+      "typeName": "integer"
     },
     {
       "name": "c",
-      "dataType": "integer",
+      "typeName": "integer",
       "isPrimaryKey": true,
       "isRequired": true
     }
@@ -181,17 +181,17 @@ CREATE TABLE example (
   "columns": [
     {
       "name": "a",
-      "dataType": "integer",
+      "typeName": "integer",
       "isRequired": true,
       "isPrimaryKey": true
     },
     {
       "name": "b",
-      "dataType": "integer"
+      "typeName": "integer"
     },
     {
       "name": "c",
-      "dataType": "integer",
+      "typeName": "integer",
       "isRequired": true,
       "isPrimaryKey": true
     }
@@ -220,16 +220,16 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "product_no",
-      "dataType": "integer",
+      "typeName": "integer",
       "isUnique": true
     },
     {
       "name": "name",
-      "dataType": "text"
+      "typeName": "text"
     },
     {
       "name": "price",
-      "dataType": "numeric"
+      "typeName": "numeric"
     }
   ],
   "unique" : [
@@ -257,15 +257,15 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "a",
-      "dataType": "integer"
+      "typeName": "integer"
     },
     {
       "name": "b",
-      "dataType": "integer"
+      "typeName": "integer"
     },
     {
       "name": "c",
-      "dataType": "integer"
+      "typeName": "integer"
     }
   ],
   "unique": [
@@ -293,16 +293,16 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "product_no",
-      "dataType": "integer",
+      "typeName": "integer",
       "isUnique": true
     },
     {
       "name": "name",
-      "dataType": "text"
+      "typeName": "text"
     },
     {
       "name": "price",
-      "dataType": "numeric"
+      "typeName": "numeric"
     }
   ],
   "unique": [
@@ -331,16 +331,16 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "product_no",
-      "dataType": "integer",
+      "typeName": "integer",
       "isUnique": true
     },
     {
       "name": "name",
-      "dataType": "text"
+      "typeName": "text"
     },
     {
       "name": "price",
-      "dataType": "numeric"
+      "typeName": "numeric"
     }
   ],
   "unique": [
@@ -368,11 +368,11 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "price",
-      "dataType": "numeric"
+      "typeName": "numeric"
     },
     {
       "name": "discounted_price",
-      "dataType": "numeric"
+      "typeName": "numeric"
     }
   ]
 }
@@ -394,11 +394,11 @@ CREATE TABLE products (
   "columns": [
     {
       "name": "price",
-      "dataType": "numeric"
+      "typeName": "numeric"
     },
     {
       "name": "discounted_price",
-      "dataType": "numeric"
+      "typeName": "numeric"
     }
   ]
 }
@@ -423,7 +423,7 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "a",
-        "dataType": "integer"
+        "typeName": "integer"
       }
     ]
   },
@@ -432,7 +432,7 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "b",
-        "dataType": "integer"
+        "typeName": "integer"
       }
     ],
     "foreignKeys": [
@@ -470,11 +470,11 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "a1",
-        "dataType": "integer"
+        "typeName": "integer"
       },
       {
         "name": "a2",
-        "dataType": "integer"
+        "typeName": "integer"
       }
     ]
   },
@@ -483,11 +483,11 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "b1",
-        "dataType": "integer"
+        "typeName": "integer"
       },
       {
         "name": "b2",
-        "dataType": "integer"
+        "typeName": "integer"
       }
     ],
     "foreignKeys": [
@@ -524,7 +524,7 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "a",
-        "dataType": "integer"
+        "typeName": "integer"
       }
     ]
   },
@@ -533,7 +533,7 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "b",
-        "dataType": "integer"
+        "typeName": "integer"
       }
     ],
     "foreignKeys": [
@@ -569,7 +569,7 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "a",
-        "dataType": "integer"
+        "typeName": "integer"
       }
     ]
   },
@@ -578,7 +578,7 @@ CREATE TABLE tb (
     "columns": [
       {
         "name": "b",
-        "dataType": "integer"
+        "typeName": "integer"
       }
     ],
     "foreignKeys": [

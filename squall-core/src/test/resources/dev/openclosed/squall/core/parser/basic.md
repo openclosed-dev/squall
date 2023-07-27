@@ -33,11 +33,11 @@ CREATE TABLE example(
               "columns": [
                 {
                   "name": "a",
-                  "dataType": "integer"
+                  "typeName": "integer"
                 },
                 {
                   "name": "b",
-                  "dataType": "integer"
+                  "typeName": "integer"
                 }
               ]
             }
@@ -77,11 +77,11 @@ CREATE TABLE example(
               "columns": [
                 {
                   "name": "a",
-                  "dataType": "integer"
+                  "typeName": "integer"
                 },
                 {
                   "name": "b",
-                  "dataType": "integer"
+                  "typeName": "integer"
                 }
               ]
             }
@@ -123,7 +123,7 @@ CREATE TABLE table2(
               "columns": [
                 {
                   "name": "a",
-                  "dataType": "integer"
+                  "typeName": "integer"
                 }
               ]
             },
@@ -132,7 +132,7 @@ CREATE TABLE table2(
               "columns": [
                 {
                   "name": "b",
-                  "dataType": "integer"
+                  "typeName": "integer"
                 }
               ]
             }

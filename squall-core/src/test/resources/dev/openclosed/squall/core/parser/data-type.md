@@ -9,7 +9,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "smallint"
+  "typeName" : "smallint"
 }
 ```
 
@@ -24,7 +24,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "integer"
+  "typeName" : "integer"
 }
 ```
 
@@ -39,7 +39,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "bigint"
+  "typeName" : "bigint"
 }
 ```
 
@@ -54,7 +54,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "decimal"
+  "typeName" : "decimal"
 }
 ```
 
@@ -69,7 +69,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "decimal",
+  "typeName" : "decimal",
   "precision" : 3
 }
 ```
@@ -85,7 +85,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "decimal",
+  "typeName" : "decimal",
   "precision" : 3,
   "scale" : 1
 }
@@ -102,7 +102,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "decimal",
+  "typeName" : "decimal",
   "precision" : 2,
   "scale" : -3
 }
@@ -119,7 +119,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "decimal",
+  "typeName" : "decimal",
   "precision" : 3,
   "scale" : 5
 }
@@ -136,7 +136,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "numeric"
+  "typeName" : "numeric"
 }
 ```
 
@@ -151,7 +151,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "numeric",
+  "typeName" : "numeric",
   "precision" : 3
 }
 ```
@@ -167,7 +167,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "numeric",
+  "typeName" : "numeric",
   "precision" : 3,
   "scale" : 1
 }
@@ -184,7 +184,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "numeric",
+  "typeName" : "numeric",
   "precision" : 2,
   "scale" : -3
 }
@@ -201,7 +201,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "numeric",
+  "typeName" : "numeric",
   "precision" : 3,
   "scale" : 5
 }
@@ -218,7 +218,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "real"
+  "typeName" : "real"
 }
 ```
 
@@ -233,7 +233,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "float"
+  "typeName" : "float"
 }
 ```
 
@@ -248,7 +248,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "float",
+  "typeName" : "float",
   "precision" : 53
 }
 ```
@@ -264,7 +264,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "double precision"
+  "typeName" : "double precision"
 }
 ```
 
@@ -279,12 +279,12 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "character varying",
+  "typeName" : "character varying",
   "length" : 42
 }
 ```
 
-# character varying without length 
+# character varying without length
 
 ```sql
 CREATE TABLE example (
@@ -295,7 +295,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "character varying"
+  "typeName" : "character varying"
 }
 ```
 # varchar
@@ -309,7 +309,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "varchar",
+  "typeName" : "varchar",
   "length" : 42
 }
 ```
@@ -325,7 +325,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "varchar"
+  "typeName" : "varchar"
 }
 ```
 
@@ -340,7 +340,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "text"
+  "typeName" : "text"
 }
 ```
 
@@ -355,7 +355,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "character",
+  "typeName" : "character",
   "length" : 42
 }
 ```
@@ -371,7 +371,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "char",
+  "typeName" : "char",
   "length" : 42
 }
 ```
@@ -388,7 +388,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "date"
+  "typeName" : "date"
 }
 ```
 
@@ -403,7 +403,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "timestamp"
+  "typeName" : "timestamp"
 }
 ```
 
@@ -418,7 +418,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "timestamp with time zone"
+  "typeName" : "timestamp with time zone"
 }
 ```
 
@@ -433,7 +433,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "timestamp"
+  "typeName" : "timestamp"
 }
 ```
 
@@ -448,7 +448,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "timestamp",
+  "typeName" : "timestamp",
   "precision" : 4
 }
 ```
@@ -464,7 +464,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "timestamp with time zone",
+  "typeName" : "timestamp with time zone",
   "precision" : 4
 }
 ```
@@ -480,7 +480,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "timestamp",
+  "typeName" : "timestamp",
   "precision" : 4
 }
 ```
@@ -496,7 +496,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "time"
+  "typeName" : "time"
 }
 ```
 
@@ -511,7 +511,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "time with time zone"
+  "typeName" : "time with time zone"
 }
 ```
 
@@ -526,7 +526,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "time"
+  "typeName" : "time"
 }
 ```
 
@@ -541,7 +541,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "time",
+  "typeName" : "time",
   "precision" : 4
 }
 ```
@@ -557,7 +557,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "time with time zone",
+  "typeName" : "time with time zone",
   "precision" : 4
 }
 ```
@@ -573,7 +573,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "time",
+  "typeName" : "time",
   "precision" : 4
 }
 ```
@@ -589,7 +589,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval"
+  "typeName" : "interval"
 }
 ```
 
@@ -604,7 +604,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval year"
+  "typeName" : "interval year"
 }
 ```
 
@@ -619,7 +619,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval month"
+  "typeName" : "interval month"
 }
 ```
 
@@ -634,7 +634,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval day"
+  "typeName" : "interval day"
 }
 ```
 
@@ -649,7 +649,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval hour"
+  "typeName" : "interval hour"
 }
 ```
 
@@ -664,7 +664,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval minute"
+  "typeName" : "interval minute"
 }
 ```
 
@@ -679,7 +679,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval second"
+  "typeName" : "interval second"
 }
 ```
 
@@ -694,7 +694,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval year to month"
+  "typeName" : "interval year to month"
 }
 ```
 
@@ -709,7 +709,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval day to hour"
+  "typeName" : "interval day to hour"
 }
 ```
 
@@ -724,7 +724,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval day to minute"
+  "typeName" : "interval day to minute"
 }
 ```
 
@@ -739,7 +739,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval day to second"
+  "typeName" : "interval day to second"
 }
 ```
 
@@ -754,7 +754,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval minute to second"
+  "typeName" : "interval minute to second"
 }
 ```
 
@@ -769,7 +769,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval",
+  "typeName" : "interval",
   "precision" : 6
 }
 ```
@@ -785,7 +785,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval year",
+  "typeName" : "interval year",
   "precision" : 6
 }
 ```
@@ -801,7 +801,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval month",
+  "typeName" : "interval month",
   "precision" : 6
 }
 ```
@@ -817,7 +817,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval day",
+  "typeName" : "interval day",
   "precision" : 6
 }
 ```
@@ -833,7 +833,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval hour",
+  "typeName" : "interval hour",
   "precision" : 6
 }
 ```
@@ -849,7 +849,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval minute",
+  "typeName" : "interval minute",
   "precision" : 6
 }
 ```
@@ -865,7 +865,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval second",
+  "typeName" : "interval second",
   "precision" : 6
 }
 ```
@@ -881,7 +881,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval year to month",
+  "typeName" : "interval year to month",
   "precision" : 6
 }
 ```
@@ -897,7 +897,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval day to hour",
+  "typeName" : "interval day to hour",
   "precision" : 6
 }
 ```
@@ -913,7 +913,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval day to minute",
+  "typeName" : "interval day to minute",
   "precision" : 6
 }
 ```
@@ -929,7 +929,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval day to second",
+  "typeName" : "interval day to second",
   "precision" : 6
 }
 ```
@@ -945,7 +945,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "interval minute to second",
+  "typeName" : "interval minute to second",
   "precision" : 6
 }
 ```
@@ -961,7 +961,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "boolean"
+  "typeName" : "boolean"
 }
 ```
 
@@ -976,7 +976,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "bit"
+  "typeName" : "bit"
 }
 ```
 
@@ -991,7 +991,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "bit",
+  "typeName" : "bit",
   "length" : 42
 }
 ```
@@ -1007,7 +1007,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "bit varying"
+  "typeName" : "bit varying"
 }
 ```
 
@@ -1022,7 +1022,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "bit varying",
+  "typeName" : "bit varying",
   "length" : 42
 }
 ```

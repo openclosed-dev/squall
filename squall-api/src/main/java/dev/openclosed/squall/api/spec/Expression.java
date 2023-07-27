@@ -20,13 +20,24 @@ import dev.openclosed.squall.api.base.MapSource;
 
 import java.util.Map;
 
+/**
+ * An expression.
+ */
 public interface Expression extends MapSource {
 
+    /**
+     * Type of the expression.
+     */
     enum Type {
+        /** String literal. */
         STRING,
+        /** Bit-string literal. */
         BIT_STRING,
+        /** Numeric literal. */
         NUMBER,
+        /** Boolean literal. */
         BOOLEAN,
+        /** NULL literal. */
         NULL,
         FUNCTION,
         UNARY_OPERATOR,
@@ -35,8 +46,15 @@ public interface Expression extends MapSource {
         TYPECAST
     }
 
+    /**
+     * Returns the type of this expression.
+     * @return the type of this expression.
+     */
     Type type();
 
+    /**
+     * NULL literal.
+     */
     Expression NULL = new Expression() {
 
         private static final Map<String, Object> MAP = Map.of("type", "null");
@@ -57,6 +75,9 @@ public interface Expression extends MapSource {
         }
     };
 
+    /**
+     * Boolean TRUE literal.
+     */
     Expression TRUE = new Expression() {
 
         private static final Map<String, Object> MAP = Map.of(
@@ -79,6 +100,9 @@ public interface Expression extends MapSource {
         }
     };
 
+    /**
+     * Boolean FALSE literal.
+     */
     Expression FALSE = new Expression() {
 
         private static final Map<String, Object> MAP = Map.of(

@@ -9,7 +9,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "numeric",
+  "typeName" : "numeric",
   "defaultValue" : {
     "type": "number",
     "value": "9.99"
@@ -28,7 +28,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "text",
+  "typeName" : "text",
   "defaultValue" : {
     "type": "string",
     "value": "hello world"
@@ -47,7 +47,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "text",
+  "typeName" : "text",
   "defaultValue" : {
     "type": "string",
     "value": ""
@@ -66,7 +66,7 @@ CREATE TABLE example (
 ```json
 {
   "name": "a",
-  "dataType": "bit varying",
+  "typeName": "bit varying",
   "defaultValue": {
     "type": "bit_string",
     "value":"1001"
@@ -85,7 +85,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "boolean",
+  "typeName" : "boolean",
   "defaultValue" : {
     "type": "boolean",
     "value": "true"
@@ -104,7 +104,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "boolean",
+  "typeName" : "boolean",
   "defaultValue" : {
     "type": "boolean",
     "value": "false"
@@ -123,7 +123,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "timestamp",
+  "typeName" : "timestamp",
   "defaultValue" : {
     "type": "function",
     "name": "CURRENT_TIMESTAMP"
@@ -142,7 +142,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "character varying",
+  "typeName" : "character varying",
   "defaultValue" : {
     "type": "null"
   }
@@ -160,7 +160,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "integer",
+  "typeName" : "integer",
   "isRequired": true
 }
 ```
@@ -176,7 +176,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "text"
+  "typeName" : "text"
 }
 ```
 
@@ -191,7 +191,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "dataType" : "numeric",
+  "typeName" : "numeric",
   "defaultValue" : {
     "type": "number",
     "value": "9.99"

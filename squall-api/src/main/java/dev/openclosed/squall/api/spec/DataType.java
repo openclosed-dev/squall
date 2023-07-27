@@ -23,6 +23,10 @@ import java.util.OptionalInt;
  */
 public interface DataType {
 
+    /**
+     * Returns the name of the data type.
+     * @return the name of the data type.
+     */
     String typeName();
 
     default OptionalInt length() {

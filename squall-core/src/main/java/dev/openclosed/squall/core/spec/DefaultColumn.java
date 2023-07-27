@@ -29,7 +29,7 @@ import java.util.OptionalInt;
 /**
  * Default implementation of {@link Column}.
  * @param name
- * @param dataType
+ * @param typeName
  * @param length
  * @param precision
  * @param scale
@@ -41,7 +41,7 @@ import java.util.OptionalInt;
  */
 public record DefaultColumn(
         String name,
-        String dataType,
+        String typeName,
         OptionalInt length,
         OptionalInt precision,
         OptionalInt scale,

@@ -23,7 +23,7 @@ public non-sealed interface Sequence extends Component {
         return Type.SEQUENCE;
     }
 
-    String dataType();
+    String typeName();
 
     long start();
 

@@ -863,7 +863,7 @@ a + b
     "type": "string",
     "value": "1.23"
   },
-  "dataType": "real"
+  "typeName": "real"
 }
 ```
 
@@ -887,7 +887,7 @@ CAST('1.23' AS real)
       "type": "string",
       "value": "1"
     },
-    "dataType": "numeric"
+    "typeName": "numeric"
   },
   "right": {
     "type": "number",

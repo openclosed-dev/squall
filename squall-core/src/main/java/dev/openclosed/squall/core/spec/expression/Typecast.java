@@ -20,14 +20,23 @@ import dev.openclosed.squall.api.spec.Expression;
 
 import java.util.OptionalInt;
 
+/**
+ * An implementation of {@link dev.openclosed.squall.api.spec.Typecast}.
+ * @param type
+ * @param source
+ * @param typeName
+ * @param length
+ * @param precision
+ * @param scale
+ */
 record Typecast(
     Expression.Type type,
     Expression source,
-    String dataType,
+    String typeName,
     OptionalInt length,
     OptionalInt precision,
     OptionalInt scale
-) implements RecordExpression {
+) implements dev.openclosed.squall.api.spec.Typecast, RecordExpression {
 
     Typecast(Type type, Expression source, String dataType) {
         this(type, source, dataType, OptionalInt.empty(), OptionalInt.empty(), OptionalInt.empty());
@@ -39,7 +48,7 @@ record Typecast(
             .append("CAST(")
             .append(source.toString())
             .append(" AS ")
-            .append(dataType);
+            .append(typeName);
 
         length().ifPresentOrElse(l -> {
             sb.append('(').append(l).append(')');

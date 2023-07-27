@@ -31,7 +31,7 @@ CREATE TABLE customer(
               "columns": [
                 {
                   "name": "id",
-                  "dataType": "integer",
+                  "typeName": "integer",
                   "annotations": [
                     {
                       "type": "description",
