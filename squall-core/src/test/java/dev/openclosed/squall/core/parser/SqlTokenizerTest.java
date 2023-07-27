@@ -32,7 +32,7 @@ public abstract class SqlTokenizerTest {
     protected abstract SqlTokenizer createTokenizer(String text);
 
     public static Stream<SqlTestCase> generateTokens() {
-        return loadTests("tokenize.md");
+        return loadTests("token.md");
     }
 
     @ParameterizedTest

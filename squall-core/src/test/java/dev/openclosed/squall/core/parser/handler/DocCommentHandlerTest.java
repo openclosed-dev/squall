@@ -31,7 +31,7 @@ import dev.openclosed.squall.core.parser.SqlTestCase;
 public final class DocCommentHandlerTest {
 
     public static Stream<SqlTestCase> testComments() {
-        return SqlTestCase.loadFrom("doc-comments.md",
+        return SqlTestCase.loadFrom("doc-comment.md",
                 DocCommentHandlerTest.class).stream();
     }
 

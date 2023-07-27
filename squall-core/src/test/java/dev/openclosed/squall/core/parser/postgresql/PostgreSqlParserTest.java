@@ -43,7 +43,7 @@ public final class PostgreSqlParserTest extends SqlParserTest {
     // Additional tests
 
     public static Stream<SqlTestCase> parseDataTypesForPostgreSql() {
-        return loadTests("postgresql/parse-data-types-postgres.md");
+        return loadTests("postgresql/data-type-postgres.md");
     }
 
     @ParameterizedTest
@@ -52,12 +52,36 @@ public final class PostgreSqlParserTest extends SqlParserTest {
         testDataType(test);
     }
 
-    public static Stream<SqlTestCase> parseColumn() {
-        return loadTests("parse-columns.md");
+    public static Stream<SqlTestCase> parseBasic() {
+        return loadTests("basic.md");
+    }
+
+    public static Stream<SqlTestCase> parseSourceWithErrors() {
+        return loadTests("basic-error.md");
+    }
+
+    public static Stream<SqlTestCase> parseDatabases() {
+        return loadTests("database.md");
+    }
+
+    public static Stream<SqlTestCase> parseSchemas() {
+        return loadTests("schema.md");
     }
 
     public static Stream<SqlTestCase> parseSequence() {
         return loadTests("sequence.md");
+    }
+
+    public static Stream<SqlTestCase> parseTables() {
+        return loadTests("table.md");
+    }
+
+    public static Stream<SqlTestCase> parseColumn() {
+        return loadTests("column.md");
+    }
+
+    public static Stream<SqlTestCase> parseDataTypes() {
+        return loadTests("data-type.md");
     }
 
     public static Stream<SqlTestCase> parseExpression() {

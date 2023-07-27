@@ -56,18 +56,10 @@ public abstract class SqlParserTest {
         this.sqlParser = createParser(this.builder);
     }
 
-    public static Stream<SqlTestCase> parseBasic() {
-        return loadTests("parse-basic.md");
-    }
-
     @ParameterizedTest
     @MethodSource
     public void parseBasic(SqlTestCase test) {
         testParser(test);
-    }
-
-    public static Stream<SqlTestCase> parseDatabases() {
-        return loadTests("parse-databases.md");
     }
 
     @ParameterizedTest
@@ -76,18 +68,10 @@ public abstract class SqlParserTest {
         testParser(test);
     }
 
-    public static Stream<SqlTestCase> parseSchemas() {
-        return loadTests("parse-schemas.md");
-    }
-
     @ParameterizedTest
     @MethodSource
     public void parseSchemas(SqlTestCase test) {
         testParser(test);
-    }
-
-    public static Stream<SqlTestCase> parseTables() {
-        return loadTests("table.md");
     }
 
     @ParameterizedTest
@@ -106,10 +90,6 @@ public abstract class SqlParserTest {
     @MethodSource
     public void parseSequence(SqlTestCase test) {
         testSequence(test);
-    }
-
-    public static Stream<SqlTestCase> parseDataTypes() {
-        return loadTests("parse-data-types.md");
     }
 
     @ParameterizedTest
@@ -138,10 +118,6 @@ public abstract class SqlParserTest {
         if (thrown instanceof SqlSyntaxException e) {
             System.out.println(e.getBundledMessage().get());
         }
-    }
-
-    public static Stream<SqlTestCase> parseSourceWithErrors() {
-        return loadTests("parse-errors.md");
     }
 
     @ParameterizedTest
