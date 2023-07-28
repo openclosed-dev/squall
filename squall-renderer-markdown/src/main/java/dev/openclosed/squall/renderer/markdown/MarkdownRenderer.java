@@ -26,6 +26,7 @@ import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -73,7 +74,7 @@ class MarkdownRenderer implements TextRenderer {
         Files.createDirectories(imagesDir);
         for (Badge badge : Badge.values()) {
             try (var in = badge.getResourceAsStream()) {
-                Files.copy(in, imagesDir.resolve(badge.filename()));
+                Files.copy(in, imagesDir.resolve(badge.filename()), StandardCopyOption.REPLACE_EXISTING);
             }
         }
     }
