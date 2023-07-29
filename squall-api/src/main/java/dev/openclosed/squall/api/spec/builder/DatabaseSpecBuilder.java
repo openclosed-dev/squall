@@ -89,7 +89,7 @@ public interface DatabaseSpecBuilder {
 
     DatabaseSpecBuilder addAnnotations(List<DocAnnotation> annotations);
 
-    List<DocAnnotation> useAnnotations();
+    List<DocAnnotation> getAnnotations();
 
     DatabaseSpec build();
 }

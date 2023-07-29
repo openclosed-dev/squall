@@ -45,7 +45,7 @@ public final class DocCommentHandlerTest {
         int end = sql.lastIndexOf("*/");
         var comment = sql.subSequence(start, end + 2);
         handler.handleComment(comment, new Location(1, start + 1, start), context);
-        var annotations = context.builder().useAnnotations();
+        var annotations = context.builder().getAnnotations();
         var actual = annotations.stream().map(DocAnnotation::toMap).toList();
         var expected = test.jsonAsMaps();
         assertThat(actual).isEqualTo(expected);

@@ -108,3 +108,41 @@ CREATE SEQUENCE customer_number;
   ]
 }
 ```
+
+# previous comment
+
+```sql
+/** table t1. */
+DROP TABLE t1;
+
+/** table t2. */
+CREATE TABLE t2();
+```
+
+```json
+{
+  "databases" : [
+    {
+      "name": "",
+      "state": "undefined",
+      "schemas" : [
+        {
+          "name" : "public",
+          "state": "undefined",
+          "tables": [
+            {
+              "name": "t2",
+              "annotations": [
+                {
+                  "type": "description",
+                  "value": "table t2."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```

@@ -57,7 +57,7 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     @Override
     public DatabaseSpecBuilder addDatabase(String name) {
         Objects.requireNonNull(name);
-        addAnnotatedDatabase(name, useAnnotations(), State.DEFINED);
+        addAnnotatedDatabase(name, removeAnnotations(), State.DEFINED);
         changeCurrentDatabase(name);
         return this;
     }
@@ -79,7 +79,7 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     @Override
     public DatabaseSpecBuilder addSchema(String name) {
         Objects.requireNonNull(name);
-        getCurrentDatabase().addSchema(name, useAnnotations());
+        getCurrentDatabase().addSchema(name, removeAnnotations());
         return this;
     }
 
@@ -87,7 +87,7 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     public DatabaseSpecBuilder addTable(String schemaName, String tableName) {
         Objects.requireNonNull(tableName);
         SchemaBuilder schema = getCurrentDatabase().getSchema(schemaName);
-        TableBuilder tableBuilder = schema.addTable(tableName, useAnnotations());
+        TableBuilder tableBuilder = schema.addTable(tableName, removeAnnotations());
         this.currentTableBuilder = tableBuilder;
         return this;
     }
@@ -105,7 +105,7 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     public DatabaseSpecBuilder addTableColumn(String name, DataType dataType) {
         Objects.requireNonNull(name);
         Objects.requireNonNull(dataType);
-        ColumnBuilder builder = requireCurrentTable().addColumn(name, dataType, useAnnotations());
+        ColumnBuilder builder = requireCurrentTable().addColumn(name, dataType, removeAnnotations());
         this.currentColumnBuilder = builder;
         return this;
     }
@@ -158,7 +158,7 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     public DatabaseSpecBuilder addSequence(String schemaName, String sequenceName) {
         Objects.requireNonNull(sequenceName);
         SchemaBuilder schema = getCurrentDatabase().getSchema(schemaName);
-        SequenceBuilder builder = schema.addSequence(sequenceName, useAnnotations());
+        SequenceBuilder builder = schema.addSequence(sequenceName, removeAnnotations());
         this.currentSequenceBuilder = builder;
         return this;
     }
@@ -196,15 +196,14 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
 
     @Override
     public DatabaseSpecBuilder addAnnotations(List<DocAnnotation> annotations) {
+        this.annotations.clear();
         this.annotations.addAll(annotations);
         return this;
     }
 
     @Override
-    public List<DocAnnotation> useAnnotations() {
-        var result = List.copyOf(annotations);
-        this.annotations.clear();
-        return result;
+    public List<DocAnnotation> getAnnotations() {
+        return List.copyOf(annotations);
     }
 
     @Override
@@ -215,12 +214,20 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
                 Optional.ofNullable(title), databases);
     }
 
+    //
+
     private DatabaseBuilder findDatabase(String name) {
         var database = databaseBuilders.get(name);
         if (database == null) {
             database =  addUndefinedDatabase(name);
         }
         return database;
+    }
+
+    private List<DocAnnotation> removeAnnotations() {
+        var removed = getAnnotations();
+        this.annotations.clear();
+        return removed;
     }
 
     private DatabaseBuilder addUndefinedDatabase(String name) {
