@@ -18,6 +18,7 @@ package dev.openclosed.squall.core.parser.postgresql;
 
 import dev.openclosed.squall.core.parser.BaseSqlTokenizer;
 import dev.openclosed.squall.core.parser.Keyword;
+import dev.openclosed.squall.core.parser.MetacommandToken;
 import dev.openclosed.squall.core.parser.SpecialSymbol;
 import dev.openclosed.squall.core.parser.Token;
 
@@ -144,8 +145,18 @@ final class PostgreSqlTokenizer extends BaseSqlTokenizer {
                 }
                 yield OperatorSymbol.EXCLAMATION;
             }
+            case '\\' -> processMetacommand();
             default -> throw newInvalidCharacterException(c);
         };
+    }
+
+    Token processMetacommand() {
+        consumeChar();
+        for (int c = nextChar(); c != '\n' && c != '\\' && c != EOI;) {
+            consumeChar();
+            c = nextChar();
+        }
+        return new MetacommandToken(text(), getTokenOffset(), getOffset());
     }
 }
 

@@ -53,7 +53,9 @@ public final class PostgreSqlParserTest extends SqlParserTest {
     }
 
     public static Stream<SqlTestCase> parseBasic() {
-        return loadTests("basic.md");
+        return loadTests(
+            "basic.md",
+            "postgresql/metacommand.md");
     }
 
     public static Stream<SqlTestCase> parseSourceWithErrors() {

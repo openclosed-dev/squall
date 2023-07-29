@@ -135,8 +135,10 @@ public abstract class BaseSqlParser
     public Token next() {
         SqlTokenizer t = getTokenizer();
         Token next = t.next();
-        while (next != Token.EOI && next.isComment()) {
-            handleComment((CommentToken) next);
+        while (!next.isPrimary()) {
+            if (next instanceof CommentToken comment) {
+                handleComment(comment);
+            }
             t.consume();
             next = t.next();
         }

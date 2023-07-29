@@ -18,6 +18,9 @@ package dev.openclosed.squall.core.parser;
 
 import dev.openclosed.squall.api.base.Location;
 
+/**
+ * A tokenizer for SQL sources.
+ */
 public interface SqlTokenizer {
 
     /**
@@ -37,9 +40,35 @@ public interface SqlTokenizer {
      */
     void consume();
 
+    /**
+     * Returns the current offset.
+     * @return the current offset.
+     */
+    int getOffset();
+
+    /**
+     * Returns the offset of the current token.
+     * @return the offset of the current token.
+     */
+    int getTokenOffset();
+
+    /**
+     * Returns the current location.
+     * @return the current location.
+     */
     Location getLocation();
 
+    /**
+     * Returns the location of the current token.
+     * @return the location of the current token.
+     */
     Location getTokenLocation();
 
-    CharSequence getTokenText();
+    /**
+     * Returns the text of the current token.
+     * @return the text of the current token.
+     */
+    default CharSequence getTokenText() {
+        return text().subSequence(getTokenOffset(), getOffset());
+    }
 }

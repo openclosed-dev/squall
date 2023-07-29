@@ -42,7 +42,7 @@ public abstract class BaseSqlTokenizer implements SqlTokenizer {
 
     private final StringBuilder stringBuilder = new StringBuilder();
 
-    private static final int EOI = -1;
+    public static final int EOI = -1;
     private static final int NOT_FETCHED = -2;
 
     protected BaseSqlTokenizer(CharSequence text) {
@@ -71,6 +71,16 @@ public abstract class BaseSqlTokenizer implements SqlTokenizer {
     }
 
     @Override
+    public final int getOffset() {
+        return this.offset;
+    }
+
+    @Override
+    public final int getTokenOffset() {
+        return this.tokenOffset;
+    }
+
+    @Override
     public final Location getLocation() {
         return new Location(lineNo, columnNo, offset);
     }
@@ -80,18 +90,22 @@ public abstract class BaseSqlTokenizer implements SqlTokenizer {
         return new Location(tokenLineNo, tokenColumnNo, tokenOffset);
     }
 
-    @Override
-    public final CharSequence getTokenText() {
-        return text.subSequence(this.tokenOffset, this.offset);
-    }
-
     //
 
     private Token fetch() {
         if (this.finished) {
             return Token.EOI;
-        } else if (!skipWhitespaces()) {
-            this.finished = true;
+        } else {
+            var newToken = fetchNew();
+            if (newToken == Token.EOI) {
+                this.finished = true;
+            }
+            return newToken;
+        }
+    }
+
+    protected final Token fetchNew() {
+        if (!skipWhitespaces()) {
             return Token.EOI;
         }
 

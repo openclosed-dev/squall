@@ -30,10 +30,6 @@ public enum TokenType {
     QUOTED_IDENTIFIER,
     /** An symbol. */
     SYMBOL,
-    /** A comment on a single line. */
-    LINE_COMMENT,
-    /** C-style block comment. */
-    BLOCK_COMMENT,
 
     // constants
 
@@ -44,5 +40,26 @@ public enum TokenType {
     /** A numeric constant. */
     NUMBER,
     /** A numeric constant without fractional part. */
-    INTEGER;
+    INTEGER,
+
+    /** A comment on a single line. */
+    LINE_COMMENT(false),
+    /** C-style block comment. */
+    BLOCK_COMMENT(false),
+    /** Meta-command. */
+    METACOMMAND(false);
+
+    private final boolean primary;
+
+    TokenType() {
+        this(true);
+    }
+
+    TokenType(boolean primary) {
+        this.primary = primary;
+    }
+
+    public boolean isPrimary() {
+        return this.primary;
+    }
 }

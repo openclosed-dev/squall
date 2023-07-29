@@ -180,8 +180,9 @@ public abstract class SqlParserTest {
         return sqlParser;
     }
 
-    protected static Stream<SqlTestCase> loadTests(String name) {
-        return loadTests(name, SqlParserTest.class);
+    protected static Stream<SqlTestCase> loadTests(String... names) {
+        return Stream.of(names)
+            .flatMap(name -> loadTests(name, SqlParserTest.class));
     }
 
     protected static Stream<SqlTestCase> loadTests(String name, Class<?> clazz) {
@@ -200,6 +201,7 @@ public abstract class SqlParserTest {
         for (var sql : test.sql()) {
             sqlParser.parse(sql);
         }
+        assertThat(sqlParser.getProblems()).isEmpty();
         var spec = builder.build();
         assertThat(spec.toMap()).isEqualTo(test.jsonAsMap());
     }

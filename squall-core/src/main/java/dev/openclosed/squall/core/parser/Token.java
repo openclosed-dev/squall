@@ -44,6 +44,10 @@ public interface Token {
         throw new UnsupportedOperationException("not a literal");
     }
 
+    default boolean isPrimary() {
+        return type().isPrimary();
+    }
+
     default boolean isKeyword() {
         return false;
     }
@@ -91,6 +95,46 @@ public interface Token {
     }
 }
 
+record BitStringToken(CharSequence wholeText, int start, int end) implements Token {
+
+    @Override
+    public TokenType type() {
+        return TokenType.BIT_STRING;
+    }
+
+    @Override
+    public String text() {
+        return wholeText.subSequence(start, end).toString();
+    }
+
+    @Override
+    public Object value() {
+        return wholeText.subSequence(start + 2, end - 1).toString();
+    }
+
+    @Override
+    public Expression toLiteral() {
+        return Expressions.createBitString(value().toString());
+    }
+
+    @Override
+    public boolean isLiteral() {
+        return true;
+    }
+}
+
+record CommentToken(TokenType type, CharSequence wholeText, int start, int end) implements Token {
+
+    int length() {
+        return end() - start();
+    }
+
+    @Override
+    public String text() {
+        return wholeText.subSequence(start, end).toString();
+    }
+}
+
 record IdentifierToken(String text) implements Token {
 
     @Override
@@ -105,6 +149,19 @@ record IdentifierToken(String text) implements Token {
 
     @Override
     public boolean isIdentifier(IdentifierType type) {
+        return true;
+    }
+}
+
+record NumberToken(TokenType type, String text, Number value) implements Token {
+
+    @Override
+    public Expression toLiteral() {
+        return Expressions.createNumber(text());
+    }
+
+    @Override
+    public boolean isLiteral() {
         return true;
     }
 }
@@ -159,55 +216,3 @@ record StringToken(CharSequence wholeText, int start, int end, String value) imp
     }
 }
 
-record BitStringToken(CharSequence wholeText, int start, int end) implements Token {
-
-    @Override
-    public TokenType type() {
-        return TokenType.BIT_STRING;
-    }
-
-    @Override
-    public String text() {
-        return wholeText.subSequence(start, end).toString();
-    }
-
-    @Override
-    public Object value() {
-        return wholeText.subSequence(start + 2, end - 1).toString();
-    }
-
-    @Override
-    public Expression toLiteral() {
-        return Expressions.createBitString(value().toString());
-    }
-
-    @Override
-    public boolean isLiteral() {
-        return true;
-    }
-}
-
-record NumberToken(TokenType type, String text, Number value) implements Token {
-
-    @Override
-    public Expression toLiteral() {
-        return Expressions.createNumber(text());
-    }
-
-    @Override
-    public boolean isLiteral() {
-        return true;
-    }
-}
-
-record CommentToken(TokenType type, CharSequence wholeText, int start, int end) implements Token {
-
-    int length() {
-        return end() - start();
-    }
-
-    @Override
-    public String text() {
-        return wholeText.subSequence(start, end).toString();
-    }
-}
