@@ -110,7 +110,9 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     DESCRIPTION(ALIGN_LEFT) {
         @Override
         public String getValue(Column column, Table table, int ordinal) {
-            return column.description().orElse("-");
+            return column.description()
+                .map(ColumnCellProvider::inlined)
+                .orElse("-");
         }
     };
 
@@ -126,6 +128,10 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     @Override
     public String getSeparator() {
         return this.separator;
+    }
+
+    private static String inlined(String text) {
+        return text.replaceAll("\\n+", " ");
     }
 
     static ColumnCellProvider provider(ColumnAttribute attribute) {
