@@ -23,5 +23,6 @@ public enum DocAnnotationType {
     DESCRIPTION,
     LABEL,
     SINCE,
-    DEPRECATED
+    DEPRECATED,
+    SEE
 }

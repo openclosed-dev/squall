@@ -18,13 +18,19 @@ package dev.openclosed.squall.core.parser.handler;
 
 import dev.openclosed.squall.api.base.Location;
 import dev.openclosed.squall.api.base.Message;
+import dev.openclosed.squall.api.base.Problem;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.ParserContext;
 import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 class TestParserContext implements ParserContext {
     private final ParserConfig config;
     private final DatabaseSpecBuilder builder;
+    private final List<Problem> problems = new ArrayList<>();
 
     TestParserContext() {
         this.config = ParserConfig.getDefault();
@@ -43,6 +49,14 @@ class TestParserContext implements ParserContext {
 
     @Override
     public void reportProblem(System.Logger.Level severity, Message message, Location location) {
-        // Do nothing
+        this.problems.add(new ReportedProblem(severity, message, Optional.of(location)));
+    }
+
+    List<Problem> getProblems() {
+        return this.problems;
+    }
+
+    record ReportedProblem(System.Logger.Level severity, Message message, Optional<Location> location)
+        implements Problem {
     }
 }

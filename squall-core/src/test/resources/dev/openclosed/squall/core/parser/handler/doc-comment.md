@@ -6,10 +6,10 @@
 
 ```json
 [
-    {
-        "type": "description",
-        "value": "Hello World"
-    }
+  {
+    "type": "description",
+    "value": "Hello World"
+  }
 ]
 ```
 
@@ -22,10 +22,10 @@
 
 ```json
 [
-    {
-        "type": "description",
-        "value": "First line\nSecond line"
-    }
+  {
+    "type": "description",
+    "value": "First line\nSecond line"
+  }
 ]
 ```
 
@@ -41,10 +41,10 @@
 
 ```json
 [
-    {
-        "type": "description",
-        "value": "This is a summary.\nSecond line\nThird line"
-    }
+  {
+    "type": "description",
+    "value": "This is a summary.\nSecond line\nThird line"
+  }
 ]
 ```
 
@@ -61,10 +61,10 @@
 
 ```json
 [
-    {
-        "type": "description",
-        "value": "This _table_ has **three** columns:\n1. x\n2. y\n3. z"
-    }
+  {
+    "type": "description",
+    "value": "This _table_ has **three** columns:\n1. x\n2. y\n3. z"
+  }
 ]
 ```
 
@@ -80,10 +80,10 @@
 
 ```json
 [
-    {
-        "type": "description",
-        "value": "1st paragraph\n\n2nd paragraph"
-    }
+  {
+    "type": "description",
+    "value": "1st paragraph\n\n2nd paragraph"
+  }
 ]
 ```
 
@@ -101,10 +101,10 @@
 
 ```json
 [
-    {
-        "type": "description",
-        "value": "1. 1st item\n2. 2nd item\n  1. 1st child item\n  2. 2nd child item\n3. 3rd item"
-    }
+  {
+    "type": "description",
+    "value": "1. 1st item\n2. 2nd item\n  1. 1st child item\n  2. 2nd child item\n3. 3rd item"
+  }
 ]
 ```
 
@@ -118,10 +118,10 @@
 
 ```json
 [
-    {
-        "type": "description",
-        "value": "This is a description."
-    }
+  {
+    "type": "description",
+    "value": "This is a description."
+  }
 ]
 ```
 
@@ -137,10 +137,10 @@
 
 ```json
 [
-    {
-        "type": "description",
-        "value": "This is 1st line.\nThis is 2nd line.\nThis is 3rd line."
-    }
+  {
+    "type": "description",
+    "value": "This is 1st line.\nThis is 2nd line.\nThis is 3rd line."
+  }
 ]
 ```
 
@@ -154,10 +154,10 @@
 
 ```json
 [
-    {
-        "type": "label",
-        "value": "name for display"
-    }
+  {
+    "type": "label",
+    "value": "name for display"
+  }
 ]
 ```
 
@@ -171,10 +171,10 @@
 
 ```json
 [
-    {
-        "type": "since",
-        "value": "v5.0"
-    }
+  {
+    "type": "since",
+    "value": "v5.0"
+  }
 ]
 ```
 
@@ -188,10 +188,10 @@
 
 ```json
 [
-    {
-        "type": "deprecated",
-        "value": "Do not use this column"
-    }
+  {
+    "type": "deprecated",
+    "value": "Do not use this column"
+  }
 ]
 ```
 
@@ -205,10 +205,10 @@
 
 ```json
 [
-    {
-        "type": "deprecated",
-        "value": ""
-    }
+  {
+    "type": "deprecated",
+    "value": ""
+  }
 ]
 ```
 
@@ -223,14 +223,14 @@
 
 ```json
 [
-    {
-        "type": "description",
-        "value": "Order database."
-    },
-    {
-        "type": "label",
-        "value": "order database"
-    }
+  {
+    "type": "description",
+    "value": "Order database."
+  },
+  {
+    "type": "label",
+    "value": "order database"
+  }
 ]
 ```
 
@@ -244,10 +244,10 @@
 
 ```json
 [
-    {
-        "type": "label",
-        "value": ""
-    }
+  {
+    "type": "label",
+    "value": ""
+  }
 ]
 ```
 
@@ -283,14 +283,14 @@
 
 ```json
 [
-    {
-        "type": "description",
-        "value": "The name of this customer."
-    },
-    {
-        "type": "label",
-        "value": "customer name"
-    }
+  {
+    "type": "description",
+    "value": "The name of this customer."
+  },
+  {
+    "type": "label",
+    "value": "customer name"
+  }
 ]
 ```
 
@@ -302,26 +302,31 @@
    * @label customer name
    * @since v5
    * @deprecated do not use
+   * @see <a href="https://example.com/">examnple</a>
    */
 ```
 
 ```json
 [
-    {
-        "type": "description",
-        "value": "The name of the customer."
-    },
-    {
-        "type": "label",
-        "value": "customer name"
-    },
-    {
-      "type": "since",
-      "value": "v5"
-    },
-    {
-      "type": "deprecated",
-      "value": "do not use"
-    }
+  {
+    "type": "description",
+    "value": "The name of the customer."
+  },
+  {
+    "type": "label",
+    "value": "customer name"
+  },
+  {
+    "type": "since",
+    "value": "v5"
+  },
+  {
+    "type": "deprecated",
+    "value": "do not use"
+  },
+  {
+    "type": "see",
+    "value": "<a href=\"https://example.com/\">examnple</a>"
+  }
 ]
 ```

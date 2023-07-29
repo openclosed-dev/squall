@@ -46,8 +46,15 @@ public final class DocCommentHandlerTest {
         var comment = sql.subSequence(start, end + 2);
         handler.handleComment(comment, new Location(1, start + 1, start), context);
         var annotations = context.builder().getAnnotations();
+        var problems = context.getProblems();
         var actual = annotations.stream().map(DocAnnotation::toMap).toList();
         var expected = test.jsonAsMaps();
+
+        for (var problem : problems) {
+            System.out.println(problem.message().get());
+        }
+
         assertThat(actual).isEqualTo(expected);
+        assertThat(context.getProblems()).isEmpty();
     }
 }
