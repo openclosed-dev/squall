@@ -40,11 +40,11 @@ A description of table 1.
 
 | No. | Name | Display Name | Data Type | Precision / Length | Scale | Nullable | Unique | Default Value | Description |
 | --: | :-- | :-- | :-- | --: | --: | :-: | :-: | :-- | :-- |
-| 1 | `a` :key: | column A | integer | - | - | - | &#x2713; | - | A description of column A. |
+| 1 | `a` &#x1F511; | column A | integer | - | - | - | &#x2705; | - | A description of column A. |
 
 ## 2. table 2 `table2` ![table]
 A description of table 2.
 
 | No. | Name | Display Name | Data Type | Precision / Length | Scale | Nullable | Unique | Default Value | Description |
 | --: | :-- | :-- | :-- | --: | --: | :-: | :-: | :-- | :-- |
-| 1 | `b` :key: | column B | integer | - | - | - | &#x2713; | - | A description of column B. |
+| 1 | `b` &#x1F511; | column B | integer | - | - | - | &#x2705; | - | A description of column B. |

@@ -38,9 +38,9 @@ A description of table 1.
 
 | No. | Name | Display Name | Data Type | Precision / Length | Scale | Nullable | Unique | Default Value | Description |
 | --: | :-- | :-- | :-- | --: | --: | :-: | :-: | :-- | :-- |
-| 1 | `a` :key: | column A | varchar | 64 | - | - | &#x2713; | - | A description of column A. |
+| 1 | `a` &#x1F511; | column A | varchar | 64 | - | - | &#x2705; | - | A description of column A. |
 | 2 | `b` | column B | numeric | 9 | 4 | - | - | - | A description of column B. |
-| 3 | `c` | column C | integer | - | - | &#x2713; | - | - | A description of column C. |
+| 3 | `c` | column C | integer | - | - | &#x2705; | - | - | A description of column C. |
 
 ---
 
@@ -71,7 +71,7 @@ A description of table 1.
 
 | No. | Name | Display Name | Data Type | Precision / Length | Scale | Nullable | Unique | Default Value | Description |
 | --: | :-- | :-- | :-- | --: | --: | :-: | :-: | :-- | :-- |
-| 1 | `c1` :key: | column c1 | varchar | 64 | - | - | &#x2713; | - | first line. second line. |
+| 1 | `c1` &#x1F511; | column c1 | varchar | 64 | - | - | &#x2705; | - | first line. second line. |
 
 ---
 
@@ -103,4 +103,4 @@ A description of table 1.
 
 | No. | Name | Display Name | Data Type | Precision / Length | Scale | Nullable | Unique | Default Value | Description |
 | --: | :-- | :-- | :-- | --: | --: | :-: | :-: | :-- | :-- |
-| 1 | `c1` :key: | column c1 | varchar | 64 | - | - | &#x2713; | - | first line. second line. |
+| 1 | `c1` &#x1F511; | column c1 | varchar | 64 | - | - | &#x2705; | - | first line. second line. |

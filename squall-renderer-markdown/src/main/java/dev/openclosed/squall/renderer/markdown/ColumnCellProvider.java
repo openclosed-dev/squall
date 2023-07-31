@@ -116,8 +116,8 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
         }
     };
 
-    private static final String KEY_MARK = ":key:";
-    private static final String CHECK_MARK = "&#x2713;";
+    private static final String KEY_MARK = "&#x1F511;";
+    private static final String CHECK_MARK = "&#x2705;";
 
     private final String separator;
 
