@@ -18,10 +18,9 @@ package dev.openclosed.squall.core.parser;
 
 public interface Operator {
 
-    enum Type {
-        BINARY,
-        PREFIX,
-        POSTFIX
+    enum Arity {
+        UNARY,
+        BINARY
     }
 
     enum Associativity {
@@ -30,7 +29,11 @@ public interface Operator {
         RIGHT
     }
 
-    Type type();
+    /**
+     * Returns the arity of this operator.
+     * @return the arity of this operator.
+     */
+    Arity arity();
 
     int precedence();
 

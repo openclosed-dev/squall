@@ -68,6 +68,10 @@ public final class Expressions {
             dataType.scale());
     }
 
+    public static Expression createIsPredicate(Expression subject, String predicate) {
+        return new Is(Expression.Type.IS, subject, predicate.toLowerCase());
+    }
+
     private Expressions() {
     }
 }

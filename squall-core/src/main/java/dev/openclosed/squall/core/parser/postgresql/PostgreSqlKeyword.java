@@ -386,8 +386,28 @@ enum PostgreSqlKeyword implements Keyword {
     INTERVAL(Option.NOT_FOR_FUNCTION),
     INTO(Option.RESERVED | Option.REQUIRES_AS),
     INVOKER,
-    IS(Option.NOT_FOR_TABLE),
-    ISNULL(Option.NOT_FOR_TABLE | Option.REQUIRES_AS),
+    IS(Option.NOT_FOR_TABLE) {
+        @Override
+        public boolean isBinaryOperator() {
+            return true;
+        }
+
+        @Override
+        public Operator toBinaryOperator() {
+            return PostgreSqlOperator.IS;
+        }
+    },
+    ISNULL(Option.NOT_FOR_TABLE | Option.REQUIRES_AS) {
+        @Override
+        public boolean isBinaryOperator() {
+            return true;
+        }
+
+        @Override
+        public Operator toBinaryOperator() {
+            return PostgreSqlOperator.IS_NULL;
+        }
+    },
     ISOLATION,
     JOIN(Option.NOT_FOR_TABLE),
     JSON_ARRAY,
@@ -491,18 +511,28 @@ enum PostgreSqlKeyword implements Keyword {
     NORMALIZED,
     NOT(Option.RESERVED) {
         @Override
-        public boolean isPrefixOperator() {
+        public boolean isUnaryOperator() {
             return true;
         }
 
         @Override
-        public Operator toPrefixOperator() {
+        public Operator toUnaryOperator() {
             return PostgreSqlOperator.LOGICAL_NEGATION;
         }
     },
     NOTHING,
     NOTIFY,
-    NOTNULL(Option.NOT_FOR_TABLE | Option.REQUIRES_AS),
+    NOTNULL(Option.NOT_FOR_TABLE | Option.REQUIRES_AS) {
+        @Override
+        public boolean isBinaryOperator() {
+            return true;
+        }
+
+        @Override
+        public Operator toBinaryOperator() {
+            return PostgreSqlOperator.IS_NOT_NULL;
+        }
+    },
     NOWAIT,
     NTH_VALUE,
     NTILE,

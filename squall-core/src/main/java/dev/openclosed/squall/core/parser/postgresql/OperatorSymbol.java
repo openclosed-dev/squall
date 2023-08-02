@@ -22,12 +22,7 @@ import dev.openclosed.squall.core.parser.TokenType;
 
 enum OperatorSymbol implements Token {
     ASTERISK("*", PostgreSqlOperator.MULTIPLICATION),
-    DOUBLE_COLON("::") {
-        @Override
-        public boolean isPostfixOperator() {
-            return true;
-        }
-    },
+    DOUBLE_COLON("::", PostgreSqlOperator.POSTFIX_TYPECAST),
     EQUAL("=", PostgreSqlOperator.EQUAL),
     PLUS("+", PostgreSqlOperator.ADDITION, PostgreSqlOperator.UNARY_PLUS),
     MINUS("-", PostgreSqlOperator.SUBTRACTION, PostgreSqlOperator.UNARY_MINUS),
@@ -43,7 +38,7 @@ enum OperatorSymbol implements Token {
 
     private final String text;
     private final Operator binaryOperator;
-    private final Operator prefixOperator;
+    private final Operator unaryOperator;
 
     OperatorSymbol(String text) {
         this(text, null, null);
@@ -53,10 +48,10 @@ enum OperatorSymbol implements Token {
         this(text, binaryOperator, null);
     }
 
-    OperatorSymbol(String text, Operator binaryOperator, Operator prefixOperator) {
+    OperatorSymbol(String text, Operator binaryOperator, Operator unaryOperator) {
         this.text = text;
         this.binaryOperator = binaryOperator;
-        this.prefixOperator = prefixOperator;
+        this.unaryOperator = unaryOperator;
     }
 
     @Override
@@ -80,12 +75,12 @@ enum OperatorSymbol implements Token {
     }
 
     @Override
-    public boolean isPrefixOperator() {
-        return this.prefixOperator != null;
+    public boolean isUnaryOperator() {
+        return this.unaryOperator != null;
     }
 
     @Override
-    public Operator toPrefixOperator() {
-        return this.prefixOperator;
+    public Operator toUnaryOperator() {
+        return this.unaryOperator;
     }
 }

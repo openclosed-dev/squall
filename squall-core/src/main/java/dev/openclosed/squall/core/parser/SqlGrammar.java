@@ -38,7 +38,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
     @Override
     default void statements() {
         while (next() != Token.EOI) {
-            withRecovery(() -> statement());
+            withRecovery(this::statement);
             consume();
         }
     }
@@ -872,15 +872,10 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
                 if (op.precedence() < precedence) {
                     break;
                 }
-                var text = token.text();
-                consume();
-                var right = expression(op.rightPrecedence());
-                expression = Expressions.createBinaryOperator(text, expression, right);
+                expression = binaryOperator(expression, op.rightPrecedence());
                 if (op.associativity() == Operator.Associativity.NONE) {
                     break;
                 }
-            } else if (token.isPostfixOperator()) {
-                expression = postfixOperator(expression);
             } else {
                 break;
             }
@@ -888,10 +883,63 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         return expression;
     }
 
+    default Expression binaryOperator(Expression leftOperand, int rightPrecedence) {
+        if (next().isKeyword()) {
+            return keywordBinaryOperator(leftOperand, rightPrecedence);
+        } else {
+            return symbolBinaryOperator(leftOperand, rightPrecedence);
+        }
+    }
+
+    default Expression keywordBinaryOperator(Expression leftOperand, int rightPrecedence) {
+        Keyword keyword = expectKeyword();
+        if (keyword.isSameAs(StandardKeyword.IS)) {
+            return isPredicate().toExpression(leftOperand);
+        }
+        var text = keyword.text();
+        consume();
+        var rightOperand = expression(rightPrecedence);
+        return Expressions.createBinaryOperator(text, leftOperand, rightOperand);
+    }
+
+    default Expression symbolBinaryOperator(Expression leftOperand, int rightPrecedence) {
+        Token token = next();
+        var text = token.text();
+        consume();
+        var rightOperand = expression(rightPrecedence);
+        return Expressions.createBinaryOperator(text, leftOperand, rightOperand);
+    }
+
+    default IsPredicate isPredicate() {
+        expect(StandardKeyword.IS);
+        consume();
+        Keyword keyword = expectKeyword();
+        final boolean negated = keyword.isSameAs(StandardKeyword.NOT);
+        if (negated) {
+            consume();
+            keyword = expectKeyword();
+        }
+        IsPredicate predicate = switch (keyword.standard()) {
+            case NULL -> IsPredicate.IS_NULL;
+            case TRUE -> IsPredicate.IS_TRUE;
+            case FALSE -> IsPredicate.IS_FALSE;
+            case UNKNOWN -> IsPredicate.IS_UNKNOWN;
+            default -> {
+                syntaxError(keyword);
+                yield null;
+            }
+        };
+        assert predicate != null;
+        if (negated) {
+            predicate = predicate.negated();
+        }
+        return predicate;
+    }
+
     default Expression literalOrGroup() {
         var token = next();
-        if (token.isPrefixOperator()) {
-            var op = token.toPrefixOperator();
+        if (token.isUnaryOperator()) {
+            var op = token.toUnaryOperator();
             var text = token.text();
             consume();
             var operand = expression(op.precedence());
@@ -961,10 +1009,5 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         }
         consume();
         return args;
-    }
-
-    default Expression postfixOperator(Expression operand) {
-        syntaxError(next());
-        return null;
     }
 }

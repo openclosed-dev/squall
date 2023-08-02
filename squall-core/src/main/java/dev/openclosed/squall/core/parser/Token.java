@@ -74,12 +74,12 @@ public interface Token {
 
     // As operators
 
-    default boolean isPrefixOperator() {
+    default boolean isUnaryOperator() {
         return false;
     }
 
-    default Operator toPrefixOperator() {
-        throw new UnsupportedOperationException("not an prefix operator");
+    default Operator toUnaryOperator() {
+        throw new UnsupportedOperationException("not an unary operator");
     }
 
     default boolean isBinaryOperator() {
@@ -88,10 +88,6 @@ public interface Token {
 
     default Operator toBinaryOperator() {
         throw new UnsupportedOperationException("not a binary operator");
-    }
-
-    default boolean isPostfixOperator() {
-        return false;
     }
 }
 

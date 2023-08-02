@@ -18,6 +18,7 @@ package dev.openclosed.squall.core.parser.postgresql;
 
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.core.parser.IsPredicate;
 import dev.openclosed.squall.core.spec.StandardDataType;
 import dev.openclosed.squall.core.parser.IdentifierType;
 import dev.openclosed.squall.core.parser.SqlGrammar;
@@ -83,12 +84,22 @@ interface PostgreSqlGrammar extends SqlGrammar, PostgreSqlPredicates {
     }
 
     @Override
-    default Expression postfixOperator(Expression operand) {
+    default Expression keywordBinaryOperator(Expression leftOperand, int rightPrecedence) {
+        PostgreSqlKeyword keyword = (PostgreSqlKeyword) expectKeyword();
+        return switch (keyword) {
+            case ISNULL -> IsPredicate.IS_NULL.toExpression(leftOperand);
+            case NOTNULL -> IsPredicate.IS_NOT_NULL.toExpression(leftOperand);
+            default -> SqlGrammar.super.keywordBinaryOperator(leftOperand, rightPrecedence);
+        };
+    }
+
+    @Override
+    default Expression symbolBinaryOperator(Expression leftOperand, int rightPrecedence) {
         Token token = next();
         if (token == OperatorSymbol.DOUBLE_COLON) {
             consume();
-            return Expressions.createTypecast(operand, dataType());
+            return Expressions.createTypecast(leftOperand, dataType());
         }
-        return SqlGrammar.super.postfixOperator(operand);
+        return SqlGrammar.super.symbolBinaryOperator(leftOperand, rightPrecedence);
     }
 }

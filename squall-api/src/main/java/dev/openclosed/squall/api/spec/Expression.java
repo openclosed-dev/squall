@@ -43,7 +43,10 @@ public interface Expression extends MapSource {
         UNARY_OPERATOR,
         BINARY_OPERATOR,
         COLUMN_REFERENCE,
-        TYPECAST
+        /** Typecasting. */
+        TYPECAST,
+        /** Is predicate. */
+        IS
     }
 
     /**

@@ -87,7 +87,11 @@ public final class PostgreSqlParserTest extends SqlParserTest {
     }
 
     public static Stream<SqlTestCase> parseExpression() {
-        return loadTests("expression.md");
+        return loadTests(
+            "expression.md",
+            "predicate.md",
+            "postgresql/predicate.md"
+        );
     }
 
     public static Stream<SqlTestCase> parseInvalidExpression() {
