@@ -19,7 +19,7 @@ package dev.openclosed.squall.core.parser.postgresql;
 import dev.openclosed.squall.core.parser.IdentifierType;
 import dev.openclosed.squall.core.parser.StandardKeyword;
 import dev.openclosed.squall.core.parser.Keyword;
-import dev.openclosed.squall.core.parser.Operator;
+import dev.openclosed.squall.core.parser.OperatorGroup;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -55,8 +55,8 @@ enum PostgreSqlKeyword implements Keyword {
         }
 
         @Override
-        public Operator toBinaryOperator() {
-            return PostgreSqlOperator.LOGICAL_CONJUNCTION;
+        public OperatorGroup binaryOperatorGroup() {
+            return PostgreSqlOperatorGroup.LOGICAL_CONJUNCTION;
         }
     },
     ANY(Option.RESERVED),
@@ -357,7 +357,12 @@ enum PostgreSqlKeyword implements Keyword {
     IMPLEMENTATION,
     IMPLICIT,
     IMPORT,
-    IN(Option.RESERVED),
+    IN(Option.RESERVED) {
+        @Override
+        public OperatorGroup binaryOperatorGroup() {
+            return PostgreSqlOperatorGroup.RANGE_MEMBERSHIP;
+        }
+    },
     INCLUDE,
     INCLUDING,
     INCREMENT,
@@ -388,24 +393,14 @@ enum PostgreSqlKeyword implements Keyword {
     INVOKER,
     IS(Option.NOT_FOR_TABLE) {
         @Override
-        public boolean isBinaryOperator() {
-            return true;
-        }
-
-        @Override
-        public Operator toBinaryOperator() {
-            return PostgreSqlOperator.IS;
+        public OperatorGroup binaryOperatorGroup() {
+            return PostgreSqlOperatorGroup.IS;
         }
     },
     ISNULL(Option.NOT_FOR_TABLE | Option.REQUIRES_AS) {
         @Override
-        public boolean isBinaryOperator() {
-            return true;
-        }
-
-        @Override
-        public Operator toBinaryOperator() {
-            return PostgreSqlOperator.IS_NULL;
+        public OperatorGroup binaryOperatorGroup() {
+            return PostgreSqlOperatorGroup.IS;
         }
     },
     ISOLATION,
@@ -511,26 +506,21 @@ enum PostgreSqlKeyword implements Keyword {
     NORMALIZED,
     NOT(Option.RESERVED) {
         @Override
-        public boolean isUnaryOperator() {
-            return true;
+        public OperatorGroup unaryOperatorGroup() {
+            return PostgreSqlOperatorGroup.LOGICAL_NEGATION;
         }
 
         @Override
-        public Operator toUnaryOperator() {
-            return PostgreSqlOperator.LOGICAL_NEGATION;
+        public OperatorGroup binaryOperatorGroup() {
+            return PostgreSqlOperatorGroup.RANGE_MEMBERSHIP;
         }
     },
     NOTHING,
     NOTIFY,
     NOTNULL(Option.NOT_FOR_TABLE | Option.REQUIRES_AS) {
         @Override
-        public boolean isBinaryOperator() {
-            return true;
-        }
-
-        @Override
-        public Operator toBinaryOperator() {
-            return PostgreSqlOperator.IS_NOT_NULL;
+        public OperatorGroup binaryOperatorGroup() {
+            return PostgreSqlOperatorGroup.IS;
         }
     },
     NOWAIT,
@@ -568,8 +558,8 @@ enum PostgreSqlKeyword implements Keyword {
         }
 
         @Override
-        public Operator toBinaryOperator() {
-            return PostgreSqlOperator.LOGICAL_DISJUNCTION;
+        public OperatorGroup binaryOperatorGroup() {
+            return PostgreSqlOperatorGroup.LOGICAL_DISJUNCTION;
         }
     },
     ORDER(Option.RESERVED | Option.REQUIRES_AS),

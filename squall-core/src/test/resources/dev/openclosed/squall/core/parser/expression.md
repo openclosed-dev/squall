@@ -899,3 +899,71 @@ CAST('1.23' AS real)
 ```text
 (CAST('1' AS numeric) + 2)
 ```
+
+# in array comparison
+
+```sql
+'a' IN ('foo', 'bar', 'baz')
+```
+
+```json
+{
+  "type" : "in",
+  "left" : {
+    "type": "string",
+    "value": "a"
+  },
+  "right": [
+    {
+      "type": "string",
+      "value": "foo"
+    },
+    {
+      "type": "string",
+      "value": "bar"
+    },
+    {
+      "type": "string",
+      "value": "baz"
+    }
+  ]
+}
+```
+
+```text
+'a' IN ('foo', 'bar', 'baz')
+```
+
+# not in array comparison
+
+```sql
+7 NOT IN (2, 3, 5)
+```
+
+```json
+{
+  "type" : "not_in",
+  "left" : {
+    "type": "number",
+    "value": "7"
+  },
+  "right": [
+    {
+      "type": "number",
+      "value": "2"
+    },
+    {
+      "type": "number",
+      "value": "3"
+    },
+    {
+      "type": "number",
+      "value": "5"
+    }
+  ]
+}
+```
+
+```text
+7 NOT IN (2, 3, 5)
+```

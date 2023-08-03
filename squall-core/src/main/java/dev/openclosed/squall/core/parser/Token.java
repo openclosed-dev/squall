@@ -75,19 +75,19 @@ public interface Token {
     // As operators
 
     default boolean isUnaryOperator() {
-        return false;
+        return unaryOperatorGroup() != null;
     }
 
-    default Operator toUnaryOperator() {
-        throw new UnsupportedOperationException("not an unary operator");
+    default OperatorGroup unaryOperatorGroup() {
+        return null;
     }
 
     default boolean isBinaryOperator() {
-        return false;
+        return binaryOperatorGroup() != null;
     }
 
-    default Operator toBinaryOperator() {
-        throw new UnsupportedOperationException("not a binary operator");
+    default OperatorGroup binaryOperatorGroup() {
+        return null;
     }
 }
 

@@ -72,6 +72,11 @@ public final class Expressions {
         return new Is(Expression.Type.IS, subject, predicate.toLowerCase());
     }
 
+    public static Expression createInPredicate(Expression left, List<Expression> right, boolean negated) {
+        var type = negated ? Expression.Type.NOT_IN : Expression.Type.IN;
+        return new In(type, left, right);
+    }
+
     private Expressions() {
     }
 }

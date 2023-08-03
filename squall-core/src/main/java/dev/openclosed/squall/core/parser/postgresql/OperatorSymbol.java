@@ -16,42 +16,42 @@
 
 package dev.openclosed.squall.core.parser.postgresql;
 
-import dev.openclosed.squall.core.parser.Operator;
+import dev.openclosed.squall.core.parser.OperatorGroup;
 import dev.openclosed.squall.core.parser.Token;
 import dev.openclosed.squall.core.parser.TokenType;
 
 enum OperatorSymbol implements Token {
-    ASTERISK("*", PostgreSqlOperator.MULTIPLICATION),
-    DOUBLE_COLON("::", PostgreSqlOperator.POSTFIX_TYPECAST),
-    EQUAL("=", PostgreSqlOperator.EQUAL),
-    PLUS("+", PostgreSqlOperator.ADDITION, PostgreSqlOperator.UNARY_PLUS),
-    MINUS("-", PostgreSqlOperator.SUBTRACTION, PostgreSqlOperator.UNARY_MINUS),
-    SLASH("/", PostgreSqlOperator.DIVISION),
-    PERCENT("%", PostgreSqlOperator.MODULO),
-    CARET("^", PostgreSqlOperator.EXPONENTIATION),
-    GREATER_THAN(">", PostgreSqlOperator.GREATER_THAN),
-    LESS_THAN("<", PostgreSqlOperator.LESS_THAN),
-    NOT_EQUAL("<>", PostgreSqlOperator.NOT_EQUAL),
-    LESS_THAN_OR_EQUAL_TO("<=", PostgreSqlOperator.LESS_THAN_OR_EQUAL_TO),
-    GREATER_THAN_OR_EQUAL_TO(">=", PostgreSqlOperator.GREATER_THAN_OR_EQUAL_TO),
+    ASTERISK("*", PostgreSqlOperatorGroup.MULTIPLICATION_DIVISION),
+    DOUBLE_COLON("::", PostgreSqlOperatorGroup.POSTFIX_TYPECAST),
+    EQUAL("=", PostgreSqlOperatorGroup.COMPARISON),
+    PLUS("+", PostgreSqlOperatorGroup.ADDITION_SUBTRACTION, PostgreSqlOperatorGroup.UNARY_PLUS_MINUS),
+    MINUS("-", PostgreSqlOperatorGroup.ADDITION_SUBTRACTION, PostgreSqlOperatorGroup.UNARY_PLUS_MINUS),
+    SLASH("/", PostgreSqlOperatorGroup.MULTIPLICATION_DIVISION),
+    PERCENT("%", PostgreSqlOperatorGroup.MULTIPLICATION_DIVISION),
+    CARET("^", PostgreSqlOperatorGroup.EXPONENTIATION),
+    GREATER_THAN(">", PostgreSqlOperatorGroup.COMPARISON),
+    LESS_THAN("<", PostgreSqlOperatorGroup.COMPARISON),
+    NOT_EQUAL("<>", PostgreSqlOperatorGroup.COMPARISON),
+    LESS_THAN_OR_EQUAL_TO("<=", PostgreSqlOperatorGroup.COMPARISON),
+    GREATER_THAN_OR_EQUAL_TO(">=", PostgreSqlOperatorGroup.COMPARISON),
     EXCLAMATION("!");
 
     private final String text;
-    private final Operator binaryOperator;
-    private final Operator unaryOperator;
+    private final OperatorGroup binaryOperatorGroup;
+    private final OperatorGroup unaryOperatorGroup;
 
     OperatorSymbol(String text) {
         this(text, null, null);
     }
 
-    OperatorSymbol(String text, Operator binaryOperator) {
-        this(text, binaryOperator, null);
+    OperatorSymbol(String text, OperatorGroup binaryOperatorGroup) {
+        this(text, binaryOperatorGroup, null);
     }
 
-    OperatorSymbol(String text, Operator binaryOperator, Operator unaryOperator) {
+    OperatorSymbol(String text, OperatorGroup binaryOperatorGroup, OperatorGroup unaryOperatorGroup) {
         this.text = text;
-        this.binaryOperator = binaryOperator;
-        this.unaryOperator = unaryOperator;
+        this.binaryOperatorGroup = binaryOperatorGroup;
+        this.unaryOperatorGroup = unaryOperatorGroup;
     }
 
     @Override
@@ -66,21 +66,21 @@ enum OperatorSymbol implements Token {
 
     @Override
     public boolean isBinaryOperator() {
-        return this.binaryOperator != null;
+        return this.binaryOperatorGroup != null;
     }
 
     @Override
-    public Operator toBinaryOperator() {
-        return this.binaryOperator;
+    public OperatorGroup binaryOperatorGroup() {
+        return this.binaryOperatorGroup;
     }
 
     @Override
     public boolean isUnaryOperator() {
-        return this.unaryOperator != null;
+        return this.unaryOperatorGroup != null;
     }
 
     @Override
-    public Operator toUnaryOperator() {
-        return this.unaryOperator;
+    public OperatorGroup unaryOperatorGroup() {
+        return this.unaryOperatorGroup;
     }
 }

@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.core.parser;
 
-public interface Operator {
+public interface OperatorGroup {
 
     enum Arity {
         UNARY,
@@ -28,6 +28,11 @@ public interface Operator {
         LEFT,
         RIGHT
     }
+
+    /**
+     * The lower bound for precedences.
+     */
+    int LOWEST_PRECEDENCE = 0;
 
     /**
      * Returns the arity of this operator.

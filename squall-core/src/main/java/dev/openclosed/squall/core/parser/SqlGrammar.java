@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.DataType;
@@ -45,7 +46,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
 
     @Override
     default Expression expression() {
-        return expression(0);
+        return expression(OperatorGroup.LOWEST_PRECEDENCE);
     }
 
     default void statement() {
@@ -516,7 +517,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
             case DEFAULT -> {
                 consume();
                 commonConstraintModifiers();
-                handleColumnDefaultValue(expression());
+                handleColumnDefaultValue(defaultValue());
             }
             case NOT -> {
                 consume();
@@ -551,6 +552,11 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
                 syntaxError(token);
             }
         }
+    }
+
+    default Expression defaultValue() {
+        return expression(OperatorGroup.LOWEST_PRECEDENCE,
+            token -> token.isSameAs(StandardKeyword.NOT));
     }
 
     default void references(String constraintName, List<String> columns) {
@@ -864,21 +870,22 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
     }
 
     default Expression expression(int precedence) {
-        var expression = literalOrGroup();
-        for (;;) {
-            var token = next();
-            if (token.isBinaryOperator()) {
-                var op = token.toBinaryOperator();
-                if (op.precedence() < precedence) {
-                    break;
-                }
-                expression = binaryOperator(expression, op.rightPrecedence());
-                if (op.associativity() == Operator.Associativity.NONE) {
-                    break;
-                }
-            } else {
+        return expression(precedence, token -> false);
+    }
+
+    default Expression expression(int precedence, Predicate<Token> stopper) {
+        Expression expression = operand();
+        Token token = next();
+        while (token.isBinaryOperator() && !stopper.test(token)) {
+            var op = token.binaryOperatorGroup();
+            if (op.precedence() < precedence) {
                 break;
             }
+            expression = binaryOperator(expression, op.rightPrecedence());
+            if (op.associativity() == OperatorGroup.Associativity.NONE) {
+                break;
+            }
+            token = next();
         }
         return expression;
     }
@@ -892,14 +899,22 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
     }
 
     default Expression keywordBinaryOperator(Expression leftOperand, int rightPrecedence) {
-        Keyword keyword = expectKeyword();
-        if (keyword.isSameAs(StandardKeyword.IS)) {
-            return isPredicate().toExpression(leftOperand);
-        }
-        var text = keyword.text();
-        consume();
-        var rightOperand = expression(rightPrecedence);
-        return Expressions.createBinaryOperator(text, leftOperand, rightOperand);
+        return switch (expectKeyword().standard()) {
+            case IS -> isPredicate(leftOperand);
+            case IN -> inOperator(leftOperand, false);
+            case NOT -> {
+                consume();
+                var keyword = expectKeyword();
+                yield switch (keyword.standard()) {
+                    case IN -> inOperator(leftOperand, true);
+                    default -> {
+                        syntaxError(keyword);
+                        yield null;
+                    }
+                };
+            }
+            default -> genericKeywordBinaryOperator(leftOperand, rightPrecedence);
+        };
     }
 
     default Expression symbolBinaryOperator(Expression leftOperand, int rightPrecedence) {
@@ -908,6 +923,10 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         consume();
         var rightOperand = expression(rightPrecedence);
         return Expressions.createBinaryOperator(text, leftOperand, rightOperand);
+    }
+
+    default Expression isPredicate(Expression subject) {
+        return isPredicate().toExpression(subject);
     }
 
     default IsPredicate isPredicate() {
@@ -936,17 +955,44 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         return predicate;
     }
 
-    default Expression literalOrGroup() {
+    default Expression inOperator(Expression subject, boolean negated) {
+        expect(StandardKeyword.IN);
+        consume();
+        return Expressions.createInPredicate(subject, listOfExpressions(), negated);
+    }
+
+    default Expression genericKeywordBinaryOperator(Expression leftOperand, int rightPrecedence) {
+        var text = next().text();
+        consume();
+        var rightOperand = expression(rightPrecedence);
+        return Expressions.createBinaryOperator(text, leftOperand, rightOperand);
+    }
+
+    default List<Expression> listOfExpressions() {
+        expect(SpecialSymbol.OPEN_PAREN);
+        consume();
+        List<Expression> list = new ArrayList<>();
+        list.add(expression());
+        while (next() != SpecialSymbol.CLOSE_PAREN) {
+            expect(SpecialSymbol.COMMA);
+            consume();
+            list.add(expression());
+        }
+        consume();
+        return list;
+    }
+
+    default Expression operand() {
         var token = next();
         if (token.isUnaryOperator()) {
-            var op = token.toUnaryOperator();
+            var op = token.unaryOperatorGroup();
             var text = token.text();
             consume();
             var operand = expression(op.precedence());
             return Expressions.createUnaryOperator(text, operand);
         } else if (token == SpecialSymbol.OPEN_PAREN) {
             consume();
-            var group = expression(0);
+            var group = expression(OperatorGroup.LOWEST_PRECEDENCE);
             expect(SpecialSymbol.CLOSE_PAREN);
             consume();
             return group;

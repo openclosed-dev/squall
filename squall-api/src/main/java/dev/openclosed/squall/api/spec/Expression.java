@@ -45,8 +45,12 @@ public interface Expression extends MapSource {
         COLUMN_REFERENCE,
         /** Typecasting. */
         TYPECAST,
-        /** Is predicate. */
-        IS
+        /** IS predicate. */
+        IS,
+        /** IN comparison. */
+        IN,
+        /** NOT IN comparison. */
+        NOT_IN
     }
 
     /**
