@@ -190,19 +190,30 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
 
     private void writeHeading(Component component, int ordinal) {
 
-        append(HEADING_PREFIX[this.level]).append(' ');
+        append(HEADING_PREFIX[this.level]).appendSpace();
 
         if (config.numbering()) {
             headingNumber.setLength(baseNumberLength[level - 1]);
             headingNumber.append(ordinal).append('.');
-            append(headingNumber).appendSpace();
+            append(headingNumber);
             baseNumberLength[level] = headingNumber.length();
         }
 
-        append(component.label().orElse(component.name())).appendSpace();
-        append('`').append(component.name()).append('`').appendSpace();
+        component.label().ifPresentOrElse(label -> {
+            if (!label.isEmpty()) {
+                appendSpace().append(label);
+            }
+            if (!component.name().isEmpty()) {
+                appendSpace().appendInlineCode(component.name());
+            }
+        }, () -> {
+            if (!component.name().isEmpty()) {
+                appendSpace().append(component.name());
+            }
+        });
 
         Badge badge = Badge.mapComponentType(component.type());
+        appendSpace();
         append("![").append(badge.label()).append(']').appendNewLine();
     }
 

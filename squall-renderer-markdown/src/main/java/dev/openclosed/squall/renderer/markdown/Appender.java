@@ -34,4 +34,11 @@ interface Appender extends Appendable {
     default Appender appendNewLine() {
         return append('\n');
     }
+
+    default Appender appendInlineCode(CharSequence csq) {
+        if (!csq.isEmpty()) {
+            append('`').append(csq).append('`');
+        }
+        return this;
+    }
 }

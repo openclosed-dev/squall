@@ -34,7 +34,7 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
         @Override
         public String getValue(Column column, Table table, int ordinal) {
             var sb = new StringBuilder();
-            sb.append('`').append(column.name()).append('`');
+            sb.append(column.name());
             if (column.isPrimaryKey()) {
                 sb.append(' ').append(KEY_MARK);
             }

@@ -29,18 +29,18 @@ CREATE TABLE schema1.table1 (
 ```
 
 # Untitled
-## 1. database1 `database1` ![database]
+## 1. database1 ![database]
 
-### 1.1. schema1 `schema1` ![schema]
+### 1.1. schema1 ![schema]
 
 #### 1.1.1. table 1 `table1` ![table]
 A description of table 1.
 
 | No. | Name | Display Name | Data Type | Precision / Length | Scale | Nullable | Unique | Default Value | Description |
 | --: | :-- | :-- | :-- | --: | --: | :-: | :-: | :-- | :-- |
-| 1 | `a` &#x1F511; | column A | varchar | 64 | - | - | &#x2705; | - | A description of column A. |
-| 2 | `b` | column B | numeric | 9 | 4 | - | - | - | A description of column B. |
-| 3 | `c` | column C | integer | - | - | &#x2705; | - | - | A description of column C. |
+| 1 | a &#x1F511; | column A | varchar | 64 | - | - | &#x2705; | - | A description of column A. |
+| 2 | b | column B | numeric | 9 | 4 | - | - | - | A description of column B. |
+| 3 | c | column C | integer | - | - | &#x2705; | - | - | A description of column C. |
 
 ---
 
@@ -62,16 +62,16 @@ CREATE TABLE public.table1 (
 ```
 
 # Untitled
-## 1.  `` ![database]
+## 1. ![database]
 
-### 1.1. public `public` ![schema]
+### 1.1. public ![schema]
 
 #### 1.1.1. table 1 `table1` ![table]
 A description of table 1.
 
 | No. | Name | Display Name | Data Type | Precision / Length | Scale | Nullable | Unique | Default Value | Description |
 | --: | :-- | :-- | :-- | --: | --: | :-: | :-: | :-- | :-- |
-| 1 | `c1` &#x1F511; | column c1 | varchar | 64 | - | - | &#x2705; | - | first line. second line. |
+| 1 | c1 &#x1F511; | column c1 | varchar | 64 | - | - | &#x2705; | - | first line. second line. |
 
 ---
 
@@ -94,13 +94,13 @@ CREATE TABLE public.table1 (
 ```
 
 # Untitled
-## 1.  `` ![database]
+## 1. ![database]
 
-### 1.1. public `public` ![schema]
+### 1.1. public ![schema]
 
 #### 1.1.1. table 1 `table1` ![table]
 A description of table 1.
 
 | No. | Name | Display Name | Data Type | Precision / Length | Scale | Nullable | Unique | Default Value | Description |
 | --: | :-- | :-- | :-- | --: | --: | :-: | :-: | :-- | :-- |
-| 1 | `c1` &#x1F511; | column c1 | varchar | 64 | - | - | &#x2705; | - | first line. second line. |
+| 1 | c1 &#x1F511; | column c1 | varchar | 64 | - | - | &#x2705; | - | first line. second line. |

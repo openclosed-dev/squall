@@ -13,9 +13,9 @@ CREATE SCHEMA schema1;
 ```
 
 # Untitled
-## 1. database1 `database1` ![database]
+## 1. database1 ![database]
 
-### 1.1. schema1 `schema1` ![schema]
+### 1.1. schema1 ![schema]
 
 ---
 # schema with comments

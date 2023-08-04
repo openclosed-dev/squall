@@ -13,9 +13,9 @@ CREATE SEQUENCE customer.customer_id;
 ```
 
 # Untitled
-## 1. customerdb `customerdb` ![database]
+## 1. customerdb ![database]
 
-### 1.1. customer `customer` ![schema]
+### 1.1. customer ![schema]
 
 #### 1.1.1. Customer Identifier `customer_id` ![sequence]
 A description of customer_id.
