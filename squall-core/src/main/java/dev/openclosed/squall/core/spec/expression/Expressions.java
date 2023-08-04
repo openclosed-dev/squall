@@ -16,7 +16,6 @@
 
 package dev.openclosed.squall.core.spec.expression;
 
-import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.Expression;
 
 import java.util.List;
@@ -53,28 +52,6 @@ public final class Expressions {
 
     public static Expression createBinaryOperator(String operator, Expression left, Expression right) {
         return new BinaryOperator(Expression.Type.BINARY_OPERATOR, operator, left, right);
-    }
-
-    public static Expression createColumnReference(String name) {
-        return new ColumnReference(Expression.Type.COLUMN_REFERENCE, name);
-    }
-
-    public static Expression createTypecast(Expression source, DataType dataType) {
-        return new Typecast(Expression.Type.TYPECAST,
-            source,
-            dataType.typeName(),
-            dataType.length(),
-            dataType.precision(),
-            dataType.scale());
-    }
-
-    public static Expression createIsPredicate(Expression subject, String predicate) {
-        return new Is(Expression.Type.IS, subject, predicate.toLowerCase());
-    }
-
-    public static Expression createInPredicate(Expression left, List<Expression> right, boolean negated) {
-        var type = negated ? Expression.Type.NOT_IN : Expression.Type.IN;
-        return new In(type, left, right);
     }
 
     private Expressions() {

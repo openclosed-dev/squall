@@ -967,3 +967,113 @@ CAST('1.23' AS real)
 ```text
 7 NOT IN (2, 3, 5)
 ```
+
+# case expression
+
+```sql
+CASE WHEN a=1 THEN 'one'
+     WHEN a=2 THEN 'two'
+     ELSE 'other'
+END
+```
+
+```json
+{
+  "type": "case",
+  "when": [
+    {
+      "condition": {
+        "type": "binary_operator",
+        "operator": "=",
+        "left": {
+          "type": "column_reference",
+          "name": "a"
+        },
+        "right": {
+          "type": "number",
+          "value": "1"
+        }
+      },
+      "result": {
+        "type": "string",
+        "value": "one"
+      }
+    },
+    {
+      "condition": {
+        "type": "binary_operator",
+        "operator": "=",
+        "left": {
+          "type": "column_reference",
+          "name": "a"
+        },
+        "right": {
+          "type": "number",
+          "value": "2"
+        }
+      },
+      "result": {
+        "type": "string",
+        "value": "two"
+      }
+    }
+  ],
+  "elseResult": {
+    "type": "string",
+    "value": "other"
+  }
+}
+```
+
+```text
+CASE WHEN (a = 1) THEN 'one' WHEN (a = 2) THEN 'two' ELSE 'other' END
+```
+
+# case with value
+
+```sql
+CASE a WHEN 1 THEN 'one'
+       WHEN 2 THEN 'two'
+       ELSE 'other'
+END
+```
+
+```json
+{
+  "type": "case",
+  "expression": {
+    "type": "column_reference",
+    "name": "a"
+  },
+  "when": [
+    {
+      "condition": {
+        "type": "number",
+        "value": "1"
+      },
+      "result": {
+        "type": "string",
+        "value": "one"
+      }
+    },
+    {
+      "condition": {
+        "type": "number",
+        "value": "2"
+      },
+      "result": {
+        "type": "string",
+        "value": "two"
+      }
+    }
+  ],
+  "elseResult": {
+    "type": "string",
+    "value": "other"
+  }
+}
+```
+
+```text
+CASE a WHEN 1 THEN 'one' WHEN 2 THEN 'two' ELSE 'other' END
+```

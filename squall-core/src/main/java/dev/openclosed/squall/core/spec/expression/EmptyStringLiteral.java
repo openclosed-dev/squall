@@ -18,7 +18,7 @@ package dev.openclosed.squall.core.spec.expression;
 
 import dev.openclosed.squall.api.spec.Expression;
 
-record EmptyStringLiteral(Expression.Type type, String value) implements RecordExpression {
+record EmptyStringLiteral(Expression.Type type, String value) implements MapSourceExpression {
 
     static final EmptyStringLiteral EMPTY = new EmptyStringLiteral(Type.STRING, "");
 

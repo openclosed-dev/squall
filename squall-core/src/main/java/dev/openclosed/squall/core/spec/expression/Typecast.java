@@ -16,6 +16,7 @@
 
 package dev.openclosed.squall.core.spec.expression;
 
+import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.Expression;
 
 import java.util.OptionalInt;
@@ -29,14 +30,23 @@ import java.util.OptionalInt;
  * @param precision
  * @param scale
  */
-record Typecast(
+public record Typecast(
     Expression.Type type,
     Expression source,
     String typeName,
     OptionalInt length,
     OptionalInt precision,
     OptionalInt scale
-) implements dev.openclosed.squall.api.spec.Typecast, RecordExpression {
+) implements dev.openclosed.squall.api.spec.Typecast, MapSourceExpression {
+
+    public Typecast(Expression source, DataType dataType) {
+        this(Expression.Type.TYPECAST,
+            source,
+            dataType.typeName(),
+            dataType.length(),
+            dataType.precision(),
+            dataType.scale());
+    }
 
     Typecast(Type type, Expression source, String dataType) {
         this(type, source, dataType, OptionalInt.empty(), OptionalInt.empty(), OptionalInt.empty());

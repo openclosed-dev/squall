@@ -23,7 +23,7 @@ import dev.openclosed.squall.core.spec.StandardDataType;
 import dev.openclosed.squall.core.parser.IdentifierType;
 import dev.openclosed.squall.core.parser.SqlGrammar;
 import dev.openclosed.squall.core.parser.Token;
-import dev.openclosed.squall.core.spec.expression.Expressions;
+import dev.openclosed.squall.core.spec.expression.Typecast;
 
 import java.util.Map;
 
@@ -98,7 +98,7 @@ interface PostgreSqlGrammar extends SqlGrammar, PostgreSqlPredicates {
         Token token = next();
         if (token == OperatorSymbol.DOUBLE_COLON) {
             consume();
-            return Expressions.createTypecast(leftOperand, dataType());
+            return new Typecast(leftOperand, dataType());
         }
         return SqlGrammar.super.symbolBinaryOperator(leftOperand, rightPrecedence);
     }

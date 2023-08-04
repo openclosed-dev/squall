@@ -18,7 +18,7 @@ package dev.openclosed.squall.core.spec.expression;
 
 import dev.openclosed.squall.api.spec.Expression;
 
-record UnaryOperator(Expression.Type type, String operator, Expression operand) implements RecordExpression {
+record UnaryOperator(Expression.Type type, String operator, Expression operand) implements MapSourceExpression {
 
     @Override
     public String toString() {

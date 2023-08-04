@@ -19,7 +19,7 @@ package dev.openclosed.squall.core.spec.expression;
 import dev.openclosed.squall.api.spec.Expression;
 
 record BinaryOperator(Expression.Type type, String operator, Expression left, Expression right)
-    implements RecordExpression {
+    implements MapSourceExpression {
 
     @Override
     public String toString() {

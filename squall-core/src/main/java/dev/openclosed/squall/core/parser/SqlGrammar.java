@@ -29,7 +29,10 @@ import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.IntegerDataType;
 import dev.openclosed.squall.api.spec.TableRef;
 import dev.openclosed.squall.core.spec.StandardDataType;
+import dev.openclosed.squall.core.spec.expression.Case;
+import dev.openclosed.squall.core.spec.expression.ColumnReference;
 import dev.openclosed.squall.core.spec.expression.Expressions;
+import dev.openclosed.squall.core.spec.expression.In;
 
 /**
  * Standard SQL grammar.
@@ -955,10 +958,10 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         return predicate;
     }
 
-    default Expression inOperator(Expression subject, boolean negated) {
+    default Expression inOperator(Expression leftOperand, boolean negated) {
         expect(StandardKeyword.IN);
         consume();
-        return Expressions.createInPredicate(subject, listOfExpressions(), negated);
+        return new In(leftOperand, listOfExpressions(), negated);
     }
 
     default Expression genericKeywordBinaryOperator(Expression leftOperand, int rightPrecedence) {
@@ -984,6 +987,26 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
 
     default Expression operand() {
         var token = next();
+        if (token instanceof Keyword keyword) {
+            switch (keyword.standard()) {
+                case TRUE -> {
+                    consume();
+                    return Expression.TRUE;
+                }
+                case FALSE -> {
+                    consume();
+                    return Expression.FALSE;
+                }
+                case NULL -> {
+                    consume();
+                    return Expression.NULL;
+                }
+                case CASE -> {
+                    return caseExpression();
+                }
+                default -> { }
+            }
+        }
         if (token.isUnaryOperator()) {
             var op = token.unaryOperatorGroup();
             var text = token.text();
@@ -996,15 +1019,6 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
             expect(SpecialSymbol.CLOSE_PAREN);
             consume();
             return group;
-        } else if (token.isSameAs(StandardKeyword.TRUE)) {
-            consume();
-            return Expression.TRUE;
-        } else if (token.isSameAs(StandardKeyword.FALSE)) {
-            consume();
-            return Expression.FALSE;
-        } else if (token.isSameAs(StandardKeyword.NULL)) {
-            consume();
-            return Expression.NULL;
         } else if (token.isLiteral()) {
             var literal = token.toLiteral();
             consume();
@@ -1015,6 +1029,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
             || token.isIdentifier(IdentifierType.FUNCTION_NAME)) {
             return functionCallOrColumnReference();
         }
+
         syntaxError(token);
         return null;
     }
@@ -1036,7 +1051,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         if (next() == SpecialSymbol.OPEN_PAREN) {
             return Expressions.createFunctionCall(token.toIdentifier(), functionArguments());
         } else if (token.isIdentifier(IdentifierType.OBJECT_NAME)) {
-            return Expressions.createColumnReference(token.toIdentifier());
+            return new ColumnReference(token.toIdentifier());
         }
         syntaxError(token);
         return null;
@@ -1055,5 +1070,36 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         }
         consume();
         return args;
+    }
+
+    default Expression caseExpression() {
+        expect(StandardKeyword.CASE);
+        consume();
+
+        Expression expression = null;
+        if (!next().isSameAs(StandardKeyword.WHEN)) {
+            expression = expression();
+            expect(StandardKeyword.WHEN);
+        }
+
+        List<Case.When> when = new ArrayList<>();
+        do {
+            consume(); // WHEN
+            Expression condition = expression();
+            expect(StandardKeyword.THEN);
+            consume();
+            Expression result = expression();
+            when.add(new Case.When(condition, result));
+        } while (next().isSameAs(StandardKeyword.WHEN));
+
+        Expression elseResult = null;
+        if (next().isSameAs(StandardKeyword.ELSE)) {
+            consume();
+            elseResult = expression();
+        }
+
+        expect(StandardKeyword.END);
+
+        return new Case(expression, when, elseResult);
     }
 }

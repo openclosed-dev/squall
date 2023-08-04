@@ -20,7 +20,7 @@ import dev.openclosed.squall.api.spec.Expression;
 
 import java.util.List;
 
-record FunctionCall(Expression.Type type, String name, List<Expression> arguments) implements RecordExpression {
+record FunctionCall(Expression.Type type, String name, List<Expression> arguments) implements MapSourceExpression {
 
     @Override
     public String toString() {

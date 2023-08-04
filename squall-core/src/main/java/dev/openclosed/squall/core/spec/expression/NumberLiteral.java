@@ -20,7 +20,7 @@ import dev.openclosed.squall.api.spec.Expression;
 
 import java.math.BigDecimal;
 
-record NumberLiteral(Expression.Type type, String value) implements RecordExpression {
+record NumberLiteral(Expression.Type type, String value) implements MapSourceExpression {
 
     public BigDecimal numericValue() {
         return new BigDecimal(value());

@@ -18,7 +18,7 @@ package dev.openclosed.squall.core.spec.expression;
 
 import dev.openclosed.squall.api.spec.Expression;
 
-record SimpleFunctionCall(Expression.Type type, String name) implements RecordExpression {
+record SimpleFunctionCall(Expression.Type type, String name) implements MapSourceExpression {
 
     @Override
     public String toString() {

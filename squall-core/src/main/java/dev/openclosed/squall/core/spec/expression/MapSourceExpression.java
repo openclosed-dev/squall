@@ -22,5 +22,5 @@ import dev.openclosed.squall.core.base.RecordMapSource;
 /**
  * Record-based expression.
  */
-interface RecordExpression extends Expression, RecordMapSource {
+interface MapSourceExpression extends Expression, RecordMapSource {
 }

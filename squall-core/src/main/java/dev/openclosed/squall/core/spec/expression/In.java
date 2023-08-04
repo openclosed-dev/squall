@@ -4,11 +4,15 @@ import dev.openclosed.squall.api.spec.Expression;
 
 import java.util.List;
 
-record In(
+public record In(
     Type type,
     Expression left,
     List<Expression> right
-    ) implements RecordExpression {
+    ) implements MapSourceExpression {
+
+    public In(Expression left, List<Expression> right, boolean negated) {
+        this(negated ? Type.NOT_IN : Type.IN, left, right);
+    }
 
     public In {
         if (type != Type.IN && type != Type.NOT_IN) {

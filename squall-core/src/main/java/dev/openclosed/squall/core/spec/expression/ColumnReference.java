@@ -18,7 +18,17 @@ package dev.openclosed.squall.core.spec.expression;
 
 import dev.openclosed.squall.api.spec.Expression;
 
-record ColumnReference(Expression.Type type, String name) implements RecordExpression {
+import java.util.Objects;
+
+public record ColumnReference(Expression.Type type, String name) implements MapSourceExpression {
+
+    public ColumnReference(String name) {
+        this(Type.COLUMN_REFERENCE, name);
+    }
+
+    public ColumnReference {
+        Objects.requireNonNull(name);
+    }
 
     @Override
     public String toString() {

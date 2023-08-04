@@ -1,7 +1,7 @@
 package dev.openclosed.squall.core.parser;
 
 import dev.openclosed.squall.api.spec.Expression;
-import dev.openclosed.squall.core.spec.expression.Expressions;
+import dev.openclosed.squall.core.spec.expression.Is;
 
 public enum IsPredicate {
     IS_NULL,
@@ -29,6 +29,6 @@ public enum IsPredicate {
     }
 
     public Expression toExpression(Expression subject) {
-        return Expressions.createIsPredicate(subject, name());
+        return new Is(subject, name());
     }
 }
