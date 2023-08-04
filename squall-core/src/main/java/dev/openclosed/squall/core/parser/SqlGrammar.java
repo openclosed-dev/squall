@@ -1099,6 +1099,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         }
 
         expect(StandardKeyword.END);
+        consume();
 
         return new Case(expression, when, elseResult);
     }
