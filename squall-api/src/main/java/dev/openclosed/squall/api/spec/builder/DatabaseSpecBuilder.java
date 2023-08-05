@@ -41,19 +41,19 @@ public interface DatabaseSpecBuilder {
 
     DatabaseSpecBuilder setTitle(String title);
 
-    DatabaseSpecBuilder addDatabase(String name);
+    DatabaseSpecBuilder addDatabase(String name, List<DocAnnotation> annotations);
 
     DatabaseSpecBuilder changeCurrentDatabase(String name);
 
-    DatabaseSpecBuilder addSchema(String name);
+    DatabaseSpecBuilder addSchema(String name, List<DocAnnotation> annotations);
 
     // Table
 
-    DatabaseSpecBuilder addTable(String schemaName, String tableName);
+    DatabaseSpecBuilder addTable(String schemaName, String tableName, List<DocAnnotation> annotations);
 
     DatabaseSpecBuilder alterTable(String schemaName, String tableName);
 
-    DatabaseSpecBuilder addTableColumn(String name, DataType dataType);
+    DatabaseSpecBuilder addTableColumn(String name, DataType dataType, List<DocAnnotation> annotations);
 
     DatabaseSpecBuilder addTablePrimaryKey(String constraintName, List<String> columnNames);
 
@@ -73,7 +73,7 @@ public interface DatabaseSpecBuilder {
 
     // Sequence
 
-    DatabaseSpecBuilder addSequence(String schemaName, String sequenceName);
+    DatabaseSpecBuilder addSequence(String schemaName, String sequenceName, List<DocAnnotation> annotations);
 
     DatabaseSpecBuilder addSequenceDataType(IntegerDataType dataType);
 
@@ -84,12 +84,6 @@ public interface DatabaseSpecBuilder {
     DatabaseSpecBuilder addSequenceMaxValue(long maxValue);
 
     DatabaseSpecBuilder addSequenceMinValue(long minValue);
-
-    // Annotations
-
-    DatabaseSpecBuilder addAnnotations(List<DocAnnotation> annotations);
-
-    List<DocAnnotation> getAnnotations();
 
     DatabaseSpec build();
 }

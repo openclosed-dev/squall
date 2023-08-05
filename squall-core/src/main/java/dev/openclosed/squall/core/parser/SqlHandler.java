@@ -17,6 +17,7 @@
 package dev.openclosed.squall.core.parser;
 
 import dev.openclosed.squall.api.spec.DataType;
+import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.IntegerDataType;
 import dev.openclosed.squall.api.spec.TableRef;
@@ -25,13 +26,13 @@ import java.util.List;
 
 public interface SqlHandler {
 
-    default void handleDatabase(String name) {
+    default void handleDatabase(String name, List<DocAnnotation> annotations) {
     }
 
-    default void handleSchema(String name) {
+    default void handleSchema(String name, List<DocAnnotation> annotations) {
     }
 
-    default void handleTable(String schemaName, String tableName) {
+    default void handleTable(String schemaName, String tableName, List<DocAnnotation> annotations) {
     }
 
     default void handleTableToAlter(String schemaName, String tableName) {
@@ -50,16 +51,16 @@ public interface SqlHandler {
     default void handleCheckConstraint(String constraintName, Expression expression) {
     }
 
-    default void handleColumn(String name, DataType dataType) {
+    default void handleColumn(String name, DataType dataType, List<DocAnnotation> annotations) {
     }
 
-    default void handleColumnDefaultValue(Expression devaultValue) {
+    default void handleColumnDefaultValue(Expression defaultValue) {
     }
 
     default void handleColumnNullable(boolean isNullable) {
     }
 
-    default void handleSequence(String schemaName, String sequenceName) {
+    default void handleSequence(String schemaName, String sequenceName, List<DocAnnotation> annotations) {
     }
 
     default void handleSequenceDataType(IntegerDataType dataType) {

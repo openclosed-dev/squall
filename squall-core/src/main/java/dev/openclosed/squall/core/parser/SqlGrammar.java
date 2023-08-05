@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.IntegerDataType;
@@ -67,6 +68,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
     }
 
     default void createStatement() {
+        var annotations = captureAnnotations();
         expect(StandardKeyword.CREATE);
         consume();
 
@@ -79,11 +81,11 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         }
 
         switch (keyword.standard()) {
-            case SCHEMA -> createSchema();
-            case TABLE -> createTable();
-            case SEQUENCE -> createSequence();
+            case SCHEMA -> createSchema(annotations);
+            case TABLE -> createTable(annotations);
+            case SEQUENCE -> createSequence(annotations);
             case VIEW -> { }
-            default -> createUnknownSchemaObject();
+            default -> createUnknownSchemaObject(annotations);
         }
     }
 
@@ -97,17 +99,17 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         }
     }
 
-    default void createUnknownSchemaObject() {
+    default void createUnknownSchemaObject(List<DocAnnotation> annotations) {
     }
 
-    default void createDatabase() {
+    default void createDatabase(List<DocAnnotation> annotations) {
         consume(); // DATABASE
         var databaseName = expectIdentifier(IdentifierType.OBJECT_NAME);
         consume();
-        handleDatabase(databaseName);
+        handleDatabase(databaseName, annotations);
     }
 
-    default void createSchema() {
+    default void createSchema(List<DocAnnotation> annotations) {
         expect(StandardKeyword.SCHEMA);
         consume();
         if (next().isSameAs(StandardKeyword.IF)) {
@@ -115,7 +117,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         }
         var schemaName = expectIdentifier(IdentifierType.OBJECT_NAME);
         consume();
-        handleSchema(schemaName);
+        handleSchema(schemaName, annotations);
     }
 
     default void ifExists() {
@@ -137,14 +139,14 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         consume();
     }
 
-    default void createSequence() {
+    default void createSequence(List<DocAnnotation> annotations) {
         expect(StandardKeyword.SEQUENCE);
         consume();
         if (next().isSameAs(StandardKeyword.IF)) {
             ifNotExists();
         }
         String[] name = schemaObjectName();
-        handleSequence(name[0], name[1]);
+        handleSequence(name[0], name[1], annotations);
 
         Token token = next();
         while (token != SpecialSymbol.SEMICOLON) {
@@ -221,14 +223,14 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         handleSequenceMinValue(integerLiteral());
     }
 
-    default void createTable() {
+    default void createTable(List<DocAnnotation> annotations) {
         expect(StandardKeyword.TABLE);
         consume();
         if (next().isSameAs(StandardKeyword.IF)) {
             ifNotExists();
         }
         String[] name = schemaObjectName();
-        handleTable(name[0], name[1]);
+        handleTable(name[0], name[1], annotations);
         tableComponents();
     }
 
@@ -478,10 +480,11 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
     }
 
     default void tableColumn() {
+        var annotations = captureAnnotations();
         String columnName = expectIdentifier(IdentifierType.OBJECT_NAME);
         consume();
         var dataType = dataType();
-        handleColumn(columnName, dataType);
+        handleColumn(columnName, dataType, annotations);
         columnConstraints(columnName);
     }
 

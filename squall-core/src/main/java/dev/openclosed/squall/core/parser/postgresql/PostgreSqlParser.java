@@ -29,6 +29,7 @@ import java.util.Map;
 final class PostgreSqlParser extends BaseSqlParser
     implements PostgreSqlGrammar, BuildingSqlHandler {
 
+    private final DatabaseSpecBuilder builder;
     private final Map<String, Keyword> keywords;
 
     PostgreSqlParser(
@@ -36,13 +37,19 @@ final class PostgreSqlParser extends BaseSqlParser
         DatabaseSpecBuilder builder,
         CommentHandler commentHandler,
         Map<String, Keyword> keywords) {
-        super(config, builder, commentHandler);
+        super(config, commentHandler);
+        this.builder = builder;
         this.keywords = keywords;
     }
 
     @Override
     protected SqlTokenizer createTokenizer(CharSequence text) {
         return new PostgreSqlTokenizer(text, this.keywords);
+    }
+
+    @Override
+    public DatabaseSpecBuilder builder() {
+        return this.builder;
     }
 }
 

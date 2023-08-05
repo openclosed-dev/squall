@@ -16,7 +16,6 @@
 
 package dev.openclosed.squall.core.spec.builder;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,7 +43,6 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     private TableBuilder currentTableBuilder;
     private ColumnBuilder currentColumnBuilder;
     private SequenceBuilder currentSequenceBuilder;
-    private final List<DocAnnotation> annotations = new ArrayList<>();
     private String title;
 
     @Override
@@ -55,9 +53,9 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder addDatabase(String name) {
+    public DatabaseSpecBuilder addDatabase(String name, List<DocAnnotation> annotations) {
         Objects.requireNonNull(name);
-        addAnnotatedDatabase(name, removeAnnotations(), State.DEFINED);
+        addAnnotatedDatabase(name, annotations, State.DEFINED);
         changeCurrentDatabase(name);
         return this;
     }
@@ -77,17 +75,17 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder addSchema(String name) {
+    public DatabaseSpecBuilder addSchema(String name, List<DocAnnotation> annotations) {
         Objects.requireNonNull(name);
-        getCurrentDatabase().addSchema(name, removeAnnotations());
+        getCurrentDatabase().addSchema(name, annotations);
         return this;
     }
 
     @Override
-    public DatabaseSpecBuilder addTable(String schemaName, String tableName) {
+    public DatabaseSpecBuilder addTable(String schemaName, String tableName, List<DocAnnotation> annotations) {
         Objects.requireNonNull(tableName);
         SchemaBuilder schema = getCurrentDatabase().getSchema(schemaName);
-        TableBuilder tableBuilder = schema.addTable(tableName, removeAnnotations());
+        TableBuilder tableBuilder = schema.addTable(tableName, annotations);
         this.currentTableBuilder = tableBuilder;
         return this;
     }
@@ -102,10 +100,10 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder addTableColumn(String name, DataType dataType) {
+    public DatabaseSpecBuilder addTableColumn(String name, DataType dataType, List<DocAnnotation> annotations) {
         Objects.requireNonNull(name);
         Objects.requireNonNull(dataType);
-        ColumnBuilder builder = requireCurrentTable().addColumn(name, dataType, removeAnnotations());
+        ColumnBuilder builder = requireCurrentTable().addColumn(name, dataType, annotations);
         this.currentColumnBuilder = builder;
         return this;
     }
@@ -155,10 +153,10 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder addSequence(String schemaName, String sequenceName) {
+    public DatabaseSpecBuilder addSequence(String schemaName, String sequenceName, List<DocAnnotation> annotations) {
         Objects.requireNonNull(sequenceName);
         SchemaBuilder schema = getCurrentDatabase().getSchema(schemaName);
-        SequenceBuilder builder = schema.addSequence(sequenceName, removeAnnotations());
+        SequenceBuilder builder = schema.addSequence(sequenceName, annotations);
         this.currentSequenceBuilder = builder;
         return this;
     }
@@ -195,18 +193,6 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder addAnnotations(List<DocAnnotation> annotations) {
-        this.annotations.clear();
-        this.annotations.addAll(annotations);
-        return this;
-    }
-
-    @Override
-    public List<DocAnnotation> getAnnotations() {
-        return List.copyOf(annotations);
-    }
-
-    @Override
     public DatabaseSpec build() {
         var databases = this.databaseBuilders.values().stream()
                 .map(DatabaseBuilder::build).toList();
@@ -222,12 +208,6 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
             database =  addUndefinedDatabase(name);
         }
         return database;
-    }
-
-    private List<DocAnnotation> removeAnnotations() {
-        var removed = getAnnotations();
-        this.annotations.clear();
-        return removed;
     }
 
     private DatabaseBuilder addUndefinedDatabase(String name) {

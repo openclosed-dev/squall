@@ -18,7 +18,10 @@ package dev.openclosed.squall.core.parser;
 
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlSyntaxException;
+import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.core.base.Messages;
+
+import java.util.List;
 
 public interface SqlGrammarSupport {
 
@@ -31,6 +34,8 @@ public interface SqlGrammarSupport {
     Token next();
 
     void consume();
+
+    List<DocAnnotation> captureAnnotations();
 
     default void find(Token token) {
         Token next;

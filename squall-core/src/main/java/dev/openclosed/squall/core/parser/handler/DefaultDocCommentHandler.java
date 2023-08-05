@@ -92,7 +92,7 @@ public final class DefaultDocCommentHandler implements DocCommentHandler {
         }
 
         addLastAnnotation();
-        context.builder().addAnnotations(this.annotations);
+        this.context.addAnnotations(this.annotations);
     }
 
     private void reset(CharSequence text, Location location, ParserContext context) {

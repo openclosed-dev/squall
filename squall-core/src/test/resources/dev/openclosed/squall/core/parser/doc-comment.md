@@ -109,7 +109,7 @@ CREATE SEQUENCE customer_number;
 }
 ```
 
-# previous comment
+# ignore comments for previous statement
 
 ```sql
 /** table t1. */
@@ -138,6 +138,37 @@ CREATE TABLE t2();
                   "value": "table t2."
                 }
               ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+# ignore comments but preceding one
+
+```sql
+/** table t1. */
+DROP TABLE t1;
+
+CREATE TABLE t2();
+```
+
+```json
+{
+  "databases" : [
+    {
+      "name": "",
+      "state": "undefined",
+      "schemas" : [
+        {
+          "name" : "public",
+          "state": "undefined",
+          "tables": [
+            {
+              "name": "t2"
             }
           ]
         }

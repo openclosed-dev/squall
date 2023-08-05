@@ -21,6 +21,7 @@ import dev.openclosed.squall.api.base.Message;
 import dev.openclosed.squall.api.base.Problem;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.ParserContext;
+import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.Optional;
 class TestParserContext implements ParserContext {
     private final ParserConfig config;
     private final DatabaseSpecBuilder builder;
+    private final List<DocAnnotation> annotations = new ArrayList<>();
     private final List<Problem> problems = new ArrayList<>();
 
     TestParserContext() {
@@ -43,13 +45,17 @@ class TestParserContext implements ParserContext {
     }
 
     @Override
-    public DatabaseSpecBuilder builder() {
-        return builder;
+    public void addAnnotations(List<DocAnnotation> annotations) {
+        this.annotations.addAll(annotations);
     }
 
     @Override
     public void reportProblem(System.Logger.Level severity, Message message, Location location) {
         this.problems.add(new ReportedProblem(severity, message, Optional.of(location)));
+    }
+
+    List<DocAnnotation> getAnnotations() {
+        return annotations;
     }
 
     List<Problem> getProblems() {

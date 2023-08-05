@@ -24,11 +24,12 @@ import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.ParserContext;
 import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlSyntaxException;
+import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Expression;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 import dev.openclosed.squall.core.base.SnippetExtractor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,24 +37,22 @@ public abstract class BaseSqlParser
     implements SqlParser, ParserContext, SqlGrammarEntry, SqlGrammarSupport {
 
     private final ParserConfig config;
-    private final DatabaseSpecBuilder specBuilder;
 
     private final CommentHandler commentHandler;
+
+    private SqlTokenizer tokenizer;
+    private int tokenNo;
+
+    private List<DocAnnotation> annotations;
+    private int annotationTokenNo;
 
     private final List<Problem> problems = new ArrayList<>();
     private int errorCount;
 
-    private SqlTokenizer tokenizer;
-
     private SnippetExtractor snippetExtractor;
 
-    protected BaseSqlParser(
-        ParserConfig config,
-        DatabaseSpecBuilder specBuilder,
-        CommentHandler commentHandler) {
-
+    protected BaseSqlParser(ParserConfig config, CommentHandler commentHandler) {
         this.config = config;
-        this.specBuilder = specBuilder;
         this.commentHandler = commentHandler;
     }
 
@@ -91,8 +90,9 @@ public abstract class BaseSqlParser
     }
 
     @Override
-    public final DatabaseSpecBuilder builder() {
-        return specBuilder;
+    public final void addAnnotations(List<DocAnnotation> annotations) {
+        this.annotations = List.copyOf(annotations);
+        this.annotationTokenNo = this.tokenNo;
     }
 
     @Override
@@ -133,14 +133,13 @@ public abstract class BaseSqlParser
 
     @Override
     public Token next() {
-        SqlTokenizer t = getTokenizer();
-        Token next = t.next();
+        Token next = fetchToken();
         while (!next.isPrimary()) {
             if (next instanceof CommentToken comment) {
                 handleComment(comment);
             }
-            t.consume();
-            next = t.next();
+            consume();
+            next = fetchToken();
         }
         return next;
     }
@@ -148,13 +147,28 @@ public abstract class BaseSqlParser
     @Override
     public void consume() {
         getTokenizer().consume();
+        this.tokenNo++;
     }
 
+    @Override
+    public List<DocAnnotation> captureAnnotations() {
+        List<DocAnnotation> captured = this.annotations;
+        this.annotations = null;
+        if (captured != null && this.tokenNo == this.annotationTokenNo + 1) {
+            return captured;
+        }
+        return Collections.emptyList();
+    }
+
+    private Token fetchToken() {
+        return getTokenizer().next();
+    }
 
     protected void reset(CharSequence text) {
         this.problems.clear();
         this.errorCount = 0;
         this.tokenizer = createTokenizer(text);
+        this.annotations = null;
         this.snippetExtractor = new SnippetExtractor(text);
     }
 

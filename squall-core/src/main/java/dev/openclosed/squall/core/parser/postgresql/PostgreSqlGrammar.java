@@ -17,6 +17,7 @@
 package dev.openclosed.squall.core.parser.postgresql;
 
 import dev.openclosed.squall.api.spec.DataType;
+import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.core.parser.IsPredicate;
 import dev.openclosed.squall.core.spec.StandardDataType;
@@ -25,6 +26,7 @@ import dev.openclosed.squall.core.parser.SqlGrammar;
 import dev.openclosed.squall.core.parser.Token;
 import dev.openclosed.squall.core.spec.expression.Typecast;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,9 +37,9 @@ interface PostgreSqlGrammar extends SqlGrammar, PostgreSqlPredicates {
     Map<String, DataType> SUPPORTED_DATA_TYPES = PostgreSqlDataType.valuesAsMap();
 
     @Override
-    default void createUnknownSchemaObject() {
+    default void createUnknownSchemaObject(List<DocAnnotation> annotations) {
         if (next() == PostgreSqlKeyword.DATABASE) {
-            createDatabase();
+            createDatabase(annotations);
         }
     }
 

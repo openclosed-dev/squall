@@ -18,7 +18,9 @@ package dev.openclosed.squall.api.parser;
 
 import dev.openclosed.squall.api.base.Location;
 import dev.openclosed.squall.api.base.Message;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
+import dev.openclosed.squall.api.spec.DocAnnotation;
+
+import java.util.List;
 
 /**
  * Parsing context.
@@ -31,11 +33,7 @@ public interface ParserContext {
      */
     ParserConfig config();
 
-    /**
-     * Returns the builder of the specification.
-     * @return the builder of the specification.
-     */
-    DatabaseSpecBuilder builder();
+    void addAnnotations(List<DocAnnotation> annotations);
 
     void reportProblem(System.Logger.Level severity, Message message, Location location);
 }

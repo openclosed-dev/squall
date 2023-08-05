@@ -17,6 +17,7 @@
 package dev.openclosed.squall.core.parser;
 
 import dev.openclosed.squall.api.spec.DataType;
+import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.IntegerDataType;
 import dev.openclosed.squall.api.spec.TableRef;
@@ -29,18 +30,18 @@ public interface BuildingSqlHandler extends SqlHandler {
     DatabaseSpecBuilder builder();
 
     @Override
-    default void handleDatabase(String name) {
-        builder().addDatabase(name);
+    default void handleDatabase(String name, List<DocAnnotation> annotations) {
+        builder().addDatabase(name, annotations);
     }
 
     @Override
-    default void handleSchema(String name) {
-        builder().addSchema(name);
+    default void handleSchema(String name, List<DocAnnotation> annotations) {
+        builder().addSchema(name, annotations);
     }
 
     @Override
-    default void handleTable(String schemaName, String tableName) {
-        builder().addTable(schemaName, tableName);
+    default void handleTable(String schemaName, String tableName, List<DocAnnotation> annotations) {
+        builder().addTable(schemaName, tableName, annotations);
     }
 
     @Override
@@ -65,8 +66,8 @@ public interface BuildingSqlHandler extends SqlHandler {
     }
 
     @Override
-    default void handleColumn(String name, DataType dataType) {
-        builder().addTableColumn(name, dataType);
+    default void handleColumn(String name, DataType dataType, List<DocAnnotation> annotations) {
+        builder().addTableColumn(name, dataType, annotations);
     }
 
     @Override
@@ -80,8 +81,8 @@ public interface BuildingSqlHandler extends SqlHandler {
     }
 
     @Override
-    default void handleSequence(String schemaName, String sequenceName) {
-        builder().addSequence(schemaName, sequenceName);
+    default void handleSequence(String schemaName, String sequenceName, List<DocAnnotation> annotations) {
+        builder().addSequence(schemaName, sequenceName, annotations);
     }
 
     @Override
@@ -108,5 +109,4 @@ public interface BuildingSqlHandler extends SqlHandler {
     default void handleSequenceMinValue(long minValue) {
         builder().addSequenceMinValue(minValue);
     }
-
 }
