@@ -61,6 +61,20 @@ public interface Expression extends MapSource {
     Type type();
 
     /**
+     * Returns whether this expression is complex or not.
+     * @return {@code true} if it may be hard to read without outermost parentheses.
+     */
+    default boolean isComplex() {
+        return false;
+    }
+
+    /**
+     * Returns this expression as a SQL fragment.
+     * @return SQL fragment of this expression.
+     */
+    String toSql();
+
+    /**
      * NULL literal.
      */
     Expression NULL = new Expression() {
@@ -73,7 +87,7 @@ public interface Expression extends MapSource {
         }
 
         @Override
-        public String toString() {
+        public String toSql() {
             return "null";
         }
 
@@ -98,7 +112,7 @@ public interface Expression extends MapSource {
         }
 
         @Override
-        public String toString() {
+        public String toSql() {
             return "true";
         }
 
@@ -123,7 +137,7 @@ public interface Expression extends MapSource {
         }
 
         @Override
-        public String toString() {
+        public String toSql() {
             return "false";
         }
 

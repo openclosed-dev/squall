@@ -27,7 +27,7 @@ record NumberLiteral(Expression.Type type, String value) implements MapSourceExp
     }
 
     @Override
-    public String toString() {
+    public String toSql() {
         return value();
     }
 }

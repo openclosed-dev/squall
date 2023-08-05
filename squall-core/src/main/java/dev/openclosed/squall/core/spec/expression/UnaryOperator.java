@@ -21,12 +21,16 @@ import dev.openclosed.squall.api.spec.Expression;
 record UnaryOperator(Expression.Type type, String operator, Expression operand) implements MapSourceExpression {
 
     @Override
-    public String toString() {
-        return new StringBuilder()
-            .append('(')
+    public boolean isComplex() {
+        return true;
+    }
+
+    @Override
+    public String toSql() {
+        return new SqlStringBuilder()
             .append(operator)
-            .append(' ')
-            .append(operand.toString())
+            .append('(')
+            .append(operand)
             .append(')')
             .toString();
     }

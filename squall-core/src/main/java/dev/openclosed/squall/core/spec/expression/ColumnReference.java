@@ -31,7 +31,7 @@ public record ColumnReference(Expression.Type type, String name) implements MapS
     }
 
     @Override
-    public String toString() {
+    public String toSql() {
         return name();
     }
 }

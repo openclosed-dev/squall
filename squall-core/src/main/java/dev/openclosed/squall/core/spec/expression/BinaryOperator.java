@@ -22,15 +22,18 @@ record BinaryOperator(Expression.Type type, String operator, Expression left, Ex
     implements MapSourceExpression {
 
     @Override
-    public String toString() {
-        return new StringBuilder()
-            .append('(')
-            .append(left)
+    public boolean isComplex() {
+        return true;
+    }
+
+    @Override
+    public String toSql() {
+        return new SqlStringBuilder()
+            .appendGroupedIfComplex(left)
             .append(' ')
             .append(operator)
             .append(' ')
-            .append(right)
-            .append(')')
+            .appendGroupedIfComplex(right)
             .toString();
     }
 }

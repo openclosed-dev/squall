@@ -23,7 +23,7 @@ record EmptyStringLiteral(Expression.Type type, String value) implements MapSour
     static final EmptyStringLiteral EMPTY = new EmptyStringLiteral(Type.STRING, "");
 
     @Override
-    public String toString() {
+    public String toSql() {
         return "''";
     }
 }

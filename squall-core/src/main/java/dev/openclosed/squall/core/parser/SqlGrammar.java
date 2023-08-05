@@ -877,7 +877,16 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
     }
 
     default Expression expression(int precedence, Predicate<Token> stopper) {
-        Expression expression = operand();
+        Expression expression = expression(operand(), precedence, stopper);
+        Token next = next();
+        if (next.isSameAs(StandardKeyword.AND) || next.isSameAs(StandardKeyword.OR)) {
+            expression = expression(expression, precedence, stopper);
+        }
+        return expression;
+    }
+
+    default Expression expression(Expression firstOperand, final int precedence, Predicate<Token> stopper) {
+        Expression expression = firstOperand;
         Token token = next();
         while (token.isBinaryOperator() && !stopper.test(token)) {
             var op = token.binaryOperatorGroup();
@@ -952,6 +961,8 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
             }
         };
         assert predicate != null;
+        // NULL/TRUE/FALSE/UNKNOWN
+        consume();
         if (negated) {
             predicate = predicate.negated();
         }

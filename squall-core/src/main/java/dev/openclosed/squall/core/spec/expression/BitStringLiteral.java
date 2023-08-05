@@ -21,7 +21,7 @@ import dev.openclosed.squall.api.spec.Expression;
 record BitStringLiteral(Expression.Type type, String value) implements MapSourceExpression {
 
     @Override
-    public String toString() {
+    public String toSql() {
         return new StringBuilder()
             .append("b'").append(value()).append('\'')
             .toString();

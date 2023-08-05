@@ -103,7 +103,7 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
         public String getValue(Column column, Table table, int ordinal) {
             return column.defaultValue()
                 .map(value -> new StringBuilder()
-                    .append('`').append(value).append('`').toString()
+                    .append('`').append(value.toSql()).append('`').toString()
                 ).orElse("-");
         }
     },

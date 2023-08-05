@@ -53,10 +53,10 @@ public record Typecast(
     }
 
     @Override
-    public String toString() {
-        var sb = new StringBuilder()
+    public String toSql() {
+        var sb = new SqlStringBuilder()
             .append("CAST(")
-            .append(source.toString())
+            .appendGroupedIfComplex(source)
             .append(" AS ")
             .append(typeName);
 

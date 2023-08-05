@@ -20,18 +20,19 @@ import dev.openclosed.squall.api.spec.Expression;
 
 import java.util.List;
 
-record FunctionCall(Expression.Type type, String name, List<Expression> arguments) implements MapSourceExpression {
+record FunctionCall(Expression.Type type, String name, List<Expression> arguments)
+    implements MapSourceExpression {
 
     @Override
-    public String toString() {
-        var sb = new StringBuilder()
+    public String toSql() {
+        var sb = new SqlStringBuilder()
             .append(name())
             .append('(');
         for (int i = 0; i < arguments.size(); i++) {
             if (i > 0) {
                 sb.append(", ");
             }
-            sb.append(arguments.get(i).toString());
+            sb.append(arguments.get(i));
         }
         return sb.append(')').toString();
     }

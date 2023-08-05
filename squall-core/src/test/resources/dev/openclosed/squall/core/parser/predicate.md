@@ -165,3 +165,36 @@ true IS NOT UNKNOWN
 ```text
 true IS NOT UNKNOWN
 ```
+
+# multiple predicates
+
+```sql
+foo IS NOT NULL OR bar IS TRUE
+```
+
+```json
+{
+  "type": "binary_operator",
+  "operator": "OR",
+  "left": {
+    "type": "is",
+    "subject": {
+      "type": "column_reference",
+      "name": "foo"
+    },
+    "predicate": "is_not_null"
+  },
+  "right": {
+    "type": "is",
+    "subject": {
+      "type": "column_reference",
+      "name": "bar"
+    },
+    "predicate": "is_true"
+  }
+}
+```
+
+```text
+(foo IS NOT NULL) OR (bar IS TRUE)
+```

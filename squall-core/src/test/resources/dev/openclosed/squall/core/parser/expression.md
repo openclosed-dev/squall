@@ -139,7 +139,7 @@ false
 ```
 
 ```text
-(1 + 2)
+1 + 2
 ```
 
 # subtraction
@@ -164,7 +164,7 @@ false
 ```
 
 ```text
-(1 - 2)
+1 - 2
 ```
 
 # multiplication
@@ -189,7 +189,7 @@ false
 ```
 
 ```text
-(1 * 2)
+1 * 2
 ```
 
 # division
@@ -214,7 +214,7 @@ false
 ```
 
 ```text
-(1 / 2)
+1 / 2
 ```
 
 # modulo
@@ -239,7 +239,7 @@ false
 ```
 
 ```text
-(5 % 2)
+5 % 2
 ```
 
 # exponentiation
@@ -264,7 +264,7 @@ false
 ```
 
 ```text
-(2 ^ 3)
+2 ^ 3
 ```
 
 # multiple additions
@@ -297,7 +297,7 @@ false
 ```
 
 ```text
-((1 + 2) + 3)
+(1 + 2) + 3
 ```
 
 # multiple exponentiation
@@ -330,7 +330,7 @@ false
 ```
 
 ```text
-((1 ^ 2) ^ 3)
+(1 ^ 2) ^ 3
 ```
 
 # addition and subtraction
@@ -363,7 +363,7 @@ false
 ```
 
 ```text
-((1 + 2) - 3)
+(1 + 2) - 3
 ```
 # addition and multiplication
 
@@ -395,7 +395,7 @@ false
 ```
 
 ```text
-(1 + (2 * 3))
+1 + (2 * 3)
 ```
 
 # group to change precedence
@@ -428,7 +428,7 @@ false
 ```
 
 ```text
-((1 + 2) * 3)
+(1 + 2) * 3
 ```
 
 # unary plus
@@ -457,7 +457,7 @@ false
 ```
 
 ```text
-(+ (1 + 2))
++(1 + 2)
 ```
 
 # unary minus
@@ -486,7 +486,7 @@ false
 ```
 
 ```text
-(- (1 + 2))
+-(1 + 2)
 ```
 
 # current_time
@@ -602,7 +602,7 @@ LOCALTIMESTAMP
 ```
 
 ```text
-(1 = 2)
+1 = 2
 ```
 
 # less-than comparison operator
@@ -627,7 +627,7 @@ LOCALTIMESTAMP
 ```
 
 ```text
-(1 < 2)
+1 < 2
 ```
 
 # greater-than comparison operator
@@ -652,7 +652,7 @@ LOCALTIMESTAMP
 ```
 
 ```text
-(1 > 2)
+1 > 2
 ```
 
 # not-equal comparison operator
@@ -677,7 +677,7 @@ LOCALTIMESTAMP
 ```
 
 ```text
-(1 <> 2)
+1 <> 2
 ```
 
 # not-equal alias comparison operator
@@ -702,7 +702,7 @@ LOCALTIMESTAMP
 ```
 
 ```text
-(1 <> 2)
+1 <> 2
 ```
 
 # less-than-or-equal-to comparison operator
@@ -727,7 +727,7 @@ LOCALTIMESTAMP
 ```
 
 ```text
-(1 <= 2)
+1 <= 2
 ```
 
 # greater-than-or-equal-to comparison operator
@@ -752,7 +752,7 @@ LOCALTIMESTAMP
 ```
 
 ```text
-(1 >= 2)
+1 >= 2
 ```
 
 # AND logical operator
@@ -777,7 +777,7 @@ true AND false
 ```
 
 ```text
-(true AND false)
+true AND false
 ```
 
 # OR logical operator
@@ -802,7 +802,7 @@ true OR false
 ```
 
 ```text
-(true OR false)
+true OR false
 ```
 
 # NOT logical operator
@@ -823,7 +823,7 @@ NOT true
 ```
 
 ```text
-(NOT true)
+NOT(true)
 ```
 
 # column reference
@@ -848,7 +848,7 @@ a + b
 ```
 
 ```text
-(a + b)
+a + b
 ```
 # typecasting
 
@@ -897,7 +897,7 @@ CAST('1.23' AS real)
 ```
 
 ```text
-(CAST('1' AS numeric) + 2)
+CAST('1' AS numeric) + 2
 ```
 
 # in array comparison
@@ -1076,4 +1076,45 @@ END
 
 ```text
 CASE a WHEN 1 THEN 'one' WHEN 2 THEN 'two' ELSE 'other' END
+```
+
+# comparison and logical operators
+
+```sql
+a < 12 AND b < 34
+```
+
+```json
+{
+  "type": "binary_operator",
+  "operator": "AND",
+  "left": {
+    "type": "binary_operator",
+    "operator": "<",
+    "left": {
+      "type": "column_reference",
+      "name": "a"
+    },
+    "right": {
+      "type": "number",
+      "value": "12"
+    }
+  },
+  "right": {
+    "type": "binary_operator",
+    "operator": "<",
+    "left": {
+      "type": "column_reference",
+      "name": "b"
+    },
+    "right": {
+      "type": "number",
+      "value": "34"
+    }
+  }
+}
+```
+
+```text
+(a < 12) AND (b < 34)
 ```

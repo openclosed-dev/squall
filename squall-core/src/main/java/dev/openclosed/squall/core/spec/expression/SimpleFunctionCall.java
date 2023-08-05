@@ -21,7 +21,7 @@ import dev.openclosed.squall.api.spec.Expression;
 record SimpleFunctionCall(Expression.Type type, String name) implements MapSourceExpression {
 
     @Override
-    public String toString() {
+    public String toSql() {
         return name();
     }
 }

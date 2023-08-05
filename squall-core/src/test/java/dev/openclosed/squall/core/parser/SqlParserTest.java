@@ -104,7 +104,7 @@ public abstract class SqlParserTest {
         SqlParser parser = getParser();
         Expression expression = parser.parseExpression(test.firstSql());
         assertThat(expression.toMap()).isEqualTo((test.jsonAsMap()));
-        assertThat(expression.toString()).isEqualTo(test.text());
+        assertThat(expression.toSql()).isEqualTo(test.text());
     }
 
     @ParameterizedTest
