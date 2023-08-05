@@ -9,7 +9,17 @@
     },
     "renderers": {
         "markdown": {
-            "format": "markdown"
+            "format": "markdown",
+          "columnAttributes": [
+            "ordinal",
+            "name",
+            "data_type",
+            "precision_length",
+            "scale",
+            "nullable",
+            "unique",
+            "default_value"
+          ]
         }
     }
 }

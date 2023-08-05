@@ -13,7 +13,26 @@
             "format": "markdown",
             "locale": "en",
             "numbering": true,
-            "order": "name"
+            "order": "name",
+            "columnAttributes": [
+              "ordinal",
+              "name",
+              "label",
+              "data_type",
+              "precision_length",
+              "scale",
+              "nullable",
+              "unique",
+              "default_value",
+              "description"
+            ],
+            "sequenceAttributes": [
+              "data_type",
+              "start",
+              "increment",
+              "min_value",
+              "max_value"
+            ]
         }
     }
 }
