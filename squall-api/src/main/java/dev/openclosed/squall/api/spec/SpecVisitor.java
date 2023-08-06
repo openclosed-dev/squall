@@ -16,38 +16,93 @@
 
 package dev.openclosed.squall.api.spec;
 
+/**
+ * A visitor of components in the database specification.
+ */
 public interface SpecVisitor {
 
+    /**
+     * Visits the database specification.
+     * @param spec the visited database specification.
+     */
     default void visit(DatabaseSpec spec) {
     }
 
-    default void leave(DatabaseSpec sppec) {
+    /**
+     * Leaves the database specification.
+     * @param spec the visited database specification.
+     */
+    default void leave(DatabaseSpec spec) {
     }
 
+    /**
+     * Visits a database.
+     * @param database the visited database.
+     * @param ordinal the ordinal number of the visited component.
+     */
     default void visit(Database database, int ordinal) {
     }
 
+    /**
+     * Leaves the database.
+     * @param database the visited database.
+     */
     default void leave(Database database) {
     }
 
+    /**
+     * Visits a schema.
+     * @param schema the visited schema.
+     * @param ordinal the ordinal number of the visited component.
+     */
     default void visit(Schema schema, int ordinal) {
     }
 
+    /**
+     * Leaves the schema.
+     * @param schema the visited schema.
+     */
     default void leave(Schema schema) {
     }
 
-    default void visit(Sequence sequence, int ordinal) {
+    /**
+     * Visits a sequence.
+     * @param sequence the visited sequence.
+     * @param ordinal the ordinal number of the visited component.
+     * @param schema the parent schema.
+     */
+    default void visit(Sequence sequence, int ordinal, Schema schema) {
     }
 
+    /**
+     * Leaves the sequence.
+     * @param sequence the visited sequence.
+     */
     default void leave(Sequence sequence) {
     }
 
-    default void visit(Table table, int ordinal) {
+    /**
+     * Visits a table.
+     * @param table the visited table.
+     * @param ordinal the ordinal number of the visited component.
+     * @param schema the parent schema.
+     */
+    default void visit(Table table, int ordinal, Schema schema) {
     }
 
+    /**
+     * Leaves the table.
+     * @param table the visited table.
+     */
     default void leave(Table table) {
     }
 
-    default void visit(Table table, Column column, int ordinal) {
+    /**
+     * Visits a column in a table.
+     * @param column the visited column.
+     * @param ordinal the ordinal number of the visited component.
+     * @param table the table owning the column.
+     */
+    default void visit(Column column, int ordinal, Table table) {
     }
 }

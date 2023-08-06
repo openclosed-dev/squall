@@ -101,7 +101,7 @@ public sealed interface Component extends MapSource
                 .findFirst();
     }
 
-    default void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal) {
+    default void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, Component parent) {
         throw new UnsupportedOperationException("Not implemented");
     }
 }

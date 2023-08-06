@@ -123,7 +123,7 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
     }
 
     @Override
-    public void visit(Sequence sequence, int ordinal) {
+    public void visit(Sequence sequence, int ordinal, Schema schema) {
         enterLevel();
         writeHeading(sequence, ordinal);
 
@@ -144,7 +144,7 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
 
 
     @Override
-    public void visit(Table table, int ordinal) {
+    public void visit(Table table, int ordinal, Schema schema) {
         enterLevel();
         writeHeading(table, ordinal);
 
@@ -165,7 +165,7 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
     }
 
     @Override
-    public void visit(Table table, Column column, int ordinal) {
+    public void visit(Column column, int ordinal, Table table) {
         this.columnWriter.writeDataRow(this, column, table, ordinal);
     }
 

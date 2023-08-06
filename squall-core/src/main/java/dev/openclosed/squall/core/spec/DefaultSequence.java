@@ -16,8 +16,10 @@
 
 package dev.openclosed.squall.core.spec;
 
+import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.ComponentOrder;
 import dev.openclosed.squall.api.spec.DocAnnotation;
+import dev.openclosed.squall.api.spec.Schema;
 import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.core.base.RecordMapSource;
@@ -47,8 +49,11 @@ public record DefaultSequence(
     }
 
     @Override
-    public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal) {
-        visitor.visit(this, ordinal);
+    public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, Component parent) {
+        if (!(parent instanceof Schema schema)) {
+            throw new IllegalArgumentException("Illegal parent");
+        }
+        visitor.visit(this, ordinal, schema);
         visitor.leave(this);
     }
 }

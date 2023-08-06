@@ -22,16 +22,21 @@ import dev.openclosed.squall.api.spec.SpecVisitor;
 
 import java.util.Collection;
 
+/**
+ * A utility class for components.
+ */
 final class Components {
 
-    static void visitOrderedComponents(
-            Collection<? extends Component> components,
-            SpecVisitor visitor,
-            ComponentOrder order) {
+    static void visitChildComponents(
+        Collection<? extends Component> components,
+        SpecVisitor visitor,
+        ComponentOrder order,
+        Component parent
+        ) {
 
         int ordinal = 1;
         for (var component : order.reorder(components)) {
-            component.acceptVisitor(visitor, order, ordinal++);
+            component.acceptVisitor(visitor, order, ordinal++, parent);
         }
     }
 

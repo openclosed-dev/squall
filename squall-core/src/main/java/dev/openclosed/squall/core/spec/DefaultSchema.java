@@ -41,10 +41,10 @@ public record DefaultSchema(
     }
 
     @Override
-    public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal) {
+    public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, Component parent) {
         visitor.visit(this, ordinal);
-        Components.visitOrderedComponents(this.sequences, visitor, order);
-        Components.visitOrderedComponents(this.tables, visitor, order);
+        Components.visitChildComponents(this.sequences, visitor, order, this);
+        Components.visitChildComponents(this.tables, visitor, order, this);
         visitor.leave(this);
     }
 }
