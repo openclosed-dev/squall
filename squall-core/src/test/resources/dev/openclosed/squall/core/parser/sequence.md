@@ -7,6 +7,7 @@ CREATE SEQUENCE seq1;
 ```json
 {
   "name": "seq1",
+  "qualifiedName": "seq1",
   "typeName": "bigint",
   "start": 1,
   "increment": 1,
@@ -18,12 +19,13 @@ CREATE SEQUENCE seq1;
 # create sequence in schema
 
 ```sql
-CREATE SEQUENCE public.seq1;
+CREATE SEQUENCE schema1.seq1;
 ```
 
 ```json
 {
   "name": "seq1",
+  "qualifiedName": "schema1.seq1",
   "typeName": "bigint",
   "start": 1,
   "increment": 1,
@@ -41,6 +43,7 @@ CREATE SEQUENCE IF NOT EXISTS seq1;
 ```json
 {
   "name": "seq1",
+  "qualifiedName": "seq1",
   "typeName": "bigint",
   "start": 1,
   "increment": 1,
@@ -58,6 +61,7 @@ CREATE SEQUENCE seq1 AS bigint;
 ```json
 {
   "name": "seq1",
+  "qualifiedName": "seq1",
   "typeName": "bigint",
   "start": 1,
   "increment": 1,
@@ -75,6 +79,7 @@ CREATE SEQUENCE seq1 AS integer;
 ```json
 {
   "name": "seq1",
+  "qualifiedName": "seq1",
   "typeName": "integer",
   "start": 1,
   "increment": 1,
@@ -92,6 +97,7 @@ CREATE SEQUENCE seq1 AS smallint;
 ```json
 {
   "name": "seq1",
+  "qualifiedName": "seq1",
   "typeName": "smallint",
   "start": 1,
   "increment": 1,
@@ -109,6 +115,7 @@ CREATE SEQUENCE seq1 AS bigint START WITH 100 INCREMENT BY 3 MINVALUE 42 MAXVALU
 ```json
 {
   "name": "seq1",
+  "qualifiedName": "seq1",
   "typeName": "bigint",
   "start": 100,
   "increment": 3,
@@ -126,6 +133,7 @@ CREATE SEQUENCE seq1 AS bigint INCREMENT BY -1;
 ```json
 {
   "name": "seq1",
+  "qualifiedName": "seq1",
   "typeName": "bigint",
   "start": -1,
   "increment": -1,
@@ -143,6 +151,7 @@ CREATE SEQUENCE seq1 AS integer INCREMENT BY -1;
 ```json
 {
   "name": "seq1",
+  "qualifiedName": "seq1",
   "typeName": "integer",
   "start": -1,
   "increment": -1,
@@ -160,6 +169,7 @@ CREATE SEQUENCE seq1 AS smallint INCREMENT BY -1;
 ```json
 {
   "name": "seq1",
+  "qualifiedName": "seq1",
   "typeName": "smallint",
   "start": -1,
   "increment": -1,
@@ -177,6 +187,7 @@ CREATE SEQUENCE seq1 NO MINVALUE NO MAXVALUE;
 ```json
 {
   "name": "seq1",
+  "qualifiedName": "seq1",
   "typeName": "bigint",
   "start": 1,
   "increment": 1,

@@ -23,11 +23,12 @@ CREATE TABLE customer(
       "state": "undefined",
       "schemas" : [
         {
-          "name" : "public",
+          "name" : "",
           "state": "undefined",
           "tables": [
             {
               "name": "customer",
+              "qualifiedName": "customer",
               "columns": [
                 {
                   "name": "id",

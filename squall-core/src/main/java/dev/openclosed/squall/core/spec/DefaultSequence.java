@@ -23,15 +23,23 @@ import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.core.base.RecordMapSource;
 
 import java.util.List;
+import java.util.Objects;
 
 public record DefaultSequence(
     String name,
+    String qualifiedName,
     String typeName,
     long start,
     long increment,
     long maxValue,
     long minValue,
     List<DocAnnotation> annotations) implements Sequence, RecordMapSource {
+
+    public DefaultSequence {
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(qualifiedName);
+        Objects.requireNonNull(typeName);
+    }
 
     @Override
     public Type type() {

@@ -37,18 +37,21 @@ import java.util.Optional;
 
 final class TableBuilder extends ComponentBuilder {
 
+    private final String qualifiedName;
     private final Map<String, ColumnBuilder> columns = new LinkedHashMap<>();
     private PrimaryKey primaryKey;
     private final List<Unique> unique = new ArrayList<>();
     private final List<ForeignKey> foreignKeys = new ArrayList<>();
 
-    TableBuilder(String name, List<DocAnnotation> annotations) {
+    TableBuilder(String name, String qualifiedName, List<DocAnnotation> annotations) {
         super(name, annotations);
+        this.qualifiedName = qualifiedName;
     }
 
     Table build() {
         return new DefaultTable(
             name(),
+            qualifiedName,
             buildColumns(),
             Optional.ofNullable(primaryKey),
             foreignKeys,

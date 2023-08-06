@@ -100,10 +100,10 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder addTableColumn(String name, DataType dataType, List<DocAnnotation> annotations) {
-        Objects.requireNonNull(name);
+    public DatabaseSpecBuilder addTableColumn(String columnName, DataType dataType, List<DocAnnotation> annotations) {
+        Objects.requireNonNull(columnName);
         Objects.requireNonNull(dataType);
-        ColumnBuilder builder = requireCurrentTable().addColumn(name, dataType, annotations);
+        ColumnBuilder builder = requireCurrentTable().addColumn(columnName, dataType, annotations);
         this.currentColumnBuilder = builder;
         return this;
     }

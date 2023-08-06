@@ -18,9 +18,13 @@ package dev.openclosed.squall.api.spec;
 
 import dev.openclosed.squall.api.base.MapSource;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * A component in the database specification.
+ */
 public sealed interface Component extends MapSource
     permits Database, Schema, Table, Column, Sequence {
 
@@ -52,7 +56,22 @@ public sealed interface Component extends MapSource
      */
     String name();
 
-    List<DocAnnotation> annotations();
+    /**
+     * Returns the qualified name of this component.
+     * By default, this method returns the name of the component.
+     * @return the qualified name of this component.
+     */
+    default String qualifiedName() {
+        return name();
+    }
+
+    /**
+     * Returns the list of the annotations attached to this component.
+     * @return the list of the annotations.
+     */
+    default List<DocAnnotation> annotations() {
+        return Collections.emptyList();
+    }
 
     /**
      * Returns the state of this component.

@@ -25,21 +25,25 @@ import java.util.List;
 
 final class SequenceBuilder extends ComponentBuilder {
 
+    private final String qualifiedName;
     private IntegerDataType dataType = IntegerDataType.BIGINT;
     private long increment = 1L;
     private Long startValue;
     private Long maxValue;
     private Long minValue;
 
-    SequenceBuilder(String name, List<DocAnnotation> annotations) {
+    SequenceBuilder(String name, String qualifiedName, List<DocAnnotation> annotations) {
         super(name, annotations);
+        this.qualifiedName = qualifiedName;
     }
 
     Sequence build() {
         final long min = computeMinValue();
         final long max = computeMaxValue();
         final long start = computeStart(min, max);
-        return new DefaultSequence(name(),
+        return new DefaultSequence(
+            name(),
+            qualifiedName,
             dataType.typeName(),
             start,
             this.increment,

@@ -35,8 +35,8 @@ public record ParserConfig(
     }
 
     public String getDefaultSchema() {
-        return defaultSchema().orElseGet(() -> {
-            return Dialect.find(dialect()).map(Dialect::defaultSchema).orElse("");
-        });
+        return defaultSchema().orElseGet(() ->
+            Dialect.find(dialect()).map(Dialect::defaultSchema).orElse("")
+        );
     }
 }

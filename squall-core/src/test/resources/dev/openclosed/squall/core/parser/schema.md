@@ -6,17 +6,17 @@ CREATE SCHEMA myschema;
 
 ```json
 {
-  "databases" : [ 
+  "databases" : [
     {
       "name": "",
       "state": "undefined",
-      "schemas" : [ 
+      "schemas" : [
         {
           "name" : "myschema",
           "state": "defined"
-        } 
+        }
       ]
-    } 
+    }
   ]
 }
 ```
@@ -29,17 +29,17 @@ CREATE SCHEMA IF NOT EXISTS myschema;
 
 ```json
 {
-  "databases" : [ 
+  "databases" : [
     {
       "name": "",
       "state": "undefined",
-      "schemas": [ 
+      "schemas": [
         {
           "name": "myschema",
           "state": "defined"
-        } 
+        }
       ]
-    } 
+    }
   ]
 }
 ```
@@ -52,22 +52,23 @@ CREATE TABLE table1();
 
 ```json
 {
-  "databases": [ 
+  "databases": [
     {
       "name": "",
       "state": "undefined",
-      "schemas": [ 
+      "schemas": [
         {
-          "name": "public",
+          "name": "",
           "state": "undefined",
           "tables": [
             {
-              "name": "table1"
+              "name": "table1",
+              "qualifiedName": "table1"
             }
           ]
-        } 
+        }
       ]
-    } 
+    }
   ]
 }
 ```
@@ -81,22 +82,23 @@ CREATE TABLE schema1.table1();
 
 ```json
 {
-  "databases": [ 
+  "databases": [
     {
       "name": "",
       "state": "undefined",
-      "schemas": [ 
+      "schemas": [
         {
           "name": "schema1",
           "state": "defined",
           "tables": [
             {
-              "name": "table1"
+              "name": "table1",
+              "qualifiedName": "schema1.table1"
             }
           ]
-        } 
+        }
       ]
-    } 
+    }
   ]
 }
 ```

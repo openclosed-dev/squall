@@ -27,10 +27,12 @@ import dev.openclosed.squall.api.spec.Unique;
 import dev.openclosed.squall.core.base.RecordMapSource;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public record DefaultTable(
     String name,
+    String qualifiedName,
     List<Column> columns,
     Optional<PrimaryKey> primaryKey,
     List<ForeignKey> foreignKeys,
@@ -39,6 +41,8 @@ public record DefaultTable(
     ) implements Table, RecordMapSource {
 
     public DefaultTable {
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(qualifiedName);
         columns = List.copyOf(columns);
         foreignKeys = List.copyOf(foreignKeys);
         unique = List.copyOf(unique);

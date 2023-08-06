@@ -25,11 +25,12 @@ CREATE TABLE example(
       "state": "undefined",
       "schemas" : [
         {
-          "name" : "public",
+          "name" : "",
           "state": "undefined",
           "tables": [
             {
               "name": "example",
+              "qualifiedName": "example",
               "columns": [
                 {
                   "name": "a",
@@ -69,11 +70,12 @@ CREATE TABLE example(
       "state": "undefined",
       "schemas" : [
         {
-          "name" : "public",
+          "name" : "",
           "state": "undefined",
           "tables": [
             {
               "name": "example",
+              "qualifiedName": "example",
               "columns": [
                 {
                   "name": "a",
@@ -115,11 +117,12 @@ CREATE TABLE table2(
       "state": "undefined",
       "schemas" : [
         {
-          "name" : "public",
+          "name" : "",
           "state": "undefined",
           "tables": [
             {
               "name": "table1",
+              "qualifiedName": "table1",
               "columns": [
                 {
                   "name": "a",
@@ -129,6 +132,7 @@ CREATE TABLE table2(
             },
             {
               "name": "table2",
+              "qualifiedName": "table2",
               "columns": [
                 {
                   "name": "b",

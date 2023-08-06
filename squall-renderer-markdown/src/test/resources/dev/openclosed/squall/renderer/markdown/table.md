@@ -33,7 +33,7 @@ CREATE TABLE schema1.table1 (
 
 ### 1.1. schema1 ![schema]
 
-#### 1.1.1. table 1 `table1` ![table]
+#### 1.1.1. table 1 `schema1.table1` ![table]
 A description of table 1.
 
 | No. | Name | Display Name | Data Type | Precision / Length | Scale | Nullable | Unique | Default Value | Description |
@@ -66,7 +66,7 @@ CREATE TABLE public.table1 (
 
 ### 1.1. public ![schema]
 
-#### 1.1.1. table 1 `table1` ![table]
+#### 1.1.1. table 1 `public.table1` ![table]
 A description of table 1.
 
 | No. | Name | Display Name | Data Type | Precision / Length | Scale | Nullable | Unique | Default Value | Description |
@@ -98,7 +98,7 @@ CREATE TABLE public.table1 (
 
 ### 1.1. public ![schema]
 
-#### 1.1.1. table 1 `table1` ![table]
+#### 1.1.1. table 1 `public.table1` ![table]
 A description of table 1.
 
 | No. | Name | Display Name | Data Type | Precision / Length | Scale | Nullable | Unique | Default Value | Description |

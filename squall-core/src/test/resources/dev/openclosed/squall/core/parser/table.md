@@ -11,6 +11,7 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
+  "qualifiedName": "products",
   "columns": [
     {
       "name": "product_no",
@@ -39,6 +40,7 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
+  "qualifiedName": "products",
   "columns": [
     {
       "name": "price",
@@ -59,6 +61,7 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
+  "qualifiedName": "products",
   "columns": [
     {
       "name": "product_no",
@@ -85,6 +88,7 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
+  "qualifiedName": "products",
   "columns": [
     {
       "name": "product_no",
@@ -111,6 +115,7 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
+  "qualifiedName": "products",
   "columns": [
     {
       "name": "product_no",
@@ -140,6 +145,7 @@ CREATE TABLE example (
 ```json
 {
   "name": "example",
+  "qualifiedName": "example",
   "columns": [
     {
       "name": "a",
@@ -178,6 +184,7 @@ CREATE TABLE example (
 ```json
 {
   "name": "example",
+  "qualifiedName": "example",
   "columns": [
     {
       "name": "a",
@@ -217,6 +224,7 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
+  "qualifiedName": "products",
   "columns": [
     {
       "name": "product_no",
@@ -254,6 +262,7 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
+  "qualifiedName": "products",
   "columns": [
     {
       "name": "a",
@@ -290,6 +299,7 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
+  "qualifiedName": "products",
   "columns": [
     {
       "name": "product_no",
@@ -328,6 +338,7 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
+  "qualifiedName": "products",
   "columns": [
     {
       "name": "product_no",
@@ -365,6 +376,7 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
+  "qualifiedName": "products",
   "columns": [
     {
       "name": "price",
@@ -391,6 +403,7 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
+  "qualifiedName": "products",
   "columns": [
     {
       "name": "price",
@@ -420,6 +433,7 @@ CREATE TABLE tb (
 [
   {
     "name": "ta",
+    "qualifiedName": "ta",
     "columns": [
       {
         "name": "a",
@@ -429,6 +443,7 @@ CREATE TABLE tb (
   },
   {
     "name": "tb",
+    "qualifiedName": "tb",
     "columns": [
       {
         "name": "b",
@@ -437,7 +452,7 @@ CREATE TABLE tb (
     ],
     "foreignKeys": [
       {
-        "schemaName": "public",
+        "schemaName": "",
         "tableName": "ta",
         "columnMapping": {
           "b": "a"
@@ -467,6 +482,7 @@ CREATE TABLE tb (
 [
   {
     "name": "ta",
+    "qualifiedName": "ta",
     "columns": [
       {
         "name": "a1",
@@ -480,6 +496,7 @@ CREATE TABLE tb (
   },
   {
     "name": "tb",
+    "qualifiedName": "tb",
     "columns": [
       {
         "name": "b1",
@@ -492,7 +509,7 @@ CREATE TABLE tb (
     ],
     "foreignKeys": [
       {
-        "schemaName": "public",
+        "schemaName": "",
         "tableName": "ta",
         "columnMapping": {
           "b1": "a1",
@@ -521,6 +538,7 @@ CREATE TABLE tb (
 [
   {
     "name": "ta",
+    "qualifiedName": "ta",
     "columns": [
       {
         "name": "a",
@@ -530,6 +548,7 @@ CREATE TABLE tb (
   },
   {
     "name": "tb",
+    "qualifiedName": "tb",
     "columns": [
       {
         "name": "b",
@@ -538,7 +557,7 @@ CREATE TABLE tb (
     ],
     "foreignKeys": [
       {
-        "schemaName": "public",
+        "schemaName": "",
         "tableName": "ta",
         "columnMapping": {
           "b": "a"
@@ -566,6 +585,7 @@ CREATE TABLE tb (
 [
   {
     "name": "ta",
+    "qualifiedName": "ta",
     "columns": [
       {
         "name": "a",
@@ -575,6 +595,7 @@ CREATE TABLE tb (
   },
   {
     "name": "tb",
+    "qualifiedName": "tb",
     "columns": [
       {
         "name": "b",
@@ -583,7 +604,7 @@ CREATE TABLE tb (
     ],
     "foreignKeys": [
       {
-        "schemaName": "public",
+        "schemaName": "",
         "tableName": "ta",
         "columnMapping": {
           "b": "a"

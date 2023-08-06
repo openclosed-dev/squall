@@ -53,7 +53,7 @@ public interface DatabaseSpecBuilder {
 
     DatabaseSpecBuilder alterTable(String schemaName, String tableName);
 
-    DatabaseSpecBuilder addTableColumn(String name, DataType dataType, List<DocAnnotation> annotations);
+    DatabaseSpecBuilder addTableColumn(String columnName, DataType dataType, List<DocAnnotation> annotations);
 
     DatabaseSpecBuilder addTablePrimaryKey(String constraintName, List<String> columnNames);
 

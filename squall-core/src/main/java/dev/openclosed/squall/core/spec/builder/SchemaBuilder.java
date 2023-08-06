@@ -44,9 +44,9 @@ final class SchemaBuilder extends ComponentBuilder {
         return new DefaultSchema(name(), sequences, tables, annotations(), state);
     }
 
-    TableBuilder addTable(String name, List<DocAnnotation> annotations) {
-        var builder = new TableBuilder(name, annotations);
-        tableBuilders.put(name, builder);
+    TableBuilder addTable(String tableName, List<DocAnnotation> annotations) {
+        var builder = new TableBuilder(tableName, getQualifiedName(tableName), annotations);
+        tableBuilders.put(tableName, builder);
         return builder;
     }
 
@@ -54,9 +54,19 @@ final class SchemaBuilder extends ComponentBuilder {
         return tableBuilders.get(name);
     }
 
-    SequenceBuilder addSequence(String name, List<DocAnnotation> annotations) {
-        var builder = new SequenceBuilder(name, annotations);
-        sequenceBuilders.put(name, builder);
+    SequenceBuilder addSequence(String sequenceNmae, List<DocAnnotation> annotations) {
+        var builder = new SequenceBuilder(sequenceNmae, getQualifiedName(sequenceNmae), annotations);
+        sequenceBuilders.put(sequenceNmae, builder);
         return builder;
+    }
+
+    private String getQualifiedName(String componentName) {
+        String schemaName = name();
+        if (schemaName.isEmpty()) {
+            return componentName;
+        }
+        return new StringBuilder()
+            .append(schemaName).append('.').append(componentName)
+            .toString();
     }
 }
