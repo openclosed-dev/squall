@@ -18,6 +18,8 @@ package dev.openclosed.squall.renderer.markdown;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.ResourceBundle;
 
 import dev.openclosed.squall.api.renderer.RenderConfig;
@@ -35,33 +37,33 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
     private final RenderConfig config;
     private final Appendable appender;
 
-    private final boolean showDatabase;
-    private final boolean showSchema;
+    private final boolean hideDatabase;
+    private final boolean hideSchema;
     private final MarkdownTableWriter<Column, Table> columnWriter;
     private final MarkdownTableWriter<Sequence, Void> sequenceWriter;
 
-    private int level;
+    private int databaseCount;
 
     private final StringBuilder headingNumber = new StringBuilder();
 
-    private static final int MAX_LEVEL = 9;
-
     private static final String[] HEADING_PREFIX = {
-            "", "#", "##", "###", "####", "#####"
+        "#", "##", "###", "####", "#####", "######", "#######"
     };
 
-    private final int[] baseNumberLength = new int[MAX_LEVEL];
+    private final Deque<Heading> headings = new ArrayDeque<>();
 
     MarkdownWriter(RenderConfig config, ResourceBundle bundle, Appendable appender) {
         this.config = config;
         this.appender = appender;
-        this.showDatabase = !config.hide().contains(Component.Type.DATABASE);
-        this.showSchema = !config.hide().contains(Component.Type.SCHEMA);
         this.columnWriter = ColumnCellProvider.tableWriter(bundle, config.columnAttributes());
         this.sequenceWriter = SequenceCellProvider.tableWriter(bundle, config.sequenceAttributes());
+        // visibility of components
+        this.hideDatabase = config.hide().contains(Component.Type.DATABASE);
+        this.hideSchema = config.hide().contains(Component.Type.SCHEMA);
     }
 
     void writeSpec(DatabaseSpec spec) throws IOException {
+        this.databaseCount = spec.databases().size();
         try {
             spec.walkSpec(this, config.order());
         } catch (UncheckedIOException e) {
@@ -80,8 +82,10 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
 
     @Override
     public void visit(DatabaseSpec spec) {
+        String title = spec.title().orElse("Untitled");
+        append("# ").append(title).appendNewLine();
+
         enterLevel();
-        writeHeading(spec.title().orElse("Untitled"));
     }
 
     @Override
@@ -92,43 +96,50 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
 
     @Override
     public void visit(Database database, int ordinal) {
-        if (showDatabase) {
-            enterLevel();
-            writeHeading(database, ordinal);
-            append(database.description().orElse("")).append('\n');
+        if (hideDatabase) {
+            return;
         }
+
+        if (databaseCount > 1) {
+            writeHeading(database);
+            enterLevel();
+        }
+
+        writeDescription(database);
     }
 
     @Override
     public void leave(Database database) {
-        if (showDatabase) {
-            leaveLevel();
+        if (hideDatabase || databaseCount <= 1) {
+            return;
         }
+        leaveLevel();
     }
 
     @Override
     public void visit(Schema schema, int ordinal) {
-        if (showSchema) {
-            enterLevel();
-            writeHeading(schema, ordinal);
-            append(schema.description().orElse("")).append('\n');
+        if (hideSchema) {
+            return;
         }
+
+        writeHeading(schema);
+        enterLevel();
+
+        writeDescription(schema);
     }
 
     @Override
     public void leave(Schema schema) {
-        if (showSchema) {
-            leaveLevel();
+        if (hideSchema) {
+            return;
         }
+        leaveLevel();
     }
 
     @Override
     public void visit(Sequence sequence, int ordinal, Schema schema) {
-        enterLevel();
-        writeHeading(sequence, ordinal);
-
-        sequence.description().ifPresent(
-            value -> append(value).appendNewLine());
+        writeHeading(sequence);
+        writeDescription(sequence);
 
         appendNewLine();
         sequenceWriter.writeHeaderRow(this);
@@ -138,18 +149,12 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
 
     @Override
     public void leave(Sequence sequence) {
-        appendNewLine();
-        leaveLevel();
     }
-
 
     @Override
     public void visit(Table table, int ordinal, Schema schema) {
-        enterLevel();
-        writeHeading(table, ordinal);
-
-        table.description().ifPresent(
-            value -> append(value).appendNewLine());
+        writeHeading(table);
+        writeDescription(table);
 
         if (table.hasColumns()) {
             appendNewLine();
@@ -160,8 +165,6 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
 
     @Override
     public void leave(Table title) {
-        appendNewLine();
-        leaveLevel();
     }
 
     @Override
@@ -170,34 +173,25 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
     }
 
     private void enterLevel() {
-        if (this.level < MAX_LEVEL) {
-            this.level++;
-        }
+        this.headings.addLast(new Heading(headingNumber.length()));
     }
 
     private void leaveLevel() {
-        if (this.level > 0) {
-            this.level--;
-        }
+        this.headings.removeLast();
     }
 
-    private void writeHeading(String title) {
-        append(HEADING_PREFIX[this.level])
-            .append(' ')
-            .append(title)
-            .append('\n');
-    }
+    private void writeHeading(Component component) {
 
-    private void writeHeading(Component component, int ordinal) {
-
-        append(HEADING_PREFIX[this.level]);
+        final int level = this.headings.size();
+        appendNewLine();
+        append(HEADING_PREFIX[level]);
 
         if (config.numbering()) {
             appendSpace();
-            headingNumber.setLength(baseNumberLength[level - 1]);
-            headingNumber.append(ordinal).append('.');
+            Heading heading = headings.getLast();
+            headingNumber.setLength(heading.baseLength());
+            headingNumber.append(heading.nextOrdinal()).append('.');
             append(headingNumber);
-            baseNumberLength[level] = headingNumber.length();
         }
 
         String name = component.qualifiedName();
@@ -219,11 +213,34 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
         append("![").append(badge.label()).append(']').appendNewLine();
     }
 
+    private void writeDescription(Component component) {
+        component.description().ifPresent(description ->
+            appendNewLine().append(description).appendNewLine()
+            );
+    }
+
     private void writeImageDefs() {
         appendNewLine();
         for (var badge : Badge.values()) {
             append('[').append(badge.name()).append("]: ");
             append(badge.url()).appendNewLine();
+        }
+    }
+
+    static class Heading {
+        private final int baseLength;
+        private int ordinal;
+
+        Heading(int baseLength) {
+            this.baseLength = baseLength;
+        }
+
+        int baseLength() {
+            return baseLength;
+        }
+
+        int nextOrdinal() {
+            return ++ordinal;
         }
     }
 }

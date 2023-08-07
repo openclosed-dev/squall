@@ -11,7 +11,6 @@ CREATE DATABASE database1;
 ```
 
 # Untitled
-## 1. database1 ![database]
 
 ---
 # database with comments
@@ -31,5 +30,5 @@ CREATE DATABASE database1;
 ```
 
 # Untitled
-## 1. Database 1 `database1` ![database]
+
 A description of the database1.
