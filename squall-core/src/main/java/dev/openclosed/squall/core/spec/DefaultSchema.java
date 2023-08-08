@@ -23,7 +23,6 @@ import dev.openclosed.squall.api.spec.Schema;
 import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.api.spec.Table;
-import dev.openclosed.squall.core.base.RecordMapSource;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ public record DefaultSchema(
         List<Table> tables,
         List<DocAnnotation> annotations,
         Component.State state
-        ) implements Schema, RecordMapSource {
+        ) implements Schema, BasicComponent {
 
     @Override
     public Type type() {
@@ -43,8 +42,8 @@ public record DefaultSchema(
     @Override
     public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, Component parent) {
         visitor.visit(this, ordinal);
-        Components.visitChildComponents(this.sequences, visitor, order, this);
-        Components.visitChildComponents(this.tables, visitor, order, this);
+        visitChildren(this.sequences, visitor, order);
+        visitChildren(this.tables, visitor, order);
         visitor.leave(this);
     }
 }

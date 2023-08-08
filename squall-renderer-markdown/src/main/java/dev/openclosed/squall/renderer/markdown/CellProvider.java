@@ -18,6 +18,8 @@ package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.spec.Component;
 
+import java.util.ResourceBundle;
+
 public interface CellProvider<T extends Component, P> {
 
     String ALIGN_LEFT = ":--";
@@ -28,6 +30,10 @@ public interface CellProvider<T extends Component, P> {
 
     default String getSeparator() {
         return ALIGN_LEFT;
+    }
+
+    default String getLocalizedValue(T component, P parent, int ordinal, ResourceBundle bundle) {
+        return getValue(component, parent, ordinal);
     }
 
     default String getValue(T component, P parent, int ordinal) {

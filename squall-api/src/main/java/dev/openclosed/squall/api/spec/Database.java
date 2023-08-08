@@ -18,7 +18,7 @@ package dev.openclosed.squall.api.spec;
 
 import java.util.List;
 
-public non-sealed interface Database extends Component {
+public interface Database extends Component {
 
     @Override
     default Type type() {

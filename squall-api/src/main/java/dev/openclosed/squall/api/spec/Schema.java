@@ -18,7 +18,7 @@ package dev.openclosed.squall.api.spec;
 
 import java.util.List;
 
-public non-sealed interface Schema extends Component {
+public interface Schema extends Component {
 
     @Override
     default Type type() {

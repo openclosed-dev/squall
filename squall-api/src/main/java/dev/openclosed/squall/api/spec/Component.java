@@ -25,8 +25,7 @@ import java.util.Optional;
 /**
  * A component in the database specification.
  */
-public sealed interface Component extends MapSource
-    permits Database, Schema, Table, Column, Sequence {
+public interface Component extends MapSource {
 
     /**
      * Type of the component.
@@ -80,6 +79,8 @@ public sealed interface Component extends MapSource
     default State state() {
         return State.DEFINED;
     }
+
+    boolean isDeprecated();
 
     /**
      * Returns the label of this component.

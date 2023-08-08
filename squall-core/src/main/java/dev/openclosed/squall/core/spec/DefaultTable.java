@@ -26,7 +26,6 @@ import dev.openclosed.squall.api.spec.Schema;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.api.spec.Table;
 import dev.openclosed.squall.api.spec.Unique;
-import dev.openclosed.squall.core.base.RecordMapSource;
 
 import java.util.List;
 import java.util.Objects;
@@ -40,7 +39,7 @@ public record DefaultTable(
     List<ForeignKey> foreignKeys,
     List<Unique> unique,
     List<DocAnnotation> annotations
-    ) implements Table, RecordMapSource {
+    ) implements Table, BasicComponent {
 
     public DefaultTable {
         Objects.requireNonNull(name);

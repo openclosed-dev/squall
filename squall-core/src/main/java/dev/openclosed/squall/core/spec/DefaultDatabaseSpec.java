@@ -32,7 +32,7 @@ public record DefaultDatabaseSpec(
 
     public void walkSpec(SpecVisitor visitor, ComponentOrder order) {
         visitor.visit(this);
-        Components.visitChildComponents(this.databases, visitor, order, null);
+        BasicComponent.visitChildComponents(this.databases, visitor, order, null);
         visitor.leave(this);
     }
 }

@@ -18,28 +18,40 @@ package dev.openclosed.squall.core.spec;
 
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.ComponentOrder;
+import dev.openclosed.squall.api.spec.DocAnnotationType;
 import dev.openclosed.squall.api.spec.SpecVisitor;
+import dev.openclosed.squall.core.base.RecordMapSource;
 
 import java.util.Collection;
 
 /**
- * A utility class for components.
+ * Basic implementation of {@link Component}.
  */
-final class Components {
+interface BasicComponent extends Component, RecordMapSource {
+
+    @Override
+    default boolean isDeprecated() {
+        return getFirstAnnotation(DocAnnotationType.DEPRECATED).isPresent();
+    }
+
+    default void visitChildren(
+        Collection<? extends Component> components,
+        SpecVisitor visitor,
+        ComponentOrder order
+    ) {
+        visitChildComponents(components, visitor, order, this);
+    }
 
     static void visitChildComponents(
         Collection<? extends Component> components,
         SpecVisitor visitor,
         ComponentOrder order,
         Component parent
-        ) {
+    ) {
 
         int ordinal = 1;
         for (var component : order.reorder(components)) {
             component.acceptVisitor(visitor, order, ordinal++, parent);
         }
-    }
-
-    private Components() {
     }
 }

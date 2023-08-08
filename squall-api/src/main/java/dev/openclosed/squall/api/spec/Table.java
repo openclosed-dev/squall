@@ -19,7 +19,7 @@ package dev.openclosed.squall.api.spec;
 import java.util.List;
 import java.util.Optional;
 
-public non-sealed interface Table extends Component {
+public interface Table extends Component {
 
     @Override
     default Type type() {

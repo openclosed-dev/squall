@@ -22,7 +22,6 @@ import dev.openclosed.squall.api.spec.Database;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Schema;
 import dev.openclosed.squall.api.spec.SpecVisitor;
-import dev.openclosed.squall.core.base.RecordMapSource;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public record DefaultDatabase(
         List<Schema> schemas,
         List<DocAnnotation> annotations,
         Component.State state
-        ) implements Database, RecordMapSource {
+        ) implements Database, BasicComponent {
 
     @Override
     public Type type() {
@@ -42,7 +41,7 @@ public record DefaultDatabase(
     public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, Component parent) {
         assert parent == null;
         visitor.visit(this, ordinal);
-        Components.visitChildComponents(this.schemas, visitor, order, this);
+        visitChildren(this.schemas, visitor, order);
         visitor.leave(this);
     }
 }

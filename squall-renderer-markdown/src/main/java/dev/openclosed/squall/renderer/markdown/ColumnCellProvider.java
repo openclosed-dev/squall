@@ -18,6 +18,7 @@ package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
 import dev.openclosed.squall.api.spec.Column;
+import dev.openclosed.squall.api.spec.DocAnnotationType;
 import dev.openclosed.squall.api.spec.Table;
 
 import java.util.List;
@@ -34,7 +35,11 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
         @Override
         public String getValue(Column column, Table table, int ordinal) {
             var sb = new StringBuilder();
-            sb.append(column.name());
+            if (column.isDeprecated()) {
+                sb.append("~~").append(column.name()).append("~~");
+            } else {
+                sb.append(column.name());
+            }
             if (column.isPrimaryKey()) {
                 sb.append(' ').append(KEY_MARK);
             }
@@ -44,7 +49,15 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     LABEL(ALIGN_LEFT) {
         @Override
         public String getValue(Column column, Table table, int ordinal) {
-            return column.label().orElse("-");
+            return column.label().map(label -> {
+                if (column.isDeprecated()) {
+                    return new StringBuilder()
+                        .append("~~").append(label).append("~~")
+                        .toString();
+                } else {
+                    return label;
+                }
+            }).orElse("-");
         }
     },
     DATA_TYPE(ALIGN_LEFT) {
@@ -109,10 +122,25 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     },
     DESCRIPTION(ALIGN_LEFT) {
         @Override
-        public String getValue(Column column, Table table, int ordinal) {
+        public String getLocalizedValue(Column column, Table table, int ordinal, ResourceBundle bundle) {
             return column.description()
+                .map(d -> withDeprecationNotice(d, column, bundle))
                 .map(ColumnCellProvider::inlined)
                 .orElse("-");
+        }
+
+        private static String withDeprecationNotice(String description, Column column, ResourceBundle bundle) {
+            if (!column.isDeprecated()) {
+                return description;
+            }
+            var sb = new StringBuilder();
+            sb.append("**").append(bundle.getString("deprecated")).append("**");
+            String notice = column.getFirstAnnotation(DocAnnotationType.DEPRECATED).get().value();
+            if (!notice.isEmpty()) {
+                sb.append(' ').append(notice);
+            }
+            sb.append("<br>").append(description);
+            return sb.toString();
         }
     };
 

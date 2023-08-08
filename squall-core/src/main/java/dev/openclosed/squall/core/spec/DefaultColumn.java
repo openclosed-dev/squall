@@ -20,7 +20,6 @@ import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Expression;
-import dev.openclosed.squall.core.base.RecordMapSource;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +49,7 @@ public record DefaultColumn(
         boolean isUnique,
         Optional<Expression> defaultValue,
         List<DocAnnotation> annotations
-        ) implements Column, RecordMapSource {
+        ) implements Column, BasicComponent {
 
     @Override
     public Type type() {

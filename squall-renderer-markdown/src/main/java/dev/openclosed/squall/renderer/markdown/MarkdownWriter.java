@@ -27,6 +27,7 @@ import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.Database;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
+import dev.openclosed.squall.api.spec.DocAnnotationType;
 import dev.openclosed.squall.api.spec.Schema;
 import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.SpecVisitor;
@@ -35,6 +36,7 @@ import dev.openclosed.squall.api.spec.Table;
 class MarkdownWriter implements SpecVisitor, DelegatingAppender {
 
     private final RenderConfig config;
+    private final ResourceBundle bundle;
     private final Appendable appender;
 
     private final boolean hideDatabase;
@@ -54,6 +56,7 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
 
     MarkdownWriter(RenderConfig config, ResourceBundle bundle, Appendable appender) {
         this.config = config;
+        this.bundle = bundle;
         this.appender = appender;
         this.columnWriter = ColumnCellProvider.tableWriter(bundle, config.columnAttributes());
         this.sequenceWriter = SequenceCellProvider.tableWriter(bundle, config.sequenceAttributes());
@@ -105,7 +108,7 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
             enterLevel();
         }
 
-        writeDescription(database);
+        writeDescriptionSection(database);
     }
 
     @Override
@@ -125,7 +128,7 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
         writeHeading(schema);
         enterLevel();
 
-        writeDescription(schema);
+        writeDescriptionSection(schema);
     }
 
     @Override
@@ -139,7 +142,7 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
     @Override
     public void visit(Sequence sequence, int ordinal, Schema schema) {
         writeHeading(sequence);
-        writeDescription(sequence);
+        writeDescriptionSection(sequence);
 
         appendNewLine();
         sequenceWriter.writeHeaderRow(this);
@@ -154,7 +157,7 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
     @Override
     public void visit(Table table, int ordinal, Schema schema) {
         writeHeading(table);
-        writeDescription(table);
+        writeDescriptionSection(table);
 
         if (table.hasColumns()) {
             appendNewLine();
@@ -187,36 +190,76 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
         append(HEADING_PREFIX[level]);
 
         if (config.numbering()) {
-            appendSpace();
-            Heading heading = headings.getLast();
-            headingNumber.setLength(heading.baseLength());
-            headingNumber.append(heading.nextOrdinal()).append('.');
-            append(headingNumber);
+            writeHeadingNumber();
         }
 
-        String name = component.qualifiedName();
-        component.label().ifPresentOrElse(label -> {
-            if (!label.isEmpty()) {
-                appendSpace().append(label);
-            }
-            if (!name.isEmpty()) {
-                appendSpace().appendInlineCode(name);
-            }
-        }, () -> {
-            if (!name.isEmpty()) {
-                appendSpace().append(name);
-            }
-        });
+        writeHeadingText(component);
 
         Badge badge = Badge.mapComponentType(component.type());
         appendSpace();
         append("![").append(badge.label()).append(']').appendNewLine();
     }
 
-    private void writeDescription(Component component) {
+    private void writeHeadingNumber() {
+        appendSpace();
+        Heading heading = headings.getLast();
+        headingNumber.setLength(heading.baseLength());
+        headingNumber.append(heading.nextOrdinal()).append('.');
+        append(headingNumber);
+    }
+
+    private void writeHeadingText(Component component) {
+        final String name = component.qualifiedName();
+        final boolean deprecated = component.isDeprecated();
+        component.label().ifPresentOrElse(label -> {
+            writeName(label, deprecated);
+            writeNameAsCode(name, deprecated);
+        }, () -> {
+            writeName(name, deprecated);
+        });
+    }
+
+    private void writeName(String name, boolean deprecated) {
+        if (name.isEmpty()) {
+            return;
+        }
+        appendSpace();
+        if (deprecated) {
+            append("~~").append(name).append("~~");
+        } else {
+            append(name);
+        }
+    }
+
+    private void writeNameAsCode(String name, boolean deprecated) {
+        if (name.isEmpty()) {
+            return;
+        }
+        appendSpace();
+        if (deprecated) {
+            append("~~`").append(name).append("`~~");
+        } else {
+            append('`').append(name).append('`');
+        }
+    }
+
+    private void writeDescriptionSection(Component component) {
+        if (component.isDeprecated()) {
+            writeDeprecationNotice(component);
+        }
         component.description().ifPresent(description ->
             appendNewLine().append(description).appendNewLine()
             );
+    }
+
+    private void writeDeprecationNotice(Component component) {
+        appendNewLine();
+        append("**").append(getMessage("deprecated")).append("**");
+        String text = component.getFirstAnnotation(DocAnnotationType.DEPRECATED).get().value();
+        if (!text.isEmpty()) {
+            appendSpace().append(text);
+        }
+        appendNewLine();
     }
 
     private void writeImageDefs() {
@@ -225,6 +268,10 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
             append('[').append(badge.name()).append("]: ");
             append(badge.url()).appendNewLine();
         }
+    }
+
+    private String getMessage(String key) {
+        return bundle.getString(key);
     }
 
     static class Heading {

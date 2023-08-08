@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.api.spec;
 
-public non-sealed interface Sequence extends Component {
+public interface Sequence extends Component {
 
     @Override
     default Type type() {

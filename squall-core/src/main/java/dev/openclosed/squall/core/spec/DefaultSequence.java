@@ -22,7 +22,6 @@ import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Schema;
 import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.SpecVisitor;
-import dev.openclosed.squall.core.base.RecordMapSource;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +34,7 @@ public record DefaultSequence(
     long increment,
     long maxValue,
     long minValue,
-    List<DocAnnotation> annotations) implements Sequence, RecordMapSource {
+    List<DocAnnotation> annotations) implements Sequence, BasicComponent {
 
     public DefaultSequence {
         Objects.requireNonNull(name);

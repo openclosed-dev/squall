@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 final class MarkdownTableWriter<T extends Component, P> {
 
     private final List<? extends CellProvider<T, P>> providers;
+    private final ResourceBundle bundle;
     private final List<String> titles;
 
     static <T extends Component, P> MarkdownTableWriter<T, P> withProviders(
@@ -33,6 +34,7 @@ final class MarkdownTableWriter<T extends Component, P> {
 
     private MarkdownTableWriter(List<? extends CellProvider<T, P>> providers, ResourceBundle bundle) {
         this.providers = providers;
+        this.bundle = bundle;
         this.titles = providers.stream()
             .map(p -> bundle.getString("column.header." + p.name()))
             .toList();
@@ -58,7 +60,7 @@ final class MarkdownTableWriter<T extends Component, P> {
 
     void writeDataRow(Appender appender, T component, P parentComponent, int rowNo) {
         for (var provider : this.providers) {
-            String value = provider.getValue(component, parentComponent, rowNo);
+            String value = provider.getLocalizedValue(component, parentComponent, rowNo, this.bundle);
             appender.append("| ").append(value).appendSpace();
         }
         appender.append("|").appendNewLine();

@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * A column in table.
  */
-public non-sealed interface Column extends Component, DataType {
+public interface Column extends Component, DataType {
 
     @Override
     default Type type() {
