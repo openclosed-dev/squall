@@ -33,7 +33,10 @@ import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.api.spec.Table;
 
-class MarkdownWriter implements SpecVisitor, DelegatingAppender {
+/**
+ * Database specification writer.
+ */
+class SpecWriter implements SpecVisitor, DelegatingAppender {
 
     private final RenderConfig config;
     private final ResourceBundle bundle;
@@ -54,7 +57,7 @@ class MarkdownWriter implements SpecVisitor, DelegatingAppender {
 
     private final Deque<Heading> headings = new ArrayDeque<>();
 
-    MarkdownWriter(RenderConfig config, ResourceBundle bundle, Appendable appender) {
+    SpecWriter(RenderConfig config, ResourceBundle bundle, Appendable appender) {
         this.config = config;
         this.bundle = bundle;
         this.appender = appender;

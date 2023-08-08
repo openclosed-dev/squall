@@ -65,7 +65,7 @@ class MarkdownRenderer implements TextRenderer {
     }
 
     private void render(DatabaseSpec spec, Writer writer) throws IOException {
-        new MarkdownWriter(this.config, this.bundle, writer).writeSpec(spec);
+        new SpecWriter(this.config, this.bundle, writer).writeSpec(spec);
         writer.flush();
     }
 
