@@ -18,8 +18,6 @@ package dev.openclosed.squall.renderer.markdown;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.ResourceBundle;
 
 import dev.openclosed.squall.api.renderer.RenderConfig;
@@ -42,25 +40,25 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
     private final ResourceBundle bundle;
     private final Appendable appender;
 
+
     private final boolean hideDatabase;
     private final boolean hideSchema;
+    private final HeadingNumberGenerator headingNumberGenerator;
     private final MarkdownTableWriter<Column, Table> columnWriter;
     private final MarkdownTableWriter<Sequence, Void> sequenceWriter;
 
+    private int level;
     private int databaseCount;
-
-    private final StringBuilder headingNumber = new StringBuilder();
 
     private static final String[] HEADING_PREFIX = {
         "#", "##", "###", "####", "#####", "######", "#######"
     };
 
-    private final Deque<Heading> headings = new ArrayDeque<>();
-
     SpecWriter(RenderConfig config, ResourceBundle bundle, Appendable appender) {
         this.config = config;
         this.bundle = bundle;
         this.appender = appender;
+        this.headingNumberGenerator = HeadingNumberGenerator.create(config.numbering());
         this.columnWriter = ColumnCellProvider.tableWriter(bundle, config.columnAttributes());
         this.sequenceWriter = SequenceCellProvider.tableWriter(bundle, config.sequenceAttributes());
         // visibility of components
@@ -69,6 +67,7 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
     }
 
     void writeSpec(DatabaseSpec spec) throws IOException {
+        this.level = 0;
         this.databaseCount = spec.databases().size();
         try {
             spec.walkSpec(this, config.order());
@@ -179,36 +178,27 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
     }
 
     private void enterLevel() {
-        this.headings.addLast(new Heading(headingNumber.length()));
+        this.level++;
+        this.headingNumberGenerator.enterLevel();
     }
 
     private void leaveLevel() {
-        this.headings.removeLast();
+        assert this.level > 0;
+        this.level--;
+        this.headingNumberGenerator.leaveLevel();
     }
 
     private void writeHeading(Component component) {
-
-        final int level = this.headings.size();
         appendNewLine();
         append(HEADING_PREFIX[level]);
 
-        if (config.numbering()) {
-            writeHeadingNumber();
-        }
+        this.headingNumberGenerator.generate(this);
 
         writeHeadingText(component);
 
         Badge badge = Badge.mapComponentType(component.type());
         appendSpace();
         append("![").append(badge.label()).append(']').appendNewLine();
-    }
-
-    private void writeHeadingNumber() {
-        appendSpace();
-        Heading heading = headings.getLast();
-        headingNumber.setLength(heading.baseLength());
-        headingNumber.append(heading.nextOrdinal()).append('.');
-        append(headingNumber);
     }
 
     private void writeHeadingText(Component component) {
@@ -275,22 +265,5 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
 
     private String getMessage(String key) {
         return bundle.getString(key);
-    }
-
-    static class Heading {
-        private final int baseLength;
-        private int ordinal;
-
-        Heading(int baseLength) {
-            this.baseLength = baseLength;
-        }
-
-        int baseLength() {
-            return baseLength;
-        }
-
-        int nextOrdinal() {
-            return ++ordinal;
-        }
     }
 }
