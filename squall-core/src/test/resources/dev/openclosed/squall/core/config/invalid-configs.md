@@ -94,7 +94,7 @@ ERROR: Illegal value. Allowed values are ["database", "schema", "table", "column
 ```
 
 ```
-ERROR: Illegal value. Allowed values are ["ordinal", "name", "label", "data_type", "precision_length", "scale", "nullable", "required", "unique", "default_value", "description"], but actual value was "no". [/renderers/default/columnAttributes/0]
+ERROR: Illegal value. Allowed values are ["ordinal", "name", "label", "type", "type_name", "precision_length", "scale", "nullable", "required", "unique", "default_value", "description"], but actual value was "no". [/renderers/default/columnAttributes/0]
 ```
 
 # multiple problems

@@ -60,7 +60,13 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
             }).orElse("-");
         }
     },
-    DATA_TYPE(ALIGN_LEFT) {
+    TYPE(ALIGN_LEFT) {
+        @Override
+        public String getValue(Column column, Table table, int ordinal) {
+            return column.toSqlType();
+        }
+    },
+    TYPE_NAME(ALIGN_LEFT) {
         @Override
         public String getValue(Column column, Table table, int ordinal) {
             return column.typeName();
@@ -163,11 +169,13 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     }
 
     static ColumnCellProvider provider(ColumnAttribute attribute) {
+        // Mapping of ColumnAttribute to this type.
         return switch (attribute) {
             case ORDINAL -> ORDINAL;
             case NAME -> NAME;
             case LABEL -> LABEL;
-            case DATA_TYPE -> DATA_TYPE;
+            case TYPE -> TYPE;
+            case TYPE_NAME -> TYPE_NAME;
             case PRECISION_LENGTH -> PRECISION_LENGTH;
             case SCALE -> SCALE;
             case NULLABLE -> NULLABLE;

@@ -29,65 +29,64 @@ public interface DataType {
      */
     String typeName();
 
+    /**
+     * Returns the maximum length of this type.
+     * @return the maximum length of this type, or empty if not specified.
+     */
     default OptionalInt length() {
         return OptionalInt.empty();
     }
 
+    /**
+     * Returns the total number of digits in this type.
+     * @return the total number of digits, or empty if not specified.
+     */
     default OptionalInt precision() {
         return OptionalInt.empty();
     }
 
+    /**
+     * Returns the number of digits after the decimal point.
+     * @return the number of digits after the decimal point, or empty if not specified.
+     */
     default OptionalInt scale() {
         return OptionalInt.empty();
     }
 
-    static DataType withLength(DataType dataType, int length) {
-        final var typeName = dataType.typeName();
-        return new DataType() {
-            @Override
-            public String typeName() {
-                return typeName;
-            }
+    default boolean isParameterized() {
+        return length().isPresent() || precision().isPresent();
+    }
 
-            @Override
-            public OptionalInt length() {
-                return OptionalInt.of(length);
-            }
-        };
+    default String toSqlType() {
+        return isParameterized() ? toParameterizedSqlType() : typeName();
+    }
+
+    private String toParameterizedSqlType() {
+        var builder = new StringBuilder(typeName()).append('(');
+        length().ifPresentOrElse(builder::append, () -> {
+            precision().ifPresent(precision -> {
+                builder.append(precision);
+                scale().ifPresent(scale -> builder.append(", ").append(scale));
+            });
+        });
+        return builder.append(')').toString();
+    }
+
+    static DataType withLength(DataType dataType, int length) {
+        record StringDataType(String typeName, OptionalInt length) implements DataType { }
+        return new StringDataType(dataType.typeName(), OptionalInt.of(length));
     }
 
     static DataType withPrecision(DataType dataType, int precision) {
-        final var typeName = dataType.typeName();
-        return new DataType() {
-            @Override
-            public String typeName() {
-                return typeName;
-            }
-
-            @Override
-            public OptionalInt precision() {
-                return OptionalInt.of(precision);
-            }
-        };
+        record NumericDataType(String typeName, OptionalInt precision) implements DataType { }
+        return new NumericDataType(dataType.typeName(), OptionalInt.of(precision));
     }
 
     static DataType withPrecision(DataType dataType, int precision, int scale) {
-        final var typeName = dataType.typeName();
-        return new DataType() {
-            @Override
-            public String typeName() {
-                return typeName;
-            }
-
-            @Override
-            public OptionalInt precision() {
-                return OptionalInt.of(precision);
-            }
-
-            @Override
-            public OptionalInt scale() {
-                return OptionalInt.of(scale);
-            }
-        };
+        record NumericDataType(String typeName, OptionalInt precision, OptionalInt scale) implements DataType { }
+        return new NumericDataType(
+            dataType.typeName(),
+            OptionalInt.of(precision),
+            OptionalInt.of(scale));
     }
 }

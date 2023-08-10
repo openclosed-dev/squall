@@ -84,7 +84,7 @@ final class DefaultConfigLoaderTest {
             "order", "definition",
             "hide", Set.of("database", "schema"),
             "columnAttributes", List.of("name", "description"),
-            "sequenceAttributes", List.of("data_type", "start")
+            "sequenceAttributes", List.of("type_name", "start")
         );
 
         var actual = sut.loadFromMap(map, RenderConfig.class);
@@ -97,7 +97,7 @@ final class DefaultConfigLoaderTest {
             ComponentOrder.DEFINITION,
             Set.of(Component.Type.DATABASE, Component.Type.SCHEMA),
             List.of(ColumnAttribute.NAME, ColumnAttribute.DESCRIPTION),
-            List.of(SequenceAttribute.DATA_TYPE, SequenceAttribute.START)
+            List.of(SequenceAttribute.TYPE_NAME, SequenceAttribute.START)
         );
 
         assertThat(actual).isEqualTo(expected);
@@ -129,7 +129,7 @@ final class DefaultConfigLoaderTest {
                         "order", "name",
                         "hide", Set.of("database", "schema"),
                         "columnAttributes", List.of("name", "description"),
-                        "sequenceAttributes", List.of("data_type", "start")
+                        "sequenceAttributes", List.of("type_name", "start")
                         )
                     )
                 );
@@ -154,7 +154,7 @@ final class DefaultConfigLoaderTest {
                     ComponentOrder.NAME,
                     Set.of(Component.Type.DATABASE, Component.Type.SCHEMA),
                     List.of(ColumnAttribute.NAME, ColumnAttribute.DESCRIPTION),
-                    List.of(SequenceAttribute.DATA_TYPE, SequenceAttribute.START)
+                    List.of(SequenceAttribute.TYPE_NAME, SequenceAttribute.START)
                     )
                 ));
 

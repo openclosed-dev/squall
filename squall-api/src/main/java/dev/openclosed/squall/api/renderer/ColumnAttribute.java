@@ -22,10 +22,16 @@ import java.util.List;
  * Attributes of a column.
  */
 public enum ColumnAttribute {
+    /** Ordinal number in the table. */
     ORDINAL,
+    /** Physical name of the column. */
     NAME,
+    /** Name for display purpose. */
     LABEL,
-    DATA_TYPE,
+    /** Type name with length, precision, and/or scale. */
+    TYPE,
+    /** Type name only. */
+    TYPE_NAME,
     PRECISION_LENGTH,
     SCALE,
     NULLABLE,
@@ -38,9 +44,7 @@ public enum ColumnAttribute {
         ORDINAL,
         NAME,
         LABEL,
-        DATA_TYPE,
-        PRECISION_LENGTH,
-        SCALE,
+        TYPE,
         NULLABLE,
         UNIQUE,
         DEFAULT_VALUE,

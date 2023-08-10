@@ -6,18 +6,18 @@ import java.util.List;
  * Attributes of a sequence.
  */
 public enum SequenceAttribute {
-    DATA_TYPE,
+    TYPE_NAME,
     START,
     INCREMENT,
-    MIN_VALUE,
-    MAX_VALUE;
+    MINIMUM,
+    MAXIMUM;
 
     private static final List<SequenceAttribute> DEFAULT_LIST = List.of(
-        DATA_TYPE,
+        TYPE_NAME,
         START,
         INCREMENT,
-        MIN_VALUE,
-        MAX_VALUE
+        MINIMUM,
+        MAXIMUM
     );
 
     /**

@@ -13,9 +13,7 @@
           "columnAttributes": [
             "ordinal",
             "name",
-            "data_type",
-            "precision_length",
-            "scale",
+            "type",
             "nullable",
             "unique",
             "default_value"

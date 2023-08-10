@@ -8,11 +8,11 @@ import java.util.ResourceBundle;
 import java.util.function.Function;
 
 enum SequenceCellProvider implements CellProvider<Sequence, Void> {
-    DATA_TYPE(ALIGN_LEFT, Sequence::typeName),
+    TYPE_NAME(ALIGN_LEFT, Sequence::typeName),
     START(ALIGN_RIGHT, seq -> String.valueOf(seq.start())),
     INCREMENT(ALIGN_RIGHT, seq -> String.valueOf(seq.increment())),
-    MIN_VALUE(ALIGN_RIGHT, seq -> String.valueOf(seq.minValue())),
-    MAX_VALUE(ALIGN_RIGHT, seq -> String.valueOf(seq.maxValue()));
+    MINIMUM(ALIGN_RIGHT, seq -> String.valueOf(seq.minValue())),
+    MAXIMUM(ALIGN_RIGHT, seq -> String.valueOf(seq.maxValue()));
 
     private final String separator;
     private final Function<Sequence, String> valueMapper;
@@ -34,11 +34,11 @@ enum SequenceCellProvider implements CellProvider<Sequence, Void> {
 
     static SequenceCellProvider provider(SequenceAttribute attribute) {
         return switch (attribute) {
-            case DATA_TYPE -> DATA_TYPE;
+            case TYPE_NAME -> TYPE_NAME;
             case START -> START;
             case INCREMENT -> INCREMENT;
-            case MIN_VALUE -> MIN_VALUE;
-            case MAX_VALUE -> MAX_VALUE;
+            case MINIMUM -> MINIMUM;
+            case MAXIMUM -> MAXIMUM;
         };
     }
 

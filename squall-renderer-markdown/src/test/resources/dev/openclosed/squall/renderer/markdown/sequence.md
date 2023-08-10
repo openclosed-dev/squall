@@ -20,6 +20,6 @@ CREATE SEQUENCE customer.customer_id;
 
 A description of customer_id.
 
-| Data Type | Start | Increment | Min Value | Max Value |
+| Type | Start | Increment | Minimum | Maximum |
 | :-- | --: | --: | --: | --: |
 | bigint | 1 | 1 | 1 | 9223372036854775807 |

@@ -22,6 +22,6 @@ CREATE TABLE table1 (
 
 A description of table 1.
 
-| No. | Name | Display Name | Data Type | Precision / Length | Scale | Nullable | Unique | Default Value | Description |
-| --: | :-- | :-- | :-- | --: | --: | :-: | :-: | :-- | :-- |
-| 1 | a &#x1F511; | column A | integer | - | - | - | &#x2705; | - | A description of column A. |
+| No. | Name | Display Name | Type | Nullable | Unique | Default | Description |
+| --: | :-- | :-- | :-- | :-: | :-: | :-- | :-- |
+| 1 | a &#x1F511; | column A | integer | - | &#x2705; | - | A description of column A. |
