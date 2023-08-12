@@ -96,13 +96,11 @@ public interface Component extends MapSource {
                 .map(DocAnnotation::value);
     }
 
-    default  Optional<DocAnnotation> getFirstAnnotation(DocAnnotationType type) {
+    default Optional<DocAnnotation> getFirstAnnotation(DocAnnotationType type) {
         return annotations().stream()
                 .filter(a -> a.type() == type)
                 .findFirst();
     }
 
-    default void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, Component parent) {
-        throw new UnsupportedOperationException("Not implemented");
-    }
+    void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, SpecVisitor.Context context);
 }

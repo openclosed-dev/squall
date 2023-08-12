@@ -22,10 +22,23 @@ package dev.openclosed.squall.api.spec;
 public interface SpecVisitor {
 
     /**
+     * Visiting context.
+     */
+    interface Context {
+
+        Database currentDatabase();
+
+        Schema currentSchema();
+
+        Table currentTable();
+    }
+
+    /**
      * Visits the database specification.
      * @param spec the visited database specification.
+     * @param context the context of this visiting.
      */
-    default void visit(DatabaseSpec spec) {
+    default void visit(DatabaseSpec spec, Context context) {
     }
 
     /**
@@ -39,8 +52,9 @@ public interface SpecVisitor {
      * Visits a database.
      * @param database the visited database.
      * @param ordinal the ordinal number of the visited component.
+     * @param context the context of this visiting.
      */
-    default void visit(Database database, int ordinal) {
+    default void visit(Database database, int ordinal, Context context) {
     }
 
     /**
@@ -54,8 +68,9 @@ public interface SpecVisitor {
      * Visits a schema.
      * @param schema the visited schema.
      * @param ordinal the ordinal number of the visited component.
+     * @param context the context of this visiting.
      */
-    default void visit(Schema schema, int ordinal) {
+    default void visit(Schema schema, int ordinal, Context context) {
     }
 
     /**
@@ -69,9 +84,9 @@ public interface SpecVisitor {
      * Visits a sequence.
      * @param sequence the visited sequence.
      * @param ordinal the ordinal number of the visited component.
-     * @param schema the parent schema.
+     * @param context the context of this visiting.
      */
-    default void visit(Sequence sequence, int ordinal, Schema schema) {
+    default void visit(Sequence sequence, int ordinal, Context context) {
     }
 
     /**
@@ -85,9 +100,9 @@ public interface SpecVisitor {
      * Visits a table.
      * @param table the visited table.
      * @param ordinal the ordinal number of the visited component.
-     * @param schema the parent schema.
+     * @param context the context of this visiting.
      */
-    default void visit(Table table, int ordinal, Schema schema) {
+    default void visit(Table table, int ordinal, Context context) {
     }
 
     /**
@@ -101,8 +116,8 @@ public interface SpecVisitor {
      * Visits a column in a table.
      * @param column the visited column.
      * @param ordinal the ordinal number of the visited component.
-     * @param table the table owning the column.
+     * @param context the context of this visiting.
      */
-    default void visit(Column column, int ordinal, Table table) {
+    default void visit(Column column, int ordinal, Context context) {
     }
 }

@@ -17,12 +17,10 @@
 package dev.openclosed.squall.core.spec;
 
 import dev.openclosed.squall.api.spec.Column;
-import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.ComponentOrder;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.ForeignKey;
 import dev.openclosed.squall.api.spec.PrimaryKey;
-import dev.openclosed.squall.api.spec.Schema;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.api.spec.Table;
 import dev.openclosed.squall.api.spec.Unique;
@@ -50,24 +48,15 @@ public record DefaultTable(
     }
 
     @Override
-    public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, Component parent) {
-        if (!(parent instanceof Schema schema)) {
-            throw new IllegalArgumentException("Illegal parent");
-        }
-        visitor.visit(this, ordinal, schema);
-        visitColumns(visitor);
+    public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, SpecVisitorContext context) {
+        visitor.visit(this, ordinal, context);
+        // Forces to visit in definition order
+        visitChildren(columns, visitor, ComponentOrder.DEFINITION, context);
         visitor.leave(this);
     }
 
     @Override
     public boolean hasColumns() {
         return !columns.isEmpty();
-    }
-
-    private void visitColumns(SpecVisitor visitor) {
-        int ordinal = 1;
-        for (var column : columns()) {
-            visitor.visit(column, ordinal++, this);
-        }
     }
 }

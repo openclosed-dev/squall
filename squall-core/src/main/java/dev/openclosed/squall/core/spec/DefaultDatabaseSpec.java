@@ -31,8 +31,9 @@ public record DefaultDatabaseSpec(
         ) implements DatabaseSpec, RecordMapSource {
 
     public void walkSpec(SpecVisitor visitor, ComponentOrder order) {
-        visitor.visit(this);
-        BasicComponent.visitChildComponents(this.databases, visitor, order, null);
+        var context = new SpecVisitorContext();
+        visitor.visit(this, context);
+        BasicComponent.visitChildComponents(this.databases, visitor, order, context);
         visitor.leave(this);
     }
 }

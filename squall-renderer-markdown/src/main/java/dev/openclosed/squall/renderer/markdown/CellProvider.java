@@ -17,10 +17,11 @@
 package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.spec.Component;
+import dev.openclosed.squall.api.spec.SpecVisitor;
 
 import java.util.ResourceBundle;
 
-public interface CellProvider<T extends Component, P> {
+public interface CellProvider<T extends Component> {
 
     String ALIGN_LEFT = ":--";
     String ALIGN_RIGHT = "--:";
@@ -32,11 +33,11 @@ public interface CellProvider<T extends Component, P> {
         return ALIGN_LEFT;
     }
 
-    default String getLocalizedValue(T component, P parent, int ordinal, ResourceBundle bundle) {
-        return getValue(component, parent, ordinal);
+    default String getLocalizedValue(T component, int ordinal, SpecVisitor.Context context, ResourceBundle bundle) {
+        return getValue(component, ordinal, context);
     }
 
-    default String getValue(T component, P parent, int ordinal) {
+    default String getValue(T component, int ordinal, SpecVisitor.Context context) {
         return "-";
     }
 }

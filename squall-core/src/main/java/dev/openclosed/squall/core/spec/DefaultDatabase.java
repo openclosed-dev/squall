@@ -38,10 +38,9 @@ public record DefaultDatabase(
     }
 
     @Override
-    public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, Component parent) {
-        assert parent == null;
-        visitor.visit(this, ordinal);
-        visitChildren(this.schemas, visitor, order);
+    public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, SpecVisitorContext context) {
+        visitor.visit(this, ordinal, context);
+        visitChildren(this.schemas, visitor, order, context);
         visitor.leave(this);
     }
 }

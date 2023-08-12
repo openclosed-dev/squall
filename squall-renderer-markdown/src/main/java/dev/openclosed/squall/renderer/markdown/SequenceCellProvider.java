@@ -2,12 +2,13 @@ package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.spec.Sequence;
+import dev.openclosed.squall.api.spec.SpecVisitor;
 
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
-enum SequenceCellProvider implements CellProvider<Sequence, Void> {
+enum SequenceCellProvider implements CellProvider<Sequence> {
     TYPE_NAME(ALIGN_LEFT, Sequence::typeName),
     START(ALIGN_RIGHT, seq -> String.valueOf(seq.start())),
     INCREMENT(ALIGN_RIGHT, seq -> String.valueOf(seq.increment())),
@@ -28,7 +29,7 @@ enum SequenceCellProvider implements CellProvider<Sequence, Void> {
     }
 
     @Override
-    public String getValue(Sequence sequence, Void unused, int ordinal) {
+    public String getValue(Sequence sequence, int ordinal, SpecVisitor.Context context) {
         return valueMapper.apply(sequence);
     }
 
@@ -42,7 +43,7 @@ enum SequenceCellProvider implements CellProvider<Sequence, Void> {
         };
     }
 
-    static MarkdownTableWriter<Sequence, Void> tableWriter(ResourceBundle bundle, List<SequenceAttribute> attributes) {
+    static MarkdownTableWriter<Sequence> tableWriter(ResourceBundle bundle, List<SequenceAttribute> attributes) {
         List<SequenceCellProvider> providers = attributes.stream()
             .map(SequenceCellProvider::provider).toList();
         return MarkdownTableWriter.withProviders(providers, bundle);

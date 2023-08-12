@@ -21,22 +21,23 @@ import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.DocAnnotationType;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.ForeignKey;
+import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.api.spec.Table;
 
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-enum ColumnCellProvider implements CellProvider<Column, Table> {
+enum ColumnCellProvider implements CellProvider<Column> {
     ORDINAL(ALIGN_RIGHT) {
         @Override
-        public String getValue(Column column, Table table, int ordinal) {
+        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return String.valueOf(ordinal);
         }
     },
     NAME(ALIGN_LEFT) {
         @Override
-        public String getValue(Column column, Table table, int ordinal) {
+        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             var sb = new StringBuilder();
             if (column.isDeprecated()) {
                 sb.append("~~").append(column.name()).append("~~");
@@ -51,7 +52,7 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     },
     LABEL(ALIGN_LEFT) {
         @Override
-        public String getValue(Column column, Table table, int ordinal) {
+        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.label().map(label -> {
                 if (column.isDeprecated()) {
                     return new StringBuilder()
@@ -65,19 +66,19 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     },
     TYPE(ALIGN_LEFT) {
         @Override
-        public String getValue(Column column, Table table, int ordinal) {
+        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.toSqlType();
         }
     },
     TYPE_NAME(ALIGN_LEFT) {
         @Override
-        public String getValue(Column column, Table table, int ordinal) {
+        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.typeName();
         }
     },
     PRECISION_LENGTH(ALIGN_RIGHT) {
         @Override
-        public String getValue(Column column, Table table, int ordinal) {
+        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             var value = column.precision();
             if (value.isPresent()) {
                 return String.valueOf(value.getAsInt());
@@ -93,7 +94,7 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     },
     SCALE(ALIGN_RIGHT) {
         @Override
-        public String getValue(Column column, Table table, int ordinal) {
+        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             var value = column.scale();
             if (value.isPresent()) {
                 return String.valueOf(value.getAsInt());
@@ -104,25 +105,25 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     },
     NULLABLE(ALIGN_CENTER) {
         @Override
-        public String getValue(Column column, Table table, int ordinal) {
+        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.isNullable() ? CHECK_MARK : "-";
         }
     },
     REQUIRED(ALIGN_CENTER) {
         @Override
-        public String getValue(Column column, Table table, int ordinal) {
+        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.isRequired() ? CHECK_MARK : "-";
         }
     },
     UNIQUE(ALIGN_CENTER) {
         @Override
-        public String getValue(Column column, Table table, int ordinal) {
+        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.isUnique() ? CHECK_MARK : "-";
         }
     },
     DEFAULT_VALUE(ALIGN_LEFT) {
         @Override
-        public String getValue(Column column, Table table, int ordinal) {
+        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.defaultValue()
                 .map(ColumnCellProvider::expressionToCode)
                 .orElse("-");
@@ -130,8 +131,9 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     },
     FOREIGN_KEY(ALIGN_LEFT) {
         @Override
-        public String getValue(Column column, Table table, int ordinal) {
+        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             final String columnName = column.name();
+            Table table = context.currentTable();
             String value = table.foreignKeysContaining(columnName)
                 .map(fk -> foreignKeyToString(fk, columnName))
                 .collect(Collectors.joining("<br>"));
@@ -149,7 +151,8 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
     },
     DESCRIPTION(ALIGN_LEFT) {
         @Override
-        public String getLocalizedValue(Column column, Table table, int ordinal, ResourceBundle bundle) {
+        public String getLocalizedValue(
+            Column column, int ordinal, SpecVisitor.Context context, ResourceBundle bundle) {
             return column.description()
                 .map(d -> withDeprecationNotice(d, column, bundle))
                 .map(ColumnCellProvider::inlined)
@@ -214,7 +217,7 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
         };
     }
 
-    static MarkdownTableWriter<Column, Table> tableWriter(ResourceBundle bundle, List<ColumnAttribute> attributes) {
+    static MarkdownTableWriter<Column> tableWriter(ResourceBundle bundle, List<ColumnAttribute> attributes) {
         List<ColumnCellProvider> providers = attributes.stream()
             .map(ColumnCellProvider::provider).toList();
         return MarkdownTableWriter.withProviders(providers, bundle);

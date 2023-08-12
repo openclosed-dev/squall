@@ -34,24 +34,34 @@ interface BasicComponent extends Component, RecordMapSource {
         return getFirstAnnotation(DocAnnotationType.DEPRECATED).isPresent();
     }
 
+    @Override
+    default void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, SpecVisitor.Context context) {
+        acceptVisitor(visitor, order, ordinal, (SpecVisitorContext) context);
+    }
+
+    void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, SpecVisitorContext context);
+
     default void visitChildren(
         Collection<? extends Component> components,
         SpecVisitor visitor,
-        ComponentOrder order
+        ComponentOrder order,
+        SpecVisitorContext context
     ) {
-        visitChildComponents(components, visitor, order, this);
+        context.pushComponent(this);
+        visitChildComponents(components, visitor, order, context);
+        context.popComponent();
     }
 
     static void visitChildComponents(
         Collection<? extends Component> components,
         SpecVisitor visitor,
         ComponentOrder order,
-        Component parent
+        SpecVisitorContext context
     ) {
 
         int ordinal = 1;
         for (var component : order.reorder(components)) {
-            component.acceptVisitor(visitor, order, ordinal++, parent);
+            component.acceptVisitor(visitor, order, ordinal++, context);
         }
     }
 }

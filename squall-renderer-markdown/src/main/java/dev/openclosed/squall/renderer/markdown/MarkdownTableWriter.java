@@ -17,22 +17,23 @@
 package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.spec.Component;
+import dev.openclosed.squall.api.spec.SpecVisitor;
 
 import java.util.List;
 import java.util.ResourceBundle;
 
-final class MarkdownTableWriter<T extends Component, P> {
+final class MarkdownTableWriter<T extends Component> {
 
-    private final List<? extends CellProvider<T, P>> providers;
+    private final List<? extends CellProvider<T>> providers;
     private final ResourceBundle bundle;
     private final List<String> titles;
 
-    static <T extends Component, P> MarkdownTableWriter<T, P> withProviders(
-        List<? extends CellProvider<T, P>> providers, ResourceBundle bundle) {
+    static <T extends Component> MarkdownTableWriter<T> withProviders(
+        List<? extends CellProvider<T>> providers, ResourceBundle bundle) {
         return new MarkdownTableWriter<>(providers, bundle);
     }
 
-    private MarkdownTableWriter(List<? extends CellProvider<T, P>> providers, ResourceBundle bundle) {
+    private MarkdownTableWriter(List<? extends CellProvider<T>> providers, ResourceBundle bundle) {
         this.providers = providers;
         this.bundle = bundle;
         this.titles = providers.stream()
@@ -55,12 +56,12 @@ final class MarkdownTableWriter<T extends Component, P> {
     }
 
     void writeDataRow(Appender appender, T component) {
-        writeDataRow(appender, component, null, 1);
+        writeDataRow(appender, component, 1, null);
     }
 
-    void writeDataRow(Appender appender, T component, P parentComponent, int rowNo) {
+    void writeDataRow(Appender appender, T component, int rowNo, SpecVisitor.Context context) {
         for (var provider : this.providers) {
-            String value = provider.getLocalizedValue(component, parentComponent, rowNo, this.bundle);
+            String value = provider.getLocalizedValue(component, rowNo, context, this.bundle);
             appender.append("| ").append(value).appendSpace();
         }
         appender.append("|").appendNewLine();
