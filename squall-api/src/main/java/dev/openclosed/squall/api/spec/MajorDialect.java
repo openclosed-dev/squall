@@ -16,20 +16,30 @@
 
 package dev.openclosed.squall.api.spec;
 
+import java.util.Objects;
+
 /**
- * A dialect of the SQL language.
+ * Major dialects of the SQL language.
  */
-public interface Dialect {
+public enum MajorDialect implements Dialect {
+    /** PostgreSQL. */
+    POSTGRESQL("public");
 
-    /**
-     * Returns the name of this dialect.
-     * @return the name of this dialect.
-     */
-    String dialectName();
+    private final String defaultSchema;
 
-    /**
-     * Returns the default schema of this dialect.
-     * @return the default schema of this dialect.
-     */
-    String defaultSchema();
+    MajorDialect(String defaultSchema) {
+        Objects.requireNonNull(defaultSchema);
+        this.defaultSchema = defaultSchema;
+    }
+
+    @Override
+    public String dialectName() {
+        return name().toLowerCase();
+    }
+
+    @Override
+    public String defaultSchema() {
+        return defaultSchema;
+    }
 }
+

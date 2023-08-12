@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
+import dev.openclosed.squall.api.spec.MajorDialect;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -47,10 +48,7 @@ public final class InitTest {
                     Optional.of("Untitled"),
                     List.of(),
                     "output",
-                    new ParserConfig(
-                        "postgresql",
-                        Optional.of("public")
-                    ),
+                    new ParserConfig(MajorDialect.POSTGRESQL),
                     Map.of(
                         "markdown", new RenderConfig(
                             "markdown",

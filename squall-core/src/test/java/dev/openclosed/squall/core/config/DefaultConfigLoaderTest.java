@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
+import dev.openclosed.squall.api.spec.MajorDialect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,7 +42,6 @@ import dev.openclosed.squall.api.renderer.ColumnAttribute;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.ComponentOrder;
-import dev.openclosed.squall.api.spec.Dialect;
 
 final class DefaultConfigLoaderTest {
 
@@ -60,11 +60,7 @@ final class DefaultConfigLoaderTest {
                 );
 
         var actual = sut.loadFromMap(map, ParserConfig.class);
-
-        var expected = new ParserConfig(
-                Dialect.POSTGRESQL.dialectName(),
-                Optional.of("public"));
-
+        var expected = new ParserConfig(MajorDialect.POSTGRESQL.dialectName(), "public");
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -143,9 +139,7 @@ final class DefaultConfigLoaderTest {
                     "create-schema.sql"
                 ),
                 "output",
-                new ParserConfig(
-                        "postgresql",
-                        Optional.of("public")),
+                new ParserConfig(MajorDialect.POSTGRESQL.dialectName(), "public"),
                 Map.of("basic", new RenderConfig(
                     "markdown",
                     "spec",

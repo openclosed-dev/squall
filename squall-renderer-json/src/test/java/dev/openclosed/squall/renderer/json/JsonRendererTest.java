@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.util.stream.Collectors;
 
 import dev.openclosed.squall.api.spec.DatabaseSpec;
+import dev.openclosed.squall.api.spec.MajorDialect;
 import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,7 +36,6 @@ import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.RendererFactory;
-import dev.openclosed.squall.api.spec.Dialect;
 import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 
 public final class JsonRendererTest {
@@ -47,7 +47,7 @@ public final class JsonRendererTest {
 
     @BeforeAll
     public static void setUpOnce() {
-        parserFactory = SqlParserFactory.get(Dialect.POSTGRESQL);
+        parserFactory = SqlParserFactory.get(MajorDialect.POSTGRESQL);
         rendererFactory = RendererFactory.get("json");
     }
 

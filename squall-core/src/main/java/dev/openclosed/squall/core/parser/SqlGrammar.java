@@ -285,7 +285,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
             tableName = expectIdentifier(IdentifierType.OBJECT_NAME);
             consume();
         } else {
-            schemaName = config().getDefaultSchema();
+            schemaName = config().defaultSchema();
         }
         return new String[] {schemaName, tableName};
      }
@@ -598,7 +598,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
             secondPart = expectIdentifier(IdentifierType.OBJECT_NAME);
             consume();
         } else {
-            firstPart = config().getDefaultSchema();
+            firstPart = config().defaultSchema();
         }
         return TableRef.tableInSchema(secondPart, firstPart);
     }

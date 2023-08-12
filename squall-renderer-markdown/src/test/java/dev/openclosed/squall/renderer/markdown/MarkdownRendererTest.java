@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.util.Locale;
 import java.util.stream.Stream;
 
+import dev.openclosed.squall.api.spec.MajorDialect;
 import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,7 +36,6 @@ import dev.openclosed.squall.api.parser.CommentHandlers;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.renderer.RendererFactory;
-import dev.openclosed.squall.api.spec.Dialect;
 import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 
 final class MarkdownRendererTest {
@@ -50,7 +50,7 @@ final class MarkdownRendererTest {
     public static void setUpOnce() throws IOException {
         Locale.setDefault(Locale.ENGLISH);
         Files.createDirectories(BASE_DIR);
-        parserFactory = SqlParserFactory.get(Dialect.POSTGRESQL);
+        parserFactory = SqlParserFactory.get(MajorDialect.POSTGRESQL);
         rendererFactory = RendererFactory.get("markdown");
         configLoader = ConfigLoader.get();
     }
