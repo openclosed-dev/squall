@@ -48,6 +48,5 @@ public record DefaultSequence(
     @Override
     public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, SpecVisitorContext context) {
         visitor.visit(this, ordinal, context);
-        visitor.leave(this);
     }
 }

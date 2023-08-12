@@ -149,11 +149,7 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
         appendNewLine();
         sequenceWriter.writeHeaderRow(this);
         sequenceWriter.writeDelimiterRow(this);
-        sequenceWriter.writeDataRow(this, sequence);
-    }
-
-    @Override
-    public void leave(Sequence sequence) {
+        sequenceWriter.writeDataRow(this, sequence, 1, context);
     }
 
     @Override

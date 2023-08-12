@@ -55,10 +55,6 @@ final class MarkdownTableWriter<T extends Component> {
         appender.append("|").appendNewLine();
     }
 
-    void writeDataRow(Appender appender, T component) {
-        writeDataRow(appender, component, 1, null);
-    }
-
     void writeDataRow(Appender appender, T component, int rowNo, SpecVisitor.Context context) {
         for (var provider : this.providers) {
             String value = provider.getLocalizedValue(component, rowNo, context, this.bundle);

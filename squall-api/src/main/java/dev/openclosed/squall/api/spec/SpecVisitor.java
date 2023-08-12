@@ -90,13 +90,6 @@ public interface SpecVisitor {
     }
 
     /**
-     * Leaves the sequence.
-     * @param sequence the visited sequence.
-     */
-    default void leave(Sequence sequence) {
-    }
-
-    /**
      * Visits a table.
      * @param table the visited table.
      * @param ordinal the ordinal number of the visited component.
