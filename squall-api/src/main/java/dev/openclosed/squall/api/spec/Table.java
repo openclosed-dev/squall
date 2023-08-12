@@ -18,6 +18,7 @@ package dev.openclosed.squall.api.spec;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public interface Table extends Component {
 
@@ -32,9 +33,11 @@ public interface Table extends Component {
 
     List<ForeignKey> foreignKeys();
 
+    default Stream<ForeignKey> foreignKeysContaining(String column) {
+        return foreignKeys().stream().filter(fk -> fk.containsKey(column));
+    }
+
     List<Unique> unique();
 
     boolean hasColumns();
-
-    boolean containsColumnInPrimaryKey(String name);
 }

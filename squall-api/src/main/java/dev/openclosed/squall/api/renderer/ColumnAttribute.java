@@ -38,6 +38,7 @@ public enum ColumnAttribute {
     REQUIRED,
     UNIQUE,
     DEFAULT_VALUE,
+    FOREIGN_KEY,
     DESCRIPTION;
 
     private static final List<ColumnAttribute> DEFAULT_LIST = List.of(
@@ -48,6 +49,7 @@ public enum ColumnAttribute {
         NULLABLE,
         UNIQUE,
         DEFAULT_VALUE,
+        FOREIGN_KEY,
         DESCRIPTION
     );
 

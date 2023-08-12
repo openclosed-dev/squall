@@ -64,12 +64,6 @@ public record DefaultTable(
         return !columns.isEmpty();
     }
 
-    @Override
-    public boolean containsColumnInPrimaryKey(String name) {
-        return primaryKey.map(pk -> pk.containsColumn(name))
-                .orElse(false);
-    }
-
     private void visitColumns(SpecVisitor visitor) {
         int ordinal = 1;
         for (var column : columns()) {

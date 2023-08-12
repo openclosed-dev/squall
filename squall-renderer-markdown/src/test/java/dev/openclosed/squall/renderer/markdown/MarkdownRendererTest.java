@@ -60,7 +60,6 @@ final class MarkdownRendererTest {
             "database",
             "schema",
             "table",
-            "table-default-schema",
             "hide-database-and-schema",
             "sequence"
         )

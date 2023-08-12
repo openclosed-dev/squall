@@ -26,6 +26,7 @@
               //"required"
               "unique",
               "default_value",
+              "foreign_key",
               "description"
             ],
             "sequenceAttributes": [

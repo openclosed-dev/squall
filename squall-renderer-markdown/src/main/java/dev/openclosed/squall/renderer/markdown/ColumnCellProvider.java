@@ -19,10 +19,13 @@ package dev.openclosed.squall.renderer.markdown;
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
 import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.DocAnnotationType;
+import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.spec.ForeignKey;
 import dev.openclosed.squall.api.spec.Table;
 
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 enum ColumnCellProvider implements CellProvider<Column, Table> {
     ORDINAL(ALIGN_RIGHT) {
@@ -121,9 +124,27 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
         @Override
         public String getValue(Column column, Table table, int ordinal) {
             return column.defaultValue()
-                .map(value -> new StringBuilder()
-                    .append('`').append(value.toSql()).append('`').toString()
-                ).orElse("-");
+                .map(ColumnCellProvider::expressionToCode)
+                .orElse("-");
+        }
+    },
+    FOREIGN_KEY(ALIGN_LEFT) {
+        @Override
+        public String getValue(Column column, Table table, int ordinal) {
+            final String columnName = column.name();
+            String value = table.foreignKeysContaining(columnName)
+                .map(fk -> foreignKeyToString(fk, columnName))
+                .collect(Collectors.joining("<br>"));
+            return value.isEmpty() ? "-" : value;
+        }
+
+        private static String foreignKeyToString(ForeignKey foreignKey, String columnName) {
+            return new StringBuilder()
+                .append(foreignKey.tableName())
+                .append(" (")
+                .append(foreignKey.columnMapping().get(columnName))
+                .append(')')
+                .toString();
         }
     },
     DESCRIPTION(ALIGN_LEFT) {
@@ -168,6 +189,12 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
         return text.replaceAll("\\n+", " ");
     }
 
+    private static String expressionToCode(Expression expression) {
+        return new StringBuilder()
+            .append('`').append(expression.toSql()).append('`')
+            .toString();
+    }
+
     static ColumnCellProvider provider(ColumnAttribute attribute) {
         // Mapping of ColumnAttribute to this type.
         return switch (attribute) {
@@ -182,6 +209,7 @@ enum ColumnCellProvider implements CellProvider<Column, Table> {
             case REQUIRED -> REQUIRED;
             case UNIQUE -> UNIQUE;
             case DEFAULT_VALUE -> DEFAULT_VALUE;
+            case FOREIGN_KEY -> FOREIGN_KEY;
             case DESCRIPTION -> DESCRIPTION;
         };
     }

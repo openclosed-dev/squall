@@ -16,7 +16,8 @@
             "type",
             "nullable",
             "unique",
-            "default_value"
+            "default_value",
+            "foreign_key"
           ]
         }
     }

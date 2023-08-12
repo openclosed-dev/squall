@@ -8,4 +8,8 @@ import java.util.Map;
 public interface ForeignKey extends Constraint, TableRef {
 
     Map<String, String> columnMapping();
+
+    default boolean containsKey(String column) {
+        return columnMapping().containsKey(column);
+    }
 }
