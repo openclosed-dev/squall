@@ -28,11 +28,19 @@ import java.util.List;
 
 public record DefaultSchema(
         String name,
+        List<String> parents,
         List<Sequence> sequences,
         List<Table> tables,
         List<DocAnnotation> annotations,
         Component.State state
         ) implements Schema, BasicComponent {
+
+    public DefaultSchema {
+        parents = List.copyOf(parents);
+        sequences = List.copyOf(sequences);
+        tables = List.copyOf(tables);
+        annotations = List.copyOf(annotations);
+    }
 
     @Override
     public Type type() {

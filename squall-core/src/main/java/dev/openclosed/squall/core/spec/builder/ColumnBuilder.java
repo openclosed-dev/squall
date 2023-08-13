@@ -34,8 +34,8 @@ final class ColumnBuilder extends ComponentBuilder {
     private boolean isUnique = false;
     private Expression defaultValue;
 
-    ColumnBuilder(String name, DataType dataType, List<DocAnnotation> annotations) {
-        super(name, annotations);
+    ColumnBuilder(String name, List<String> parents, DataType dataType, List<DocAnnotation> annotations) {
+        super(name, parents, annotations);
         this.dataType = dataType;
     }
 
@@ -43,6 +43,7 @@ final class ColumnBuilder extends ComponentBuilder {
         var simplifiedValue = simplifyDefaultValue(this.defaultValue, this.dataType);
         return new DefaultColumn(
             name(),
+            parents(),
             dataType.typeName(),
             dataType.length(),
             dataType.precision(),

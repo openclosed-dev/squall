@@ -26,18 +26,21 @@ CREATE TABLE example(
       "schemas" : [
         {
           "name" : "",
+          "parents": [""],
           "state": "undefined",
           "tables": [
             {
               "name": "example",
-              "qualifiedName": "example",
+              "parents": ["", ""],
               "columns": [
                 {
                   "name": "a",
+                  "parents": ["", "", "example"],
                   "typeName": "integer"
                 },
                 {
                   "name": "b",
+                  "parents": ["", "", "example"],
                   "typeName": "integer"
                 }
               ]
@@ -71,18 +74,21 @@ CREATE TABLE example(
       "schemas" : [
         {
           "name" : "",
+          "parents": [""],
           "state": "undefined",
           "tables": [
             {
               "name": "example",
-              "qualifiedName": "example",
+              "parents": ["", ""],
               "columns": [
                 {
                   "name": "a",
+                  "parents": ["", "", "example"],
                   "typeName": "integer"
                 },
                 {
                   "name": "b",
+                  "parents": ["", "", "example"],
                   "typeName": "integer"
                 }
               ]
@@ -118,24 +124,27 @@ CREATE TABLE table2(
       "schemas" : [
         {
           "name" : "",
+          "parents": [""],
           "state": "undefined",
           "tables": [
             {
               "name": "table1",
-              "qualifiedName": "table1",
+              "parents": ["", ""],
               "columns": [
                 {
                   "name": "a",
+                  "parents": ["", "", "table1"],
                   "typeName": "integer"
                 }
               ]
             },
             {
               "name": "table2",
-              "qualifiedName": "table2",
+              "parents": ["", ""],
               "columns": [
                 {
                   "name": "b",
+                  "parents": ["", "", "table2"],
                   "typeName": "integer"
                 }
               ]

@@ -24,14 +24,16 @@ CREATE TABLE customer(
       "schemas" : [
         {
           "name" : "",
+          "parents": [""],
           "state": "undefined",
           "tables": [
             {
               "name": "customer",
-              "qualifiedName": "customer",
+              "parents": ["", ""],
               "columns": [
                 {
                   "name": "id",
+                  "parents": ["", "", "customer"],
                   "typeName": "integer",
                   "annotations": [
                     {

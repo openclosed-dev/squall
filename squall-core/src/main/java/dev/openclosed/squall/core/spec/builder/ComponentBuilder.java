@@ -19,22 +19,43 @@ package dev.openclosed.squall.core.spec.builder;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 abstract class ComponentBuilder {
 
     private final String name;
+    private final List<String> parents;
+    private final List<String> parentsForChild;
     private final List<DocAnnotation> annotations;
 
-    protected ComponentBuilder(String name, List<DocAnnotation> annotations) {
+    protected ComponentBuilder(String name, List<String> parents, List<DocAnnotation> annotations) {
         this.name = name;
+        this.parents = parents;
+        this.parentsForChild = concatNameList(parents, name);
         this.annotations = annotations;
     }
 
-    String name() {
+    final String name() {
         return name;
     }
 
-    List<DocAnnotation> annotations() {
+    final List<String> parents() {
+        return parents;
+    }
+
+    final List<String> parentsForChild() {
+        return parentsForChild;
+    }
+
+    final List<DocAnnotation> annotations() {
         return annotations;
+    }
+
+    private static List<String> concatNameList(List<String> parents, String name) {
+        if (parents.isEmpty()) {
+            return List.of(name);
+        } else {
+            return Stream.concat(parents.stream(), Stream.of(name)).toList();
+        }
     }
 }

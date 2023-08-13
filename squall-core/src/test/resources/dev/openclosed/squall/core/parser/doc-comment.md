@@ -23,14 +23,16 @@ CREATE TABLE customer(
       "schemas" : [
         {
           "name" : "",
+          "parents": [""],
           "state": "undefined",
           "tables": [
             {
               "name": "customer",
-              "qualifiedName": "customer",
+              "parents": ["", ""],
               "columns": [
                 {
                   "name": "id",
+                  "parents": ["", "", "customer"],
                   "typeName": "integer",
                   "annotations": [
                     {
@@ -82,11 +84,12 @@ CREATE SEQUENCE customer_number;
       "schemas" : [
         {
           "name" : "",
+          "parents": [""],
           "state": "undefined",
           "sequences": [
             {
               "name": "customer_number",
-              "qualifiedName": "customer_number",
+              "parents": ["", ""],
               "typeName": "bigint",
               "start": 1,
               "increment": 1,
@@ -130,11 +133,12 @@ CREATE TABLE t2();
       "schemas" : [
         {
           "name" : "",
+          "parents": [""],
           "state": "undefined",
           "tables": [
             {
               "name": "t2",
-              "qualifiedName": "t2",
+              "parents": ["", ""],
               "annotations": [
                 {
                   "type": "description",
@@ -168,11 +172,12 @@ CREATE TABLE t2();
       "schemas" : [
         {
           "name" : "",
+          "parents": [""],
           "state": "undefined",
           "tables": [
             {
               "name": "t2",
-              "qualifiedName": "t2"
+              "parents": ["", ""]
             }
           ]
         }

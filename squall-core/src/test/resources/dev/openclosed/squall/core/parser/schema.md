@@ -13,6 +13,7 @@ CREATE SCHEMA myschema;
       "schemas" : [
         {
           "name" : "myschema",
+          "parents": [""],
           "state": "defined"
         }
       ]
@@ -36,6 +37,7 @@ CREATE SCHEMA IF NOT EXISTS myschema;
       "schemas": [
         {
           "name": "myschema",
+          "parents": [""],
           "state": "defined"
         }
       ]
@@ -59,11 +61,12 @@ CREATE TABLE table1();
       "schemas": [
         {
           "name": "",
+          "parents": [""],
           "state": "undefined",
           "tables": [
             {
               "name": "table1",
-              "qualifiedName": "table1"
+              "parents": ["", ""]
             }
           ]
         }
@@ -89,11 +92,12 @@ CREATE TABLE schema1.table1();
       "schemas": [
         {
           "name": "schema1",
+          "parents": [""],
           "state": "defined",
           "tables": [
             {
               "name": "table1",
-              "qualifiedName": "schema1.table1"
+              "parents": ["", "schema1"]
             }
           ]
         }

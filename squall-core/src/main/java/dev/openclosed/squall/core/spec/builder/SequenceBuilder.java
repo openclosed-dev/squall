@@ -25,16 +25,14 @@ import java.util.List;
 
 final class SequenceBuilder extends ComponentBuilder {
 
-    private final String qualifiedName;
     private IntegerDataType dataType = IntegerDataType.BIGINT;
     private long increment = 1L;
     private Long startValue;
     private Long maxValue;
     private Long minValue;
 
-    SequenceBuilder(String name, String qualifiedName, List<DocAnnotation> annotations) {
-        super(name, annotations);
-        this.qualifiedName = qualifiedName;
+    SequenceBuilder(String name, List<String> parents, List<DocAnnotation> annotations) {
+        super(name, parents, annotations);
     }
 
     Sequence build() {
@@ -43,7 +41,7 @@ final class SequenceBuilder extends ComponentBuilder {
         final long start = computeStart(min, max);
         return new DefaultSequence(
             name(),
-            qualifiedName,
+            parents(),
             dataType.typeName(),
             start,
             this.increment,

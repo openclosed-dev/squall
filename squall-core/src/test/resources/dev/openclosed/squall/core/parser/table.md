@@ -11,18 +11,21 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "qualifiedName": "products",
+  "parents": ["", ""],
   "columns": [
     {
       "name": "product_no",
+      "parents": ["", "", "products"],
       "typeName": "integer"
     },
     {
       "name": "name",
+      "parents": ["", "", "products"],
       "typeName": "text"
     },
     {
       "name": "price",
+      "parents": ["", "", "products"],
       "typeName": "numeric"
     }
   ]
@@ -40,10 +43,11 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "qualifiedName": "products",
+  "parents": ["", ""],
   "columns": [
     {
       "name": "price",
+      "parents": ["", "", "products"],
       "typeName": "numeric"
     }
   ]
@@ -61,10 +65,11 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "qualifiedName": "products",
+  "parents": ["", ""],
   "columns": [
     {
       "name": "product_no",
+      "parents": ["", "", "products"],
       "typeName": "integer",
       "isUnique": true
     }
@@ -88,10 +93,11 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "qualifiedName": "products",
+  "parents": ["", ""],
   "columns": [
     {
       "name": "product_no",
+      "parents": ["", "", "products"],
       "typeName": "integer",
       "isUnique": true
     }
@@ -115,10 +121,11 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "qualifiedName": "products",
+  "parents": ["", ""],
   "columns": [
     {
       "name": "product_no",
+      "parents": ["", "", "products"],
       "typeName": "integer",
       "isRequired": true,
       "isPrimaryKey": true,
@@ -145,20 +152,23 @@ CREATE TABLE example (
 ```json
 {
   "name": "example",
-  "qualifiedName": "example",
+  "parents": ["", ""],
   "columns": [
     {
       "name": "a",
+      "parents": ["", "", "example"],
       "typeName": "integer",
       "isPrimaryKey": true,
       "isRequired": true
     },
     {
       "name": "b",
+      "parents": ["", "", "example"],
       "typeName": "integer"
     },
     {
       "name": "c",
+      "parents": ["", "", "example"],
       "typeName": "integer",
       "isPrimaryKey": true,
       "isRequired": true
@@ -184,20 +194,23 @@ CREATE TABLE example (
 ```json
 {
   "name": "example",
-  "qualifiedName": "example",
+  "parents": ["", ""],
   "columns": [
     {
       "name": "a",
+      "parents": ["", "", "example"],
       "typeName": "integer",
       "isRequired": true,
       "isPrimaryKey": true
     },
     {
       "name": "b",
+      "parents": ["", "", "example"],
       "typeName": "integer"
     },
     {
       "name": "c",
+      "parents": ["", "", "example"],
       "typeName": "integer",
       "isRequired": true,
       "isPrimaryKey": true
@@ -224,19 +237,22 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "qualifiedName": "products",
+  "parents": ["", ""],
   "columns": [
     {
       "name": "product_no",
+      "parents": ["", "", "products"],
       "typeName": "integer",
       "isUnique": true
     },
     {
       "name": "name",
+      "parents": ["", "", "products"],
       "typeName": "text"
     },
     {
       "name": "price",
+      "parents": ["", "", "products"],
       "typeName": "numeric"
     }
   ],
@@ -262,18 +278,21 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "qualifiedName": "products",
+  "parents": ["", ""],
   "columns": [
     {
       "name": "a",
+      "parents": ["", "", "products"],
       "typeName": "integer"
     },
     {
       "name": "b",
+      "parents": ["", "", "products"],
       "typeName": "integer"
     },
     {
       "name": "c",
+      "parents": ["", "", "products"],
       "typeName": "integer"
     }
   ],
@@ -299,19 +318,22 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "qualifiedName": "products",
+  "parents": ["", ""],
   "columns": [
     {
       "name": "product_no",
+      "parents": ["", "", "products"],
       "typeName": "integer",
       "isUnique": true
     },
     {
       "name": "name",
+      "parents": ["", "", "products"],
       "typeName": "text"
     },
     {
       "name": "price",
+      "parents": ["", "", "products"],
       "typeName": "numeric"
     }
   ],
@@ -338,19 +360,22 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "qualifiedName": "products",
+  "parents": ["", ""],
   "columns": [
     {
       "name": "product_no",
+      "parents": ["", "", "products"],
       "typeName": "integer",
       "isUnique": true
     },
     {
       "name": "name",
+      "parents": ["", "", "products"],
       "typeName": "text"
     },
     {
       "name": "price",
+      "parents": ["", "", "products"],
       "typeName": "numeric"
     }
   ],
@@ -376,14 +401,16 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "qualifiedName": "products",
+  "parents": ["", ""],
   "columns": [
     {
       "name": "price",
+      "parents": ["", "", "products"],
       "typeName": "numeric"
     },
     {
       "name": "discounted_price",
+      "parents": ["", "", "products"],
       "typeName": "numeric"
     }
   ]
@@ -403,14 +430,16 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "qualifiedName": "products",
+  "parents": ["", ""],
   "columns": [
     {
       "name": "price",
+      "parents": ["", "", "products"],
       "typeName": "numeric"
     },
     {
       "name": "discounted_price",
+      "parents": ["", "", "products"],
       "typeName": "numeric"
     }
   ]
@@ -433,20 +462,22 @@ CREATE TABLE tb (
 [
   {
     "name": "ta",
-    "qualifiedName": "ta",
+    "parents": ["", ""],
     "columns": [
       {
         "name": "a",
+        "parents": ["", "", "ta"],
         "typeName": "integer"
       }
     ]
   },
   {
     "name": "tb",
-    "qualifiedName": "tb",
+    "parents": ["", ""],
     "columns": [
       {
         "name": "b",
+        "parents": ["", "", "tb"],
         "typeName": "integer"
       }
     ],
@@ -482,28 +513,32 @@ CREATE TABLE tb (
 [
   {
     "name": "ta",
-    "qualifiedName": "ta",
+    "parents": ["", ""],
     "columns": [
       {
         "name": "a1",
+        "parents": ["", "", "ta"],
         "typeName": "integer"
       },
       {
         "name": "a2",
+        "parents": ["", "", "ta"],
         "typeName": "integer"
       }
     ]
   },
   {
     "name": "tb",
-    "qualifiedName": "tb",
+    "parents": ["", ""],
     "columns": [
       {
         "name": "b1",
+        "parents": ["", "", "tb"],
         "typeName": "integer"
       },
       {
         "name": "b2",
+        "parents": ["", "", "tb"],
         "typeName": "integer"
       }
     ],
@@ -538,20 +573,22 @@ CREATE TABLE tb (
 [
   {
     "name": "ta",
-    "qualifiedName": "ta",
+    "parents": ["", ""],
     "columns": [
       {
         "name": "a",
+        "parents": ["", "", "ta"],
         "typeName": "integer"
       }
     ]
   },
   {
     "name": "tb",
-    "qualifiedName": "tb",
+    "parents": ["", ""],
     "columns": [
       {
         "name": "b",
+        "parents": ["", "", "tb"],
         "typeName": "integer"
       }
     ],
@@ -585,20 +622,22 @@ CREATE TABLE tb (
 [
   {
     "name": "ta",
-    "qualifiedName": "ta",
+    "parents": ["", ""],
     "columns": [
       {
         "name": "a",
+        "parents": ["", "", "ta"],
         "typeName": "integer"
       }
     ]
   },
   {
     "name": "tb",
-    "qualifiedName": "tb",
+    "parents": ["", ""],
     "columns": [
       {
         "name": "b",
+        "parents": ["", "", "tb"],
         "typeName": "integer"
       }
     ],

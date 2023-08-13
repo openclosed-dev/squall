@@ -26,18 +26,18 @@ import java.util.Objects;
 
 public record DefaultSequence(
     String name,
-    String qualifiedName,
+    List<String> parents,
     String typeName,
     long start,
     long increment,
     long maxValue,
     long minValue,
-    List<DocAnnotation> annotations) implements Sequence, BasicComponent {
+    List<DocAnnotation> annotations) implements Sequence, SchemaObject {
 
     public DefaultSequence {
         Objects.requireNonNull(name);
-        Objects.requireNonNull(qualifiedName);
         Objects.requireNonNull(typeName);
+        parents = List.copyOf(parents);
     }
 
     @Override

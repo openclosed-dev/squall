@@ -31,17 +31,17 @@ import java.util.Optional;
 
 public record DefaultTable(
     String name,
-    String qualifiedName,
+    List<String> parents,
     List<Column> columns,
     Optional<PrimaryKey> primaryKey,
     List<ForeignKey> foreignKeys,
     List<Unique> unique,
     List<DocAnnotation> annotations
-    ) implements Table, BasicComponent {
+    ) implements Table, SchemaObject {
 
     public DefaultTable {
         Objects.requireNonNull(name);
-        Objects.requireNonNull(qualifiedName);
+        parents = List.copyOf(parents);
         columns = List.copyOf(columns);
         foreignKeys = List.copyOf(foreignKeys);
         unique = List.copyOf(unique);

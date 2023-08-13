@@ -9,6 +9,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
+  "parents": ["", "", "example"],
   "typeName" : "smallserial"
 }
 ```
@@ -24,6 +25,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
+  "parents": ["", "", "example"],
   "typeName" : "serial"
 }
 ```
@@ -39,6 +41,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
+  "parents": ["", "", "example"],
   "typeName" : "bigserial"
 }
 ```
@@ -54,6 +57,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
+  "parents": ["", "", "example"],
   "typeName" : "bytea"
 }
 ```
@@ -69,6 +73,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
+  "parents": ["", "", "example"],
   "typeName" : "uuid"
 }
 ```
@@ -84,6 +89,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
+  "parents": ["", "", "example"],
   "typeName" : "money"
 }
 ```
@@ -99,6 +105,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
+  "parents": ["", "", "example"],
   "typeName" : "timestamptz"
 }
 ```
@@ -114,6 +121,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
+  "parents": ["", "", "example"],
   "typeName" : "json"
 }
 ```
@@ -129,6 +137,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
+  "parents": ["", "", "example"],
   "typeName" : "jsonb"
 }
 ```

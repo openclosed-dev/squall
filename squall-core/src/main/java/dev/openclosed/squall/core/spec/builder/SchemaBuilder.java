@@ -31,8 +31,8 @@ final class SchemaBuilder extends ComponentBuilder {
     private final Map<String, TableBuilder> tableBuilders = new LinkedHashMap<>();
     private final Map<String, SequenceBuilder> sequenceBuilders = new LinkedHashMap<>();
 
-    SchemaBuilder(String name, List<DocAnnotation> annotations, Component.State state) {
-        super(name, annotations);
+    SchemaBuilder(String name, List<String> parents, List<DocAnnotation> annotations, Component.State state) {
+        super(name, parents, annotations);
         this.state = state;
     }
 
@@ -41,11 +41,11 @@ final class SchemaBuilder extends ComponentBuilder {
             .map(SequenceBuilder::build).toList();
         var tables = this.tableBuilders.values().stream()
             .map(TableBuilder::build).toList();
-        return new DefaultSchema(name(), sequences, tables, annotations(), state);
+        return new DefaultSchema(name(), parents(), sequences, tables, annotations(), state);
     }
 
     TableBuilder addTable(String tableName, List<DocAnnotation> annotations) {
-        var builder = new TableBuilder(tableName, getQualifiedName(tableName), annotations);
+        var builder = new TableBuilder(tableName, parentsForChild(), annotations);
         tableBuilders.put(tableName, builder);
         return builder;
     }
@@ -55,18 +55,8 @@ final class SchemaBuilder extends ComponentBuilder {
     }
 
     SequenceBuilder addSequence(String sequenceNmae, List<DocAnnotation> annotations) {
-        var builder = new SequenceBuilder(sequenceNmae, getQualifiedName(sequenceNmae), annotations);
+        var builder = new SequenceBuilder(sequenceNmae, parentsForChild(), annotations);
         sequenceBuilders.put(sequenceNmae, builder);
         return builder;
-    }
-
-    private String getQualifiedName(String componentName) {
-        String schemaName = name();
-        if (schemaName.isEmpty()) {
-            return componentName;
-        }
-        return new StringBuilder()
-            .append(schemaName).append('.').append(componentName)
-            .toString();
     }
 }

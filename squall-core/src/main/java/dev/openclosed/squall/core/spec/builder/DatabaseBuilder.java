@@ -32,7 +32,7 @@ class DatabaseBuilder extends ComponentBuilder {
     private final Map<String, SchemaBuilder> schemaBuilders = new LinkedHashMap<>();
 
     DatabaseBuilder(String name, List<DocAnnotation> annotations, Component.State state) {
-        super(name, annotations);
+        super(name, Collections.emptyList(), annotations);
         this.state = state;
     }
 
@@ -55,7 +55,7 @@ class DatabaseBuilder extends ComponentBuilder {
     }
 
     private SchemaBuilder addAnnotatedSchema(String name, List<DocAnnotation> annotations, Component.State state) {
-        var builder = new SchemaBuilder(name, annotations, state);
+        var builder = new SchemaBuilder(name, parentsForChild(), annotations, state);
         schemaBuilders.put(name, builder);
         return builder;
     }

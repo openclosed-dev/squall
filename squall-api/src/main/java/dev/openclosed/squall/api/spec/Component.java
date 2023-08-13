@@ -64,6 +64,10 @@ public interface Component extends MapSource {
         return name();
     }
 
+    default List<String> parents() {
+        return Collections.emptyList();
+    }
+
     /**
      * Returns the list of the annotations attached to this component.
      * @return the list of the annotations.
@@ -80,6 +84,10 @@ public interface Component extends MapSource {
         return State.DEFINED;
     }
 
+    /**
+     * Returns whether this component is deprecated or not.
+     * @return {@code true} if this component is deprecated, {@code false} otherwise.
+     */
     boolean isDeprecated();
 
     /**

@@ -30,6 +30,7 @@ import java.util.OptionalInt;
 /**
  * Default implementation of {@link Column}.
  * @param name
+ * @param parents
  * @param typeName
  * @param length
  * @param precision
@@ -42,6 +43,7 @@ import java.util.OptionalInt;
  */
 public record DefaultColumn(
         String name,
+        List<String> parents,
         String typeName,
         OptionalInt length,
         OptionalInt precision,

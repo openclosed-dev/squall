@@ -37,21 +37,19 @@ import java.util.Optional;
 
 final class TableBuilder extends ComponentBuilder {
 
-    private final String qualifiedName;
     private final Map<String, ColumnBuilder> columns = new LinkedHashMap<>();
     private PrimaryKey primaryKey;
     private final List<Unique> unique = new ArrayList<>();
     private final List<ForeignKey> foreignKeys = new ArrayList<>();
 
-    TableBuilder(String name, String qualifiedName, List<DocAnnotation> annotations) {
-        super(name, annotations);
-        this.qualifiedName = qualifiedName;
+    TableBuilder(String name, List<String> parents, List<DocAnnotation> annotations) {
+        super(name, parents, annotations);
     }
 
     Table build() {
         return new DefaultTable(
             name(),
-            qualifiedName,
+            parents(),
             buildColumns(),
             Optional.ofNullable(primaryKey),
             foreignKeys,
@@ -62,7 +60,7 @@ final class TableBuilder extends ComponentBuilder {
     ColumnBuilder addColumn(String name,
                             DataType dataType,
                             List<DocAnnotation> annotations) {
-        var builder = new ColumnBuilder(name, dataType, annotations);
+        var builder = new ColumnBuilder(name, parentsForChild(), dataType, annotations);
         this.columns.put(name, builder);
         return builder;
     }
