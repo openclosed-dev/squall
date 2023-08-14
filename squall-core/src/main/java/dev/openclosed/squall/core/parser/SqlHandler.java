@@ -20,7 +20,7 @@ import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.IntegerDataType;
-import dev.openclosed.squall.api.spec.TableRef;
+import dev.openclosed.squall.api.spec.SchemaObjectRef;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public interface SqlHandler {
     }
 
     default void handleTableForeignKey(
-        String constraintName, TableRef table, List<String> columns, List<String> refColumns) {
+            String constraintName, SchemaObjectRef table, List<String> columns, List<String> refColumns) {
     }
 
     default void handleTableUniqueConstraint(String constraintName, List<String> columns) {

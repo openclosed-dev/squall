@@ -23,11 +23,24 @@ import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.core.base.RecordMapSource;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Basic implementation of {@link Component}.
  */
 interface BasicComponent extends Component, RecordMapSource {
+
+    @Override
+    default String fullName() {
+        var parents = parents();
+        if (parents.isEmpty()) {
+            return name();
+        } else {
+            return Stream.concat(parents.stream(), Stream.of(name()))
+                .collect(Collectors.joining("."));
+        }
+    }
 
     @Override
     default boolean isDeprecated() {

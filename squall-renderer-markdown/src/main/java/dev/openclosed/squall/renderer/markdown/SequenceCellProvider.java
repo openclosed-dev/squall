@@ -4,8 +4,6 @@ import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 
-import java.util.List;
-import java.util.ResourceBundle;
 import java.util.function.Function;
 
 enum SequenceCellProvider implements CellProvider<Sequence> {
@@ -41,11 +39,5 @@ enum SequenceCellProvider implements CellProvider<Sequence> {
             case MINIMUM -> MINIMUM;
             case MAXIMUM -> MAXIMUM;
         };
-    }
-
-    static MarkdownTableWriter<Sequence> tableWriter(ResourceBundle bundle, List<SequenceAttribute> attributes) {
-        List<SequenceCellProvider> providers = attributes.stream()
-            .map(SequenceCellProvider::provider).toList();
-        return MarkdownTableWriter.withProviders(providers, bundle);
     }
 }

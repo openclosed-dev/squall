@@ -16,50 +16,46 @@
 
 package dev.openclosed.squall.renderer.markdown;
 
+import dev.openclosed.squall.api.renderer.ColumnAttribute;
+import dev.openclosed.squall.api.renderer.SequenceAttribute;
+import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.Component;
+import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
-final class MarkdownTableWriter<T extends Component> {
+/**
+ * A table writer in Markdown format.
+ * @param <T> the type of the component written as the table rows.
+ */
+interface MarkdownTableWriter<T extends Component> {
 
-    private final List<? extends CellProvider<T>> providers;
-    private final ResourceBundle bundle;
-    private final List<String> titles;
-
-    static <T extends Component> MarkdownTableWriter<T> withProviders(
-        List<? extends CellProvider<T>> providers, ResourceBundle bundle) {
-        return new MarkdownTableWriter<>(providers, bundle);
+    default void writeHeaderRow(Appender appender) {
     }
 
-    private MarkdownTableWriter(List<? extends CellProvider<T>> providers, ResourceBundle bundle) {
-        this.providers = providers;
-        this.bundle = bundle;
-        this.titles = providers.stream()
-            .map(p -> bundle.getString("column.header." + p.name()))
-            .toList();
+    default void writeDelimiterRow(Appender appender) {
     }
 
-    void writeHeaderRow(Appender appender) {
-        for (var title : this.titles) {
-            appender.append("| ").append(title).appendSpace();
-        }
-        appender.append("|").appendNewLine();
+    default void writeDataRow(Appender appender, T component, int rowNo, SpecVisitor.Context context) {
     }
 
-    void writeDelimiterRow(Appender appender) {
-        for (var provider : providers) {
-            appender.append("| ").append(provider.getSeparator()).appendSpace();
-        }
-        appender.append("|").appendNewLine();
+    static MarkdownTableWriter<Column> forColumn(
+        List<ColumnAttribute> attributes,
+        ResourceBundle bundle,
+        Consumer<Column> anchorWriter) {
+        List<ColumnCellProvider> providers = attributes.stream()
+            .map(ColumnCellProvider::provider).toList();
+        return MarkdownTableWriterImpl.withProviders(providers, bundle, anchorWriter);
     }
 
-    void writeDataRow(Appender appender, T component, int rowNo, SpecVisitor.Context context) {
-        for (var provider : this.providers) {
-            String value = provider.getLocalizedValue(component, rowNo, context, this.bundle);
-            appender.append("| ").append(value).appendSpace();
-        }
-        appender.append("|").appendNewLine();
+    static MarkdownTableWriter<Sequence> forSequence(
+        List<SequenceAttribute> attributes,
+        ResourceBundle bundle) {
+        List<SequenceCellProvider> providers = attributes.stream()
+            .map(SequenceCellProvider::provider).toList();
+        return MarkdownTableWriterImpl.withProviders(providers, bundle, t -> { });
     }
 }

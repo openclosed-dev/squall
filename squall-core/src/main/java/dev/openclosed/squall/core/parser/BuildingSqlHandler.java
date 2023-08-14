@@ -20,7 +20,7 @@ import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.IntegerDataType;
-import dev.openclosed.squall.api.spec.TableRef;
+import dev.openclosed.squall.api.spec.SchemaObjectRef;
 import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public interface BuildingSqlHandler extends SqlHandler {
 
     @Override
     default void handleTableForeignKey(
-        String constraintName, TableRef table, List<String> columns, List<String> refColumns) {
+            String constraintName, SchemaObjectRef table, List<String> columns, List<String> refColumns) {
         builder().addTableForeignKey(constraintName, table, columns, refColumns);
     }
 

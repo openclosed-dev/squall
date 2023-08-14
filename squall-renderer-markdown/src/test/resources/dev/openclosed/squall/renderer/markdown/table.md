@@ -38,9 +38,9 @@ A description of table 1.
 
 | No. | Name | Display name | Type | Nullable | Unique | Default | Foreign key | Description |
 | --: | :-- | :-- | :-- | :-: | :-: | :-- | :-- | :-- |
-| 1 | a &#x1F511; | column A | varchar(64) | - | &#x2705; | - | - | A description of column A. |
-| 2 | b | column B | numeric(9, 4) | - | - | - | - | A description of column B. |
-| 3 | c | column C | integer | &#x2705; | - | - | - | A description of column C. |
+| <a id="database1.schema1.table1.a"></a> 1 | a &#x1F511; | column A | varchar(64) | - | &#x2705; | - | - | A description of column A. |
+| <a id="database1.schema1.table1.b"></a> 2 | b | column B | numeric(9, 4) | - | - | - | - | A description of column B. |
+| <a id="database1.schema1.table1.c"></a> 3 | c | column C | integer | &#x2705; | - | - | - | A description of column C. |
 
 ---
 
@@ -70,7 +70,7 @@ A description of table 1.
 
 | No. | Name | Display name | Type | Nullable | Unique | Default | Foreign key | Description |
 | --: | :-- | :-- | :-- | :-: | :-: | :-- | :-- | :-- |
-| 1 | a &#x1F511; | column A | integer | - | &#x2705; | - | - | A description of column A. |
+| <a id=".public.table1.a"></a> 1 | a &#x1F511; | column A | integer | - | &#x2705; | - | - | A description of column A. |
 
 ---
 
@@ -101,7 +101,7 @@ A description of table 1.
 
 | No. | Name | Display name | Type | Nullable | Unique | Default | Foreign key | Description |
 | --: | :-- | :-- | :-- | :-: | :-: | :-- | :-- | :-- |
-| 1 | c1 &#x1F511; | column c1 | varchar(64) | - | &#x2705; | - | - | first line. second line. |
+| <a id=".public.table1.c1"></a> 1 | c1 &#x1F511; | column c1 | varchar(64) | - | &#x2705; | - | - | first line. second line. |
 
 ---
 
@@ -133,7 +133,7 @@ A description of table 1.
 
 | No. | Name | Display name | Type | Nullable | Unique | Default | Foreign key | Description |
 | --: | :-- | :-- | :-- | :-: | :-: | :-- | :-- | :-- |
-| 1 | c1 &#x1F511; | column c1 | varchar(64) | - | &#x2705; | - | - | first line. second line. |
+| <a id=".public.table1.c1"></a> 1 | c1 &#x1F511; | column c1 | varchar(64) | - | &#x2705; | - | - | first line. second line. |
 
 ---
 
@@ -192,8 +192,8 @@ A description of table 1.
 
 | No. | Name | Display name | Type | Nullable | Unique | Default | Foreign key | Description |
 | --: | :-- | :-- | :-- | :-: | :-: | :-- | :-- | :-- |
-| 1 | a &#x1F511; | column A | varchar(64) | - | &#x2705; | - | - | A description of column A. |
-| 2 | ~~b~~ | ~~column B~~ | numeric(9, 4) | - | - | - | - | **Deprecated.** Do not use this column.<br>A description of column B. |
+| <a id=".schema1.table1.a"></a> 1 | a &#x1F511; | column A | varchar(64) | - | &#x2705; | - | - | A description of column A. |
+| <a id=".schema1.table1.b"></a> 2 | ~~b~~ | ~~column B~~ | numeric(9, 4) | - | - | - | - | **Deprecated.** Do not use this column.<br>A description of column B. |
 
 ---
 
@@ -221,15 +221,15 @@ CREATE TABLE orders (
 
 | No. | Name | Display name | Type | Nullable | Unique | Default | Foreign key | Description |
 | --: | :-- | :-- | :-- | :-: | :-: | :-- | :-- | :-- |
-| 1 | order_id &#x1F511; | - | integer | - | &#x2705; | - | - | - |
-| 2 | product_no | - | integer | &#x2705; | - | - | products (product_no) | - |
-| 3 | quantity | - | integer | &#x2705; | - | - | - | - |
+| <a id=".public.orders.order_id"></a> 1 | order_id &#x1F511; | - | integer | - | &#x2705; | - | - | - |
+| <a id=".public.orders.product_no"></a> 2 | product_no | - | integer | &#x2705; | - | - | public.products ([product_no](#.public.products.product_no)) | - |
+| <a id=".public.orders.quantity"></a> 3 | quantity | - | integer | &#x2705; | - | - | - | - |
 
 ### 1.2. public.products ![table]
 
 | No. | Name | Display name | Type | Nullable | Unique | Default | Foreign key | Description |
 | --: | :-- | :-- | :-- | :-: | :-: | :-- | :-- | :-- |
-| 1 | product_no &#x1F511; | - | integer | - | &#x2705; | - | - | - |
-| 2 | name | - | text | &#x2705; | - | - | - | - |
-| 3 | price | - | numeric | &#x2705; | - | - | - | - |
+| <a id=".public.products.product_no"></a> 1 | product_no &#x1F511; | - | integer | - | &#x2705; | - | - | - |
+| <a id=".public.products.name"></a> 2 | name | - | text | &#x2705; | - | - | - | - |
+| <a id=".public.products.price"></a> 3 | price | - | numeric | &#x2705; | - | - | - | - |
 

@@ -19,10 +19,23 @@ package dev.openclosed.squall.renderer.markdown;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-class DefaultHeadingNumberGenerator implements HeadingNumberGenerator {
+final class HeadingNumberGeneratorImpl implements HeadingNumberGenerator {
+
+    private static final HeadingNumberGenerator EMPTY = new HeadingNumberGenerator() { };
 
     private final StringBuilder stringBuilder = new StringBuilder();
     private final Deque<Level> levels = new ArrayDeque<>();
+
+    static HeadingNumberGenerator create(boolean enabled) {
+        if (enabled) {
+            return new HeadingNumberGeneratorImpl();
+        } else {
+            return EMPTY;
+        }
+    }
+
+    private HeadingNumberGeneratorImpl() {
+    }
 
     @Override
     public void enterLevel() {

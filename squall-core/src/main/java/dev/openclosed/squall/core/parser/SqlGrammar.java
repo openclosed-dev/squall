@@ -28,7 +28,7 @@ import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.IntegerDataType;
-import dev.openclosed.squall.api.spec.TableRef;
+import dev.openclosed.squall.api.spec.SchemaObjectRef;
 import dev.openclosed.squall.core.spec.StandardDataType;
 import dev.openclosed.squall.core.spec.expression.Case;
 import dev.openclosed.squall.core.spec.expression.ColumnReference;
@@ -568,7 +568,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
     default void references(String constraintName, List<String> columns) {
         expect(StandardKeyword.REFERENCES);
         consume();
-        TableRef tableRef = tableReference();
+        SchemaObjectRef tableRef = tableReference();
         List<String> refColumns = Collections.emptyList();
         if (next() == SpecialSymbol.OPEN_PAREN) {
             refColumns = columnNameList();
@@ -588,7 +588,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         handleTableForeignKey(constraintName, tableRef, columns, refColumns);
     }
 
-    default TableRef tableReference() {
+    default SchemaObjectRef tableReference() {
         String firstPart;
         String secondPart = expectIdentifier(IdentifierType.OBJECT_NAME);
         consume();
@@ -600,7 +600,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         } else {
             firstPart = config().defaultSchema();
         }
-        return TableRef.tableInSchema(secondPart, firstPart);
+        return SchemaObjectRef.schemaQualified(secondPart, firstPart);
     }
 
     default boolean nullsDistinct() {

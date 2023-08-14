@@ -56,17 +56,30 @@ public interface Component extends MapSource {
     String name();
 
     /**
-     * Returns the qualified name of this component.
-     * By default, this method returns the name of the component.
-     * @return the qualified name of this component.
+     * Returns the parents of this component.
+     * @return the parents of this component.
+     * The first element is a database, and the last element is the direct parent
+     * of the component.
+     */
+    default List<String> parents() {
+        return Collections.emptyList();
+    }
+
+    /**
+     * Returns the schema-qualified name of this component.
+     * @return the schema-qualified name of this component
+     * if this component is not a schema object, the method returns
+     * the same value as {@link #name()}.
      */
     default String qualifiedName() {
         return name();
     }
 
-    default List<String> parents() {
-        return Collections.emptyList();
-    }
+    /**
+     * Returns the fully qualified name of this component, including the parents.
+     * @return the fully qualified name.
+     */
+    String fullName();
 
     /**
      * Returns the list of the annotations attached to this component.

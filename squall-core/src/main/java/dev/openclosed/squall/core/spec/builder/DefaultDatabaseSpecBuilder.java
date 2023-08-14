@@ -29,7 +29,7 @@ import dev.openclosed.squall.api.spec.Component.State;
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.IntegerDataType;
-import dev.openclosed.squall.api.spec.TableRef;
+import dev.openclosed.squall.api.spec.SchemaObjectRef;
 import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 import dev.openclosed.squall.core.spec.DefaultDatabaseSpec;
 
@@ -117,7 +117,7 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     @Override
     public DatabaseSpecBuilder addTableForeignKey(
         String constraintName,
-        TableRef table,
+        SchemaObjectRef table,
         List<String> columns,
         List<String> refColumns) {
 

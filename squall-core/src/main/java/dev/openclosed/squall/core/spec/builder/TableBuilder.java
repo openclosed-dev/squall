@@ -22,7 +22,7 @@ import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.ForeignKey;
 import dev.openclosed.squall.api.spec.PrimaryKey;
 import dev.openclosed.squall.api.spec.Table;
-import dev.openclosed.squall.api.spec.TableRef;
+import dev.openclosed.squall.api.spec.SchemaObjectRef;
 import dev.openclosed.squall.api.spec.Unique;
 import dev.openclosed.squall.core.spec.DefaultForeignKey;
 import dev.openclosed.squall.core.spec.DefaultPrimaryKey;
@@ -73,7 +73,7 @@ final class TableBuilder extends ComponentBuilder {
         unique.add(new DefaultUnique(Optional.ofNullable(name), columns));
     }
 
-    void addForeignKey(String name, TableRef table, Map<String, String> columnMapping) {
+    void addForeignKey(String name, SchemaObjectRef table, Map<String, String> columnMapping) {
         foreignKeys.add(new DefaultForeignKey(
             Optional.ofNullable(name),
             table,

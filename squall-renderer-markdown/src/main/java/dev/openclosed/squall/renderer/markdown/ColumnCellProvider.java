@@ -24,7 +24,6 @@ import dev.openclosed.squall.api.spec.ForeignKey;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.api.spec.Table;
 
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -136,16 +135,21 @@ enum ColumnCellProvider implements CellProvider<Column> {
             Table table = context.currentTable();
             String value = table.foreignKeysContaining(columnName)
                 .map(fk -> foreignKeyToString(fk, columnName))
+                .distinct()
                 .collect(Collectors.joining("<br>"));
             return value.isEmpty() ? "-" : value;
         }
 
         private static String foreignKeyToString(ForeignKey foreignKey, String columnName) {
+            String targetColumn = foreignKey.getTargetColumn(columnName);
+            String fullTargetColumn = foreignKey.getFullyQualifiedTargetColumn(columnName);
             return new StringBuilder()
-                .append(foreignKey.tableName())
-                .append(" (")
-                .append(foreignKey.columnMapping().get(columnName))
-                .append(')')
+                .append(foreignKey.qualifiedTableName())
+                .append(" ([")
+                .append(targetColumn)
+                .append("](#")
+                .append(fullTargetColumn)
+                .append("))")
                 .toString();
         }
     },
@@ -215,11 +219,5 @@ enum ColumnCellProvider implements CellProvider<Column> {
             case FOREIGN_KEY -> FOREIGN_KEY;
             case DESCRIPTION -> DESCRIPTION;
         };
-    }
-
-    static MarkdownTableWriter<Column> tableWriter(ResourceBundle bundle, List<ColumnAttribute> attributes) {
-        List<ColumnCellProvider> providers = attributes.stream()
-            .map(ColumnCellProvider::provider).toList();
-        return MarkdownTableWriter.withProviders(providers, bundle);
     }
 }

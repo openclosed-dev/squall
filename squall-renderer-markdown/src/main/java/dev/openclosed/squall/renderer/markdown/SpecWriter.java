@@ -59,8 +59,11 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
         this.bundle = bundle;
         this.appender = appender;
         this.headingNumberGenerator = HeadingNumberGenerator.create(config.numbering());
-        this.columnWriter = ColumnCellProvider.tableWriter(bundle, config.columnAttributes());
-        this.sequenceWriter = SequenceCellProvider.tableWriter(bundle, config.sequenceAttributes());
+        this.columnWriter = MarkdownTableWriter.forColumn(
+            config.columnAttributes(),
+            bundle,
+            this::writeAnchor);
+        this.sequenceWriter = MarkdownTableWriter.forSequence(config.sequenceAttributes(), bundle);
         // visibility of components
         this.hideDatabase = config.hide().contains(Component.Type.DATABASE);
         this.hideSchema = config.hide().contains(Component.Type.SCHEMA);
@@ -257,6 +260,11 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
             append('[').append(badge.name()).append("]: ");
             append(badge.url()).appendNewLine();
         }
+    }
+
+    private void writeAnchor(Column column) {
+        appendSpace();
+        append("<a id=\"").append(column.fullName()).append("\"></a>");
     }
 
     private String getMessage(String key) {

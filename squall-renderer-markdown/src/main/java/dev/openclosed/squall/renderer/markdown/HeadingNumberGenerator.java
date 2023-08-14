@@ -28,11 +28,6 @@ interface HeadingNumberGenerator {
     }
 
     static HeadingNumberGenerator create(boolean enabled) {
-        if (enabled) {
-            return new DefaultHeadingNumberGenerator();
-        } else {
-            return new HeadingNumberGenerator() {
-            };
-        }
+        return HeadingNumberGeneratorImpl.create(enabled);
     }
 }
