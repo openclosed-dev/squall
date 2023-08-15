@@ -141,14 +141,16 @@ enum ColumnCellProvider implements CellProvider<Column> {
         }
 
         private static String foreignKeyToString(ForeignKey foreignKey, String columnName) {
-            String targetColumn = foreignKey.getTargetColumn(columnName);
-            String fullTargetColumn = foreignKey.getFullyQualifiedTargetColumn(columnName);
+            String targetColumn = foreignKey.columnMapping().get(columnName);
+            String fullTableName = foreignKey.fullTableName();
             return new StringBuilder()
                 .append(foreignKey.qualifiedTableName())
                 .append(" ([")
                 .append(targetColumn)
                 .append("](#")
-                .append(fullTargetColumn)
+                .append(fullTableName)
+                .append('.')
+                .append(targetColumn)
                 .append("))")
                 .toString();
         }

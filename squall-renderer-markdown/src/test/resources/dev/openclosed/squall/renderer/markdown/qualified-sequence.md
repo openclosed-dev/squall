@@ -1,22 +1,22 @@
-# simple sequence
+# schema qualified sequence
 
 ```sql
-CREATE DATABASE customerdb;
+CREATE DATABASE db1;
 
-CREATE SCHEMA customer;
+CREATE SCHEMA schema1;
 
 /**
  * A description of customer_id.
  * @label Customer Identifier
  */
-CREATE SEQUENCE customer.customer_id;
+CREATE SEQUENCE schema1.customer_id;
 ```
 
 # Untitled
 
-## 1. customer ![schema]
+## 1. schema1 ![schema]
 
-### 1.1. Customer Identifier `customer.customer_id` ![sequence]
+### 1.1. Customer Identifier `schema1.customer_id` ![sequence]
 
 A description of customer_id.
 

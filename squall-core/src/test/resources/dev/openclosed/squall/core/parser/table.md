@@ -483,8 +483,8 @@ CREATE TABLE tb (
     ],
     "foreignKeys": [
       {
-        "schemaName": "",
         "tableName": "ta",
+        "tableParents": ["", ""],
         "columnMapping": {
           "b": "a"
         }
@@ -544,8 +544,8 @@ CREATE TABLE tb (
     ],
     "foreignKeys": [
       {
-        "schemaName": "",
         "tableName": "ta",
+        "tableParents": ["", ""],
         "columnMapping": {
           "b1": "a1",
           "b2": "a2"
@@ -594,8 +594,8 @@ CREATE TABLE tb (
     ],
     "foreignKeys": [
       {
-        "schemaName": "",
         "tableName": "ta",
+        "tableParents": ["", ""],
         "columnMapping": {
           "b": "a"
         }
@@ -643,8 +643,8 @@ CREATE TABLE tb (
     ],
     "foreignKeys": [
       {
-        "schemaName": "",
         "tableName": "ta",
+        "tableParents": ["", ""],
         "columnMapping": {
           "b": "a"
         }

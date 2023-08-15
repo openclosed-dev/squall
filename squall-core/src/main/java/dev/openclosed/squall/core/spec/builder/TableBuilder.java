@@ -73,10 +73,20 @@ final class TableBuilder extends ComponentBuilder {
         unique.add(new DefaultUnique(Optional.ofNullable(name), columns));
     }
 
-    void addForeignKey(String name, SchemaObjectRef table, Map<String, String> columnMapping) {
+    void addForeignKey(String name, SchemaObjectRef tableRef, List<String> columns, List<String> refColumns) {
+        var columnMapping = new LinkedHashMap<String, String>();
+        for (int i = 0; i < columns.size(); i++) {
+            columnMapping.put(columns.get(i), refColumns.get(i));
+        }
+
+        List<String> tableParents = List.of(
+            tableRef.databaseName().orElseGet(() -> parents().get(0)),
+            tableRef.schemaName().orElseGet(() -> parents().get(1)));
+
         foreignKeys.add(new DefaultForeignKey(
             Optional.ofNullable(name),
-            table,
+            tableRef.objectName(),
+            tableParents,
             columnMapping
         ));
     }

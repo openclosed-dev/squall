@@ -117,18 +117,13 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     @Override
     public DatabaseSpecBuilder addTableForeignKey(
         String constraintName,
-        SchemaObjectRef table,
+        SchemaObjectRef tableRef,
         List<String> columns,
         List<String> refColumns) {
-
-        Objects.requireNonNull(table);
+        Objects.requireNonNull(tableRef);
         Objects.requireNonNull(columns);
-
-        var columnMapping = new LinkedHashMap<String, String>();
-        for (int i = 0; i < columns.size(); i++) {
-            columnMapping.put(columns.get(i), refColumns.get(i));
-        }
-        requireCurrentTable().addForeignKey(constraintName, table, columnMapping);
+        Objects.requireNonNull(refColumns);
+        requireCurrentTable().addForeignKey(constraintName, tableRef, columns, refColumns);
         return this;
     }
 

@@ -25,55 +25,30 @@ import java.nio.file.Path;
 import java.util.Locale;
 import java.util.stream.Stream;
 
-import dev.openclosed.squall.api.spec.MajorDialect;
+import dev.openclosed.squall.api.parser.SqlParser;
+import dev.openclosed.squall.api.spec.Dialect;
 import org.apache.commons.io.file.PathUtils;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import dev.openclosed.squall.api.config.ConfigLoader;
-import dev.openclosed.squall.api.parser.CommentHandlers;
-import dev.openclosed.squall.api.parser.ParserConfig;
-import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.renderer.RendererFactory;
 import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 
-final class MarkdownRendererTest {
+abstract class MarkdownRendererTest {
 
-    private static SqlParserFactory parserFactory;
+    private static final Path BASE_DIR = Path.of("target", "test-runs");
     private static RendererFactory rendererFactory;
     private static ConfigLoader configLoader;
 
-    private static final Path BASE_DIR = Path.of("target", "test-runs");
-
-    @BeforeAll
-    public static void setUpOnce() throws IOException {
+    public static void setUpBase(Dialect dialect) throws IOException {
         Locale.setDefault(Locale.ENGLISH);
-        Files.createDirectories(BASE_DIR);
-        parserFactory = SqlParserFactory.get(MajorDialect.POSTGRESQL);
+        Files.createDirectories(BASE_DIR.resolve((dialect.dialectName())));
         rendererFactory = RendererFactory.get("markdown");
         configLoader = ConfigLoader.get();
     }
 
-    public static Stream<RenderTest> testRenderer() {
-        return Stream.of(
-            "database",
-            "schema",
-            "table",
-            "hide-database-and-schema",
-            "sequence"
-        )
-        .flatMap(MarkdownRendererTest::loadTest);
-    }
-
-    @ParameterizedTest
-    @MethodSource
-    public void testRenderer(RenderTest test) throws IOException {
+    protected void testRenderer(RenderTest test, Dialect dialect) throws IOException {
         var builder = DatabaseSpecBuilder.newBuilder();
-        var parser = parserFactory.createParser(
-                ParserConfig.getDefault(),
-                builder,
-                CommentHandlers.createDocCommentHandler());
+        var parser = createParser(builder);
 
         for (var sql : test.sql()) {
             parser.parse(sql);
@@ -83,7 +58,7 @@ final class MarkdownRendererTest {
         var config = configLoader.loadRenderConfigFromJson(test.json());
         var renderer = rendererFactory.createRenderer(config);
 
-        Path dir = prepareDirectory(test.title());
+        Path dir = prepareDirectory(dialect, test.title());
 
         renderer.render(spec, dir);
 
@@ -91,14 +66,17 @@ final class MarkdownRendererTest {
         assertThat(convertRenderedContent(actual)).isEqualTo(test.expected());
     }
 
-    private static Stream<RenderTest> loadTest(String name) {
+    protected static Stream<RenderTest> loadTest(String name) {
         var filename = name + ".md";
         var in = MarkdownRendererTest.class.getResourceAsStream(filename);
         return RenderTest.loadFrom(in).stream();
     }
 
-    private static Path prepareDirectory(String title) throws IOException {
-        Path dir = BASE_DIR.resolve(title.replaceAll("\s", "-"));
+    protected abstract SqlParser createParser(DatabaseSpecBuilder builder);
+
+    private static Path prepareDirectory(Dialect dialect, String title) throws IOException {
+        Path parentDir = BASE_DIR.resolve(dialect.dialectName());
+        Path dir = parentDir.resolve(title.replaceAll("\s", "-"));
         if (Files.exists(dir)) {
             PathUtils.cleanDirectory(dir);
         }

@@ -1,47 +1,46 @@
 package dev.openclosed.squall.core.spec;
 
 import dev.openclosed.squall.api.spec.ForeignKey;
-import dev.openclosed.squall.api.spec.SchemaObjectRef;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public record DefaultForeignKey(
     Optional<String> constraintName,
-    Optional<String> databaseName,
-    Optional<String> schemaName,
     String tableName,
+    List<String> tableParents,
     Map<String, String> columnMapping
     ) implements ForeignKey {
 
     public DefaultForeignKey {
+        tableParents = List.copyOf(tableParents);
         columnMapping = Map.copyOf(columnMapping);
-    }
-
-    public DefaultForeignKey(
-        Optional<String> constraintName, SchemaObjectRef table, Map<String, String> columnMapping) {
-        this(constraintName, table.databaseName(), table.schemaName(), table.objectName(), columnMapping);
     }
 
     @Override
     public String qualifiedTableName() {
         var b = new StringBuilder();
-        schemaName().ifPresentOrElse(
-            name -> b.append(name).append('.'),
-            () -> databaseName().ifPresent(name -> b.append(name).append('.'))
-        );
-        return b.append(tableName).toString();
+        var parents = tableParents();
+        for (int i = parents.size() - 1; i >= 0; i--) {
+            var parent = parents.get(i);
+            if (!parent.isEmpty()) {
+                b.append(parent).append('.');
+                break;
+            }
+        }
+        return b.append(tableName()).toString();
     }
 
     @Override
-    public String getFullyQualifiedTargetColumn(String sourceColumn) {
-        String targetColumn = getTargetColumn(sourceColumn);
-        var b = new StringBuilder();
-        databaseName().ifPresent(b::append);
-        b.append('.');
-        schemaName().ifPresent(b::append);
-        b.append('.').append(tableName());
-        b.append('.').append(targetColumn);
-        return b.toString();
+    public String fullTableName() {
+        return getFullName(tableName());
+    }
+
+    private String getFullName(String... names) {
+        return Stream.concat(tableParents.stream(), Stream.of(names))
+            .collect(Collectors.joining("."));
     }
 }
