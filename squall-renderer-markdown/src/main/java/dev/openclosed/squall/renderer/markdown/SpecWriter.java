@@ -62,7 +62,7 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
         this.columnWriter = MarkdownTableWriter.forColumn(
             config.columnAttributes(),
             bundle,
-            this::writeAnchor);
+            this::writeColumnAnchor);
         this.sequenceWriter = MarkdownTableWriter.forSequence(config.sequenceAttributes(), bundle);
         // visibility of components
         this.hideDatabase = config.hide().contains(Component.Type.DATABASE);
@@ -99,7 +99,7 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
     @Override
     public void leave(DatabaseSpec spec) {
         leaveLevel();
-        writeImageDefs();
+        writeImageDefinitions();
     }
 
     @Override
@@ -168,10 +168,6 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
     }
 
     @Override
-    public void leave(Table title) {
-    }
-
-    @Override
     public void visit(Column column, int ordinal, Context context) {
         this.columnWriter.writeDataRow(this, column, ordinal, context);
     }
@@ -206,9 +202,9 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
         component.label().ifPresentOrElse(label -> {
             writeName(label, deprecated);
             writeNameAsCode(name, deprecated);
-        }, () -> {
-            writeName(name, deprecated);
-        });
+            },
+            () -> writeName(name, deprecated)
+        );
     }
 
     private void writeName(String name, boolean deprecated) {
@@ -247,14 +243,16 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
     private void writeDeprecationNotice(Component component) {
         appendNewLine();
         append("**").append(getMessage("deprecated")).append("**");
-        String text = component.getFirstAnnotation(DocAnnotationType.DEPRECATED).get().value();
-        if (!text.isEmpty()) {
-            appendSpace().append(text);
-        }
+        component.getFirstAnnotation(DocAnnotationType.DEPRECATED).ifPresent(a -> {
+            String text = a.value();
+            if (!text.isEmpty()) {
+                appendSpace().append(text);
+            }
+        });
         appendNewLine();
     }
 
-    private void writeImageDefs() {
+    private void writeImageDefinitions() {
         appendNewLine();
         for (var badge : Badge.values()) {
             append('[').append(badge.name()).append("]: ");
@@ -262,9 +260,12 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
         }
     }
 
-    private void writeAnchor(Column column) {
+    private void writeColumnAnchor(Column column) {
+        String fullName = column.fullName();
         appendSpace();
-        append("<a id=\"").append(column.fullName()).append("\"></a>");
+        append("<a id=\"").append(fullName);
+        append("\" name=\"").append(fullName);
+        append("\"></a>");
     }
 
     private String getMessage(String key) {
