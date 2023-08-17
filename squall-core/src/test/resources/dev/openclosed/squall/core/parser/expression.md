@@ -1018,7 +1018,7 @@ END
       }
     }
   ],
-  "elseResult": {
+  "else": {
     "type": "string",
     "value": "other"
   }
@@ -1067,7 +1067,7 @@ END
       }
     }
   ],
-  "elseResult": {
+  "else": {
     "type": "string",
     "value": "other"
   }

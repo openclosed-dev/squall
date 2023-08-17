@@ -17,6 +17,7 @@
 package dev.openclosed.squall.core.spec.expression;
 
 import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.core.base.Property;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +27,7 @@ public record Case(
     Type type,
     Optional<Expression> expression,
     List<When> when,
+    @Property("else")
     Optional<Expression> elseResult) implements MapSourceExpression {
 
     public record When(Expression condition, Expression result) {

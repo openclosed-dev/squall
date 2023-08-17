@@ -18,6 +18,7 @@ package dev.openclosed.squall.core.base;
 
 import dev.openclosed.squall.api.base.MapSource;
 
+import java.lang.reflect.RecordComponent;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,8 +27,16 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
 
+/**
+ * A utility class for mapping a Java Record to a Java Map recursively.
+ */
 final class RecordMapper {
 
+    /**
+     * Maps a record to a map.
+     * @param rec the input record.
+     * @return converted map.
+     */
     static Map<String, Object> toMap(Record rec) {
         return convert(rec);
     }
@@ -73,10 +82,19 @@ final class RecordMapper {
             var original = accessor.invoke(rec);
             var converted = convertValue(original);
             if (shouldInclude(converted)) {
-                map.put(component.getName(), converted);
+                map.put(getPropertyName(component), converted);
             }
         }
         return map;
+    }
+
+    private static String getPropertyName(RecordComponent component) {
+        if (component.isAnnotationPresent(Property.class)) {
+            var prop = component.getAnnotation(Property.class);
+            return prop.value();
+        } else {
+            return component.getName();
+        }
     }
 
     private static Number convert(Long value) {
