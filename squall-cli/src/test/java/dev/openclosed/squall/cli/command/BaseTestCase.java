@@ -23,8 +23,10 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.file.PathUtils;
 
@@ -41,24 +43,20 @@ public interface BaseTestCase {
     Path EXPECTED_OUTPUT_FILE = Path.of("expected-output.txt");
 
     /**
-     * The name of the command to test.
-     * @return the name of the command
-     */
-    String subcommand();
-
-    /**
-     * The prefix of the directories.
-     * @return the prefix of the directories.
-     */
-    default String prefix() {
-        return subcommand();
-    }
-
-    /**
      * The name of this test case.
      * @return The name of this test case.
      */
     String name();
+
+    /**
+     * The name of the command to test.
+     * @return the name of the command
+     */
+    List<String> subcommand();
+
+    default List<String> prefix() {
+        return subcommand();
+    }
 
     /**
      * Returns the arguments given to the subcommand.
@@ -66,13 +64,12 @@ public interface BaseTestCase {
      */
     String[] args();
 
-
     /**
      * Returns the working directory for this test run.
      * @return the working directory.
      */
     default Path directory() {
-        return BASE_WORK_DIR.resolve(prefix()).resolve(name());
+        return getTestPath(BASE_WORK_DIR).resolve(name());
     }
 
     default List<String> getExpectedConsoleOutput() {
@@ -108,6 +105,7 @@ public interface BaseTestCase {
         PRINTER.print("[" + name() + "] ");
         PRINTER.println("squall " + String.join(" ", args));
     }
+
     private void printConsoleOutput(List<String> lines) {
         for (String line : lines) {
             PRINTER.println(line);
@@ -132,15 +130,12 @@ public interface BaseTestCase {
     }
 
     private String[] createArgs() {
-        String[] args = args();
-        String[] combined = new String[args.length + 1];
-        combined[0] = subcommand();
-        System.arraycopy(args, 0, combined, 1, args.length);
-        return combined;
+        return Stream.concat(subcommand().stream(), Arrays.stream(args()))
+            .toArray(String[]::new);
     }
 
     private Path sourceDirectory() {
-        return BASE_SOURCE_DIR.resolve(prefix()).resolve(name());
+        return getTestPath(BASE_SOURCE_DIR).resolve(name());
     }
 
     private void copySources(Path targetPath) throws IOException {
@@ -157,6 +152,14 @@ public interface BaseTestCase {
                 }
             });
         }
+    }
+
+    private Path getTestPath(Path basePath) {
+        Path path = basePath;
+        for (var prefix : prefix()) {
+            path = path.resolve(prefix);
+        }
+        return path;
     }
 
     private static boolean filterSource(Path path) {

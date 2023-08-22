@@ -1,0 +1,4 @@
+Loading the configuration "squall.json"...
+Loaded the configuration successfully.
+No SQL sources are defined in the configuration.
+Command build was completed. (### ms)

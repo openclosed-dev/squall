@@ -1,4 +1,0 @@
-Loading the configuration "squall.json"...
-Loaded the configuration successfully.
-No SQL sources are defined in the configuration.
-Command render was completed. (### ms)

@@ -25,48 +25,65 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.ServiceLoader;
-import java.util.ServiceLoader.Provider;
 import java.util.spi.ToolProvider;
 
-import dev.openclosed.squall.cli.base.LoggerFactory;
-import dev.openclosed.squall.cli.spi.BaseCommand;
+import dev.openclosed.squall.cli.base.Messages;
+import dev.openclosed.squall.cli.spi.Subcommand;
+import dev.openclosed.squall.cli.spi.SubcommandProvider;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.ExecutionException;
 import picocli.CommandLine.ExitCode;
 import picocli.CommandLine.Help;
-import picocli.CommandLine.HelpCommand;
+import picocli.CommandLine.IDefaultValueProvider;
 import picocli.CommandLine.IExecutionExceptionHandler;
+import picocli.CommandLine.IExecutionStrategy;
+import picocli.CommandLine.IFactory;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.ParseResult;
+import picocli.CommandLine.RunLast;
+import picocli.CommandLine.ScopeType;
 
 @Command(
-        name = "squall",
-        description = "Squall is a document generator for SQL Data Definition Language (DDL).",
-        mixinStandardHelpOptions = true,
-        version = {
-                "Squall ${program.version}",
-                "Picocli " + picocli.CommandLine.VERSION,
-                "JVM: ${java.version} (${java.vendor} ${java.vm.name} ${java.vm.version})",
-                "OS: ${os.name} ${os.version} ${os.arch}"
-        }
-        )
-public final class RootCommand implements ToolProvider, IExecutionExceptionHandler, LoggerFactory {
+    name = "squall",
+    description = "Squall is a document generator for SQL Data Definition Language (DDL).",
+    version = {
+        "Squall ${program.version}",
+        "JVM: ${java.version} (${java.vendor} ${java.vm.name} ${java.vm.version})",
+        "OS: ${os.name} ${os.version} ${os.arch}"
+    }
+)
+public final class RootCommand implements
+    ToolProvider,
+    LoggerProvider,
+    IFactory,
+    IDefaultValueProvider,
+    IExecutionExceptionHandler {
 
     private static final String BUNDLE_BASE_NAME = "dev.openclosed.squall.cli.HelpMessages";
 
-    private final String workDir;
+    private final String defaultWorkDir;
 
     @SuppressWarnings("unused")
     private PrintWriter out;
     private PrintWriter err;
 
+    private ExecutionContext context;
+
+    private System.Logger logger;
+
     private Exception executionException;
 
     public RootCommand() {
-        this.workDir = System.getProperty("user.dir");
+        this(System.getProperty("user.dir"));
     }
 
     public RootCommand(Path workDir) {
-        this.workDir = workDir.toString();
+        this(workDir.toString());
+    }
+
+    public RootCommand(String workDir) {
+        this.defaultWorkDir = workDir;
     }
 
     @Override
@@ -79,16 +96,48 @@ public final class RootCommand implements ToolProvider, IExecutionExceptionHandl
         return executeCommand(out, err, args);
     }
 
+    // LoggerProvider
+
+    @Override
+    public Logger getLogger() {
+        if (this.logger == null) {
+            throw new IllegalStateException("logger is not created yet");
+        }
+        return this.logger;
+    }
+
+    // IFactory
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <K> K create(Class<K> clazz) throws Exception {
+        if (clazz == Subcommand.ExecutionContext.class) {
+            return (K) new ExecutionContext(this);
+        }
+        return CommandLine.defaultFactory().create(clazz);
+    }
+
+    // IDefaultValueProvider
+
+    @Override
+    public String defaultValue(CommandLine.Model.ArgSpec argSpec) {
+        if (argSpec instanceof CommandLine.Model.OptionSpec optionSpec) {
+            if ("--directory".equals(optionSpec.longestName())) {
+                return defaultWorkDir;
+            }
+        }
+        return null;
+    }
+
+    // IExecutionExceptionHandler
+
     @Override
     public int handleExecutionException(Exception ex, CommandLine commandLine, ParseResult parseResult) {
         this.executionException = ex;
         return ExitCode.SOFTWARE;
     }
 
-    @Override
-    public Logger createLogger(Level level) {
-        return new DefaultLogger(level, this.err);
-    }
+    //
 
     public int run(String... args) {
         var charset = StandardCharsets.UTF_8;
@@ -102,9 +151,43 @@ public final class RootCommand implements ToolProvider, IExecutionExceptionHandl
         return Optional.ofNullable(this.executionException);
     }
 
+    // Global options
+
+    @Option(
+        names = {"-h", "--help"},
+        description = "show this help message and exit.",
+        usageHelp = true,
+        scope = ScopeType.INHERIT
+    )
+    public void requestUsageHelp(boolean requested) {
+    }
+
+    @Option(
+        names = {"-V", "--version"},
+        description = "print version information and exit.",
+        versionHelp = true
+    )
+    public void requestVersionHelp(boolean requested) {
+    }
+
+    @Option(
+        names = {"--verbose"},
+        description = "produce detailed output.",
+        defaultValue = "false",
+        scope = ScopeType.INHERIT
+    )
+    public void setVerbose(boolean verbose) {
+        var level = verbose ? Level.TRACE : Level.INFO;
+        this.logger = new DefaultLogger(level, this.err);
+    }
+
+    // The entry point
+
     public static void main(String[] args) {
         new RootCommand().run(args);
     }
+
+    //
 
     private int executeCommand(PrintWriter out, PrintWriter err, String[] args) {
         this.out = out;
@@ -127,20 +210,22 @@ public final class RootCommand implements ToolProvider, IExecutionExceptionHandl
     }
 
     private CommandLine createCommandLine(PrintWriter out, PrintWriter err) {
-        var commandLine = new CommandLine(this, new ObjectFactory())
+        var commandLine = new CommandLine(this)
             .setResourceBundle(getResourceBundle())
-            .addSubcommand(new HelpCommand());
+            .setExecutionStrategy(new CommandExecutor())
+            .setExecutionExceptionHandler(this);
 
-        ServiceLoader.load(BaseCommand.class).stream()
-            .map(Provider::type)
-            .filter(t -> t.isAnnotationPresent(Command.class))
-            .forEach(commandLine::addSubcommand);
+        return findSubcommands(commandLine)
+            .setOut(out)
+            .setErr(err)
+            .setDefaultValueProvider(this);
+    }
 
-        commandLine.setDefaultValueProvider(new DefaultValueProvider(this.workDir))
-                .setExecutionExceptionHandler(this)
-                .setOut(out)
-                .setErr(err);
-
+    private CommandLine findSubcommands(CommandLine commandLine) {
+        for (var provider : ServiceLoader.load(SubcommandProvider.class)) {
+            var child = new CommandLine(provider, this);
+            commandLine.addSubcommand(child);
+        }
         return commandLine;
     }
 
@@ -150,5 +235,60 @@ public final class RootCommand implements ToolProvider, IExecutionExceptionHandl
             Locale.getDefault(),
             RootCommand.class.getClassLoader()
         );
+    }
+
+    /**
+     * An executor of commands.
+     */
+    class CommandExecutor implements IExecutionStrategy {
+
+        @Override
+        public int execute(ParseResult parseResult) throws ExecutionException {
+            final String commandName = getCommandNameToExecute(parseResult);
+            final long startTime = System.currentTimeMillis();
+            try {
+                int result = executeLastCommand(parseResult);
+                final long timeElapsed = System.currentTimeMillis() - startTime;
+                if (!checkHelpRequested(parseResult)) {
+                    getLogger().log(Level.INFO, Messages.COMMAND_COMPLETED(commandName, timeElapsed));
+                }
+                return result;
+            } catch (ExecutionException e) {
+                reportError(e.getCause());
+                throw e;
+            }
+        }
+
+        private int executeLastCommand(ParseResult parseResult) throws ExecutionException {
+            return new RunLast().execute(parseResult);
+        }
+
+        private String getCommandNameToExecute(ParseResult parseResult) {
+            return getLastParseResult(parseResult).commandSpec().name();
+        }
+
+        private ParseResult getLastParseResult(ParseResult parseResult) {
+            while (parseResult.hasSubcommand()) {
+                parseResult = parseResult.subcommand();
+            }
+            return parseResult;
+        }
+
+        private void reportError(Throwable e) {
+            getLogger().log(Level.ERROR, e.getMessage());
+            if (e.getCause() != null) {
+                getLogger().log(Level.TRACE, e.getCause());
+            }
+        }
+
+        private boolean checkHelpRequested(ParseResult parseResult) {
+            while (parseResult != null) {
+                if (parseResult.isUsageHelpRequested() || parseResult.isVersionHelpRequested()) {
+                    return true;
+                }
+                parseResult = parseResult.subcommand();
+            }
+            return false;
+        }
     }
 }
