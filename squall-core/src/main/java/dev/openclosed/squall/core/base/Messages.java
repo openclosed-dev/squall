@@ -70,22 +70,6 @@ public final class Messages {
         return of("UNKNOWN_PROPERTY", name);
     }
 
-    // SQL sources
-
-    public static Message INVALID_CHARACTER(char c) {
-        return of("INVALID_CHARACTER", String.valueOf(c));
-    }
-
-    public static Message SYNTAX_ERROR(CharSequence text) {
-        return of("SYNTAX_ERROR", text);
-    }
-
-    // Doc comment
-
-    public static Message UNKNOWN_ANNOTATION(String name) {
-        return of("UNKNOWN_ANNOTATION", name);
-    }
-
     //CHECKSTYLE:ON
 
     private static String nameOf(Class<?> cls) {

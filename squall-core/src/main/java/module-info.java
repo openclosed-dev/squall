@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import dev.openclosed.squall.core.parser.postgresql.PostgreSqlParserFactory;
-
 module dev.openclosed.squall.core {
 
     requires dev.openclosed.squall.api;
@@ -24,14 +22,12 @@ module dev.openclosed.squall.core {
 
     provides dev.openclosed.squall.api.config.ConfigLoader
         with dev.openclosed.squall.core.config.DefaultConfigLoader;
-    provides dev.openclosed.squall.api.parser.SqlParserFactory
-        with PostgreSqlParserFactory;
-    provides dev.openclosed.squall.api.parser.DocCommentHandler
-        with dev.openclosed.squall.core.parser.handler.DefaultDocCommentHandler;
     provides dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder
         with dev.openclosed.squall.core.spec.builder.DefaultDatabaseSpecBuilder;
     provides dev.openclosed.squall.core.spi.MessagesProvider
         with dev.openclosed.squall.core.spi.impl.DefaultMessagesProvider;
     provides dev.openclosed.squall.api.spi.RendererMessagesProvider
         with dev.openclosed.squall.core.base.DefaultRendererMessagesProvider;
+    provides dev.openclosed.squall.api.spec.ExpressionFactory
+        with dev.openclosed.squall.core.spec.expression.DefaultExpressionFactory;
 }

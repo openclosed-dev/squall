@@ -20,13 +20,13 @@ import dev.openclosed.squall.api.spec.Expression;
 
 import java.util.Objects;
 
-public record Is(Type type, Expression subject, String predicate) implements MapSourceExpression {
+record Is(Type type, Expression subject, String predicate) implements MapSourceExpression {
 
-    public Is(Expression subject, String predicate) {
+    Is(Expression subject, String predicate) {
         this(Type.IS, subject, predicate);
     }
 
-    public Is {
+    Is {
         Objects.requireNonNull(subject);
         Objects.requireNonNull(predicate);
         predicate = predicate.toLowerCase();

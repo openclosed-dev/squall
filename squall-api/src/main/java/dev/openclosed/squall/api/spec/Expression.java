@@ -51,7 +51,8 @@ public interface Expression extends MapSource {
         IN,
         /** NOT IN comparison. */
         NOT_IN,
-        CASE
+        CASE,
+        WHEN
     }
 
     /**

@@ -23,25 +23,26 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public record Case(
+record Case(
     Type type,
     Optional<Expression> expression,
     List<When> when,
     @Property("else")
-    Optional<Expression> elseResult) implements MapSourceExpression {
+    Optional<Expression> elseExpression) implements MapSourceExpression {
 
-    public record When(Expression condition, Expression result) {
-        public When {
+    record When(Expression condition, Expression result) {
+
+        When {
             Objects.requireNonNull(condition);
             Objects.requireNonNull(result);
         }
-    };
-
-    public Case(Expression expression, List<When> when, Expression elseResult) {
-        this(Type.CASE, Optional.ofNullable(expression), when, Optional.ofNullable(elseResult));
     }
 
-    public Case {
+    Case(Optional<Expression> expression, List<When> when, Optional<Expression> elseExpression) {
+        this(Type.CASE, expression, when, elseExpression);
+    }
+
+    Case {
         when = List.copyOf(when);
     }
 
@@ -64,8 +65,8 @@ public record Case(
                 .append(' ');
         }
 
-        elseResult().ifPresent(result -> {
-            sb.append("ELSE ").appendGroupedIfComplex(result).append(' ');
+        elseExpression().ifPresent(e -> {
+            sb.append("ELSE ").appendGroupedIfComplex(e).append(' ');
         });
         return sb.append("END").toString();
     }

@@ -20,17 +20,17 @@ import dev.openclosed.squall.api.spec.Expression;
 
 import java.util.List;
 
-public record In(
+record In(
     Type type,
     Expression left,
     List<Expression> right
     ) implements MapSourceExpression {
 
-    public In(Expression left, List<Expression> right, boolean negated) {
+    In(Expression left, List<Expression> right, boolean negated) {
         this(negated ? Type.NOT_IN : Type.IN, left, right);
     }
 
-    public In {
+    In {
         if (type != Type.IN && type != Type.NOT_IN) {
             throw new IllegalArgumentException();
         }

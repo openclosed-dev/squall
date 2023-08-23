@@ -30,6 +30,7 @@
         <module>squall-cli</module>
         <module>squall-core</module>
         <module>squall-dist</module>
+        <module>squall-parser</module>
         <module>squall-renderer-json</module>
         <module>squall-renderer-markdown</module>
         <module>squall-service-json</module>

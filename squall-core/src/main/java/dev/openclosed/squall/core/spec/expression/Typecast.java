@@ -30,7 +30,7 @@ import java.util.OptionalInt;
  * @param precision
  * @param scale
  */
-public record Typecast(
+record Typecast(
     Expression.Type type,
     Expression source,
     String typeName,
@@ -39,7 +39,7 @@ public record Typecast(
     OptionalInt scale
 ) implements dev.openclosed.squall.api.spec.Typecast, MapSourceExpression {
 
-    public Typecast(Expression source, DataType dataType) {
+    Typecast(Expression source, DataType dataType) {
         this(Expression.Type.TYPECAST,
             source,
             dataType.typeName(),

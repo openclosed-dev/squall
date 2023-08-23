@@ -20,13 +20,13 @@ import dev.openclosed.squall.api.spec.Expression;
 
 import java.util.Objects;
 
-public record ColumnReference(Expression.Type type, String name) implements MapSourceExpression {
+record ColumnReference(Expression.Type type, String name) implements MapSourceExpression {
 
-    public ColumnReference(String name) {
+    ColumnReference(String name) {
         this(Type.COLUMN_REFERENCE, name);
     }
 
-    public ColumnReference {
+    ColumnReference {
         Objects.requireNonNull(name);
     }
 
