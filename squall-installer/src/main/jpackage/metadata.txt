@@ -1,0 +1,4 @@
+--name squall
+--app-version '${release.version}'
+--description 'Squall is a document generator for SQL Data Definition Language (DDL).'
+--vendor openclosed.dev
