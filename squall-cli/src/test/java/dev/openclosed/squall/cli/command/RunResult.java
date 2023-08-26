@@ -24,10 +24,12 @@ import java.util.regex.Pattern;
 public record RunResult(int exitCode, List<String> consoleOutput, Optional<Exception> thrown) {
 
     private static final Pattern TIME_ELAPSED = Pattern.compile("\\([\\d,]+ ms\\)");
+    private static final Pattern FILE_PATH_SEPARATOR = Pattern.compile("\\\\");
 
     public List<String> getConsoleOutputToVerify() {
         return consoleOutput().stream()
             .map(line -> TIME_ELAPSED.matcher(line).replaceAll("(### ms)"))
+            .map(line -> FILE_PATH_SEPARATOR.matcher(line).replaceAll("/"))
             .toList();
     }
 }

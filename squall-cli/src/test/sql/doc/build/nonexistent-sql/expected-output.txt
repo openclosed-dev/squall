@@ -1,5 +1,5 @@
 Loading the configuration "squall.json"...
 Loaded the configuration successfully.
 Parsing a SQL source file "schema.sql"...
-ERROR: SQL file does not exist at ".\target\test-runs\doc\build\nonexistent-sql\schema.sql".
+ERROR: SQL file does not exist at "./target/test-runs/doc/build/nonexistent-sql/schema.sql".
 ERROR: Found errors in 1 SQL source file(s).

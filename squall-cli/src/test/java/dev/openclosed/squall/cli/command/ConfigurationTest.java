@@ -64,7 +64,7 @@ final class ConfigurationTest {
         var result = testCase.run();
         assertThat(result.exitCode()).isEqualTo(1);
 
-        assertThat(result.consoleOutput()).isEqualTo(testCase.getExpectedConsoleOutput());
+        assertThat(result.getConsoleOutputToVerify()).isEqualTo(testCase.getExpectedConsoleOutput());
 
         var thrown = result.thrown().get();
         assertThat(thrown).isInstanceOf(CommandException.class);

@@ -2,8 +2,8 @@ Loading the configuration "squall.json"...
 Loaded the configuration successfully.
 Parsing a SQL source file "schema.sql"...
 Parsed a SQL source file "schema.sql" successfully.
-Renderer "markdown" is rendering the spec into ".\target\test-runs\doc\build\multiple\output".
-Renderer "markdown" has rendered the spec into ".\target\test-runs\doc\build\multiple\output" successfully.
-Renderer "json" is rendering the spec into ".\target\test-runs\doc\build\multiple\output".
-Renderer "json" has rendered the spec into ".\target\test-runs\doc\build\multiple\output" successfully.
+Renderer "markdown" is rendering the spec into "./target/test-runs/doc/build/multiple/output".
+Renderer "markdown" has rendered the spec into "./target/test-runs/doc/build/multiple/output" successfully.
+Renderer "json" is rendering the spec into "./target/test-runs/doc/build/multiple/output".
+Renderer "json" has rendered the spec into "./target/test-runs/doc/build/multiple/output" successfully.
 Command build was completed. (### ms)
