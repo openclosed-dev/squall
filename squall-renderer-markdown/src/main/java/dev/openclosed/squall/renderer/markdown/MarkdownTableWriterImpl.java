@@ -16,6 +16,7 @@
 
 package dev.openclosed.squall.renderer.markdown;
 
+import dev.openclosed.squall.api.renderer.support.Appender;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 

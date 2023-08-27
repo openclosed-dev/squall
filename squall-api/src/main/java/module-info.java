@@ -4,6 +4,7 @@ module dev.openclosed.squall.api {
     exports dev.openclosed.squall.api.config;
     exports dev.openclosed.squall.api.parser;
     exports dev.openclosed.squall.api.renderer;
+    exports dev.openclosed.squall.api.renderer.support;
     exports dev.openclosed.squall.api.spi;
     exports dev.openclosed.squall.api.spec;
     exports dev.openclosed.squall.api.spec.builder;

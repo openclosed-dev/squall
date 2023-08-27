@@ -16,6 +16,8 @@
 
 package dev.openclosed.squall.renderer.markdown;
 
+import dev.openclosed.squall.api.renderer.support.Appender;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 

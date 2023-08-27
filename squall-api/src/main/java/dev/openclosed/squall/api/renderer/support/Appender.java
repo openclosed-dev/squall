@@ -14,22 +14,27 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.renderer.markdown;
+package dev.openclosed.squall.api.renderer.support;
 
-import dev.openclosed.squall.api.renderer.support.Appender;
+/**
+ * Appendable that does not throw checked exceptions.
+ */
+public interface Appender extends Appendable {
 
-interface HeadingNumberGenerator {
+    @Override
+    Appender append(CharSequence csq);
 
-    default void enterLevel() {
+    @Override
+    Appender append(CharSequence csq, int start, int end);
+
+    @Override
+    Appender append(char c);
+
+    default Appender appendSpace() {
+        return append(' ');
     }
 
-    default void leaveLevel() {
-    }
-
-    default void generate(Appender appender) {
-    }
-
-    static HeadingNumberGenerator create(boolean enabled) {
-        return HeadingNumberGeneratorImpl.create(enabled);
+    default Appender appendNewLine() {
+        return append('\n');
     }
 }

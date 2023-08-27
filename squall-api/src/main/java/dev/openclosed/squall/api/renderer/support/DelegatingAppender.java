@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.renderer.markdown;
+package dev.openclosed.squall.api.renderer.support;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-interface DelegatingAppender extends Appender {
+public interface DelegatingAppender extends Appender {
 
     Appendable getDelegate();
 

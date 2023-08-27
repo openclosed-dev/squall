@@ -21,6 +21,7 @@ import java.io.UncheckedIOException;
 import java.util.ResourceBundle;
 
 import dev.openclosed.squall.api.renderer.RenderConfig;
+import dev.openclosed.squall.api.renderer.support.DelegatingAppender;
 import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.Database;

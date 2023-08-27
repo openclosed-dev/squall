@@ -14,24 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.renderer.markdown;
-
-interface Appender extends Appendable {
-
-    @Override
-    Appender append(CharSequence csq);
-
-    @Override
-    Appender append(CharSequence csq, int start, int end);
-
-    @Override
-    Appender append(char c);
-
-    default Appender appendSpace() {
-        return append(' ');
-    }
-
-    default Appender appendNewLine() {
-        return append('\n');
-    }
-}
+/**
+ * Provides helpers for renderer implementations.
+ */
+package dev.openclosed.squall.api.renderer.support;
