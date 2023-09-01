@@ -31,6 +31,7 @@
         <module>squall-core</module>
         <module>squall-installer</module>
         <module>squall-parser</module>
+        <module>squall-renderer-asciidoc</module>
         <module>squall-renderer-json</module>
         <module>squall-renderer-markdown</module>
         <module>squall-service-json</module>
@@ -65,6 +66,21 @@
                 <groupId>info.picocli</groupId>
                 <artifactId>picocli</artifactId>
                 <version>4.7.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctorj</artifactId>
+                <version>2.5.10</version>
+            </dependency>
+            <dependency>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctorj-api</artifactId>
+                <version>2.5.10</version>
+            </dependency>
+            <dependency>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctorj-pdf</artifactId>
+                <version>2.3.9</version>
             </dependency>
             <dependency>
                 <groupId>org.assertj</groupId>

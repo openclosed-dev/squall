@@ -26,7 +26,7 @@
         <version>0.2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>squall-cli</artifactId>
+    <artifactId>squall-renderer-asciidoc</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -36,10 +36,19 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>info.picocli</groupId>
-            <artifactId>picocli</artifactId>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctorj</artifactId>
+            <scope>runtime</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctorj-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctorj-pdf</artifactId>
+            <scope>runtime</scope>
+        </dependency>
         <!-- test dependencies -->
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -50,24 +59,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>squall-parser</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>squall-renderer-asciidoc</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>squall-renderer-json</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>squall-renderer-markdown</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
@@ -100,27 +91,10 @@
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>dev.openclosed.squall.cli.command.RootCommand</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
             </plugin>
         </plugins>
     </build>
