@@ -14,25 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.parser.handler;
-
-import dev.openclosed.squall.api.spec.DocAnnotation;
-import dev.openclosed.squall.api.spec.DocAnnotationType;
-
-import java.util.Map;
-
 /**
- * Simple implementation of {@link DocAnnotation}.
- * @param type the type of the annotation.
- * @param value the value given for this annotation.
+ * Provides doc comment processor.
  */
-record SimpleDocAnnotation(DocAnnotationType type, String value) implements DocAnnotation {
-
-    @Override
-    public Map<String, Object> toMap() {
-        return Map.of(
-            "type", type().name().toLowerCase(),
-            "value", value()
-        );
-    }
-}
+package dev.openclosed.squall.doc;

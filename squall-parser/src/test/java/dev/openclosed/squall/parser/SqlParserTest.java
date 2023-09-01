@@ -147,33 +147,6 @@ public abstract class SqlParserTest {
         saveSpecAsJson(fileName.replace(".sql", ".json"), spec);
     }
 
-    @ParameterizedTest
-    @MethodSource
-    public void parseDocComment(SqlTestCase test) {
-        SqlParser parser = getParser();
-        int errors = parser.parse(test.firstSql());
-        if (errors > 0) {
-            handleProblems(parser.getProblems());
-        }
-        assertThat(errors).isEqualTo(0);
-        var spec = builder.build();
-        assertThat(spec.toMap()).isEqualTo(test.jsonAsMap());
-    }
-
-    @ParameterizedTest
-    @MethodSource
-    public void parseDocCommentWithError(SqlTestCase test) {
-        SqlParser parser = getParser();
-        int errors = parser.parse(test.firstSql());
-        assertThat(errors).isGreaterThan(0);
-
-        var spec = builder.build();
-        assertThat(spec.toMap()).isEqualTo(test.jsonAsMap());
-
-        var output = handleProblems(parser.getProblems());
-        assertThat(output).isEqualTo(test.output());
-    }
-
     protected abstract SqlParser createParser(DatabaseSpecBuilder builder);
 
     protected final SqlParser getParser() {

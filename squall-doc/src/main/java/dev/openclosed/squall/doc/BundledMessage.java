@@ -14,37 +14,28 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.parser;
+package dev.openclosed.squall.doc;
 
 import dev.openclosed.squall.api.base.Message;
 
-import static dev.openclosed.squall.parser.BundledMessage.of;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
- * Messages for internal use.
+ * Bundled message for this module.
+ * @param key the key of the message.
+ * @param args the arguments which will be passed to the formatter.
  */
-public final class Messages {
+record BundledMessage(String key, Object[] args) implements Message {
 
-    //CHECKSTYLE:OFF
+    private static final String BUNDLE_BASE_NAME = "dev.openclosed.squall.doc.Messages";
 
-    // Common
-
-    public static Message UNEXPECTED_END_OF_INPUT() {
-        return of("UNEXPECTED_END_OF_INPUT");
+    static Message of(String key, Object... args) {
+        return new BundledMessage(key, args);
     }
 
-    // SQL sources
-
-    public static Message INVALID_CHARACTER(char c) {
-        return of("INVALID_CHARACTER", String.valueOf(c));
-    }
-
-    public static Message SYNTAX_ERROR(CharSequence text) {
-        return of("SYNTAX_ERROR", text);
-    }
-
-    //CHECKSTYLE:ON
-
-    private Messages() {
+    @Override
+    public ResourceBundle getBundle(Locale locale) {
+        return ResourceBundle.getBundle(BUNDLE_BASE_NAME, locale);
     }
 }

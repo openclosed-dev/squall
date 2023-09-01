@@ -14,37 +14,34 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.parser.handler;
+package dev.openclosed.squall.doc;
 
-import static org.assertj.core.api.Assertions.*;
-
-import java.util.stream.Stream;
-
-import dev.openclosed.squall.parser.SqlTestCase;
+import dev.openclosed.squall.api.base.Location;
+import dev.openclosed.squall.api.spec.DocAnnotation;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import dev.openclosed.squall.api.base.Location;
-import dev.openclosed.squall.api.parser.CommentHandlers;
-import dev.openclosed.squall.api.spec.DocAnnotation;
+import java.util.stream.Stream;
 
-public final class DocCommentHandlerTest {
+import static org.assertj.core.api.Assertions.assertThat;
+
+public final class DocCommentProcessorTest {
 
     public static Stream<SqlTestCase> testComments() {
         return SqlTestCase.loadFrom("doc-comment.md",
-                DocCommentHandlerTest.class).stream();
+                DocCommentProcessorTest.class).stream();
     }
 
     @ParameterizedTest
     @MethodSource
     public void testComments(SqlTestCase test) {
         var context = new TestParserContext();
-        var handler = CommentHandlers.createDocCommentHandler();
+        var processor = new DocCommentProcessor();
         var sql = test.firstSql();
         int start = sql.indexOf("/**");
         int end = sql.lastIndexOf("*/");
         var comment = sql.subSequence(start, end + 2);
-        handler.handleComment(comment, new Location(1, start + 1, start), context);
+        processor.processComment(comment, new Location(1, start + 1, start), context);
         var annotations = context.getAnnotations();
         var problems = context.getProblems();
         var actual = annotations.stream().map(DocAnnotation::toMap).toList();

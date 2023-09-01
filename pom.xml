@@ -29,6 +29,7 @@
         <module>squall-api</module>
         <module>squall-cli</module>
         <module>squall-core</module>
+        <module>squall-doc</module>
         <module>squall-installer</module>
         <module>squall-parser</module>
         <module>squall-renderer-asciidoc</module>

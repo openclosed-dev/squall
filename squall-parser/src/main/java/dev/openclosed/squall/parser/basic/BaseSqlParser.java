@@ -19,7 +19,7 @@ package dev.openclosed.squall.parser.basic;
 import dev.openclosed.squall.api.base.Location;
 import dev.openclosed.squall.api.base.Message;
 import dev.openclosed.squall.api.base.Problem;
-import dev.openclosed.squall.api.parser.CommentHandler;
+import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.ParserContext;
 import dev.openclosed.squall.api.parser.SqlParser;
@@ -38,7 +38,7 @@ public abstract class BaseSqlParser
 
     private final ParserConfig config;
 
-    private final CommentHandler commentHandler;
+    private final CommentProcessor commentProcessor;
 
     private SqlTokenizer tokenizer;
     private int tokenNo;
@@ -51,9 +51,9 @@ public abstract class BaseSqlParser
 
     private SnippetExtractor snippetExtractor;
 
-    protected BaseSqlParser(ParserConfig config, CommentHandler commentHandler) {
+    protected BaseSqlParser(ParserConfig config, CommentProcessor commentProcessor) {
         this.config = config;
-        this.commentHandler = commentHandler;
+        this.commentProcessor = commentProcessor;
     }
 
     @Override
@@ -175,13 +175,13 @@ public abstract class BaseSqlParser
     protected abstract SqlTokenizer createTokenizer(CharSequence text);
 
     private void handleComment(CommentToken token) {
-        if (this.commentHandler == null) {
+        if (this.commentProcessor == null) {
             return;
         }
         var comment = new TextSegment(getTokenizer().text(), token.start(), token.length());
-        if (commentHandler.canHandle(comment)) {
+        if (commentProcessor.canProcess(comment)) {
             var location = getTokenizer().getTokenLocation();
-            commentHandler.handleComment(comment, location, this);
+            commentProcessor.processComment(comment, location, this);
         }
     }
 

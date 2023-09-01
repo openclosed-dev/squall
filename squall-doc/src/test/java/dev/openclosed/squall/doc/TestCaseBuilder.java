@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.parser;
+package dev.openclosed.squall.doc;
 
-import java.util.ServiceLoader;
+public interface TestCaseBuilder<T> {
 
-/**
- * Provides basic comment handlers.
- */
-public final class CommentHandlers {
+    void setTitle(String title);
 
-    /**
-     * Creates a document comment handler.
-     * @return created document comment handler.
-     */
-    public static CommentHandler createDocCommentHandler() {
-        return ServiceLoader.load(DocCommentHandler.class).findFirst().get();
-    }
+    void addCode(String code, String language);
 
-    private CommentHandlers() {
-    }
+    T build();
 }

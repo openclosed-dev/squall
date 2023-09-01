@@ -16,13 +16,13 @@
 
 package dev.openclosed.squall.renderer.asciidoc;
 
-import dev.openclosed.squall.api.parser.CommentHandlers;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.spec.Dialect;
 import dev.openclosed.squall.api.spec.MajorDialect;
 import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
+import dev.openclosed.squall.doc.DocCommentProcessor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -58,6 +58,6 @@ class PostgreSqlAsciiDocRendererTest extends AsciiDocRendererTest {
         return parserFactory.createParser(
             ParserConfig.getDefault(),
             builder,
-            CommentHandlers.createDocCommentHandler());
+            new DocCommentProcessor());
     }
 }

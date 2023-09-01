@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.parser.handler;
+package dev.openclosed.squall.doc;
 
 import dev.openclosed.squall.api.base.Location;
 import dev.openclosed.squall.api.base.Message;

@@ -37,13 +37,23 @@ public interface SqlParserFactory {
      * Create a new parser.
      * @param config the configuration for the parser.
      * @param builder the builder of the database specification.
-     * @param commentHandler the handler of comments.
+     * @return newly created parser.
+     */
+    default SqlParser createParser(ParserConfig config, DatabaseSpecBuilder builder) {
+        return createParser(config, builder, CommentProcessor.empty());
+    }
+
+    /**
+     * Create a new parser.
+     * @param config the configuration for the parser.
+     * @param builder the builder of the database specification.
+     * @param commentProcessor the processor of comments.
      * @return newly created parser.
      */
     SqlParser createParser(
             ParserConfig config,
             DatabaseSpecBuilder builder,
-            CommentHandler commentHandler);
+            CommentProcessor commentProcessor);
 
     static SqlParserFactory get(Dialect dialect) {
         Objects.requireNonNull(dialect);

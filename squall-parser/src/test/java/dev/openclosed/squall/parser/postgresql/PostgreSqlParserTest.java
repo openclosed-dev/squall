@@ -24,7 +24,6 @@ import dev.openclosed.squall.parser.SqlTestCase;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import dev.openclosed.squall.api.parser.CommentHandlers;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
@@ -38,10 +37,7 @@ public final class PostgreSqlParserTest extends SqlParserTest {
 
     @Override
     protected SqlParser createParser(DatabaseSpecBuilder builder) {
-        return PARSER_FACTORY.createParser(
-            PARSER_CONFIG,
-            builder,
-            CommentHandlers.createDocCommentHandler());
+        return PARSER_FACTORY.createParser(PARSER_CONFIG, builder);
     }
 
     // Additional tests
@@ -106,13 +102,5 @@ public final class PostgreSqlParserTest extends SqlParserTest {
         return Stream.of(
           "postgresql/redmine-schema.sql"
         );
-    }
-
-    public static Stream<SqlTestCase> parseDocComment() {
-        return loadTests("doc-comment.md");
-    }
-
-    public static Stream<SqlTestCase> parseDocCommentWithError() {
-        return loadTests("doc-comment-error.md");
     }
 }

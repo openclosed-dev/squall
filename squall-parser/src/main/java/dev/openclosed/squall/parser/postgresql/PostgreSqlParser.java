@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.parser.postgresql;
 
-import dev.openclosed.squall.api.parser.CommentHandler;
+import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.spec.ExpressionFactory;
 import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
@@ -38,9 +38,9 @@ final class PostgreSqlParser extends BaseSqlParser
         ParserConfig config,
         DatabaseSpecBuilder builder,
         ExpressionFactory expressionFactory,
-        CommentHandler commentHandler,
+        CommentProcessor commentProcessor,
         Map<String, Keyword> keywords) {
-        super(config, commentHandler);
+        super(config, commentProcessor);
         this.builder = builder;
         this.expressionFactory = expressionFactory;
         this.keywords = keywords;

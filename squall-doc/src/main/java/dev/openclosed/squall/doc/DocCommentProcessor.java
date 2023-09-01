@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.parser.handler;
+package dev.openclosed.squall.doc;
+
+import dev.openclosed.squall.api.base.Location;
+import dev.openclosed.squall.api.parser.CommentProcessor;
+import dev.openclosed.squall.api.parser.ParserContext;
+import dev.openclosed.squall.api.spec.DocAnnotation;
+import dev.openclosed.squall.api.spec.DocAnnotationType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import dev.openclosed.squall.api.base.Location;
-import dev.openclosed.squall.api.parser.DocCommentHandler;
-import dev.openclosed.squall.api.parser.ParserContext;
-import dev.openclosed.squall.api.spec.DocAnnotation;
-import dev.openclosed.squall.api.spec.DocAnnotationType;
-import dev.openclosed.squall.parser.Messages;
-
-/**
- * An implementation of {@link DocCommentHandler}.
- */
-public final class DefaultDocCommentHandler implements DocCommentHandler {
+public class DocCommentProcessor implements CommentProcessor {
 
     private final List<DocAnnotation> annotations = new ArrayList<>();
     private final StringBuilder textBuilder = new StringBuilder();
@@ -58,11 +54,11 @@ public final class DefaultDocCommentHandler implements DocCommentHandler {
     private DocAnnotationType annotationType;
     private boolean explicit;
 
-    public DefaultDocCommentHandler() {
+    public DocCommentProcessor() {
     }
 
     @Override
-    public boolean canHandle(CharSequence text) {
+    public boolean canProcess(CharSequence text) {
         Objects.requireNonNull(text);
 
         if (text.length() < 5) {
@@ -77,7 +73,7 @@ public final class DefaultDocCommentHandler implements DocCommentHandler {
     }
 
     @Override
-    public void handleComment(CharSequence text, Location location, ParserContext context) {
+    public void processComment(CharSequence text, Location location, ParserContext context) {
         Objects.requireNonNull(text);
         Objects.requireNonNull(location);
 

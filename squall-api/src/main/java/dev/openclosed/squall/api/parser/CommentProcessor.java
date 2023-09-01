@@ -19,19 +19,25 @@ package dev.openclosed.squall.api.parser;
 import dev.openclosed.squall.api.base.Location;
 
 /**
- * Comment handler.
+ * Comment processor.
  */
-public interface CommentHandler {
+public interface CommentProcessor {
 
-    default boolean canHandle(CharSequence text) {
+    CommentProcessor EMPTY = new CommentProcessor() { };
+
+    default boolean canProcess(CharSequence text) {
         return false;
     }
 
-    default void handleComment(
+    default void processComment(
             CharSequence text,
             Location location,
             ParserContext context
             ) {
         // do nothing
+    }
+
+    static CommentProcessor empty() {
+        return EMPTY;
     }
 }

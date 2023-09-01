@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-module dev.openclosed.squall.parser {
+module dev.openclosed.squall.doc {
 
     requires dev.openclosed.squall.api;
 
-    provides dev.openclosed.squall.api.parser.SqlParserFactory
-        with dev.openclosed.squall.parser.postgresql.PostgreSqlParserFactory;
+    exports dev.openclosed.squall.doc;
 }
+

@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 
 import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.MajorDialect;
+import dev.openclosed.squall.doc.DocCommentProcessor;
 import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import dev.openclosed.squall.api.parser.CommentHandlers;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.renderer.RenderConfig;
@@ -71,7 +71,7 @@ public final class JsonRendererTest {
         var parser = parserFactory.createParser(
             ParserConfig.getDefault(),
             builder,
-            CommentHandlers.createDocCommentHandler());
+            new DocCommentProcessor());
         parser.parse(sql);
         return builder.build();
     }

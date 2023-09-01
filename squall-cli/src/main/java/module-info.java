@@ -3,6 +3,7 @@
  */
 open module dev.openclosed.squall.cli {
     requires transitive dev.openclosed.squall.api;
+    requires dev.openclosed.squall.doc;
     requires info.picocli;
 
     // the only package to be exported

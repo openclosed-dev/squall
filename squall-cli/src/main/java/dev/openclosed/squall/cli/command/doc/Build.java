@@ -18,7 +18,6 @@ package dev.openclosed.squall.cli.command.doc;
 
 import dev.openclosed.squall.api.base.Problem;
 import dev.openclosed.squall.api.config.RootConfig;
-import dev.openclosed.squall.api.parser.CommentHandlers;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.renderer.RenderConfig;
@@ -28,6 +27,7 @@ import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 import dev.openclosed.squall.cli.base.Messages;
 import dev.openclosed.squall.cli.spi.CommandException;
 import dev.openclosed.squall.cli.spi.Subcommand;
+import dev.openclosed.squall.doc.DocCommentProcessor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Parameters;
@@ -91,10 +91,9 @@ final class Build implements Subcommand {
         ParserConfig parserConfig,
         DatabaseSpecBuilder specBuilder) {
         var parserFactory = SqlParserFactory.get(parserConfig.dialect());
-        var commentHandler = CommentHandlers.createDocCommentHandler();
         var parser = parserFactory.createParser(parserConfig,
             specBuilder,
-            commentHandler);
+            new DocCommentProcessor());
         int failures = 0;
         for (String source : sources) {
             Path fullPath = resolvePath(source);
