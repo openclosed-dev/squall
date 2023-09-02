@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022-2023 The Squall Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 module dev.openclosed.squall.api {
 
     exports dev.openclosed.squall.api.base;
@@ -7,13 +23,12 @@ module dev.openclosed.squall.api {
     exports dev.openclosed.squall.api.renderer.support;
     exports dev.openclosed.squall.api.spi;
     exports dev.openclosed.squall.api.spec;
-    exports dev.openclosed.squall.api.spec.builder;
 
     uses dev.openclosed.squall.api.config.ConfigLoader;
     uses dev.openclosed.squall.api.parser.SqlParserFactory;
     uses dev.openclosed.squall.api.renderer.RendererFactory;
     uses dev.openclosed.squall.api.spec.ExpressionFactory;
-    uses dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
+    uses dev.openclosed.squall.api.spec.DatabaseSpec.Builder;
     uses dev.openclosed.squall.api.spi.JsonReader;
     uses dev.openclosed.squall.api.spi.JsonWriter;
     uses dev.openclosed.squall.api.spi.RendererMessagesProvider;

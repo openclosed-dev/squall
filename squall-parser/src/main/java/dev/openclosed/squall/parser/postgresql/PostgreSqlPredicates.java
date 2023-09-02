@@ -17,14 +17,9 @@
 package dev.openclosed.squall.parser.postgresql;
 
 import dev.openclosed.squall.parser.basic.Keyword;
-import dev.openclosed.squall.parser.basic.SqlPredicates;
+import dev.openclosed.squall.parser.basic.TokenPredicates;
 
-public interface PostgreSqlPredicates extends SqlPredicates {
-
-    @Override
-    default boolean testTemporary(Keyword keyword) {
-        return keyword == PostgreSqlKeyword.TEMP || keyword == PostgreSqlKeyword.TEMPORARY;
-    }
+public interface PostgreSqlPredicates extends TokenPredicates {
 
     @Override
     default boolean testSchemaObjectModifier(Keyword keyword) {

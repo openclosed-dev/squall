@@ -18,6 +18,7 @@ package dev.openclosed.squall.parser.postgresql;
 
 import java.util.stream.Stream;
 
+import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.MajorDialect;
 import dev.openclosed.squall.parser.SqlParserTest;
 import dev.openclosed.squall.parser.SqlTestCase;
@@ -26,7 +27,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 
 public final class PostgreSqlParserTest extends SqlParserTest {
 
@@ -36,7 +36,7 @@ public final class PostgreSqlParserTest extends SqlParserTest {
     );
 
     @Override
-    protected SqlParser createParser(DatabaseSpecBuilder builder) {
+    protected SqlParser createParser(DatabaseSpec.Builder builder) {
         return PARSER_FACTORY.createParser(PARSER_CONFIG, builder);
     }
 

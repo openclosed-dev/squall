@@ -19,9 +19,9 @@ package dev.openclosed.squall.renderer.asciidoc;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
+import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.Dialect;
 import dev.openclosed.squall.api.spec.MajorDialect;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 import dev.openclosed.squall.doc.DocCommentProcessor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -54,7 +54,7 @@ class PostgreSqlAsciiDocRendererTest extends AsciiDocRendererTest {
     }
 
     @Override
-    protected SqlParser createParser(DatabaseSpecBuilder builder) {
+    protected SqlParser createParser(DatabaseSpec.Builder builder) {
         return parserFactory.createParser(
             ParserConfig.getDefault(),
             builder,

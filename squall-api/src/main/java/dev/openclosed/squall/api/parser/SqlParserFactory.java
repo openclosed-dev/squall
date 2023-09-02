@@ -19,8 +19,8 @@ package dev.openclosed.squall.api.parser;
 import java.util.Objects;
 import java.util.ServiceLoader;
 
+import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.Dialect;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 
 /**
  * A factory of SQL parsers.
@@ -39,7 +39,7 @@ public interface SqlParserFactory {
      * @param builder the builder of the database specification.
      * @return newly created parser.
      */
-    default SqlParser createParser(ParserConfig config, DatabaseSpecBuilder builder) {
+    default SqlParser createParser(ParserConfig config, DatabaseSpec.Builder builder) {
         return createParser(config, builder, CommentProcessor.empty());
     }
 
@@ -52,7 +52,7 @@ public interface SqlParserFactory {
      */
     SqlParser createParser(
             ParserConfig config,
-            DatabaseSpecBuilder builder,
+            DatabaseSpec.Builder builder,
             CommentProcessor commentProcessor);
 
     static SqlParserFactory get(Dialect dialect) {

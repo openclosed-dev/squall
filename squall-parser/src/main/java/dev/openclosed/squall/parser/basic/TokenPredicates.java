@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-/**
- * SQL specification builders.
- */
-package dev.openclosed.squall.api.spec.builder;
+package dev.openclosed.squall.parser.basic;
+
+public interface TokenPredicates {
+
+    default boolean testSchemaObjectModifier(Keyword keyword) {
+        return false;
+    }
+}

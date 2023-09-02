@@ -18,18 +18,17 @@ package dev.openclosed.squall.core.spec.builder;
 
 import static org.assertj.core.api.Assertions.*;
 
+import dev.openclosed.squall.api.spec.DatabaseSpec;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
-
 public final class DatabaseSpecBuilderTest {
 
-    private DatabaseSpecBuilder sut;
+    private DatabaseSpec.Builder sut;
 
     @BeforeEach
     public void setUp() {
-        sut = DatabaseSpecBuilder.newBuilder();
+        sut = DatabaseSpec.builder();
     }
 
     @Test

@@ -23,7 +23,6 @@ import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.RendererFactory;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 import dev.openclosed.squall.cli.base.Messages;
 import dev.openclosed.squall.cli.spi.CommandException;
 import dev.openclosed.squall.cli.spi.Subcommand;
@@ -80,7 +79,7 @@ final class Build implements Subcommand {
     }
 
     private DatabaseSpec readDatabaseSpec(RootConfig config) {
-        var specBuilder = DatabaseSpecBuilder.newBuilder();
+        var specBuilder = DatabaseSpec.builder();
         config.title().ifPresent(specBuilder::setTitle);
         parseSqlSources(config.sources(), config.parser(), specBuilder);
         return specBuilder.build();
@@ -89,7 +88,7 @@ final class Build implements Subcommand {
     private void parseSqlSources(
         List<String> sources,
         ParserConfig parserConfig,
-        DatabaseSpecBuilder specBuilder) {
+        DatabaseSpec.Builder specBuilder) {
         var parserFactory = SqlParserFactory.get(parserConfig.dialect());
         var parser = parserFactory.createParser(parserConfig,
             specBuilder,

@@ -14,4 +14,4 @@
 # limitations under the License.
 #
 
-dev.openclosed.squall.core.spec.builder.DefaultDatabaseSpecBuilder
+dev.openclosed.squall.core.spec.builder.DatabaseSpecBuilder

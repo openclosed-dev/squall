@@ -35,7 +35,7 @@ import dev.openclosed.squall.api.spec.StandardDataType;
 /**
  * Standard SQL grammar.
  */
-public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredicates, SqlHandler {
+public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPredicates {
 
     @Override
     default void statements() {
@@ -103,7 +103,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         consume(); // DATABASE
         var databaseName = expectIdentifier(IdentifierType.OBJECT_NAME);
         consume();
-        handleDatabase(databaseName, annotations);
+        builder().addDatabase(databaseName, annotations);
     }
 
     default void createSchema(List<DocAnnotation> annotations) {
@@ -114,7 +114,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         }
         var schemaName = expectIdentifier(IdentifierType.OBJECT_NAME);
         consume();
-        handleSchema(schemaName, annotations);
+        builder().addSchema(schemaName, annotations);
     }
 
     default void ifExists() {
@@ -143,7 +143,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
             ifNotExists();
         }
         String[] name = schemaObjectName();
-        handleSequence(name[0], name[1], annotations);
+        builder().addSequence(name[0], name[1], annotations);
 
         Token token = next();
         while (token != SpecialSymbol.SEMICOLON) {
@@ -186,7 +186,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
                 yield null;
             }
         };
-        this.handleSequenceDataType(dataType);
+        builder().addSequenceDataType(dataType);
         consume();
     }
 
@@ -196,7 +196,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         if (next().isSameAs(StandardKeyword.WITH)) {
             consume();
         }
-        handleSequenceStart(integerLiteral());
+        builder().addSequenceStart(integerLiteral());
     }
 
     default void sequenceIncrement() {
@@ -205,19 +205,19 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         if (next().isSameAs(StandardKeyword.BY)) {
             consume();
         }
-        handleSequenceIncrement(integerLiteral());
+        builder().addSequenceIncrement(integerLiteral());
     }
 
     default void sequenceMaxValue() {
         expect(StandardKeyword.MAXVALUE);
         consume();
-        handleSequenceMaxValue(integerLiteral());
+        builder().addSequenceMaxValue(integerLiteral());
     }
 
     default void sequenceMinValue() {
         expect(StandardKeyword.MINVALUE);
         consume();
-        handleSequenceMinValue(integerLiteral());
+        builder().addSequenceMinValue(integerLiteral());
     }
 
     default void createTable(List<DocAnnotation> annotations) {
@@ -227,7 +227,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
             ifNotExists();
         }
         String[] name = schemaObjectName();
-        handleTable(name[0], name[1], annotations);
+        builder().addTable(name[0], name[1], annotations);
         tableComponents();
     }
 
@@ -241,7 +241,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
             consume();
         }
         String[] name = schemaObjectName();
-        handleTableToAlter(name[0], name[1]);
+        builder().alterTable(name[0], name[1]);
 
         for (;;) {
             Token token = next();
@@ -355,7 +355,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         consume();
         var columns = columnNameList();
         commonConstraintModifiers();
-        handleTablePrimaryKey(constraintName, columns);
+        builder().addTablePrimaryKey(constraintName, columns);
     }
 
     default void tableUniqueConstraint(String constraintName) {
@@ -366,7 +366,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         }
         var columns = columnNameList();
         commonConstraintModifiers();
-        handleTableUniqueConstraint(constraintName, columns);
+        builder().addTableUniqueConstraint(constraintName, columns);
     }
 
     default void tableForeignKey(String constraintName) {
@@ -481,7 +481,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         String columnName = expectIdentifier(IdentifierType.OBJECT_NAME);
         consume();
         var dataType = dataType();
-        handleColumn(columnName, dataType, annotations);
+        builder().addTableColumn(columnName, dataType, annotations);
         columnConstraints(columnName);
     }
 
@@ -520,26 +520,26 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
             case DEFAULT -> {
                 consume();
                 commonConstraintModifiers();
-                handleColumnDefaultValue(defaultValue());
+                builder().addColumnDefaultValue(defaultValue());
             }
             case NOT -> {
                 consume();
                 expect(StandardKeyword.NULL);
                 consume();
                 commonConstraintModifiers();
-                handleColumnNullable(false);
+                builder().addColumnNullable(false);
             }
             case NULL -> {
                 consume();
                 commonConstraintModifiers();
-                handleColumnNullable(true);
+                builder().addColumnNullable(true);
             }
             case PRIMARY -> {
                 consume();
                 expect(StandardKeyword.KEY);
                 consume();
                 commonConstraintModifiers();
-                handleTablePrimaryKey(constraintName, List.of(columnName));
+                builder().addTablePrimaryKey(constraintName, List.of(columnName));
             }
             case UNIQUE -> {
                 consume();
@@ -547,7 +547,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
                     nullsDistinct();
                 }
                 commonConstraintModifiers();
-                handleTableUniqueConstraint(constraintName, List.of(columnName));
+                builder().addTableUniqueConstraint(constraintName, List.of(columnName));
             }
             case REFERENCES -> references(constraintName, List.of(columnName));
             default -> {
@@ -582,7 +582,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
             token = next();
         }
         commonConstraintModifiers();
-        handleTableForeignKey(constraintName, tableRef, columns, refColumns);
+        builder().addTableForeignKey(constraintName, tableRef, columns, refColumns);
     }
 
     default SchemaObjectRef tableReference() {
@@ -866,7 +866,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, SqlPredi
         checkConstraintModifier();
         commonConstraintModifiers();
 
-        handleCheckConstraint(constraintName, expression);
+        // Add check constraint
     }
 
     default void checkConstraintModifier() {

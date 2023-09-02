@@ -20,9 +20,9 @@ import dev.openclosed.squall.api.base.Problem;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
+import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.Dialect;
 import dev.openclosed.squall.api.spec.MajorDialect;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,7 +41,7 @@ public final class SqlParserTest {
         DIALECT.dialectName(), ""
     );
 
-    private DatabaseSpecBuilder builder;
+    private DatabaseSpec.Builder builder;
     private SqlParser sqlParser;
 
     @BeforeAll
@@ -51,7 +51,7 @@ public final class SqlParserTest {
 
     @BeforeEach
     public void setUp() {
-        this.builder = DatabaseSpecBuilder.newBuilder();
+        this.builder = DatabaseSpec.builder();
         this.sqlParser = createParser(this.builder);
     }
 
@@ -94,7 +94,7 @@ public final class SqlParserTest {
         return sqlParser;
     }
 
-    SqlParser createParser(DatabaseSpecBuilder builder) {
+    SqlParser createParser(DatabaseSpec.Builder builder) {
         return parserFactory.createParser(
             PARSER_CONFIG,
             builder,

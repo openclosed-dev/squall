@@ -18,25 +18,23 @@ package dev.openclosed.squall.parser.postgresql;
 
 import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.parser.ParserConfig;
+import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.ExpressionFactory;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 import dev.openclosed.squall.parser.basic.BaseSqlParser;
-import dev.openclosed.squall.parser.basic.BuildingSqlHandler;
 import dev.openclosed.squall.parser.basic.Keyword;
 import dev.openclosed.squall.parser.basic.SqlTokenizer;
 
 import java.util.Map;
 
-final class PostgreSqlParser extends BaseSqlParser
-    implements PostgreSqlGrammar, BuildingSqlHandler {
+final class PostgreSqlParser extends BaseSqlParser implements PostgreSqlGrammar {
 
-    private final DatabaseSpecBuilder builder;
+    private final DatabaseSpec.Builder builder;
     private final ExpressionFactory expressionFactory;
     private final Map<String, Keyword> keywords;
 
     PostgreSqlParser(
         ParserConfig config,
-        DatabaseSpecBuilder builder,
+        DatabaseSpec.Builder builder,
         ExpressionFactory expressionFactory,
         CommentProcessor commentProcessor,
         Map<String, Keyword> keywords) {
@@ -53,14 +51,12 @@ final class PostgreSqlParser extends BaseSqlParser
         return new PostgreSqlTokenizer(text, this.keywords);
     }
 
-    // BuildingSqlHandler
+    // SqlGrammarSupport
 
     @Override
-    public DatabaseSpecBuilder builder() {
+    public DatabaseSpec.Builder builder() {
         return this.builder;
     }
-
-    // SqlGrammarSupport
 
     @Override
     public ExpressionFactory expressionFactory() {

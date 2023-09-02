@@ -20,12 +20,134 @@ import dev.openclosed.squall.api.base.MapSource;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ServiceLoader;
 
+/**
+ * Database specification.
+ */
 public interface DatabaseSpec extends MapSource {
 
     void walkSpec(SpecVisitor visitor, ComponentOrder order);
 
+    /**
+     * Returns the title of the specification.
+     * @return the title of the specification.
+     */
     Optional<String> title();
 
+    /**
+     * Returns the list of the databases defined in this specification.
+     * @return the list of the databases.
+     */
     List<Database> databases();
+
+    /**
+     * Creates a new builder.
+     * @return created builder instance.
+     */
+    static Builder builder() {
+        return ServiceLoader.load(Builder.class).findFirst().get();
+    }
+
+    /**
+     * Returns an empty builder.
+     * @return an empty builder.
+     */
+    static Builder emptyBuilder() {
+        return EMPTY_BUILDER;
+    }
+
+    /**
+     * A builder of database specification.
+     */
+    interface Builder {
+
+        default Builder setTitle(String title) {
+            return this;
+        }
+
+        default Builder addDatabase(String name, List<DocAnnotation> annotations) {
+            return this;
+        }
+
+        default Builder changeCurrentDatabase(String name) {
+            return this;
+        }
+
+        default Builder addSchema(String name, List<DocAnnotation> annotations) {
+            return this;
+        }
+
+        // Table
+
+        default Builder addTable(String schemaName, String tableName, List<DocAnnotation> annotations) {
+            return this;
+        }
+
+        default Builder alterTable(String schemaName, String tableName) {
+            return this;
+        }
+
+        default Builder addTableColumn(String columnName, DataType dataType, List<DocAnnotation> annotations) {
+            return this;
+        }
+
+        default Builder addTablePrimaryKey(String constraintName, List<String> columnNames) {
+            return this;
+        }
+
+        default Builder addTableForeignKey(
+            String constraintName,
+            SchemaObjectRef table,
+            List<String> columns,
+            List<String> refColumns) {
+            return this;
+        }
+
+        default Builder addTableUniqueConstraint(String constraintName, List<String> columnNames) {
+            return this;
+        }
+
+        // Column
+
+        default Builder addColumnNullable(boolean isNullable) {
+            return this;
+        }
+
+        default Builder addColumnDefaultValue(Expression defaultValue) {
+            return this;
+        }
+
+        // Sequence
+
+        default Builder addSequence(String schemaName, String sequenceName, List<DocAnnotation> annotations) {
+            return this;
+        }
+
+        default Builder addSequenceDataType(IntegerDataType dataType) {
+            return this;
+        }
+
+        default Builder addSequenceStart(long start) {
+            return this;
+        }
+
+        default Builder addSequenceIncrement(long increment) {
+            return this;
+        }
+
+        default Builder addSequenceMaxValue(long maxValue) {
+            return this;
+        }
+
+        default Builder addSequenceMinValue(long minValue) {
+            return this;
+        }
+
+        default DatabaseSpec build() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    Builder EMPTY_BUILDER = new Builder() { };
 }

@@ -30,13 +30,12 @@ import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.IntegerDataType;
 import dev.openclosed.squall.api.spec.SchemaObjectRef;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 import dev.openclosed.squall.core.spec.DefaultDatabaseSpec;
 
 /**
- * The default implementation of {@link DatabaseSpecBuilder}.
+ * The default implementation of {@link DatabaseSpec.Builder}.
  */
-public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
+public final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
 
     private final Map<String, DatabaseBuilder> databaseBuilders = new LinkedHashMap<>();
     private DatabaseBuilder currentDatabaseBuilder;
@@ -46,14 +45,14 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     private String title;
 
     @Override
-    public DatabaseSpecBuilder setTitle(String title) {
+    public DatabaseSpec.Builder setTitle(String title) {
         Objects.requireNonNull(title);
         this.title = title;
         return this;
     }
 
     @Override
-    public DatabaseSpecBuilder addDatabase(String name, List<DocAnnotation> annotations) {
+    public DatabaseSpec.Builder addDatabase(String name, List<DocAnnotation> annotations) {
         Objects.requireNonNull(name);
         addAnnotatedDatabase(name, annotations, State.DEFINED);
         changeCurrentDatabase(name);
@@ -61,7 +60,7 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder changeCurrentDatabase(String name) {
+    public DatabaseSpec.Builder changeCurrentDatabase(String name) {
         Objects.requireNonNull(name);
         this.currentDatabaseBuilder = findDatabase(name);
         return this;
@@ -75,14 +74,14 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder addSchema(String name, List<DocAnnotation> annotations) {
+    public DatabaseSpec.Builder addSchema(String name, List<DocAnnotation> annotations) {
         Objects.requireNonNull(name);
         getCurrentDatabase().addSchema(name, annotations);
         return this;
     }
 
     @Override
-    public DatabaseSpecBuilder addTable(String schemaName, String tableName, List<DocAnnotation> annotations) {
+    public DatabaseSpec.Builder addTable(String schemaName, String tableName, List<DocAnnotation> annotations) {
         Objects.requireNonNull(tableName);
         SchemaBuilder schema = getCurrentDatabase().getSchema(schemaName);
         TableBuilder tableBuilder = schema.addTable(tableName, annotations);
@@ -91,7 +90,7 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder alterTable(String schemaName, String tableName) {
+    public DatabaseSpec.Builder alterTable(String schemaName, String tableName) {
         Objects.requireNonNull(tableName);
         SchemaBuilder schema = getCurrentDatabase().getSchema(schemaName);
         TableBuilder tableBuilder = schema.getTableToAlter(tableName);
@@ -100,7 +99,7 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder addTableColumn(String columnName, DataType dataType, List<DocAnnotation> annotations) {
+    public DatabaseSpec.Builder addTableColumn(String columnName, DataType dataType, List<DocAnnotation> annotations) {
         Objects.requireNonNull(columnName);
         Objects.requireNonNull(dataType);
         ColumnBuilder builder = requireCurrentTable().addColumn(columnName, dataType, annotations);
@@ -109,13 +108,13 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder addTablePrimaryKey(String constraintName, List<String> columnNames) {
+    public DatabaseSpec.Builder addTablePrimaryKey(String constraintName, List<String> columnNames) {
         requireCurrentTable().setPrimaryKey(constraintName, columnNames);
         return this;
     }
 
     @Override
-    public DatabaseSpecBuilder addTableForeignKey(
+    public DatabaseSpec.Builder addTableForeignKey(
         String constraintName,
         SchemaObjectRef tableRef,
         List<String> columns,
@@ -128,27 +127,27 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder addTableUniqueConstraint(
+    public DatabaseSpec.Builder addTableUniqueConstraint(
         String constraintName, List<String> columnNames) {
         requireCurrentTable().addUnique(constraintName, columnNames);
         return this;
     }
 
     @Override
-    public DatabaseSpecBuilder addColumnNullable(boolean isNullable) {
+    public DatabaseSpec.Builder addColumnNullable(boolean isNullable) {
         requireCurrentColumn().setRequired(!isNullable);
         return this;
     }
 
     @Override
-    public DatabaseSpecBuilder addColumnDefaultValue(Expression defaultValue) {
+    public DatabaseSpec.Builder addColumnDefaultValue(Expression defaultValue) {
         Objects.requireNonNull(defaultValue);
         requireCurrentColumn().setDefaultValue(defaultValue);
         return this;
     }
 
     @Override
-    public DatabaseSpecBuilder addSequence(String schemaName, String sequenceName, List<DocAnnotation> annotations) {
+    public DatabaseSpec.Builder addSequence(String schemaName, String sequenceName, List<DocAnnotation> annotations) {
         Objects.requireNonNull(sequenceName);
         SchemaBuilder schema = getCurrentDatabase().getSchema(schemaName);
         SequenceBuilder builder = schema.addSequence(sequenceName, annotations);
@@ -157,32 +156,32 @@ public final class DefaultDatabaseSpecBuilder implements DatabaseSpecBuilder {
     }
 
     @Override
-    public DatabaseSpecBuilder addSequenceDataType(IntegerDataType dataType) {
+    public DatabaseSpec.Builder addSequenceDataType(IntegerDataType dataType) {
         Objects.requireNonNull(dataType);
         requireCurrentSequence().setDataType(dataType);
         return this;
     }
 
     @Override
-    public DatabaseSpecBuilder addSequenceStart(long start) {
+    public DatabaseSpec.Builder addSequenceStart(long start) {
         requireCurrentSequence().setStart(start);
         return this;
     }
 
     @Override
-    public DatabaseSpecBuilder addSequenceIncrement(long increment) {
+    public DatabaseSpec.Builder addSequenceIncrement(long increment) {
         requireCurrentSequence().setIncrement(increment);
         return this;
     }
 
     @Override
-    public DatabaseSpecBuilder addSequenceMaxValue(long maxValue) {
+    public DatabaseSpec.Builder addSequenceMaxValue(long maxValue) {
         requireCurrentSequence().setMaxValue(maxValue);
         return this;
     }
 
     @Override
-    public DatabaseSpecBuilder addSequenceMinValue(long minValue) {
+    public DatabaseSpec.Builder addSequenceMinValue(long minValue) {
         requireCurrentSequence().setMinValue(minValue);
         return this;
     }

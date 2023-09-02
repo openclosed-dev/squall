@@ -36,7 +36,6 @@ import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.RendererFactory;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 
 public final class JsonRendererTest {
 
@@ -67,7 +66,7 @@ public final class JsonRendererTest {
 
     private DatabaseSpec parseSpec(String name) throws IOException {
         var sql = readResource(name);
-        var builder = DatabaseSpecBuilder.newBuilder();
+        var builder = DatabaseSpec.builder();
         var parser = parserFactory.createParser(
             ParserConfig.getDefault(),
             builder,

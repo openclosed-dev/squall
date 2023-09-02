@@ -26,12 +26,12 @@ import java.util.Locale;
 import java.util.stream.Stream;
 
 import dev.openclosed.squall.api.parser.SqlParser;
+import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.Dialect;
 import org.apache.commons.io.file.PathUtils;
 
 import dev.openclosed.squall.api.config.ConfigLoader;
 import dev.openclosed.squall.api.renderer.RendererFactory;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 
 abstract class MarkdownRendererTest {
 
@@ -47,7 +47,7 @@ abstract class MarkdownRendererTest {
     }
 
     protected void testRenderer(RenderTest test, Dialect dialect) throws IOException {
-        var builder = DatabaseSpecBuilder.newBuilder();
+        var builder = DatabaseSpec.builder();
         var parser = createParser(builder);
 
         for (var sql : test.sql()) {
@@ -72,7 +72,7 @@ abstract class MarkdownRendererTest {
         return RenderTest.loadFrom(in).stream();
     }
 
-    protected abstract SqlParser createParser(DatabaseSpecBuilder builder);
+    protected abstract SqlParser createParser(DatabaseSpec.Builder builder);
 
     private static Path prepareDirectory(Dialect dialect, String title) throws IOException {
         Path parentDir = BASE_DIR.resolve(dialect.dialectName());

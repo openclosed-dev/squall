@@ -37,7 +37,6 @@ import org.junit.jupiter.api.BeforeEach;
 
 import dev.openclosed.squall.api.base.Problem;
 import dev.openclosed.squall.api.parser.SqlParser;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -45,14 +44,14 @@ public abstract class SqlParserTest {
 
     private static final Path BASE_OUTPUT_DIR = Path.of("target", "test-output");
 
-    private DatabaseSpecBuilder builder;
+    private DatabaseSpec.Builder builder;
     private SqlParser sqlParser;
 
     private static JsonWriter jsonWriter;
 
     @BeforeEach
     public final void setUp() {
-        this.builder = DatabaseSpecBuilder.newBuilder();
+        this.builder = DatabaseSpec.builder();
         this.sqlParser = createParser(this.builder);
     }
 
@@ -147,7 +146,7 @@ public abstract class SqlParserTest {
         saveSpecAsJson(fileName.replace(".sql", ".json"), spec);
     }
 
-    protected abstract SqlParser createParser(DatabaseSpecBuilder builder);
+    protected abstract SqlParser createParser(DatabaseSpec.Builder builder);
 
     protected final SqlParser getParser() {
         return sqlParser;

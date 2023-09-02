@@ -20,13 +20,14 @@ import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
+import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.Dialect;
 import dev.openclosed.squall.api.spec.ExpressionFactory;
 import dev.openclosed.squall.api.spec.MajorDialect;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 import dev.openclosed.squall.parser.basic.Keyword;
 
 import java.util.Map;
+import java.util.Objects;
 
 public final class PostgreSqlParserFactory implements SqlParserFactory {
 
@@ -39,9 +40,14 @@ public final class PostgreSqlParserFactory implements SqlParserFactory {
     }
 
     @Override
-    public SqlParser createParser(ParserConfig config,
-            DatabaseSpecBuilder builder,
-            CommentProcessor commentProcessor) {
+    public SqlParser createParser(
+        ParserConfig config,
+        DatabaseSpec.Builder builder,
+        CommentProcessor commentProcessor) {
+
+        Objects.requireNonNull(config);
+        Objects.requireNonNull(builder);
+        Objects.requireNonNull(commentProcessor);
 
         return new PostgreSqlParser(
             config, builder, getExpressionFactory(), commentProcessor, getKeywords());

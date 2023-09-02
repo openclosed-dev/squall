@@ -19,8 +19,8 @@ package dev.openclosed.squall.renderer.asciidoc;
 import dev.openclosed.squall.api.config.ConfigLoader;
 import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.renderer.RendererFactory;
+import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.Dialect;
-import dev.openclosed.squall.api.spec.builder.DatabaseSpecBuilder;
 import org.apache.commons.io.file.PathUtils;
 
 import java.io.IOException;
@@ -46,7 +46,7 @@ abstract class AsciiDocRendererTest {
     }
 
     protected void testRenderer(TestCase test, Dialect dialect) throws IOException {
-        var builder = DatabaseSpecBuilder.newBuilder();
+        var builder = DatabaseSpec.builder();
         var parser = createParser(builder);
 
         for (var sql : test.sql()) {
@@ -71,7 +71,7 @@ abstract class AsciiDocRendererTest {
         return TestCase.loadFrom(in).stream();
     }
 
-    protected abstract SqlParser createParser(DatabaseSpecBuilder builder);
+    protected abstract SqlParser createParser(DatabaseSpec.Builder builder);
 
     private static Path prepareDirectory(Dialect dialect, String title) throws IOException {
         Path parentDir = BASE_DIR.resolve(dialect.dialectName());
