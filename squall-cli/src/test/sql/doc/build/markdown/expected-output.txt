@@ -1,7 +1,0 @@
-Loading the configuration "squall.json"...
-Loaded the configuration successfully.
-Parsing a SQL source file "schema.sql"...
-Parsed a SQL source file "schema.sql" successfully.
-Renderer "markdown" is rendering the spec into "./target/test-runs/doc/build/markdown/output".
-Renderer "markdown" has rendered the spec into "./target/test-runs/doc/build/markdown/output" successfully.
-Command build was completed. (### ms)

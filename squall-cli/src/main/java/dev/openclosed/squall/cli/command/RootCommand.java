@@ -155,7 +155,7 @@ public final class RootCommand implements
 
     @Option(
         names = {"-h", "--help"},
-        description = "show this help message and exit.",
+        description = "Show this help message and exit.",
         usageHelp = true,
         scope = ScopeType.INHERIT
     )
@@ -164,7 +164,7 @@ public final class RootCommand implements
 
     @Option(
         names = {"-V", "--version"},
-        description = "print version information and exit.",
+        description = "Print version information and exit.",
         versionHelp = true
     )
     public void requestVersionHelp(boolean requested) {
@@ -172,7 +172,7 @@ public final class RootCommand implements
 
     @Option(
         names = {"--verbose"},
-        description = "produce detailed output.",
+        description = "Produce detailed output.",
         defaultValue = "false",
         scope = ScopeType.INHERIT
     )

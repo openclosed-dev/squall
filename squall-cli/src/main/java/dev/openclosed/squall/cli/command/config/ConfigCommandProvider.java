@@ -21,7 +21,7 @@ import picocli.CommandLine.Command;
 
 @Command(
     name = "config",
-    description = "Manage configurations",
+    description = "Manage configurations.",
     subcommands = {
         Init.class
     }

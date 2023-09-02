@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.cli.command.doc;
+package dev.openclosed.squall.cli.command.spec;
 
 import dev.openclosed.squall.api.base.Problem;
 import dev.openclosed.squall.api.config.RootConfig;
@@ -42,17 +42,20 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Command(
-    name = "build",
+    name = "render",
     description = "Generate specification documents from SQL sources."
 )
-final class Build implements Subcommand {
+final class Render implements Subcommand {
 
     @Mixin
     private ExecutionContext context;
 
     @Parameters(
         paramLabel = "NAME",
-        description = "name of the renderer defined in the configuration"
+        description = {
+            "Name of the renderer defined in the configuration.",
+            "When omitted, the first renderer defined will be selected."
+        }
     )
     private String[] names;
 

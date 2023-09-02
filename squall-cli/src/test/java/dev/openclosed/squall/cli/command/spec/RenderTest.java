@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.cli.command.doc;
+package dev.openclosed.squall.cli.command.spec;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,7 +29,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import dev.openclosed.squall.cli.command.BaseTestCase;
 
-public final class BuildTest {
+public final class RenderTest {
 
     @BeforeAll
     public static void setUpOnce() {
@@ -38,7 +38,7 @@ public final class BuildTest {
 
     record TestCase(String name, int exitCode, String... args) implements BaseTestCase {
 
-        private static final List<String> SUBCOMMAND = List.of("doc", "build");
+        private static final List<String> SUBCOMMAND = List.of("spec", "render");
 
         @Override
         public List<String> subcommand() {

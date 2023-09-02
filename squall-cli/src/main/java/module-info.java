@@ -1,3 +1,5 @@
+import dev.openclosed.squall.cli.command.spec.SpecCommandProvider;
+
 /**
  * Provides command line interface.
  */
@@ -14,7 +16,7 @@ open module dev.openclosed.squall.cli {
 
     provides dev.openclosed.squall.cli.spi.SubcommandProvider
         with dev.openclosed.squall.cli.command.config.ConfigCommandProvider,
-             dev.openclosed.squall.cli.command.doc.DocCommandProvider;
+            SpecCommandProvider;
 
     provides dev.openclosed.squall.cli.spi.HelpMessagesProvider
         with dev.openclosed.squall.cli.spi.impl.DefaultResourceBundleProvider;

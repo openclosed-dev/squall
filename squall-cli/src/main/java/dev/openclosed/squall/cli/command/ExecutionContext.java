@@ -101,7 +101,7 @@ final class ExecutionContext implements Subcommand.ExecutionContext {
 
     @Option(names = { "-C", "--directory" },
         paramLabel = "DIR",
-        description  = "change to directory DIR.",
+        description  = "Change to directory DIR.",
         defaultValue = "${user.dir}"
     )
     public void setDirectory(String directory) {
@@ -110,7 +110,7 @@ final class ExecutionContext implements Subcommand.ExecutionContext {
 
     @Option(names = { "-f", "--file" },
         paramLabel = "FILE",
-        description  = "path to the configuration file.",
+        description  = "Path to the configuration file.",
         defaultValue = Subcommand.DEFAULT_CONFIG_FILENAME
     )
     public void setFile(String file) {

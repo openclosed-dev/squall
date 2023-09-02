@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.cli.base;
+package dev.openclosed.squall.cli.command.spec;
 
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
+import dev.openclosed.squall.cli.spi.SubcommandProvider;
+import picocli.CommandLine.Command;
 
-/**
- * A factory of {@link Logger}.
- */
-public interface LoggerFactory {
-
-    Logger createLogger(Level level);
+@Command(
+    name = "spec",
+    description = "Manage database specification.",
+    subcommands = {
+        Render.class
+    }
+)
+public class SpecCommandProvider implements SubcommandProvider {
 }

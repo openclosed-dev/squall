@@ -14,17 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.cli.command.doc;
-
-import dev.openclosed.squall.cli.spi.SubcommandProvider;
-import picocli.CommandLine.Command;
-
-@Command(
-    name = "doc",
-    description = "Manage documentations",
-    subcommands = {
-        Build.class
-    }
-)
-public class DocCommandProvider implements SubcommandProvider {
-}
+/**
+ * Provides doc subcommands.
+ */
+package dev.openclosed.squall.cli.command.spec;

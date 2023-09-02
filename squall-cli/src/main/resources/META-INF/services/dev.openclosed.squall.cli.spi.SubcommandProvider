@@ -15,4 +15,4 @@
 #
 
 dev.openclosed.squall.cli.command.config.ConfigCommandProvider
-dev.openclosed.squall.cli.command.doc.DocCommandProvider
+dev.openclosed.squall.cli.command.spec.SpecCommandProvider

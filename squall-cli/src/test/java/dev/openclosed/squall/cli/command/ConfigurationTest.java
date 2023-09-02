@@ -31,7 +31,7 @@ final class ConfigurationTest {
 
     public record TestCase(String name, String messageKey, String... args) implements BaseTestCase {
 
-        private static final List<String> SUBCOMMAND = List.of("doc", "build");
+        private static final List<String> SUBCOMMAND = List.of("spec", "render");
         private static final List<String> PREFIX = List.of("common");
 
         @Override
