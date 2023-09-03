@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 import java.util.ServiceLoader;
 import java.util.spi.ToolProvider;
 
-import dev.openclosed.squall.cli.base.Messages;
+import dev.openclosed.squall.cli.spi.MessageBundle;
 import dev.openclosed.squall.cli.spi.Subcommand;
 import dev.openclosed.squall.cli.spi.SubcommandProvider;
 import picocli.CommandLine;
@@ -68,9 +68,9 @@ public final class RootCommand implements
     private PrintWriter out;
     private PrintWriter err;
 
-    private ExecutionContext context;
-
     private System.Logger logger;
+
+    private MessageBundle messageBundle;
 
     private Exception executionException;
 
@@ -112,7 +112,7 @@ public final class RootCommand implements
     @SuppressWarnings("unchecked")
     public <K> K create(Class<K> clazz) throws Exception {
         if (clazz == Subcommand.ExecutionContext.class) {
-            return (K) new ExecutionContext(this);
+            return (K) new ExecutionContext(this, this.messageBundle);
         }
         return CommandLine.defaultFactory().create(clazz);
     }
@@ -190,8 +190,11 @@ public final class RootCommand implements
     //
 
     private int executeCommand(PrintWriter out, PrintWriter err, String[] args) {
+        this.messageBundle = MessageBundle.forLocale(Locale.getDefault());
+
         this.out = out;
         this.err = err;
+
         var commandLine = createCommandLine(out, err);
         int exitCode = ExitCode.OK;
         if (args.length > 0) {
@@ -229,6 +232,10 @@ public final class RootCommand implements
         return commandLine;
     }
 
+    private MessageBundle messages() {
+        return this.messageBundle;
+    }
+
     private static ResourceBundle getResourceBundle() {
         return ResourceBundle.getBundle(
             BUNDLE_BASE_NAME,
@@ -250,7 +257,7 @@ public final class RootCommand implements
                 int result = executeLastCommand(parseResult);
                 final long timeElapsed = System.currentTimeMillis() - startTime;
                 if (!checkHelpRequested(parseResult)) {
-                    getLogger().log(Level.INFO, Messages.COMMAND_COMPLETED(commandName, timeElapsed));
+                    getLogger().log(Level.INFO, messages().COMMAND_COMPLETED(commandName, timeElapsed));
                 }
                 return result;
             } catch (ExecutionException e) {

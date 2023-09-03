@@ -16,20 +16,38 @@
 
 package dev.openclosed.squall.doc;
 
-import static dev.openclosed.squall.doc.BundledMessage.of;
-
 import dev.openclosed.squall.api.base.Message;
 
-final class Messages {
+import java.util.Locale;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
+interface MessageBundle {
+
+    String BUNDLE_BASE_NAME = "dev.openclosed.squall.doc.Messages";
+
+    /**
+     * Creates a message bundle.
+     * @param locale the locale of the message bundle.
+     * @return newly created message bundle.
+     */
+    static MessageBundle forLocale(Locale locale) {
+        Objects.requireNonNull(locale);
+        var resourceBundle = ResourceBundle.getBundle(BUNDLE_BASE_NAME, locale);
+        return () -> resourceBundle;
+    }
 
     //CHECKSTYLE:OFF
 
-    static Message UNKNOWN_ANNOTATION(String name) {
+    default Message UNKNOWN_ANNOTATION(String name) {
         return of("UNKNOWN_ANNOTATION", name);
     }
 
     //CHECKSTYLE:ON
 
-    private Messages() {
+    ResourceBundle getResourceBundle();
+
+    private Message of(String key, Object... args) {
+        return Message.of(key, args, getResourceBundle());
     }
 }

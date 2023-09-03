@@ -16,6 +16,7 @@
 
 package dev.openclosed.squall.api.parser;
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.ServiceLoader;
 
@@ -54,7 +55,8 @@ public interface SqlParserFactory {
             ParserConfig config,
             DatabaseSpec.Builder builder,
             CommentProcessor commentProcessor) {
-        return createParser(config, builder, commentProcessor, MessageBundle.get());
+        return createParser(
+            config, builder, commentProcessor, MessageBundle.forLocale(Locale.getDefault()));
     }
 
     /**

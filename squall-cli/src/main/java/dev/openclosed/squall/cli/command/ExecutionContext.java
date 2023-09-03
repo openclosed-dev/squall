@@ -20,8 +20,8 @@ import dev.openclosed.squall.api.base.Problem;
 import dev.openclosed.squall.api.config.ConfigLoader;
 import dev.openclosed.squall.api.config.ConfigurationException;
 import dev.openclosed.squall.api.config.RootConfig;
-import dev.openclosed.squall.cli.base.Messages;
 import dev.openclosed.squall.cli.spi.CommandException;
+import dev.openclosed.squall.cli.spi.MessageBundle;
 import dev.openclosed.squall.cli.spi.Subcommand;
 import picocli.CommandLine.Option;
 
@@ -34,19 +34,21 @@ import java.util.List;
 final class ExecutionContext implements Subcommand.ExecutionContext {
 
     private final LoggerProvider loggerProvider;
+    private final MessageBundle messageBundle;
     private System.Logger logger;
 
     private Path directory;
     private Path file;
 
-    ExecutionContext(LoggerProvider loggerProvider) {
+    ExecutionContext(LoggerProvider loggerProvider, MessageBundle messageBundle) {
         this.loggerProvider = loggerProvider;
+        this.messageBundle = messageBundle;
     }
 
     // ExecutionContext
 
     @Override
-    public System.Logger getLogger() {
+    public System.Logger logger() {
         if (this.logger == null) {
             this.logger = this.loggerProvider.getLogger();
         }
@@ -54,46 +56,51 @@ final class ExecutionContext implements Subcommand.ExecutionContext {
     }
 
     @Override
-    public Path getDirectory() {
+    public MessageBundle messages() {
+        return this.messageBundle;
+    }
+
+    @Override
+    public Path workDirectory() {
         return this.directory;
     }
 
     @Override
-    public Path getFile() {
+    public Path configFile() {
         return this.file;
     }
 
     @Override
     public Path checkDirectoryExists() {
-        Path path = getDirectory();
+        Path path = workDirectory();
         if (!Files.exists(path)) {
-            throw new CommandException(Messages.WORKING_DIRECTORY_NOT_EXIST(path));
+            throw new CommandException(messages().WORKING_DIRECTORY_NOT_EXIST(path));
         } else if (!Files.isDirectory(path)) {
-            throw new CommandException(Messages.WORKING_DIRECTORY_IS_NOT_DIRECTORY(path));
+            throw new CommandException(messages().WORKING_DIRECTORY_IS_NOT_DIRECTORY(path));
         }
         return path;
     }
 
     @Override
     public RootConfig loadConfiguration() {
-        Path dir = getDirectory();
-        Path configFile = getFile();
+        Path dir = workDirectory();
+        Path configFile = configFile();
         Path configPath = dir.resolve(configFile);
         var configLoader = ConfigLoader.get();
         try {
-            getLogger().log(System.Logger.Level.INFO, Messages.LOADING_CONFIGURATION(configFile));
+            logger().log(System.Logger.Level.INFO, messages().LOADING_CONFIGURATION(configFile));
             String json = Files.readString(configPath);
             var config = configLoader.loadFromJson(json);
             reportConfigurationProblems(configLoader.getProblems());
-            getLogger().log(System.Logger.Level.INFO, Messages.LOADED_CONFIGURATION());
+            logger().log(System.Logger.Level.INFO, messages().LOADED_CONFIGURATION());
             return config;
         } catch (NoSuchFileException e) {
-            throw new CommandException(Messages.CONFIGURATION_NOT_EXIST(configPath));
+            throw new CommandException(messages().CONFIGURATION_NOT_EXIST(configPath));
         } catch (IOException e) {
-            throw new CommandException(Messages.FAILED_TO_READ_FILE(configPath));
+            throw new CommandException(messages().FAILED_TO_READ_FILE(configPath));
         } catch (ConfigurationException e) {
             reportConfigurationProblems(e.getProblems());
-            throw new CommandException(Messages.CONFIGURATION_INVALID(), e);
+            throw new CommandException(messages().CONFIGURATION_INVALID(), e);
         }
     }
 
@@ -118,10 +125,9 @@ final class ExecutionContext implements Subcommand.ExecutionContext {
     }
 
     private void reportConfigurationProblems(List<Problem> problems) {
-        var log = getLogger();
+        var log = logger();
         for (var problem : problems) {
             log.log(problem.severity(), problem.toString());
         }
     }
-
 }

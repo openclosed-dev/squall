@@ -24,11 +24,13 @@ import dev.openclosed.squall.api.spec.DocAnnotationType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class DocCommentProcessor implements CommentProcessor {
 
+    private final MessageBundle messageBundle;
     private final List<DocAnnotation> annotations = new ArrayList<>();
     private final StringBuilder textBuilder = new StringBuilder();
 
@@ -55,6 +57,7 @@ public class DocCommentProcessor implements CommentProcessor {
     private boolean explicit;
 
     public DocCommentProcessor() {
+        this.messageBundle = MessageBundle.forLocale(Locale.getDefault());
     }
 
     @Override
@@ -89,6 +92,12 @@ public class DocCommentProcessor implements CommentProcessor {
 
         addLastAnnotation();
         this.context.addAnnotations(this.annotations);
+    }
+
+    //
+
+    protected MessageBundle messages() {
+        return this.messageBundle;
     }
 
     private void reset(CharSequence text, Location location, ParserContext context) {
@@ -187,7 +196,7 @@ public class DocCommentProcessor implements CommentProcessor {
             return DocAnnotationType.valueOf(name.toUpperCase());
         } catch (IllegalArgumentException e) {
             Location loc = new Location(annotationLineNo, annotationColumnNo, annotationOffset + textOffset);
-            context.reportProblem(System.Logger.Level.ERROR, Messages.UNKNOWN_ANNOTATION(name.toLowerCase()), loc);
+            context.reportProblem(System.Logger.Level.ERROR, messages().UNKNOWN_ANNOTATION(name.toLowerCase()), loc);
             return null;
         }
     }

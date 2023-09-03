@@ -17,6 +17,7 @@
 package dev.openclosed.squall.api.config;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.ServiceLoader;
 
 import dev.openclosed.squall.api.base.Problem;
@@ -30,7 +31,7 @@ public interface ConfigLoader {
     /**
      * Creates an instance of {@link RootConfig} from JSON document.
      * @param text text containing a JSON document.
-     * @return created instance of {@link RootConffig}.
+     * @return created instance of {@link RootConfig}.
      * @throws ConfigurationException if the input text is invalid.
      */
     RootConfig loadFromJson(String text);

@@ -19,6 +19,7 @@ package dev.openclosed.squall.api.parser;
 import dev.openclosed.squall.api.base.Message;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -30,10 +31,12 @@ public interface MessageBundle {
 
     /**
      * Creates a message bundle.
+     * @param locale the locale of the message bundle.
      * @return newly created message bundle.
      */
-    static MessageBundle get() {
-        var resourceBundle = ResourceBundle.getBundle(BUNDLE_BASE_NAME);
+    static MessageBundle forLocale(Locale locale) {
+        Objects.requireNonNull(locale);
+        var resourceBundle = ResourceBundle.getBundle(BUNDLE_BASE_NAME, locale);
         return () -> resourceBundle;
     }
 
@@ -56,21 +59,6 @@ public interface MessageBundle {
     ResourceBundle getResourceBundle();
 
     private Message of(String key, Object... args) {
-        return new Message() {
-            @Override
-            public String key() {
-                return key;
-            }
-
-            @Override
-            public Object[] args() {
-                return args;
-            }
-
-            @Override
-            public ResourceBundle getBundle(Locale locale) {
-                return getResourceBundle();
-            }
-        };
+        return Message.of(key, args, getResourceBundle());
     }
 }

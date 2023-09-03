@@ -17,7 +17,6 @@
 package dev.openclosed.squall.api.base;
 
 import java.text.MessageFormat;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
@@ -25,6 +24,25 @@ import java.util.function.Supplier;
  * A message.
  */
 public interface Message extends Supplier<String> {
+
+    static Message of(String key, Object[] args, ResourceBundle bundle) {
+        return new Message() {
+            @Override
+            public String key() {
+                return key;
+            }
+
+            @Override
+            public Object[] args() {
+                return args;
+            }
+
+            @Override
+            public ResourceBundle getBundle() {
+                return bundle;
+            }
+        };
+    }
 
     /**
      * Returns the unique identifier of this message.
@@ -44,7 +62,7 @@ public interface Message extends Supplier<String> {
      */
     @Override
     default String get() {
-        var pattern = getBundle(Locale.getDefault()).getString(key());
+        var pattern = getBundle().getString(key());
         if (args().length > 0) {
             return MessageFormat.format(pattern, args());
         } else {
@@ -54,8 +72,7 @@ public interface Message extends Supplier<String> {
 
     /**
      * Returns the resource bundle for this message.
-     * @param locale the locale of the resource bundle. Cannot be {@code null}.
      * @return the resource bundle found.
      */
-    ResourceBundle getBundle(Locale locale);
+    ResourceBundle getBundle();
 }

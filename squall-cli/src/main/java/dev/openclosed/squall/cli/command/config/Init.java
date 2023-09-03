@@ -17,7 +17,6 @@
 package dev.openclosed.squall.cli.command.config;
 
 import dev.openclosed.squall.api.config.RootConfig;
-import dev.openclosed.squall.cli.base.Messages;
 import dev.openclosed.squall.cli.spi.CommandException;
 import dev.openclosed.squall.cli.spi.Subcommand;
 import picocli.CommandLine.Command;
@@ -40,7 +39,7 @@ final class Init implements Subcommand {
     private ExecutionContext context;
 
     @Override
-    public ExecutionContext getContext() {
+    public ExecutionContext context() {
         return this.context;
     }
 
@@ -48,7 +47,7 @@ final class Init implements Subcommand {
     public void run() {
         checkDirectoryExists();
         generateConfigurationFile(getResolvedFile());
-        getLogger().log(System.Logger.Level.INFO, Messages.INITIALIZED_SUCCESSFULLY(getDirectory()));
+        logger().log(System.Logger.Level.INFO, messages().INITIALIZED_SUCCESSFULLY(workDirectory()));
     }
 
     @Override
@@ -62,9 +61,9 @@ final class Init implements Subcommand {
                 in.transferTo(out);
             }
         } catch (FileAlreadyExistsException e) {
-            throw new CommandException(Messages.CONFIGURATION_ALREADY_EXISTS(path));
+            throw new CommandException(messages().CONFIGURATION_ALREADY_EXISTS(path));
         } catch (IOException e) {
-            throw new CommandException(Messages.FAILED_TO_WRITE_FILE(path), e);
+            throw new CommandException(messages().FAILED_TO_WRITE_FILE(path), e);
         }
     }
 

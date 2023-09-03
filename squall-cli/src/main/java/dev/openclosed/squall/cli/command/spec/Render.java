@@ -23,7 +23,6 @@ import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.RendererFactory;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
-import dev.openclosed.squall.cli.base.Messages;
 import dev.openclosed.squall.cli.spi.CommandException;
 import dev.openclosed.squall.cli.spi.Subcommand;
 import dev.openclosed.squall.doc.DocCommentProcessor;
@@ -60,14 +59,14 @@ final class Render implements Subcommand {
     private String[] names;
 
     @Override
-    public ExecutionContext getContext() {
+    public ExecutionContext context() {
         return this.context;
     }
 
     @Override
     public void runWithConfig(RootConfig config) {
         if (config.sources().isEmpty()) {
-            getLogger().log(System.Logger.Level.INFO, Messages.NO_SQL_SOURCES());
+            logger().log(System.Logger.Level.INFO, messages().NO_SQL_SOURCES());
         } else {
             processAll(names, config);
         }
@@ -100,30 +99,30 @@ final class Render implements Subcommand {
         for (String source : sources) {
             Path fullPath = resolvePath(source);
             try {
-                getLogger().log(System.Logger.Level.INFO, Messages.PARSING_SQL_SOURCE(source));
+                logger().log(System.Logger.Level.INFO, messages().PARSING_SQL_SOURCE(source));
                 String sql = Files.readString(fullPath);
                 int errors = parser.parse(sql);
                 reportSqlProblems(parser.getProblems());
                 if (errors == 0) {
-                    getLogger().log(System.Logger.Level.INFO, Messages.PARSED_SQL_SOURCE(source));
+                    logger().log(System.Logger.Level.INFO, messages().PARSED_SQL_SOURCE(source));
                 } else {
                     failures++;
                 }
             } catch (NoSuchFileException e) {
-                getLogger().log(System.Logger.Level.ERROR, Messages.SQL_FILE_NOT_EXIST(fullPath));
+                logger().log(System.Logger.Level.ERROR, messages().SQL_FILE_NOT_EXIST(fullPath));
                 failures++;
             } catch (IOException e) {
-                getLogger().log(System.Logger.Level.ERROR, Messages.FAILED_TO_READ_FILE(fullPath));
+                logger().log(System.Logger.Level.ERROR, messages().FAILED_TO_READ_FILE(fullPath));
                 failures++;
             }
         }
         if (failures > 0) {
-            throw new CommandException(Messages.FOUND_SQL_ERRORS(failures));
+            throw new CommandException(messages().FOUND_SQL_ERRORS(failures));
         }
     }
 
     private void reportSqlProblems(List<Problem> problems) {
-        var logger = getLogger();
+        var logger = logger();
         for (var problem : problems) {
             logger.log(problem.severity(), problem.toString());
         }
@@ -132,7 +131,7 @@ final class Render implements Subcommand {
     private Map<String, RenderConfig> selectRenderers(RootConfig rootConfig, String[] names) {
         var renderers = rootConfig.renderers();
         if (renderers.isEmpty()) {
-            throw new CommandException(Messages.NO_RENDERER_DEFINED());
+            throw new CommandException(messages().NO_RENDERER_DEFINED());
         }
 
         if (names == null || names.length == 0) {
@@ -146,7 +145,7 @@ final class Render implements Subcommand {
                     if (renderers.containsKey(name)) {
                         return renderers.get(name);
                     } else {
-                        throw new CommandException(Messages.RENDERER_NOT_DEFINED(name));
+                        throw new CommandException(messages().RENDERER_NOT_DEFINED(name));
                     }
                 }
             ));
@@ -159,11 +158,11 @@ final class Render implements Subcommand {
         var renderer = factory.createRenderer(renderConfig);
         Path outDir = requireOutputDirectory(rootConfig.outDir());
         try  {
-            getLogger().log(System.Logger.Level.INFO, Messages.RENDERING_SPEC(name, outDir));
+            logger().log(System.Logger.Level.INFO, messages().RENDERING_SPEC(name, outDir));
             renderer.render(spec, outDir);
-            getLogger().log(System.Logger.Level.INFO, Messages.RENDERED_SPEC(name, outDir));
+            logger().log(System.Logger.Level.INFO, messages().RENDERED_SPEC(name, outDir));
         } catch (IOException e) {
-            throw new CommandException(Messages.FAILED_TO_WRITE_FILE(outDir), e);
+            throw new CommandException(messages().FAILED_TO_WRITE_FILE(outDir), e);
         }
     }
 
@@ -171,7 +170,7 @@ final class Render implements Subcommand {
         try {
             return RendererFactory.get(format);
         } catch (Exception e) {
-            throw new CommandException(Messages.RENDERER_UNAVAILABLE(format), e);
+            throw new CommandException(messages().RENDERER_UNAVAILABLE(format), e);
         }
     }
 
@@ -181,7 +180,7 @@ final class Render implements Subcommand {
             Files.createDirectories(path);
             return path;
         } catch (IOException e) {
-            throw new CommandException(Messages.CANNOT_TO_CREATE_OUTPUT_DIRECTORY(path), e);
+            throw new CommandException(messages().CANNOT_TO_CREATE_OUTPUT_DIRECTORY(path), e);
         }
     }
 }

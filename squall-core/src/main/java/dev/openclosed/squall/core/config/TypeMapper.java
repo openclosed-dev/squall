@@ -29,8 +29,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import dev.openclosed.squall.core.base.Messages;
-
 /**
  * Type mapper that maps a value to the target type.
  */
@@ -38,55 +36,55 @@ enum TypeMapper {
     BOOLEAN {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            return requireType(source, Boolean.class);
+            return requireType(source, Boolean.class, context);
         }
     },
     INTEGER {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            return requireType(source, Integer.class);
+            return requireType(source, Integer.class, context);
         }
     },
     LONG {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            return requireType(source, Long.class);
+            return requireType(source, Long.class, context);
         }
     },
     SHORT {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            return requireType(source, Short.class);
+            return requireType(source, Short.class, context);
         }
     },
     STRING {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            return requireType(source, String.class);
+            return requireType(source, String.class, context);
         }
     },
     ENUM {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            String s = requireType(source, String.class);
-            return mapToEnum(s, target);
+            String s = requireType(source, String.class, context);
+            return mapToEnum(s, target, context);
         }
 
-        private static <T extends Enum<T>> Enum<T> mapToEnum(String source, Class<?> target) {
+        private static <T extends Enum<T>> Enum<T> mapToEnum(String source, Class<?> target, MapperContext context) {
             assert target.isEnum();
             @SuppressWarnings("unchecked")
             Class<T> enumType = (Class<T>) target;
             try {
                 return Enum.valueOf(enumType, source.toUpperCase());
             } catch (IllegalArgumentException e) {
-                throw new MappingException(Messages.ILLEGAL_VALUE(target, source));
+                throw new MappingException(context.messages().ILLEGAL_VALUE(target, source));
             }
         }
     },
     LIST {
         @Override
         protected Object map(Object source, RecordComponent target, MapperContext context) {
-            var collection = requireType(source, Collection.class);
+            var collection = requireType(source, Collection.class, context);
             if (collection.isEmpty()) {
                 return Collections.emptyList();
             }
@@ -97,14 +95,14 @@ enum TypeMapper {
     LOCALE {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            String s = requireType(source, String.class);
+            String s = requireType(source, String.class, context);
             return Locale.forLanguageTag(s);
         }
     },
     MAP {
         @Override
         protected Object map(Object source, RecordComponent target, MapperContext context) {
-            Map<?, ?> map = requireType(source, Map.class);
+            Map<?, ?> map = requireType(source, Map.class, context);
             if (map.isEmpty()) {
                 return Collections.emptyMap();
             }
@@ -122,7 +120,7 @@ enum TypeMapper {
         }
 
         private static Map<String, ?> map(Map<?, ?> source, Class<?> elementClass, MapperContext context) {
-            var mapper = findMapper(elementClass);
+            var mapper = findMapper(elementClass, context);
             var map = new HashMap<String, Object>();
             boolean failed = false;
             context.push();
@@ -152,7 +150,7 @@ enum TypeMapper {
             var parameterizedType = (ParameterizedType) target.getGenericType();
             var parameterType = parameterizedType.getActualTypeArguments()[0];
             if (parameterType instanceof Class<?> targetClass) {
-                var mapper = findMapper(targetClass);
+                var mapper = findMapper(targetClass, context);
                 return Optional.ofNullable(mapper.map(source, targetClass, context));
             }
             throw new IllegalStateException();
@@ -161,7 +159,7 @@ enum TypeMapper {
     RECORD {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            Map<?, ?> map = requireType(source, Map.class);
+            Map<?, ?> map = requireType(source, Map.class, context);
             @SuppressWarnings("unchecked")
             var recordTarget = (Class<? extends Record>) target;
             return mapToRecord(map, context.getRecordType(recordTarget), context);
@@ -203,17 +201,19 @@ enum TypeMapper {
             }
         }
 
-        private static Object mapToComponent(String name,
-                Object source,
-                RecordComponent component,
-                Map<String, Object> defaultValues, MapperContext context) {
+        private static Object mapToComponent(
+            String name,
+            Object source,
+            RecordComponent component,
+            Map<String, Object> defaultValues,
+            MapperContext context) {
             if (source != null) {
-                var mapper = findMapper(component.getType());
+                var mapper = findMapper(component.getType(), context);
                 return mapper.map(source, component, context);
             } else if (defaultValues.containsKey(name)) {
                 return defaultValues.get(name);
             } else {
-                return getDefaultValueForType(component.getType());
+                return getDefaultValueForType(component.getType(), context);
             }
         }
 
@@ -223,14 +223,14 @@ enum TypeMapper {
                 .map(Object::toString)
                 .forEach(key -> {
                     context.setCurrent(key);
-                    context.addProblem(Level.WARNING, Messages.UNKNOWN_PROPERTY(key));
+                    context.addProblem(Level.WARNING, context.messages().UNKNOWN_PROPERTY(key));
                 });
         }
     },
     SET {
         @Override
         protected Object map(Object source, RecordComponent target, MapperContext context) {
-            var collection = requireType(source, Collection.class);
+            var collection = requireType(source, Collection.class, context);
             if (collection.isEmpty()) {
                 return Collections.emptySet();
             }
@@ -246,7 +246,7 @@ enum TypeMapper {
         return target.cast(source);
     }
 
-    static TypeMapper findMapper(Class<?> target) {
+    static TypeMapper findMapper(Class<?> target, MapperContext context) {
         if (target.isPrimitive()) {
             return getSimpleTypeMapper(target.getName());
         } else if (target.isEnum()) {
@@ -256,14 +256,14 @@ enum TypeMapper {
         } else if (MAPPERS.containsKey(target)) {
             return MAPPERS.get(target);
         } else {
-            throw new MappingException(Messages.UNSUPPORTED_TARGET_TYPE(target));
+            throw new MappingException(context.messages().UNSUPPORTED_TARGET_TYPE(target));
         }
     }
 
-    static Object getDefaultValueForType(Class<?> target) {
+    static Object getDefaultValueForType(Class<?> target, MapperContext context) {
         var value = DEFAULT_VALUES.get(target);
         if (value == null) {
-            throw new MappingException(Messages.UNSUPPORTED_TARGET_TYPE(target));
+            throw new MappingException(context.messages().UNSUPPORTED_TARGET_TYPE(target));
         }
         return value;
     }
@@ -283,7 +283,7 @@ enum TypeMapper {
     }
 
     private Object[] mapToArray(Collection<?> source, Class<?> elementClass, MapperContext context) {
-        var mapper = findMapper(elementClass);
+        var mapper = findMapper(elementClass, context);
         Object[] array = new Object[source.size()];
 
         boolean failed = false;
@@ -308,9 +308,9 @@ enum TypeMapper {
         return array;
     }
 
-    private static <T> T requireType(Object value, Class<T> target) {
+    private static <T> T requireType(Object value, Class<T> target, MapperContext context) {
         if (!target.isInstance(value)) {
-            throw new MappingException(Messages.TYPE_MISMATCH(target, value.getClass()));
+            throw new MappingException(context.messages().TYPE_MISMATCH(target, value.getClass()));
         }
         return target.cast(value);
     }

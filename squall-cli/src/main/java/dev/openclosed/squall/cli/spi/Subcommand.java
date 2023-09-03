@@ -31,34 +31,38 @@ public interface Subcommand extends Runnable {
      * Returns the execution context.
      * @return the context in which this subcommand is executed.
      */
-    ExecutionContext getContext();
+    ExecutionContext context();
 
-    default System.Logger getLogger() {
-        return getContext().getLogger();
+    default System.Logger logger() {
+        return context().logger();
     }
 
-    default Path getDirectory() {
-        return getContext().getDirectory();
+    default MessageBundle messages() {
+        return context().messages();
     }
 
-    default Path getFile() {
-        return getContext().getFile();
+    default Path workDirectory() {
+        return context().workDirectory();
+    }
+
+    default Path configFile() {
+        return context().configFile();
     }
 
     default Path getResolvedFile() {
-        return getDirectory().resolve(getFile());
+        return workDirectory().resolve(configFile());
     }
 
     default Path resolvePath(String other) {
-        return getDirectory().resolve(other);
+        return workDirectory().resolve(other);
     }
 
     default Path checkDirectoryExists() {
-        return getContext().checkDirectoryExists();
+        return context().checkDirectoryExists();
     }
 
     default RootConfig loadConfiguration() {
-        return getContext().loadConfiguration();
+        return context().loadConfiguration();
     }
 
     /**
@@ -81,15 +85,17 @@ public interface Subcommand extends Runnable {
      */
     interface ExecutionContext {
 
-        System.Logger getLogger();
+        System.Logger logger();
+
+        MessageBundle messages();
 
         /**
          * Returns the current working directory.
          * @return the current working directory.
          */
-        Path getDirectory();
+        Path workDirectory();
 
-        Path getFile();
+        Path configFile();
 
         Path checkDirectoryExists();
 

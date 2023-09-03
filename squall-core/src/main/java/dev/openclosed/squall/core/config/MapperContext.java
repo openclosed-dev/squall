@@ -26,15 +26,18 @@ import java.util.function.Consumer;
 import dev.openclosed.squall.api.base.JsonPointer;
 import dev.openclosed.squall.api.base.Message;
 import dev.openclosed.squall.api.base.Problem;
+import dev.openclosed.squall.api.config.MessageBundle;
 
 final class MapperContext {
 
     private final Consumer<Problem> problemHandler;
+    private final MessageBundle messageBundle;
     private final List<String> tokens = new ArrayList<>();
     private final Map<Class<? extends Record>, RecordType<?>> recordCache = new HashMap<>();
 
-    MapperContext(Consumer<Problem> problemHandler) {
+    MapperContext(Consumer<Problem> problemHandler, MessageBundle messageBundle) {
         this.problemHandler = problemHandler;
+        this.messageBundle = messageBundle;
     }
 
     @SuppressWarnings("unchecked")
@@ -61,5 +64,9 @@ final class MapperContext {
     void addProblem(Level severity, Message message) {
         var problem = new ConfigProblem(severity, message, JsonPointer.of(tokens));
         problemHandler.accept(problem);
+    }
+
+    MessageBundle messages() {
+        return this.messageBundle;
     }
 }

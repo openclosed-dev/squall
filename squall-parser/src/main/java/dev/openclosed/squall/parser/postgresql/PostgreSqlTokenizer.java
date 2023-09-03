@@ -23,6 +23,7 @@ import dev.openclosed.squall.parser.basic.MetacommandToken;
 import dev.openclosed.squall.parser.basic.SpecialSymbol;
 import dev.openclosed.squall.parser.basic.Token;
 
+import java.util.Locale;
 import java.util.Map;
 
 final class PostgreSqlTokenizer extends BaseSqlTokenizer {
@@ -30,7 +31,7 @@ final class PostgreSqlTokenizer extends BaseSqlTokenizer {
     private final Map<String, Keyword> keywords;
 
     PostgreSqlTokenizer(CharSequence text) {
-        this(text, MessageBundle.get(), PostgreSqlKeyword.valuesAsMap());
+        this(text, MessageBundle.forLocale(Locale.getDefault()), PostgreSqlKeyword.valuesAsMap());
     }
 
     PostgreSqlTokenizer(

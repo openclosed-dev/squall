@@ -20,6 +20,7 @@ import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -30,11 +31,11 @@ import dev.openclosed.squall.api.base.Message;
 import dev.openclosed.squall.api.base.Problem;
 import dev.openclosed.squall.api.config.ConfigLoader;
 import dev.openclosed.squall.api.config.ConfigurationException;
+import dev.openclosed.squall.api.config.MessageBundle;
 import dev.openclosed.squall.api.config.RootConfig;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.spi.JsonReader;
 import dev.openclosed.squall.api.spi.JsonReadingException;
-import dev.openclosed.squall.core.base.Messages;
 import dev.openclosed.squall.core.base.SnippetExtractor;
 
 /**
@@ -43,11 +44,15 @@ import dev.openclosed.squall.core.base.SnippetExtractor;
 public final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem> {
 
     private final JsonReader reader;
+    private final MessageBundle messageBundle;
     private List<Problem> problems;
 
     public DefaultConfigLoader() {
         this.reader = JsonReader.get();
+        this.messageBundle = MessageBundle.forLocale(Locale.getDefault());
     }
+
+    // ConfigLoader
 
     @Override
     public RootConfig loadFromJson(String text) {
@@ -64,12 +69,20 @@ public final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem
         return (problems != null) ? problems : Collections.emptyList();
     }
 
+    // Consumer
+
     @Override
     public void accept(Problem problem) {
         if (problems == null) {
-            problems = new ArrayList<Problem>();
+            problems = new ArrayList<>();
         }
         problems.add(problem);
+    }
+
+    //
+
+    MessageBundle messages() {
+        return this.messageBundle;
     }
 
     <T extends Record> T loadFromJson(String text, Class<T> targetClass) {
@@ -82,17 +95,17 @@ public final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem
 
     @SuppressWarnings("unchecked")
     <T extends Record> T loadFromMap(Map<String, ?> map, Class<T> targetClass) {
-        var context = new MapperContext(this);
+        var context = new MapperContext(this, messages());
         try {
             return (T) TypeMapper.RECORD.map(map, targetClass, context);
         } catch (MappingException e) {
-            throw new ConfigurationException(Messages.BAD_CONFIGURATION(), getProblems());
+            throw new ConfigurationException(messages().BAD_CONFIGURATION(), getProblems());
         }
     }
 
     private Map<String, ?> loadMapFromJson(String text) {
         if (text.isEmpty()) {
-            addProblem(Level.ERROR, Messages.UNEXPECTED_END_OF_INPUT());
+            addProblem(Level.ERROR, messages().UNEXPECTED_END_OF_INPUT());
         } else {
             try {
                 return reader.readObject(text);
@@ -100,13 +113,13 @@ public final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem
                 var loc = e.getLocation();
                 if (loc.offset() < text.length()) {
                     var source = new SnippetExtractor(text).extract(e.getLocation());
-                    addProblem(Level.ERROR, Messages.JSON_ILL_FORMED(), e.getLocation(), source);
+                    addProblem(Level.ERROR, messages().JSON_ILL_FORMED(), e.getLocation(), source);
                 } else {
-                    addProblem(Level.ERROR, Messages.UNEXPECTED_END_OF_INPUT());
+                    addProblem(Level.ERROR, messages().UNEXPECTED_END_OF_INPUT());
                 }
             }
         }
-        throw new ConfigurationException(Messages.BAD_CONFIGURATION(), getProblems());
+        throw new ConfigurationException(messages().BAD_CONFIGURATION(), getProblems());
     }
 
     private void addProblem(Level severity, Message message) {
