@@ -20,6 +20,7 @@ import dev.openclosed.squall.api.base.Location;
 import dev.openclosed.squall.api.base.Message;
 import dev.openclosed.squall.api.base.Problem;
 import dev.openclosed.squall.api.parser.CommentProcessor;
+import dev.openclosed.squall.api.parser.MessageBundle;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.ParserContext;
 import dev.openclosed.squall.api.parser.SqlParser;
@@ -37,8 +38,8 @@ public abstract class BaseSqlParser
     implements SqlParser, ParserContext, SqlGrammarEntry, SqlGrammarSupport {
 
     private final ParserConfig config;
-
     private final CommentProcessor commentProcessor;
+    private final MessageBundle messageBundle;
 
     private SqlTokenizer tokenizer;
     private int tokenNo;
@@ -51,9 +52,13 @@ public abstract class BaseSqlParser
 
     private SnippetExtractor snippetExtractor;
 
-    protected BaseSqlParser(ParserConfig config, CommentProcessor commentProcessor) {
+    protected BaseSqlParser(
+        ParserConfig config,
+        CommentProcessor commentProcessor,
+        MessageBundle messageBundle) {
         this.config = config;
         this.commentProcessor = commentProcessor;
+        this.messageBundle = messageBundle;
     }
 
     @Override
@@ -119,6 +124,11 @@ public abstract class BaseSqlParser
     }
 
     @Override
+    public final MessageBundle messages() {
+        return messageBundle;
+    }
+
+    @Override
     public void withRecovery(Runnable runnable) {
         try {
             runnable.run();
@@ -167,12 +177,13 @@ public abstract class BaseSqlParser
     protected void reset(CharSequence text) {
         this.problems.clear();
         this.errorCount = 0;
-        this.tokenizer = createTokenizer(text);
+        this.tokenizer = createTokenizer(text, this.messageBundle);
         this.annotations = null;
         this.snippetExtractor = new SnippetExtractor(text);
     }
 
-    protected abstract SqlTokenizer createTokenizer(CharSequence text);
+    protected abstract SqlTokenizer createTokenizer(
+        CharSequence text, MessageBundle messageBundle);
 
     private void handleComment(CommentToken token) {
         if (this.commentProcessor == null) {

@@ -31,5 +31,5 @@ module dev.openclosed.squall.api {
     uses dev.openclosed.squall.api.spec.DatabaseSpec.Builder;
     uses dev.openclosed.squall.api.spi.JsonReader;
     uses dev.openclosed.squall.api.spi.JsonWriter;
-    uses dev.openclosed.squall.api.spi.RendererMessagesProvider;
+    uses dev.openclosed.squall.api.spi.MessagesProvider;
 }

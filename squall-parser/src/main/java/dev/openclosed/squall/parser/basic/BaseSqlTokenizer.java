@@ -18,8 +18,8 @@ package dev.openclosed.squall.parser.basic;
 
 import dev.openclosed.squall.api.base.Location;
 import dev.openclosed.squall.api.base.Message;
+import dev.openclosed.squall.api.parser.MessageBundle;
 import dev.openclosed.squall.api.parser.SqlSyntaxException;
-import dev.openclosed.squall.parser.Messages;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -27,6 +27,7 @@ import java.math.BigInteger;
 public abstract class BaseSqlTokenizer implements SqlTokenizer {
 
     private final CharSequence text;
+    private final MessageBundle messageBundle;
 
     private int lineNo;
     private int columnNo;
@@ -45,8 +46,10 @@ public abstract class BaseSqlTokenizer implements SqlTokenizer {
     public static final int EOI = -1;
     private static final int NOT_FETCHED = -2;
 
-    protected BaseSqlTokenizer(CharSequence text) {
+    protected BaseSqlTokenizer(CharSequence text, MessageBundle messageBundle) {
         this.text = text;
+        this.messageBundle = messageBundle;
+
         this.lineNo = 1;
         this.columnNo = 1;
         this.currentChar = NOT_FETCHED;
@@ -393,10 +396,10 @@ public abstract class BaseSqlTokenizer implements SqlTokenizer {
         if (c == EOI) {
             return newUnexpectedEndException();
         }
-        return newSyntaxException(Messages.INVALID_CHARACTER((char) c));
+        return newSyntaxException(messageBundle.INVALID_CHARACTER((char) c));
     }
 
     protected final SqlSyntaxException newUnexpectedEndException() {
-        return newSyntaxException(Messages.UNEXPECTED_END_OF_INPUT());
+        return newSyntaxException(messageBundle.UNEXPECTED_END_OF_INPUT());
     }
 }

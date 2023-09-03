@@ -50,10 +50,26 @@ public interface SqlParserFactory {
      * @param commentProcessor the processor of comments.
      * @return newly created parser.
      */
-    SqlParser createParser(
+    default SqlParser createParser(
             ParserConfig config,
             DatabaseSpec.Builder builder,
-            CommentProcessor commentProcessor);
+            CommentProcessor commentProcessor) {
+        return createParser(config, builder, commentProcessor, MessageBundle.get());
+    }
+
+    /**
+     * Create a new parser.
+     * @param config the configuration for the parser.
+     * @param builder the builder of the database specification.
+     * @param commentProcessor the processor of comments.
+     * @param messageBundle the bundle of messages.
+     * @return newly created parser.
+     */
+    SqlParser createParser(
+        ParserConfig config,
+        DatabaseSpec.Builder builder,
+        CommentProcessor commentProcessor,
+        MessageBundle messageBundle);
 
     static SqlParserFactory get(Dialect dialect) {
         Objects.requireNonNull(dialect);

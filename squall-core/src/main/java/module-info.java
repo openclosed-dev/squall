@@ -20,16 +20,14 @@ module dev.openclosed.squall.core {
 
     requires dev.openclosed.squall.api;
 
-    uses dev.openclosed.squall.core.spi.MessagesProvider;
+    uses dev.openclosed.squall.api.spi.MessagesProvider;
 
     provides dev.openclosed.squall.api.config.ConfigLoader
         with dev.openclosed.squall.core.config.DefaultConfigLoader;
     provides dev.openclosed.squall.api.spec.DatabaseSpec.Builder
         with DatabaseSpecBuilder;
-    provides dev.openclosed.squall.core.spi.MessagesProvider
-        with dev.openclosed.squall.core.spi.impl.DefaultMessagesProvider;
-    provides dev.openclosed.squall.api.spi.RendererMessagesProvider
-        with dev.openclosed.squall.core.base.DefaultRendererMessagesProvider;
+    provides dev.openclosed.squall.api.spi.MessagesProvider
+        with dev.openclosed.squall.core.base.DefaultMessagesProvider;
     provides dev.openclosed.squall.api.spec.ExpressionFactory
         with dev.openclosed.squall.core.spec.expression.DefaultExpressionFactory;
 }

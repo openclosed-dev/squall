@@ -23,7 +23,7 @@ import java.util.ServiceLoader;
 
 public interface RendererFactory {
 
-    String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.RendererMessages";
+    String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.Messages";
 
     String format();
 

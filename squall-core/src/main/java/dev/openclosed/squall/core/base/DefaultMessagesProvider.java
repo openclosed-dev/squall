@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,20 @@
 
 package dev.openclosed.squall.core.base;
 
+import dev.openclosed.squall.api.spi.MessagesProvider;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.spi.AbstractResourceBundleProvider;
 
-import dev.openclosed.squall.api.spi.RendererMessagesProvider;
+public class DefaultMessagesProvider extends AbstractResourceBundleProvider
+    implements MessagesProvider {
 
-public final class DefaultRendererMessagesProvider extends AbstractResourceBundleProvider
-    implements RendererMessagesProvider {
+    private static final String BASE_NAME = "dev.openclosed.squall.core.Messages";
 
-    private static final String BASE_NAME = "dev.openclosed.squall.core.RendererMessages";
+    public DefaultMessagesProvider() {
+        super("java.properties");
+    }
 
     @Override
     public ResourceBundle getBundle(String baseName, Locale locale) {

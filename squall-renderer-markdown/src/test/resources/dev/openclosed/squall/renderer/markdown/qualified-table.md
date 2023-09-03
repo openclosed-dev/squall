@@ -11,7 +11,7 @@ CREATE TABLE schema1.products (
 
 CREATE TABLE schema1.orders (
   order_id integer PRIMARY KEY,
-  product_no integer REFERENCES schema1.products (product_no),
+  product_no integer REFERENCES schema1.products (product_no)
 );
 ```
 

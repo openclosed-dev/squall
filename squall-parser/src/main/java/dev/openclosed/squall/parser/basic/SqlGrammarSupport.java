@@ -16,12 +16,12 @@
 
 package dev.openclosed.squall.parser.basic;
 
+import dev.openclosed.squall.api.parser.MessageBundle;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlSyntaxException;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.ExpressionFactory;
-import dev.openclosed.squall.parser.Messages;
 
 import java.util.List;
 
@@ -34,6 +34,8 @@ public interface SqlGrammarSupport {
     DatabaseSpec.Builder builder();
 
     ExpressionFactory expressionFactory();
+
+    MessageBundle messages();
 
     void withRecovery(Runnable runnable);
 
@@ -110,12 +112,12 @@ public interface SqlGrammarSupport {
             var t = getTokenizer();
             var location = t.getTokenLocation();
             var text = t.getTokenText();
-            throw new SqlSyntaxException(Messages.SYNTAX_ERROR(text), location);
+            throw new SqlSyntaxException(messages().SYNTAX_ERROR(text), location);
         }
     }
 
     default void unexpectedEndError() {
         var location = getTokenizer().getLocation();
-        throw new SqlSyntaxException(Messages.UNEXPECTED_END_OF_INPUT(), location);
+        throw new SqlSyntaxException(messages().UNEXPECTED_END_OF_INPUT(), location);
     }
 }

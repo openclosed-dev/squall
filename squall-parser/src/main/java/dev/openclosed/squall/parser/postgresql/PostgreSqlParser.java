@@ -17,6 +17,7 @@
 package dev.openclosed.squall.parser.postgresql;
 
 import dev.openclosed.squall.api.parser.CommentProcessor;
+import dev.openclosed.squall.api.parser.MessageBundle;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.ExpressionFactory;
@@ -37,8 +38,9 @@ final class PostgreSqlParser extends BaseSqlParser implements PostgreSqlGrammar 
         DatabaseSpec.Builder builder,
         ExpressionFactory expressionFactory,
         CommentProcessor commentProcessor,
+        MessageBundle messageBundle,
         Map<String, Keyword> keywords) {
-        super(config, commentProcessor);
+        super(config, commentProcessor, messageBundle);
         this.builder = builder;
         this.expressionFactory = expressionFactory;
         this.keywords = keywords;
@@ -47,8 +49,8 @@ final class PostgreSqlParser extends BaseSqlParser implements PostgreSqlGrammar 
     // BaseSqlParser
 
     @Override
-    protected SqlTokenizer createTokenizer(CharSequence text) {
-        return new PostgreSqlTokenizer(text, this.keywords);
+    protected SqlTokenizer createTokenizer(CharSequence text, MessageBundle messageBundle) {
+        return new PostgreSqlTokenizer(text, messageBundle, this.keywords);
     }
 
     // SqlGrammarSupport

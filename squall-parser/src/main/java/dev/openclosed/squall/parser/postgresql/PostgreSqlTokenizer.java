@@ -16,6 +16,7 @@
 
 package dev.openclosed.squall.parser.postgresql;
 
+import dev.openclosed.squall.api.parser.MessageBundle;
 import dev.openclosed.squall.parser.basic.BaseSqlTokenizer;
 import dev.openclosed.squall.parser.basic.Keyword;
 import dev.openclosed.squall.parser.basic.MetacommandToken;
@@ -29,11 +30,14 @@ final class PostgreSqlTokenizer extends BaseSqlTokenizer {
     private final Map<String, Keyword> keywords;
 
     PostgreSqlTokenizer(CharSequence text) {
-        this(text, PostgreSqlKeyword.valuesAsMap());
+        this(text, MessageBundle.get(), PostgreSqlKeyword.valuesAsMap());
     }
 
-    PostgreSqlTokenizer(CharSequence text, Map<String, Keyword> keywords) {
-        super(text);
+    PostgreSqlTokenizer(
+        CharSequence text,
+        MessageBundle messageBundle,
+        Map<String, Keyword> keywords) {
+        super(text, messageBundle);
         this.keywords = keywords;
     }
 

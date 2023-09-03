@@ -28,7 +28,7 @@ import dev.openclosed.squall.api.base.Message;
  */
 record BundledMessage(String key, Object[] args) implements Message {
 
-    private static final String BUNDLE_BASE_NAME = "dev.openclosed.squall.core.Messages";
+    private static final String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.Messages";
 
     static Message of(String key, Object... args) {
         return new BundledMessage(key, args);
