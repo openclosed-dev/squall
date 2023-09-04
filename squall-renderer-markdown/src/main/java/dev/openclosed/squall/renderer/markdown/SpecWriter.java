@@ -41,9 +41,6 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
     private final ResourceBundle bundle;
     private final Appendable appender;
 
-
-    private final boolean hideDatabase;
-    private final boolean hideSchema;
     private final HeadingNumberGenerator headingNumberGenerator;
     private final MarkdownTableWriter<Column> columnWriter;
     private final MarkdownTableWriter<Sequence> sequenceWriter;
@@ -59,22 +56,20 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
         this.config = config;
         this.bundle = bundle;
         this.appender = appender;
+
         this.headingNumberGenerator = HeadingNumberGenerator.create(config.numbering());
         this.columnWriter = MarkdownTableWriter.forColumn(
             config.columnAttributes(),
             bundle,
             this::writeColumnAnchor);
         this.sequenceWriter = MarkdownTableWriter.forSequence(config.sequenceAttributes(), bundle);
-        // visibility of components
-        this.hideDatabase = config.hide().contains(Component.Type.DATABASE);
-        this.hideSchema = config.hide().contains(Component.Type.SCHEMA);
     }
 
     void writeSpec(DatabaseSpec spec) throws IOException {
         this.level = 0;
         this.databaseCount = spec.databases().size();
         try {
-            spec.walkSpec(this, config.order());
+            spec.walkSpec(config.order(), config.show(), this);
         } catch (UncheckedIOException e) {
             throw e.getCause();
         }
@@ -105,10 +100,6 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
 
     @Override
     public void visit(Database database, int ordinal, Context context) {
-        if (hideDatabase) {
-            return;
-        }
-
         if (databaseCount > 1) {
             writeHeading(database);
             enterLevel();
@@ -119,18 +110,13 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
 
     @Override
     public void leave(Database database) {
-        if (hideDatabase || databaseCount <= 1) {
-            return;
+        if (databaseCount > 1) {
+            leaveLevel();
         }
-        leaveLevel();
     }
 
     @Override
     public void visit(Schema schema, int ordinal, Context context) {
-        if (hideSchema) {
-            return;
-        }
-
         writeHeading(schema);
         enterLevel();
 
@@ -139,9 +125,6 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
 
     @Override
     public void leave(Schema schema) {
-        if (hideSchema) {
-            return;
-        }
         leaveLevel();
     }
 

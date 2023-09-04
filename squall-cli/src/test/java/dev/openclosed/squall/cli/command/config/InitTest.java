@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
+import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.MajorDialect;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -56,7 +56,7 @@ public final class InitTest {
                             Locale.ENGLISH,
                             true,
                             ComponentOrder.NAME,
-                            Set.of(),
+                            Component.Type.all(),
                             ColumnAttribute.defaultList(),
                             SequenceAttribute.defaultList()
                         )

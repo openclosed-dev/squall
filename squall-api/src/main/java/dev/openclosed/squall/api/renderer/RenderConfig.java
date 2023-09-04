@@ -16,7 +16,6 @@
 
 package dev.openclosed.squall.api.renderer;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -30,7 +29,7 @@ public record RenderConfig(
         Locale locale,
         boolean numbering,
         ComponentOrder order,
-        Set<Component.Type> hide,
+        Set<Component.Type> show,
         List<ColumnAttribute> columnAttributes,
         List<SequenceAttribute> sequenceAttributes) {
 
@@ -46,7 +45,7 @@ public record RenderConfig(
             Locale.ENGLISH,
             true,
             ComponentOrder.NAME,
-            Collections.emptySet(),
+            Component.Type.all(),
             ColumnAttribute.defaultList(),
             SequenceAttribute.defaultList()
         );

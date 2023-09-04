@@ -21,13 +21,13 @@ import dev.openclosed.squall.api.base.MapSource;
 import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Database specification.
  */
 public interface DatabaseSpec extends MapSource {
-
-    void walkSpec(SpecVisitor visitor, ComponentOrder order);
 
     /**
      * Returns the title of the specification.
@@ -40,6 +40,17 @@ public interface DatabaseSpec extends MapSource {
      * @return the list of the databases.
      */
     List<Database> databases();
+
+    /**
+     * Walks all components in a specification.
+     * @param order visiting order.
+     * @param visitor the component visitor.
+     */
+    void walkSpec(ComponentOrder order, SpecVisitor visitor);
+
+    void walkSpec(ComponentOrder order, Set<Component.Type> types, SpecVisitor visitor);
+
+    void walkSpec(ComponentOrder order, Predicate<Component> filter, SpecVisitor visitor);
 
     /**
      * Creates a new builder.

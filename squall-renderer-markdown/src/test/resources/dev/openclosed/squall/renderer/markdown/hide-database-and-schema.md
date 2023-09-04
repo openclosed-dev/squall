@@ -3,7 +3,7 @@
 ```json
 {
   "numbering": true,
-  "hide": ["database", "schema"]
+  "show": ["table", "column", "sequence"]
 }
 
 ```

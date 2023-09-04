@@ -29,16 +29,21 @@ import dev.openclosed.squall.api.spec.Table;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 final class SpecWalker implements SpecVisitor.Context {
 
-    private final SpecVisitor visitor;
     private final ComponentOrder order;
+    private final Predicate<Component> filter;
+    private final SpecVisitor visitor;
+
     private final List<Component> componentStack;
 
-    SpecWalker(SpecVisitor visitor, ComponentOrder order) {
-        this.visitor = visitor;
+    SpecWalker(ComponentOrder order, Predicate<Component> filter, SpecVisitor visitor) {
         this.order = order;
+        this.filter = filter;
+        this.visitor = visitor;
+
         this.componentStack = new ArrayList<>(8);
     }
 
@@ -84,6 +89,10 @@ final class SpecWalker implements SpecVisitor.Context {
         return this.componentStack.remove(this.componentStack.size() - 1);
     }
 
+    boolean shouldVisit(Component component) {
+        return filter.test(component);
+    }
+
     private void walkOnDatabases(List<Database> databases) {
         int ordinal = 1;
         for (var child : reorder(databases)) {
@@ -92,11 +101,16 @@ final class SpecWalker implements SpecVisitor.Context {
     }
 
     private void walkOnDatabase(Database database, int ordinal) {
-        this.visitor.visit(database, ordinal, this);
+        final boolean shouldVisit = shouldVisit(database);
+        if (shouldVisit) {
+            this.visitor.visit(database, ordinal, this);
+        }
         pushComponent(database);
         walkOnSchemas(database.schemas());
         popComponent();
-        this.visitor.leave(database);
+        if (shouldVisit) {
+            this.visitor.leave(database);
+        }
     }
 
     private void walkOnSchemas(List<Schema> schemas) {
@@ -107,12 +121,17 @@ final class SpecWalker implements SpecVisitor.Context {
     }
 
     private void walkOnSchema(Schema schema, int ordinal) {
-        this.visitor.visit(schema, ordinal, this);
+        final boolean shouldVisit = shouldVisit(schema);
+        if (shouldVisit) {
+            this.visitor.visit(schema, ordinal, this);
+        }
         pushComponent(schema);
         walkOnSequences(schema.sequences());
         walkOnTables(schema.tables());
         popComponent();
-        this.visitor.leave(schema);
+        if (shouldVisit) {
+            this.visitor.leave(schema);
+        }
     }
 
     private void walkOnSequences(List<Sequence> sequences) {
@@ -123,7 +142,9 @@ final class SpecWalker implements SpecVisitor.Context {
     }
 
     private void walkOnSequence(Sequence sequence, int ordinal) {
-        this.visitor.visit(sequence, ordinal, this);
+        if (shouldVisit(sequence)) {
+            this.visitor.visit(sequence, ordinal, this);
+        }
     }
 
     private void walkOnTables(List<Table> tables) {
@@ -134,11 +155,16 @@ final class SpecWalker implements SpecVisitor.Context {
     }
 
     private void walkOnTable(Table table, int ordinal) {
-        this.visitor.visit(table, ordinal, this);
+        final boolean shouldVisit = shouldVisit(table);
+        if (shouldVisit) {
+            this.visitor.visit(table, ordinal, this);
+        }
         pushComponent(table);
         walkOnColumns(table.columns());
         popComponent();
-        this.visitor.leave(table);
+        if (shouldVisit) {
+            this.visitor.leave(table);
+        }
     }
 
     private void walkOnColumns(List<Column> columns) {
@@ -149,7 +175,9 @@ final class SpecWalker implements SpecVisitor.Context {
     }
 
     private void walkOnColumn(Column column, int ordinal) {
-        this.visitor.visit(column, ordinal, this);
+        if (shouldVisit(column)) {
+            this.visitor.visit(column, ordinal, this);
+        }
     }
 
     private <T extends Component> Collection<T> reorder(Collection<T> components) {

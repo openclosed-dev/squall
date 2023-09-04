@@ -49,7 +49,7 @@ final class SpecWriter implements SpecVisitor, DelegatingAppender {
     void writeSpec(DatabaseSpec spec) throws IOException {
         this.level = 0;
         try {
-            spec.walkSpec(this, config.order());
+            spec.walkSpec(config.order(), config.show(), this);
         } catch (UncheckedIOException e) {
             throw e.getCause();
         }

@@ -63,13 +63,13 @@ ERROR: Unexpected value type. Expected type is object, but actual type was array
 ERROR: Illegal value. Allowed values are ["name", "definition"], but actual value was "length". [/renderers/default/order]
 ```
 
-# illegal value for hide
+# illegal value for show
 
 ```json
 {
     "renderers": {
         "default": {
-            "hide": ["database", "schema", "row"]
+            "show": ["database", "schema", "row"]
         }
     }
 }
@@ -77,7 +77,7 @@ ERROR: Illegal value. Allowed values are ["name", "definition"], but actual valu
 ```
 
 ```
-ERROR: Illegal value. Allowed values are ["database", "schema", "table", "column", "sequence"], but actual value was "row". [/renderers/default/hide/2]
+ERROR: Illegal value. Allowed values are ["database", "schema", "table", "column", "sequence"], but actual value was "row". [/renderers/default/show/2]
 ```
 
 # illegal value for column attributes

@@ -78,7 +78,7 @@ final class DefaultConfigLoaderTest {
             "locale", "ja",
             "numbering", false,
             "order", "definition",
-            "hide", Set.of("database", "schema"),
+            "show", Set.of("database", "schema"),
             "columnAttributes", List.of("name", "description"),
             "sequenceAttributes", List.of("type_name", "start")
         );
@@ -123,7 +123,7 @@ final class DefaultConfigLoaderTest {
                         "locale", "en",
                         "numbering", false,
                         "order", "name",
-                        "hide", Set.of("database", "schema"),
+                        "show", Set.of("database", "schema"),
                         "columnAttributes", List.of("name", "description"),
                         "sequenceAttributes", List.of("type_name", "start")
                         )

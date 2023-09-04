@@ -21,6 +21,7 @@ import dev.openclosed.squall.api.base.MapSource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * A component in the database specification.
@@ -35,7 +36,13 @@ public interface Component extends MapSource {
         SCHEMA,
         TABLE,
         COLUMN,
-        SEQUENCE
+        SEQUENCE;
+
+        private static final Set<Type> ALL = Set.of(Type.values());
+
+        public static Set<Type> all() {
+            return ALL;
+        }
     };
 
     enum State {
