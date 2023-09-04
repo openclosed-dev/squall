@@ -122,6 +122,4 @@ public interface Component extends MapSource {
                 .filter(a -> a.type() == type)
                 .findFirst();
     }
-
-    void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, SpecVisitor.Context context);
 }

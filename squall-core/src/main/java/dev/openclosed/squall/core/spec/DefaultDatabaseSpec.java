@@ -30,10 +30,8 @@ public record DefaultDatabaseSpec(
         List<Database> databases
         ) implements DatabaseSpec, RecordMapSource {
 
+    @Override
     public void walkSpec(SpecVisitor visitor, ComponentOrder order) {
-        var context = new SpecVisitorContext();
-        visitor.visit(this, context);
-        BasicComponent.visitChildComponents(this.databases, visitor, order, context);
-        visitor.leave(this);
+        new SpecWalker(visitor, order).walkOnSpec(this);
     }
 }

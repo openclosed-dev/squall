@@ -17,12 +17,9 @@
 package dev.openclosed.squall.core.spec;
 
 import dev.openclosed.squall.api.spec.Component;
-import dev.openclosed.squall.api.spec.ComponentOrder;
 import dev.openclosed.squall.api.spec.DocAnnotationType;
-import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.core.base.RecordMapSource;
 
-import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,36 +42,5 @@ interface BasicComponent extends Component, RecordMapSource {
     @Override
     default boolean isDeprecated() {
         return getFirstAnnotation(DocAnnotationType.DEPRECATED).isPresent();
-    }
-
-    @Override
-    default void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, SpecVisitor.Context context) {
-        acceptVisitor(visitor, order, ordinal, (SpecVisitorContext) context);
-    }
-
-    void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, SpecVisitorContext context);
-
-    default void visitChildren(
-        Collection<? extends Component> components,
-        SpecVisitor visitor,
-        ComponentOrder order,
-        SpecVisitorContext context
-    ) {
-        context.pushComponent(this);
-        visitChildComponents(components, visitor, order, context);
-        context.popComponent();
-    }
-
-    static void visitChildComponents(
-        Collection<? extends Component> components,
-        SpecVisitor visitor,
-        ComponentOrder order,
-        SpecVisitorContext context
-    ) {
-
-        int ordinal = 1;
-        for (var component : order.reorder(components)) {
-            component.acceptVisitor(visitor, order, ordinal++, context);
-        }
     }
 }

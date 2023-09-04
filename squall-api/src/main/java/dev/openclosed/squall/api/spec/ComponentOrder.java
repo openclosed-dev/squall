@@ -21,6 +21,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
+/**
+ * Order of specification components.
+ */
 public enum ComponentOrder {
     NAME {
         @Override
@@ -35,13 +38,19 @@ public enum ComponentOrder {
         }
     };
 
-    protected Comparator<Component> comparator() {
-        throw new UnsupportedOperationException();
-    }
-
-    public <T extends Component> Collection<T> reorder(Collection<T> collection) {
-        var list = new ArrayList<T>(collection);
+    /**
+     * Reorders the components.
+     * @param components the list of components.
+     * @return reordered components.
+     * @param <T> the type of the component.
+     */
+    public <T extends Component> Collection<T> reorder(Collection<T> components) {
+        var list = new ArrayList<T>(components);
         Collections.sort(list, comparator());
         return list;
+    }
+
+    protected Comparator<Component> comparator() {
+        throw new UnsupportedOperationException();
     }
 }

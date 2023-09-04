@@ -16,10 +16,8 @@
 
 package dev.openclosed.squall.core.spec;
 
-import dev.openclosed.squall.api.spec.ComponentOrder;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Sequence;
-import dev.openclosed.squall.api.spec.SpecVisitor;
 
 import java.util.List;
 import java.util.Objects;
@@ -43,10 +41,5 @@ public record DefaultSequence(
     @Override
     public Type type() {
         return Type.SEQUENCE;
-    }
-
-    @Override
-    public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, SpecVisitorContext context) {
-        visitor.visit(this, ordinal, context);
     }
 }

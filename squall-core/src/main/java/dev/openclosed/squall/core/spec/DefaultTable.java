@@ -17,11 +17,9 @@
 package dev.openclosed.squall.core.spec;
 
 import dev.openclosed.squall.api.spec.Column;
-import dev.openclosed.squall.api.spec.ComponentOrder;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.ForeignKey;
 import dev.openclosed.squall.api.spec.PrimaryKey;
-import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.api.spec.Table;
 import dev.openclosed.squall.api.spec.Unique;
 
@@ -45,14 +43,6 @@ public record DefaultTable(
         columns = List.copyOf(columns);
         foreignKeys = List.copyOf(foreignKeys);
         unique = List.copyOf(unique);
-    }
-
-    @Override
-    public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, SpecVisitorContext context) {
-        visitor.visit(this, ordinal, context);
-        // Forces to visit in definition order
-        visitChildren(columns, visitor, ComponentOrder.DEFINITION, context);
-        visitor.leave(this);
     }
 
     @Override

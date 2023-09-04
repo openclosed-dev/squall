@@ -17,11 +17,9 @@
 package dev.openclosed.squall.core.spec;
 
 import dev.openclosed.squall.api.spec.Component;
-import dev.openclosed.squall.api.spec.ComponentOrder;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Schema;
 import dev.openclosed.squall.api.spec.Sequence;
-import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.api.spec.Table;
 
 import java.util.List;
@@ -45,13 +43,5 @@ public record DefaultSchema(
     @Override
     public Type type() {
         return Type.SCHEMA;
-    }
-
-    @Override
-    public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, SpecVisitorContext context) {
-        visitor.visit(this, ordinal, context);
-        visitChildren(this.sequences, visitor, order, context);
-        visitChildren(this.tables, visitor, order, context);
-        visitor.leave(this);
     }
 }

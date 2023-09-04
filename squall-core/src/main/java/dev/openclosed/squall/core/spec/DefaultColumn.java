@@ -18,10 +18,8 @@ package dev.openclosed.squall.core.spec;
 
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.Column;
-import dev.openclosed.squall.api.spec.ComponentOrder;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Expression;
-import dev.openclosed.squall.api.spec.SpecVisitor;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,10 +56,5 @@ public record DefaultColumn(
     @Override
     public Type type() {
         return Component.Type.COLUMN;
-    }
-
-    @Override
-    public void acceptVisitor(SpecVisitor visitor, ComponentOrder order, int ordinal, SpecVisitorContext context) {
-        visitor.visit(this, ordinal, context);
     }
 }
