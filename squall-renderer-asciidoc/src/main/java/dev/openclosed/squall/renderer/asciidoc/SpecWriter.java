@@ -16,6 +16,7 @@
 
 package dev.openclosed.squall.renderer.asciidoc;
 
+import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.support.DelegatingAppender;
 import dev.openclosed.squall.api.spec.Component;
@@ -26,12 +27,11 @@ import dev.openclosed.squall.api.spec.SpecVisitor;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.ResourceBundle;
 
 final class SpecWriter implements SpecVisitor, DelegatingAppender {
 
     private final RenderConfig config;
-    private final ResourceBundle bundle;
+    private final MessageBundle bundle;
     private final Appendable appender;
 
     private int level;
@@ -40,7 +40,7 @@ final class SpecWriter implements SpecVisitor, DelegatingAppender {
         "=", "==", "===", "====", "=====", "======", "======="
     };
 
-    SpecWriter(RenderConfig config, ResourceBundle bundle, Appendable appender) {
+    SpecWriter(RenderConfig config, MessageBundle bundle, Appendable appender) {
         this.config = config;
         this.bundle = bundle;
         this.appender = appender;

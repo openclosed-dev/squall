@@ -17,6 +17,7 @@
 package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
+import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.DocAnnotationType;
 import dev.openclosed.squall.api.spec.Expression;
@@ -24,7 +25,6 @@ import dev.openclosed.squall.api.spec.ForeignKey;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.api.spec.Table;
 
-import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 enum ColumnCellProvider implements CellProvider<Column> {
@@ -158,19 +158,19 @@ enum ColumnCellProvider implements CellProvider<Column> {
     DESCRIPTION(ALIGN_LEFT) {
         @Override
         public String getLocalizedValue(
-            Column column, int ordinal, SpecVisitor.Context context, ResourceBundle bundle) {
+            Column column, int ordinal, SpecVisitor.Context context, MessageBundle bundle) {
             return column.description()
                 .map(d -> withDeprecationNotice(d, column, bundle))
                 .map(ColumnCellProvider::inlined)
                 .orElse("-");
         }
 
-        private static String withDeprecationNotice(String description, Column column, ResourceBundle bundle) {
+        private static String withDeprecationNotice(String description, Column column, MessageBundle bundle) {
             if (!column.isDeprecated()) {
                 return description;
             }
             var sb = new StringBuilder();
-            sb.append("**").append(bundle.getString("deprecated")).append("**");
+            sb.append("**").append(bundle.deprecated()).append("**");
             String notice = column.getFirstAnnotation(DocAnnotationType.DEPRECATED).get().value();
             if (!notice.isEmpty()) {
                 sb.append(' ').append(notice);

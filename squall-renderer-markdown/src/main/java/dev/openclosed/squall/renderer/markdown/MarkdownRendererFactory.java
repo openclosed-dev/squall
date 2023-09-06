@@ -16,8 +16,7 @@
 
 package dev.openclosed.squall.renderer.markdown;
 
-import java.util.ResourceBundle;
-
+import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.RendererFactory;
 import dev.openclosed.squall.api.renderer.TextRenderer;
@@ -30,7 +29,7 @@ public final class MarkdownRendererFactory implements RendererFactory {
     }
 
     @Override
-    public TextRenderer createRenderer(RenderConfig config, ResourceBundle bundle) {
+    public TextRenderer createRenderer(RenderConfig config, MessageBundle bundle) {
         return new MarkdownRenderer(config, bundle);
     }
 }

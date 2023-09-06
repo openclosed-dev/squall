@@ -17,6 +17,7 @@
 package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
+import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.renderer.support.Appender;
 import dev.openclosed.squall.api.spec.Column;
@@ -25,7 +26,6 @@ import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 /**
@@ -45,7 +45,7 @@ interface MarkdownTableWriter<T extends Component> {
 
     static MarkdownTableWriter<Column> forColumn(
         List<ColumnAttribute> attributes,
-        ResourceBundle bundle,
+        MessageBundle bundle,
         Consumer<Column> anchorWriter) {
         List<ColumnCellProvider> providers = attributes.stream()
             .map(ColumnCellProvider::provider).toList();
@@ -54,7 +54,7 @@ interface MarkdownTableWriter<T extends Component> {
 
     static MarkdownTableWriter<Sequence> forSequence(
         List<SequenceAttribute> attributes,
-        ResourceBundle bundle) {
+        MessageBundle bundle) {
         List<SequenceCellProvider> providers = attributes.stream()
             .map(SequenceCellProvider::provider).toList();
         return MarkdownTableWriterImpl.withProviders(providers, bundle, t -> { });

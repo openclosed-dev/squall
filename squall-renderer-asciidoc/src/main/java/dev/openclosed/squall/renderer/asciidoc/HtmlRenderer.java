@@ -16,6 +16,7 @@
 
 package dev.openclosed.squall.renderer.asciidoc;
 
+import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.TextRenderer;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
@@ -27,14 +28,13 @@ import org.asciidoctor.SafeMode;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ResourceBundle;
 
 final class HtmlRenderer implements TextRenderer {
 
     private final AsciiDocRenderer asciiDocRenderer;
     private static final String BACKEND_NAME = "html5";
 
-    HtmlRenderer(RenderConfig config, ResourceBundle bundle) {
+    HtmlRenderer(RenderConfig config, MessageBundle bundle) {
         this.asciiDocRenderer = new AsciiDocRenderer(config, bundle);
     }
 

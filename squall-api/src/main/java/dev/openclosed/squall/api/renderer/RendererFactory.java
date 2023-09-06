@@ -18,29 +18,21 @@ package dev.openclosed.squall.api.renderer;
 
 import java.util.Locale;
 import java.util.NoSuchElementException;
-import java.util.ResourceBundle;
 import java.util.ServiceLoader;
 
 public interface RendererFactory {
 
-    String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.Messages";
-
     String format();
-
-    default Renderer createRenderer() {
-        return createRenderer(RenderConfig.getDefault());
-    }
 
     default Renderer createRenderer(RenderConfig config) {
         return createRenderer(config, config.locale());
     }
 
     default Renderer createRenderer(RenderConfig config, Locale locale) {
-        var bundle = ResourceBundle.getBundle(BUNDLE_BASE_NAME, locale);
-        return createRenderer(config, bundle);
+        return createRenderer(config, MessageBundle.forLocale(locale));
     }
 
-    Renderer createRenderer(RenderConfig config, ResourceBundle bundle);
+    Renderer createRenderer(RenderConfig config, MessageBundle bundle);
 
     static RendererFactory get(String format) {
         for (var factory : ServiceLoader.load(RendererFactory.class)) {

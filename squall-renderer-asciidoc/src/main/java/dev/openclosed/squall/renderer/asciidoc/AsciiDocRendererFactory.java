@@ -16,11 +16,10 @@
 
 package dev.openclosed.squall.renderer.asciidoc;
 
+import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.Renderer;
 import dev.openclosed.squall.api.renderer.RendererFactory;
-
-import java.util.ResourceBundle;
 
 public final class AsciiDocRendererFactory implements RendererFactory {
 
@@ -30,7 +29,7 @@ public final class AsciiDocRendererFactory implements RendererFactory {
     }
 
     @Override
-    public Renderer createRenderer(RenderConfig config, ResourceBundle bundle) {
+    public Renderer createRenderer(RenderConfig config, MessageBundle bundle) {
         return new AsciiDocRenderer(config, bundle);
     }
 }

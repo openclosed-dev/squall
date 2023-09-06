@@ -16,8 +16,7 @@
 
 package dev.openclosed.squall.renderer.json;
 
-import java.util.ResourceBundle;
-
+import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.Renderer;
 import dev.openclosed.squall.api.renderer.RendererFactory;
@@ -30,7 +29,7 @@ public final class JacksonJsonRendererFactory implements RendererFactory {
     }
 
     @Override
-    public Renderer createRenderer(RenderConfig config, ResourceBundle bundle) {
+    public Renderer createRenderer(RenderConfig config, MessageBundle bundle) {
         return new JacksonJsonRenderer(config);
     }
 }

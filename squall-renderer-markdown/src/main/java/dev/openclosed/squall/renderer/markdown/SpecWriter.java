@@ -18,8 +18,8 @@ package dev.openclosed.squall.renderer.markdown;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.ResourceBundle;
 
+import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.support.DelegatingAppender;
 import dev.openclosed.squall.api.spec.Column;
@@ -38,7 +38,7 @@ import dev.openclosed.squall.api.spec.Table;
 class SpecWriter implements SpecVisitor, DelegatingAppender {
 
     private final RenderConfig config;
-    private final ResourceBundle bundle;
+    private final MessageBundle bundle;
     private final Appendable appender;
 
     private final HeadingNumberGenerator headingNumberGenerator;
@@ -52,7 +52,7 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
         "#", "##", "###", "####", "#####", "######", "#######"
     };
 
-    SpecWriter(RenderConfig config, ResourceBundle bundle, Appendable appender) {
+    SpecWriter(RenderConfig config, MessageBundle bundle, Appendable appender) {
         this.config = config;
         this.bundle = bundle;
         this.appender = appender;
@@ -226,7 +226,7 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
 
     private void writeDeprecationNotice(Component component) {
         appendNewLine();
-        append("**").append(getMessage("deprecated")).append("**");
+        append("**").append(bundle.deprecated()).append("**");
         component.getFirstAnnotation(DocAnnotationType.DEPRECATED).ifPresent(a -> {
             String text = a.value();
             if (!text.isEmpty()) {
@@ -250,9 +250,5 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
         append("<a id=\"").append(fullName);
         append("\" name=\"").append(fullName);
         append("\"></a>");
-    }
-
-    private String getMessage(String key) {
-        return bundle.getString(key);
     }
 }

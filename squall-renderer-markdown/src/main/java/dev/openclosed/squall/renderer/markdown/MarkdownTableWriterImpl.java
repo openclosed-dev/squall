@@ -16,12 +16,12 @@
 
 package dev.openclosed.squall.renderer.markdown;
 
+import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.support.Appender;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 final class MarkdownTableWriterImpl<T extends Component> implements MarkdownTableWriter<T> {
@@ -29,7 +29,7 @@ final class MarkdownTableWriterImpl<T extends Component> implements MarkdownTabl
     private static final MarkdownTableWriter<?> EMPTY = new MarkdownTableWriter<>() { };
 
     private final List<? extends CellProvider<T>> providers;
-    private final ResourceBundle bundle;
+    private final MessageBundle bundle;
     private final Consumer<T> anchorWriter;
     private final List<String> titles;
 
@@ -43,7 +43,7 @@ final class MarkdownTableWriterImpl<T extends Component> implements MarkdownTabl
      */
     static <T extends Component> MarkdownTableWriter<T> withProviders(
         List<? extends CellProvider<T>> providers,
-        ResourceBundle bundle,
+        MessageBundle bundle,
         Consumer<T> anchorWriter) {
         if (providers.isEmpty()) {
             @SuppressWarnings("unchecked")
@@ -56,13 +56,13 @@ final class MarkdownTableWriterImpl<T extends Component> implements MarkdownTabl
 
     private MarkdownTableWriterImpl(
         List<? extends CellProvider<T>> providers,
-        ResourceBundle bundle,
+        MessageBundle bundle,
         Consumer<T> anchorWriter) {
         this.providers = providers;
         this.bundle = bundle;
         this.anchorWriter = anchorWriter;
         this.titles = providers.stream()
-            .map(p -> bundle.getString("column.header." + p.name()))
+            .map(p -> bundle.columnHeader(p.name()))
             .toList();
     }
 

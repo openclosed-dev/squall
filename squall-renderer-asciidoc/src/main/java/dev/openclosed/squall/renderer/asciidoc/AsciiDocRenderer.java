@@ -16,6 +16,7 @@
 
 package dev.openclosed.squall.renderer.asciidoc;
 
+import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.TextRenderer;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
@@ -27,14 +28,13 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
-import java.util.ResourceBundle;
 
 final class AsciiDocRenderer implements TextRenderer {
 
     private final RenderConfig config;
-    private final ResourceBundle bundle;
+    private final MessageBundle bundle;
 
-    AsciiDocRenderer(RenderConfig config, ResourceBundle bundle) {
+    AsciiDocRenderer(RenderConfig config, MessageBundle bundle) {
         this.config = config;
         this.bundle = bundle;
     }
