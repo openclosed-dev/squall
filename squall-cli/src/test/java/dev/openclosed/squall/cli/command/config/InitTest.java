@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import dev.openclosed.squall.api.renderer.PageOrientation;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.MajorDialect;
@@ -58,7 +59,9 @@ public final class InitTest {
                             ComponentOrder.NAME,
                             Component.Type.all(),
                             ColumnAttribute.defaultList(),
-                            SequenceAttribute.defaultList()
+                            SequenceAttribute.defaultList(),
+                            "a4",
+                            PageOrientation.PORTRAIT
                         )
                     )
             );

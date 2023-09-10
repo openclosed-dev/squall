@@ -31,7 +31,9 @@ public record RenderConfig(
         ComponentOrder order,
         Set<Component.Type> show,
         List<ColumnAttribute> columnAttributes,
-        List<SequenceAttribute> sequenceAttributes) {
+        List<SequenceAttribute> sequenceAttributes,
+        String pageSize,
+        PageOrientation pageOrientation) {
 
     private static final RenderConfig DEFAULT = new RenderConfig();
 
@@ -47,7 +49,9 @@ public record RenderConfig(
             ComponentOrder.NAME,
             Component.Type.all(),
             ColumnAttribute.defaultList(),
-            SequenceAttribute.defaultList()
+            SequenceAttribute.defaultList(),
+            "a4",
+            PageOrientation.PORTRAIT
         );
     }
 }

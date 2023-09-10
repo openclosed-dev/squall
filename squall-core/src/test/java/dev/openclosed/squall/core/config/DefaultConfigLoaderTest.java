@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import dev.openclosed.squall.api.renderer.PageOrientation;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.spec.MajorDialect;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,7 +81,9 @@ final class DefaultConfigLoaderTest {
             "order", "definition",
             "show", Set.of("database", "schema"),
             "columnAttributes", List.of("name", "description"),
-            "sequenceAttributes", List.of("type_name", "start")
+            "sequenceAttributes", List.of("type_name", "start"),
+            "pageSize", "a4",
+            "pageOrientation", "portrait"
         );
 
         var actual = sut.loadFromMap(map, RenderConfig.class);
@@ -93,7 +96,9 @@ final class DefaultConfigLoaderTest {
             ComponentOrder.DEFINITION,
             Set.of(Component.Type.DATABASE, Component.Type.SCHEMA),
             List.of(ColumnAttribute.NAME, ColumnAttribute.DESCRIPTION),
-            List.of(SequenceAttribute.TYPE_NAME, SequenceAttribute.START)
+            List.of(SequenceAttribute.TYPE_NAME, SequenceAttribute.START),
+            "a4",
+            PageOrientation.PORTRAIT
         );
 
         assertThat(actual).isEqualTo(expected);
@@ -148,7 +153,9 @@ final class DefaultConfigLoaderTest {
                     ComponentOrder.NAME,
                     Set.of(Component.Type.DATABASE, Component.Type.SCHEMA),
                     List.of(ColumnAttribute.NAME, ColumnAttribute.DESCRIPTION),
-                    List.of(SequenceAttribute.TYPE_NAME, SequenceAttribute.START)
+                    List.of(SequenceAttribute.TYPE_NAME, SequenceAttribute.START),
+                    "a4",
+                    PageOrientation.PORTRAIT
                     )
                 ));
 
@@ -169,9 +176,7 @@ final class DefaultConfigLoaderTest {
     @ParameterizedTest
     @MethodSource("invalidJson")
     public void shouldFailIfJsonIsInvalid(ConfigTestCase testCase) {
-        var thrown = catchThrowable(() -> {
-            sut.loadFromJson(testCase.json());
-        });
+        var thrown = catchThrowable(() -> sut.loadFromJson(testCase.json()));
         assertThat(thrown).isInstanceOf(ConfigurationException.class);
         var output = handleProblems(sut.getProblems());
         assertThat(output).isEqualTo(testCase.output());
@@ -197,9 +202,7 @@ final class DefaultConfigLoaderTest {
     @ParameterizedTest
     @MethodSource("invalidConfigurations")
     public void shouldFailIfConfigurationIsInvalid(ConfigTestCase testCase) {
-        var thrown = catchThrowable(() -> {
-            sut.loadFromJson(testCase.json());
-        });
+        var thrown = catchThrowable(() -> sut.loadFromJson(testCase.json()));
         assertThat(thrown).isInstanceOf(ConfigurationException.class);
         var output = handleProblems(sut.getProblems());
         assertThat(output).isEqualTo(testCase.output());

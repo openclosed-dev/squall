@@ -49,7 +49,7 @@ public class AsciiDocRendererTest {
     @BeforeAll
     public static void setUpOnce() {
         Locale.setDefault(Locale.ENGLISH);
-        rendererFactory = RendererFactory.get("html");
+        rendererFactory = RendererFactory.get("pdf");
         parserFactories = new HashMap<>();
     }
 

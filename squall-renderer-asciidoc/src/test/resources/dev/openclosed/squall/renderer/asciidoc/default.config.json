@@ -2,5 +2,7 @@
   "format": "pdf",
   "locale": "en",
   "numbering": true,
-  "order": "name"
+  "order": "name",
+  "pageSize": "a4",
+  "pageOrientation": "landscape"
 }

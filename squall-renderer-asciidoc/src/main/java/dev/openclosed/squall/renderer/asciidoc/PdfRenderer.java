@@ -66,8 +66,8 @@ final class PdfRenderer implements Renderer {
             .icons("font")
             .attribute("icon-set", "fas")
             .attribute("title-page")
-            .attribute("pdf-page-size", "A4")
-            .attribute("pdf-page-layout", "landscape")
+            .attribute("pdf-page-size", config.pageSize().toUpperCase())
+            .attribute("pdf-page-layout", config.pageOrientation().name().toLowerCase())
             .attribute("pdf-theme", "default-with-fallback-font");
 
         if (Locale.JAPANESE.equals(config.locale())) {
