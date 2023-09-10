@@ -105,7 +105,7 @@ class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
             enterLevel();
         }
 
-        writeDescriptionSection(database);
+        writeDescription(database);
     }
 
     @Override
@@ -120,7 +120,7 @@ class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
         writeHeading(schema);
         enterLevel();
 
-        writeDescriptionSection(schema);
+        writeDescription(schema);
     }
 
     @Override
@@ -131,7 +131,7 @@ class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
     @Override
     public void visit(Sequence sequence, Context context) {
         writeHeading(sequence);
-        writeDescriptionSection(sequence);
+        writeDescription(sequence);
 
         appendNewLine();
         sequenceWriter.writeHeaderRow(this);
@@ -142,7 +142,7 @@ class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
     @Override
     public void visit(Table table, Context context) {
         writeHeading(table);
-        writeDescriptionSection(table);
+        writeDescription(table);
 
         if (table.hasColumns()) {
             appendNewLine();
@@ -215,7 +215,7 @@ class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
         }
     }
 
-    private void writeDescriptionSection(Component component) {
+    private void writeDescription(Component component) {
         if (component.isDeprecated()) {
             writeDeprecationNotice(component);
         }

@@ -49,15 +49,15 @@ public class AsciiDocRendererTest {
     @BeforeAll
     public static void setUpOnce() {
         Locale.setDefault(Locale.ENGLISH);
-        rendererFactory = RendererFactory.get("pdf");
+        rendererFactory = RendererFactory.get("html");
         parserFactories = new HashMap<>();
     }
 
     public static Stream<TestCase> postgresqlTests() {
         var dialect = MajorDialect.POSTGRESQL;
         return Stream.of(
-            new TestCase("book", "book", "default", dialect)
-            //new TestCase("book-ja", "book-ja", "japanese", dialect)
+            new TestCase("book", "book", "default", dialect),
+            new TestCase("book-ja", "book-ja", "japanese", dialect)
         );
     }
 

@@ -66,9 +66,7 @@ final class HtmlRenderer implements TextRenderer {
         var builder = Attributes.builder()
             .sectionNumbers(config.numbering())
             .tableOfContents(true)
-            .tableOfContents(Placement.LEFT)
-            .icons("font")
-            .attribute("icon-set", "fas");
+            .tableOfContents(Placement.LEFT);
 
         return builder.build();
     }

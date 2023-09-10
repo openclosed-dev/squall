@@ -63,8 +63,6 @@ final class PdfRenderer implements Renderer {
             .sectionNumbers(config.numbering())
             .tableOfContents(true)
             .tableOfContents(Placement.PREAMBLE)
-            .icons("font")
-            .attribute("icon-set", "fas")
             .attribute("title-page")
             .attribute("pdf-page-size", config.pageSize().toUpperCase())
             .attribute("pdf-page-layout", config.pageOrientation().name().toLowerCase())

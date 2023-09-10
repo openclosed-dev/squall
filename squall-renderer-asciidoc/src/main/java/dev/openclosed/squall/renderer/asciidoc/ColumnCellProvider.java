@@ -157,7 +157,6 @@ enum ColumnCellProvider implements CellProvider<Column> {
             Column column, int ordinal, SpecVisitor.Context context, MessageBundle bundle) {
             return column.description()
                 .map(d -> withDeprecationNotice(d, column, bundle))
-                .map(ColumnCellProvider::inlined)
                 .orElse("-");
         }
 
@@ -166,12 +165,12 @@ enum ColumnCellProvider implements CellProvider<Column> {
                 return description;
             }
             var sb = new StringBuilder();
-            sb.append("**").append(bundle.deprecated()).append("**");
+            sb.append("*").append(bundle.deprecated()).append("*");
             String notice = column.getFirstAnnotation(DocAnnotationType.DEPRECATED).get().value();
             if (!notice.isEmpty()) {
-                sb.append(' ').append(notice);
+                sb.append(' ').append(notice).append('\n');
             }
-            sb.append("<br>").append(description);
+            sb.append('\n').append(description);
             return sb.toString();
         }
     };
@@ -187,12 +186,8 @@ enum ColumnCellProvider implements CellProvider<Column> {
         return this.specifier;
     }
 
-    private static String inlined(String text) {
-        return text.replaceAll("\\n+", " ");
-    }
-
     private static String expressionToCode(Expression expression) {
-        return "`+" + expression.toSql() + "+`";
+        return "`" + expression.toSql() + "`";
     }
 
     static ColumnCellProvider provider(ColumnAttribute attribute) {

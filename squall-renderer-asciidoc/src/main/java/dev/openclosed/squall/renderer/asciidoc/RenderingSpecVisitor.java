@@ -23,6 +23,7 @@ import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.Database;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
+import dev.openclosed.squall.api.spec.DocAnnotationType;
 import dev.openclosed.squall.api.spec.Schema;
 import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.SpecVisitor;
@@ -70,6 +71,9 @@ final class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
     public void visit(DatabaseSpec spec, Context context) {
         String title = spec.title().orElse("Untitled");
         append("= ").append(title).appendNewLine();
+
+        append(":icons: font").appendNewLine();
+        append(":icon-set: fas").appendNewLine();
 
         enterLevel();
     }
@@ -193,16 +197,31 @@ final class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
         }
         appendSpace();
         if (deprecated) {
-            append("[.line-through]#").append(name).append("#");
+            append("[.line-through]#`").append(name).append("`#");
         } else {
-            append("`+").append(name).append("+`");
+            append('`').append(name).append('`');
         }
     }
 
     private void writeDescription(Component component) {
+        if (component.isDeprecated()) {
+            writeDeprecationNotice(component);
+        }
         component.description().ifPresent(description ->
             appendNewLine().append(description).appendNewLine()
         );
+    }
+
+    private void writeDeprecationNotice(Component component) {
+        appendNewLine();
+        append("*").append(bundle.deprecated()).append("*");
+        component.getFirstAnnotation(DocAnnotationType.DEPRECATED).ifPresent(a -> {
+            String text = a.value();
+            if (!text.isEmpty()) {
+                appendSpace().append(text);
+            }
+        });
+        appendNewLine();
     }
 
     private void writeColumnAnchor(Column column) {

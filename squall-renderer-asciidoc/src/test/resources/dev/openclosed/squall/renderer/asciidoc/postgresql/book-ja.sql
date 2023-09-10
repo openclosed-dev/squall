@@ -41,7 +41,12 @@ CREATE TABLE book.author (
    * 著者が生まれた年。
    * @label 生年
    */
-  birth_year integer NOT NULL
+  birth_year integer NOT NULL,
+  /**
+   * このレコードをデータベースに登録した日時。
+   * @label 登録日時
+   */
+  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 /**
@@ -55,15 +60,69 @@ CREATE TABLE book.book (
    */
   id bigserial PRIMARY KEY,
   /**
-   * この書籍の著者。
-   * @label 著者ID
-   */
-  author_id bigint NOT NULL,
-  /**
    * この書籍のタイトル。
    * @label タイトル
    */
   title varchar(256) NOT NULL,
+  /**
+   * Space-delimited tags for this book.
+   * @label タグ
+   */
+  tags varchar(256),
+  /**
+   * この本の価格。
+   * @label 価格
+   * @deprecated このカラムは使用しないこと。
+   */
+  price numeric(8, 2),
+  /**
+   * このレコードをデータベースに登録した日時。
+   * @label 登録日時
+   */
+  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
+/**
+ * 本の著者。
+ * @label 本著者
+ */
+CREATE TABLE book.book_author(
+  /**
+   * 書籍のID。
+   * @label 書籍ID
+   */
+  book_id bigint NOT NULL,
+  /**
+   * 著者のID。
+   * @label 著者ID
+   */
+  author_id bigint NOT NULL,
+  /**
+   * この本における著者の序数。
+   * 番号は`1`から開始し、これは第一執筆者を意味する。
+   * @label 序数
+   */
+  ordinal_number integer NOT NULL DEFAULT 0,
+
+  PRIMARY KEY(book_id, author_id),
+  FOREIGN KEY(book_id) REFERENCES book.book(id),
   FOREIGN KEY(author_id) REFERENCES book.author(id)
+);
+
+/**
+ * 本のカテゴリ。
+ * @label カテゴリ
+ * @deprecated 分類目的では本のタグを使用すること。
+ */
+CREATE TABLE book.category (
+  /**
+   * カテゴリのID。
+   * @label Category ID
+   */
+  id bigserial PRIMARY KEY,
+  /**
+   * カテゴリの名前。
+   * @label Name
+   */
+  name varchar(256) NOT NULL
 );
