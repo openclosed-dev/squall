@@ -18,7 +18,12 @@ package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.renderer.support.Appender;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 interface HeadingNumberGenerator {
+
+    HeadingNumberGenerator EMPTY = new HeadingNumberGenerator() { };
 
     default void enterLevel() {
     }
@@ -30,6 +35,56 @@ interface HeadingNumberGenerator {
     }
 
     static HeadingNumberGenerator create(boolean enabled) {
-        return HeadingNumberGeneratorImpl.create(enabled);
+        if (enabled) {
+            return new HeadingNumberGeneratorImpl();
+        } else {
+            return EMPTY;
+        }
+    }
+}
+
+final class HeadingNumberGeneratorImpl implements HeadingNumberGenerator {
+
+    private final StringBuilder stringBuilder = new StringBuilder();
+    private final Deque<Level> levels = new ArrayDeque<>();
+
+    HeadingNumberGeneratorImpl() {
+    }
+
+    @Override
+    public void enterLevel() {
+        this.levels.addLast(new Level(stringBuilder.length(), 1));
+    }
+
+    @Override
+    public void leaveLevel() {
+        this.levels.removeLast();
+    }
+
+    @Override
+    public void generate(Appender appender) {
+        Level level = this.levels.getLast();
+        stringBuilder.setLength(level.baseLength());
+        stringBuilder.append(level.nextOrdinal()).append('.');
+        appender.appendSpace().append(stringBuilder);
+    }
+
+    private static class Level {
+
+        private final int baseLength;
+        private int ordinal;
+
+        Level(int baseLength, int start) {
+            this.baseLength = baseLength;
+            this.ordinal = start;
+        }
+
+        int baseLength() {
+            return this.baseLength;
+        }
+
+        int nextOrdinal() {
+            return this.ordinal++;
+        }
     }
 }

@@ -28,14 +28,18 @@ import org.asciidoctor.SafeMode;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Locale;
 
 final class PdfRenderer implements Renderer {
 
-    private final AsciiDocRenderer asciiDocRenderer;
     private static final String BACKEND_NAME = "pdf";
+
+    private final AsciiDocRenderer asciiDocRenderer;
+    private final Attributes attributes;
 
     PdfRenderer(RenderConfig config, MessageBundle bundle) {
         this.asciiDocRenderer = new AsciiDocRenderer(config, bundle);
+        this.attributes = buildAttributes(config);
     }
 
     @Override
@@ -48,17 +52,28 @@ final class PdfRenderer implements Renderer {
                     .backend(BACKEND_NAME)
                     .toFile(true)
                     .safe(SafeMode.UNSAFE)
-                    .attributes(getAttributes())
+                    .attributes(this.attributes)
                     .build()
             );
         }
     }
 
-    private static Attributes getAttributes() {
-        return Attributes.builder()
-            .sectionNumbers(true)
+    private static Attributes buildAttributes(RenderConfig config) {
+        var builder = Attributes.builder()
+            .sectionNumbers(config.numbering())
             .tableOfContents(true)
-            .tableOfContents(Placement.LEFT)
-            .build();
+            .tableOfContents(Placement.PREAMBLE)
+            .icons("font")
+            .attribute("icon-set", "fas")
+            .attribute("title-page")
+            .attribute("pdf-page-size", "A4")
+            .attribute("pdf-page-layout", "landscape")
+            .attribute("pdf-theme", "default-with-fallback-font");
+
+        if (Locale.JAPANESE.equals(config.locale())) {
+            builder.attribute("scripts", "cjk");
+        }
+
+        return builder.build();
     }
 }

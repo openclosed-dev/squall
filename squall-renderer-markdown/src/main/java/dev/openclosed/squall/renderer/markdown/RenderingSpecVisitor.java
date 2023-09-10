@@ -33,9 +33,9 @@ import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.api.spec.Table;
 
 /**
- * Database specification writer.
+ * Spec visitor to render document.
  */
-class SpecWriter implements SpecVisitor, DelegatingAppender {
+class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
 
     private final RenderConfig config;
     private final MessageBundle bundle;
@@ -52,7 +52,7 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
         "#", "##", "###", "####", "#####", "######", "#######"
     };
 
-    SpecWriter(RenderConfig config, MessageBundle bundle, Appendable appender) {
+    RenderingSpecVisitor(RenderConfig config, MessageBundle bundle, Appendable appender) {
         this.config = config;
         this.bundle = bundle;
         this.appender = appender;
@@ -99,7 +99,7 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
     }
 
     @Override
-    public void visit(Database database, int ordinal, Context context) {
+    public void visit(Database database, Context context) {
         if (databaseCount > 1) {
             writeHeading(database);
             enterLevel();
@@ -116,7 +116,7 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
     }
 
     @Override
-    public void visit(Schema schema, int ordinal, Context context) {
+    public void visit(Schema schema, Context context) {
         writeHeading(schema);
         enterLevel();
 
@@ -129,18 +129,18 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
     }
 
     @Override
-    public void visit(Sequence sequence, int ordinal, Context context) {
+    public void visit(Sequence sequence, Context context) {
         writeHeading(sequence);
         writeDescriptionSection(sequence);
 
         appendNewLine();
         sequenceWriter.writeHeaderRow(this);
         sequenceWriter.writeDelimiterRow(this);
-        sequenceWriter.writeDataRow(this, sequence, 1, context);
+        sequenceWriter.writeDataRow(this, sequence, context);
     }
 
     @Override
-    public void visit(Table table, int ordinal, Context context) {
+    public void visit(Table table, Context context) {
         writeHeading(table);
         writeDescriptionSection(table);
 
@@ -152,8 +152,8 @@ class SpecWriter implements SpecVisitor, DelegatingAppender {
     }
 
     @Override
-    public void visit(Column column, int ordinal, Context context) {
-        this.columnWriter.writeDataRow(this, column, ordinal, context);
+    public void visit(Column column, Context context) {
+        this.columnWriter.writeDataRow(this, column, context);
     }
 
     private void enterLevel() {

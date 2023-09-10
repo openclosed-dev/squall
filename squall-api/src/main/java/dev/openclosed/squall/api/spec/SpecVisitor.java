@@ -51,10 +51,9 @@ public interface SpecVisitor {
     /**
      * Visits a database.
      * @param database the visited database.
-     * @param ordinal the ordinal number of the visited component.
      * @param context the context of this visiting.
      */
-    default void visit(Database database, int ordinal, Context context) {
+    default void visit(Database database, Context context) {
     }
 
     /**
@@ -67,10 +66,9 @@ public interface SpecVisitor {
     /**
      * Visits a schema.
      * @param schema the visited schema.
-     * @param ordinal the ordinal number of the visited component.
      * @param context the context of this visiting.
      */
-    default void visit(Schema schema, int ordinal, Context context) {
+    default void visit(Schema schema, Context context) {
     }
 
     /**
@@ -83,19 +81,17 @@ public interface SpecVisitor {
     /**
      * Visits a sequence.
      * @param sequence the visited sequence.
-     * @param ordinal the ordinal number of the visited component.
      * @param context the context of this visiting.
      */
-    default void visit(Sequence sequence, int ordinal, Context context) {
+    default void visit(Sequence sequence, Context context) {
     }
 
     /**
      * Visits a table.
      * @param table the visited table.
-     * @param ordinal the ordinal number of the visited component.
      * @param context the context of this visiting.
      */
-    default void visit(Table table, int ordinal, Context context) {
+    default void visit(Table table, Context context) {
     }
 
     /**
@@ -108,9 +104,8 @@ public interface SpecVisitor {
     /**
      * Visits a column in a table.
      * @param column the visited column.
-     * @param ordinal the ordinal number of the visited component.
      * @param context the context of this visiting.
      */
-    default void visit(Column column, int ordinal, Context context) {
+    default void visit(Column column, Context context) {
     }
 }

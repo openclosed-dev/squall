@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,104 +16,64 @@
 
 package dev.openclosed.squall.renderer.asciidoc;
 
+import dev.openclosed.squall.api.config.ConfigLoader;
+import dev.openclosed.squall.api.renderer.RenderConfig;
+import dev.openclosed.squall.api.spec.Dialect;
+
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-public record TestCase(
-    String title,
-    String json,
-    List<String> sql,
-    String expected) {
+public record TestCase(String title, String sqlName, String configName, Dialect dialect) {
+
+    private static ConfigLoader configLoader;
+
+    String sqlFileName() {
+        return dialect().dialectName() + "/" + sqlName() + ".sql";
+    }
+
+    String configFileName() {
+        return configName() + ".config.json";
+    }
+
+    String expectedTextFileName() {
+        return dialect().dialectName() + "/" + title() + ".expected.adoc";
+    }
+
+    String getSql() throws IOException {
+        return readText(sqlFileName());
+    }
+
+    RenderConfig getConfig() throws IOException {
+        return getConfigLoader().loadRenderConfigFromJson(readText(configFileName()));
+    }
+
+    Optional<String> getExpectedText() throws IOException {
+        return Optional.ofNullable(readText(expectedTextFileName()));
+    }
 
     @Override
     public String toString() {
         return title();
     }
 
-    public static List<TestCase> loadFrom(InputStream in) {
-        try (var reader = new BufferedReader(
-            new InputStreamReader(in, StandardCharsets.UTF_8))) {
-            return new TestCaseParser(reader.lines().iterator()).parse();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+    private ConfigLoader getConfigLoader() {
+        if (configLoader == null) {
+            configLoader = ConfigLoader.get();
         }
+        return configLoader;
     }
 
-    private static class TestCaseParser {
-
-        private final Iterator<String> iterator;
-
-        TestCaseParser(Iterator<String> iterator) {
-            this.iterator = iterator;
+    private String readText(String resourceName) throws IOException {
+        var in = getClass().getResourceAsStream(resourceName);
+        if (in == null) {
+            return null;
         }
-
-        List<TestCase> parse() {
-            var tests = new ArrayList<TestCase>();
-            while (iterator.hasNext()) {
-                tests.add(parseTest());
-            }
-            return tests;
-        }
-
-        TestCase parseTest() {
-            var title = "";
-            var json = "{}";
-            var sqlBlocks = new ArrayList<String>();
-
-            while (iterator.hasNext()) {
-                var line = iterator.next();
-                if (line.startsWith("#")) {
-                    title = line.substring(1).trim();
-                    break;
-                }
-            }
-
-            while (iterator.hasNext()) {
-                var line = iterator.next();
-                if (line.startsWith("```sql")) {
-                    sqlBlocks.add(parseCodeBlock());
-                } else if (line.startsWith("```json")) {
-                    json = parseCodeBlock();
-                } else if (line.startsWith("=")) {
-                    return new TestCase(title, json, sqlBlocks, parseExpected(line));
-                }
-            }
-
-            throw new IllegalStateException();
-        }
-
-        private String parseCodeBlock() {
-            var builder = new StringBuilder();
-            while (iterator.hasNext()) {
-                var line = iterator.next();
-                if (line.equals("```")) {
-                    break;
-                }
-                if (!builder.isEmpty()) {
-                    builder.append('\n');
-                }
-                builder.append(line);
-            }
-            return builder.toString();
-        }
-
-        private String parseExpected(String first) {
-            var builder = new StringBuilder(first);
-            while (iterator.hasNext()) {
-                var line = iterator.next();
-                if (line.trim().equals("---")) {
-                    break;
-                }
-                builder.append('\n').append(line);
-            }
-            return builder.toString().stripTrailing();
+        try (var reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+            return reader.lines().collect(Collectors.joining("\n"));
         }
     }
 }

@@ -33,9 +33,11 @@ final class HtmlRenderer implements TextRenderer {
 
     private final AsciiDocRenderer asciiDocRenderer;
     private static final String BACKEND_NAME = "html5";
+    private final Attributes attributes;
 
     HtmlRenderer(RenderConfig config, MessageBundle bundle) {
         this.asciiDocRenderer = new AsciiDocRenderer(config, bundle);
+        this.attributes = buildAttributes(config);
     }
 
     @Override
@@ -48,7 +50,7 @@ final class HtmlRenderer implements TextRenderer {
                     .backend(BACKEND_NAME)
                     .toFile(true)
                     .safe(SafeMode.UNSAFE)
-                    .attributes(getAttributes())
+                    .attributes(this.attributes)
                     .build()
             );
         }
@@ -60,11 +62,14 @@ final class HtmlRenderer implements TextRenderer {
         return asciiDocText;
     }
 
-    private static Attributes getAttributes() {
-        return Attributes.builder()
-            .sectionNumbers(true)
+    private static Attributes buildAttributes(RenderConfig config) {
+        var builder = Attributes.builder()
+            .sectionNumbers(config.numbering())
             .tableOfContents(true)
             .tableOfContents(Placement.LEFT)
-            .build();
+            .icons("font")
+            .attribute("icon-set", "fas");
+
+        return builder.build();
     }
 }

@@ -94,16 +94,15 @@ final class SpecWalker implements SpecVisitor.Context {
     }
 
     private void walkOnDatabases(List<Database> databases) {
-        int ordinal = 1;
         for (var child : reorder(databases)) {
-            walkOnDatabase(child, ordinal++);
+            walkOnDatabase(child);
         }
     }
 
-    private void walkOnDatabase(Database database, int ordinal) {
+    private void walkOnDatabase(Database database) {
         final boolean shouldVisit = shouldVisit(database);
         if (shouldVisit) {
-            this.visitor.visit(database, ordinal, this);
+            this.visitor.visit(database, this);
         }
         pushComponent(database);
         walkOnSchemas(database.schemas());
@@ -114,16 +113,15 @@ final class SpecWalker implements SpecVisitor.Context {
     }
 
     private void walkOnSchemas(List<Schema> schemas) {
-        int ordinal = 1;
         for (var child : reorder(schemas)) {
-            walkOnSchema(child, ordinal++);
+            walkOnSchema(child);
         }
     }
 
-    private void walkOnSchema(Schema schema, int ordinal) {
+    private void walkOnSchema(Schema schema) {
         final boolean shouldVisit = shouldVisit(schema);
         if (shouldVisit) {
-            this.visitor.visit(schema, ordinal, this);
+            this.visitor.visit(schema, this);
         }
         pushComponent(schema);
         walkOnSequences(schema.sequences());
@@ -135,29 +133,27 @@ final class SpecWalker implements SpecVisitor.Context {
     }
 
     private void walkOnSequences(List<Sequence> sequences) {
-        int ordinal = 1;
         for (var child : reorder(sequences)) {
-            walkOnSequence(child, ordinal++);
+            walkOnSequence(child);
         }
     }
 
-    private void walkOnSequence(Sequence sequence, int ordinal) {
+    private void walkOnSequence(Sequence sequence) {
         if (shouldVisit(sequence)) {
-            this.visitor.visit(sequence, ordinal, this);
+            this.visitor.visit(sequence, this);
         }
     }
 
     private void walkOnTables(List<Table> tables) {
-        int ordinal = 1;
         for (var child : reorder(tables)) {
-            walkOnTable(child, ordinal++);
+            walkOnTable(child);
         }
     }
 
-    private void walkOnTable(Table table, int ordinal) {
+    private void walkOnTable(Table table) {
         final boolean shouldVisit = shouldVisit(table);
         if (shouldVisit) {
-            this.visitor.visit(table, ordinal, this);
+            this.visitor.visit(table, this);
         }
         pushComponent(table);
         walkOnColumns(table.columns());
@@ -168,15 +164,14 @@ final class SpecWalker implements SpecVisitor.Context {
     }
 
     private void walkOnColumns(List<Column> columns) {
-        int ordinal = 1;
         for (var child : columns) {
-            walkOnColumn(child, ordinal++);
+            walkOnColumn(child);
         }
     }
 
-    private void walkOnColumn(Column column, int ordinal) {
+    private void walkOnColumn(Column column) {
         if (shouldVisit(column)) {
-            this.visitor.visit(column, ordinal, this);
+            this.visitor.visit(column, this);
         }
     }
 

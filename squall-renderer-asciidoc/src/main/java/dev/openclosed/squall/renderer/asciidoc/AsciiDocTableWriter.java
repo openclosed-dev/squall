@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.renderer.markdown;
+package dev.openclosed.squall.renderer.asciidoc;
 
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
 import dev.openclosed.squall.api.renderer.MessageBundle;
@@ -32,20 +32,20 @@ import java.util.function.Consumer;
  * A table writer in Markdown format.
  * @param <T> the type of the component written as the table rows.
  */
-interface MarkdownTableWriter<T extends Component> {
+interface AsciiDocTableWriter<T extends Component> {
 
-    MarkdownTableWriter<?> EMPTY = new MarkdownTableWriter<>() { };
+    AsciiDocTableWriter<?> EMPTY = new AsciiDocTableWriter<>() { };
 
-    default void writeHeaderRow(Appender appender) {
+    default void writeHeader(Appender appender) {
     }
 
-    default void writeDelimiterRow(Appender appender) {
+    default void writeFooter(Appender appender) {
     }
 
     default void writeDataRow(Appender appender, T component, SpecVisitor.Context context) {
     }
 
-    static MarkdownTableWriter<Column> forColumn(
+    static AsciiDocTableWriter<Column> forColumn(
         List<ColumnAttribute> attributes,
         MessageBundle bundle,
         Consumer<Column> anchorWriter) {
@@ -54,10 +54,10 @@ interface MarkdownTableWriter<T extends Component> {
         if (providers.isEmpty()) {
             return empty();
         }
-        return new MarkdownTableWriterImpl<>(providers, bundle, anchorWriter);
+        return new AsciiDocTableWriterImpl<>(providers, bundle, anchorWriter);
     }
 
-    static MarkdownTableWriter<Sequence> forSequence(
+    static AsciiDocTableWriter<Sequence> forSequence(
         List<SequenceAttribute> attributes,
         MessageBundle bundle) {
         List<SequenceCellProvider> providers = attributes.stream()
@@ -65,16 +65,16 @@ interface MarkdownTableWriter<T extends Component> {
         if (providers.isEmpty()) {
             return empty();
         }
-        return new MarkdownTableWriterImpl<>(providers, bundle, t -> { });
+        return new AsciiDocTableWriterImpl<>(providers, bundle, t -> { });
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends Component> MarkdownTableWriter<T> empty() {
-        return (MarkdownTableWriter<T>) EMPTY;
+    private static <T extends Component> AsciiDocTableWriter<T> empty() {
+        return (AsciiDocTableWriter<T>) EMPTY;
     }
 }
 
-final class MarkdownTableWriterImpl<T extends Component> implements MarkdownTableWriter<T> {
+final class AsciiDocTableWriterImpl<T extends Component> implements AsciiDocTableWriter<T> {
 
     private final List<? extends CellProvider<T>> providers;
     private final MessageBundle bundle;
@@ -83,7 +83,7 @@ final class MarkdownTableWriterImpl<T extends Component> implements MarkdownTabl
 
     private int nextRowNo;
 
-    MarkdownTableWriterImpl(
+    AsciiDocTableWriterImpl(
         List<? extends CellProvider<T>> providers,
         MessageBundle bundle,
         Consumer<T> anchorWriter) {
@@ -96,33 +96,43 @@ final class MarkdownTableWriterImpl<T extends Component> implements MarkdownTabl
     }
 
     @Override
-    public void writeHeaderRow(Appender appender) {
+    public void writeHeader(Appender appender) {
         this.nextRowNo = 1;
-        appender.append("|");
-        for (var title : this.titles) {
-            appender.appendSpace().append(title).append(" |");
+
+        appender.append("[cols=\"");
+        int columns = 0;
+        for (var provider : this.providers) {
+            if (columns++ > 0) {
+                appender.append(',');
+            }
+            appender.append(provider.specifier());
         }
-        appender.appendNewLine();
+        appender.append("\", options=header]").appendNewLine();
+        appender.append("|===").appendNewLine();
+
+        // Header row
+        for (var title : this.titles) {
+            appender.append("^|").append(title).appendNewLine();
+        }
     }
 
     @Override
-    public void writeDelimiterRow(Appender appender) {
-        appender.append("|");
-        for (var provider : providers) {
-            appender.appendSpace().append(provider.getSeparator()).append(" |");
-        }
-        appender.appendNewLine();
+    public void writeFooter(Appender appender) {
+        appender.append("|===").appendNewLine();
     }
 
     @Override
     public void writeDataRow(Appender appender, T component, SpecVisitor.Context context) {
         final int rowNo = this.nextRowNo++;
-        appender.append("|");
-        this.anchorWriter.accept(component);
-        for (var provider : this.providers) {
-            String value = provider.getLocalizedValue(component, rowNo, context, this.bundle);
-            appender.appendSpace().append(value).append(" |");
-        }
         appender.appendNewLine();
+        int columns = 0;
+        for (var provider : this.providers) {
+            appender.append('|');
+            if (columns++ == 0) {
+                this.anchorWriter.accept(component);
+            }
+            var value = provider.getLocalizedValue(component, rowNo, context, this.bundle);
+            appender.append(value).appendNewLine();
+        }
     }
 }

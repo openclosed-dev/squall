@@ -19,20 +19,26 @@ package dev.openclosed.squall.renderer.asciidoc;
 import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.support.DelegatingAppender;
+import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.Database;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.Schema;
+import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.SpecVisitor;
+import dev.openclosed.squall.api.spec.Table;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-final class SpecWriter implements SpecVisitor, DelegatingAppender {
+final class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
 
     private final RenderConfig config;
     private final MessageBundle bundle;
     private final Appendable appender;
+
+    private final AsciiDocTableWriter<Column> columnWriter;
+    private final AsciiDocTableWriter<Sequence> sequenceWriter;
 
     private int level;
 
@@ -40,10 +46,13 @@ final class SpecWriter implements SpecVisitor, DelegatingAppender {
         "=", "==", "===", "====", "=====", "======", "======="
     };
 
-    SpecWriter(RenderConfig config, MessageBundle bundle, Appendable appender) {
+    RenderingSpecVisitor(RenderConfig config, MessageBundle bundle, Appendable appender) {
         this.config = config;
         this.bundle = bundle;
         this.appender = appender;
+        this.columnWriter = AsciiDocTableWriter.forColumn(
+            config.columnAttributes(), bundle, this::writeColumnAnchor);
+        this.sequenceWriter = AsciiDocTableWriter.forSequence(config.sequenceAttributes(), bundle);
     }
 
     void writeSpec(DatabaseSpec spec) throws IOException {
@@ -71,7 +80,7 @@ final class SpecWriter implements SpecVisitor, DelegatingAppender {
     }
 
     @Override
-    public void visit(Database database, int ordinal, Context context) {
+    public void visit(Database database, Context context) {
         writeDescription(database);
     }
 
@@ -80,7 +89,7 @@ final class SpecWriter implements SpecVisitor, DelegatingAppender {
     }
 
     @Override
-    public void visit(Schema schema, int ordinal, Context context) {
+    public void visit(Schema schema, Context context) {
         writeHeading(schema);
         enterLevel();
 
@@ -90,6 +99,38 @@ final class SpecWriter implements SpecVisitor, DelegatingAppender {
     @Override
     public void leave(Schema schema) {
         leaveLevel();
+    }
+
+    @Override
+    public void visit(Sequence sequence, Context context) {
+        writeHeading(sequence);
+        writeDescription(sequence);
+
+        appendNewLine();
+        this.sequenceWriter.writeHeader(this);
+        this.sequenceWriter.writeDataRow(this, sequence, context);
+        this.sequenceWriter.writeFooter(this);
+    }
+
+    @Override
+    public void visit(Table table, Context context) {
+        writeHeading(table);
+        writeDescription(table);
+
+        if (table.hasColumns()) {
+            appendNewLine();
+            this.columnWriter.writeHeader(this);
+        }
+    }
+
+    @Override
+    public void leave(Table table) {
+        this.columnWriter.writeFooter(this);
+    }
+
+    @Override
+    public void visit(Column column, Context context) {
+        this.columnWriter.writeDataRow(this, column, context);
     }
 
     // DelegatingAppender
@@ -112,10 +153,15 @@ final class SpecWriter implements SpecVisitor, DelegatingAppender {
 
     private void writeHeading(Component component) {
         appendNewLine();
+        writeSectionAnchor(component);
         append(HEADING_PREFIX[level]);
 
         writeHeadingText(component);
         appendNewLine();
+    }
+
+    private void writeSectionAnchor(Component component) {
+        append("[id=").append(component.fullName()).append(']').appendNewLine();
     }
 
     private void writeHeadingText(Component component) {
@@ -147,7 +193,7 @@ final class SpecWriter implements SpecVisitor, DelegatingAppender {
         }
         appendSpace();
         if (deprecated) {
-            append("~~`").append(name).append("`~~");
+            append("[.line-through]#").append(name).append("#");
         } else {
             append("`+").append(name).append("+`");
         }
@@ -157,5 +203,10 @@ final class SpecWriter implements SpecVisitor, DelegatingAppender {
         component.description().ifPresent(description ->
             appendNewLine().append(description).appendNewLine()
         );
+    }
+
+    private void writeColumnAnchor(Column column) {
+        String fullName = column.fullName();
+        append("[[").append(fullName).append("]]");
     }
 }

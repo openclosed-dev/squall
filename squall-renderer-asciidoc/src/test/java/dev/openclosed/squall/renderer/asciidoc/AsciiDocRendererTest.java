@@ -16,68 +16,95 @@
 
 package dev.openclosed.squall.renderer.asciidoc;
 
-import dev.openclosed.squall.api.config.ConfigLoader;
+import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
+import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.renderer.RendererFactory;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.Dialect;
+import dev.openclosed.squall.api.spec.MajorDialect;
+import dev.openclosed.squall.doc.DocCommentProcessor;
 import org.apache.commons.io.file.PathUtils;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-abstract class AsciiDocRendererTest {
+public class AsciiDocRendererTest {
 
     private static final Path BASE_DIR = Path.of("target", "test-runs");
     private static RendererFactory rendererFactory;
-    private static ConfigLoader configLoader;
+    private static Map<Dialect, SqlParserFactory> parserFactories;
 
-    public static void setUpBase(Dialect dialect) throws IOException {
+    @BeforeAll
+    public static void setUpOnce() {
         Locale.setDefault(Locale.ENGLISH);
-        Files.createDirectories(BASE_DIR.resolve((dialect.dialectName())));
-        rendererFactory = RendererFactory.get("pdf");
-        configLoader = ConfigLoader.get();
+        rendererFactory = RendererFactory.get("html");
+        parserFactories = new HashMap<>();
     }
 
-    protected void testRenderer(TestCase test, Dialect dialect) throws IOException {
-        var builder = DatabaseSpec.builder();
-        var parser = createParser(builder);
+    public static Stream<TestCase> postgresqlTests() {
+        var dialect = MajorDialect.POSTGRESQL;
+        return Stream.of(
+            new TestCase("book", "book", "default", dialect)
+            //new TestCase("book-ja", "book-ja", "japanese", dialect)
+        );
+    }
 
-        for (var sql : test.sql()) {
-            parser.parse(sql);
-        }
+    @ParameterizedTest
+    @MethodSource("postgresqlTests")
+    public void testPostgresql(TestCase test) throws IOException {
+        testRenderer(test);
+    }
+
+    private void testRenderer(TestCase test) throws IOException {
+        var dialect = test.dialect();
+        var builder = DatabaseSpec.builder();
+        createParser(dialect, builder).parse(test.getSql());
         var spec = builder.build();
 
-        var config = configLoader.loadRenderConfigFromJson(test.json());
-        var renderer = rendererFactory.createRenderer(config);
+        var renderer = rendererFactory.createRenderer(test.getConfig());
 
         Path dir = prepareDirectory(dialect, test.title());
-
         renderer.render(spec, dir);
 
-        String actual = readRenderedFile(dir);
-        assertThat(convertRenderedContent(actual)).isEqualTo(test.expected());
+        test.getExpectedText().ifPresent(expected -> {
+            var actual = readRenderedFile(dir);
+            assertThat(actual).isEqualTo(expected);
+        });
     }
 
-    protected static Stream<TestCase> loadTest(String name) {
-        var filename = name + ".md";
-        var in = AsciiDocRendererTest.class.getResourceAsStream(filename);
-        return TestCase.loadFrom(in).stream();
+    private SqlParser createParser(Dialect dialect, DatabaseSpec.Builder builder) {
+        return getParserFactoryFor(dialect).createParser(
+            ParserConfig.getDefault(),
+            builder,
+            new DocCommentProcessor());
     }
 
-    protected abstract SqlParser createParser(DatabaseSpec.Builder builder);
+    private SqlParserFactory getParserFactoryFor(Dialect dialect) {
+        if (!parserFactories.containsKey(dialect)) {
+            parserFactories.put(dialect, SqlParserFactory.get(dialect));
+        }
+        return parserFactories.get(dialect);
+    }
 
     private static Path prepareDirectory(Dialect dialect, String title) throws IOException {
         Path parentDir = BASE_DIR.resolve(dialect.dialectName());
-        Path dir = parentDir.resolve(title.replaceAll("\s", "-"));
+        Path dir = parentDir.resolve(title);
         if (Files.exists(dir)) {
             PathUtils.cleanDirectory(dir);
+        } else {
+            Files.createDirectories(dir);
         }
         return dir;
     }
@@ -89,11 +116,5 @@ abstract class AsciiDocRendererTest {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-
-    private static String convertRenderedContent(String content) {
-        content = content.replaceAll("\\[\\w+\\]: .+", "");
-        content = content.stripTrailing();
-        return content;
     }
 }
