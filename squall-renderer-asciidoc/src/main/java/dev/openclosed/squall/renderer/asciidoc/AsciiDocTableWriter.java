@@ -107,7 +107,8 @@ final class AsciiDocTableWriterImpl<T extends Component> implements AsciiDocTabl
             }
             appender.append(provider.specifier());
         }
-        appender.append("\", options=header]").appendNewLine();
+        // options value must be quoted.
+        appender.append("\", options=\"header\"]").appendNewLine();
         appender.append("|===").appendNewLine();
 
         // Header row
