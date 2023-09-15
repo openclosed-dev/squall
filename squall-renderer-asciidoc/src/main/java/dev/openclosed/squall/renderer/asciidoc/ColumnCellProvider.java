@@ -28,13 +28,13 @@ import dev.openclosed.squall.api.spec.Table;
 import java.util.stream.Collectors;
 
 enum ColumnCellProvider implements CellProvider<Column> {
-    ORDINAL(">1") {
+    ORDINAL(">.^2") {
         @Override
         public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return String.valueOf(ordinal);
         }
     },
-    NAME("<4") {
+    NAME("<.^8") {
         @Override
         public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             var sb = new StringBuilder();
@@ -49,7 +49,7 @@ enum ColumnCellProvider implements CellProvider<Column> {
             return sb.toString();
         }
     },
-    LABEL("<4") {
+    LABEL("<.^8") {
         @Override
         public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.label().map(label -> {
@@ -61,19 +61,19 @@ enum ColumnCellProvider implements CellProvider<Column> {
             }).orElse("-");
         }
     },
-    TYPE("<2") {
+    TYPE("<.^6") {
         @Override
         public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.toSqlType();
         }
     },
-    TYPE_NAME("<2") {
+    TYPE_NAME("<.^4") {
         @Override
         public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.typeName();
         }
     },
-    PRECISION_LENGTH(">1") {
+    PRECISION_LENGTH(">.^3") {
         @Override
         public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             var value = column.precision();
@@ -89,7 +89,7 @@ enum ColumnCellProvider implements CellProvider<Column> {
             }
         }
     },
-    SCALE(">1") {
+    SCALE(">.^3") {
         @Override
         public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             var value = column.scale();
@@ -100,25 +100,25 @@ enum ColumnCellProvider implements CellProvider<Column> {
             }
         }
     },
-    NULLABLE("^1") {
+    NULLABLE("^.^3") {
         @Override
         public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.isNullable() ? Icons.CHECK : "-";
         }
     },
-    REQUIRED("^1") {
+    REQUIRED("^.^3") {
         @Override
         public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.isRequired() ? Icons.CHECK : "-";
         }
     },
-    UNIQUE("^1") {
+    UNIQUE("^.^3") {
         @Override
         public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.isUnique() ? Icons.CHECK : "-";
         }
     },
-    DEFAULT_VALUE("<4") {
+    DEFAULT_VALUE("<.^6") {
         @Override
         public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             return column.defaultValue()
@@ -126,7 +126,7 @@ enum ColumnCellProvider implements CellProvider<Column> {
                 .orElse("-");
         }
     },
-    FOREIGN_KEY("<4") {
+    FOREIGN_KEY("<.^6") {
         @Override
         public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
             final String columnName = column.name();
@@ -151,7 +151,7 @@ enum ColumnCellProvider implements CellProvider<Column> {
                 .toString();
         }
     },
-    DESCRIPTION("<8a") {
+    DESCRIPTION("<.<12a") {
         @Override
         public String getLocalizedValue(
             Column column, int ordinal, SpecVisitor.Context context, MessageBundle bundle) {
@@ -168,9 +168,9 @@ enum ColumnCellProvider implements CellProvider<Column> {
             sb.append("*").append(bundle.deprecated()).append("*");
             String notice = column.getFirstAnnotation(DocAnnotationType.DEPRECATED).get().value();
             if (!notice.isEmpty()) {
-                sb.append(' ').append(notice).append('\n');
+                sb.append(' ').append(notice);
             }
-            sb.append('\n').append(description);
+            sb.append(" +\n").append(description);
             return sb.toString();
         }
     };

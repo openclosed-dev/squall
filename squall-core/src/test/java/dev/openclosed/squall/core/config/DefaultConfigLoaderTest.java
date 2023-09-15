@@ -83,7 +83,8 @@ final class DefaultConfigLoaderTest {
             "columnAttributes", List.of("name", "description"),
             "sequenceAttributes", List.of("type_name", "start"),
             "pageSize", "a4",
-            "pageOrientation", "portrait"
+            "pageOrientation", "portrait",
+            "pageMargin", List.of("5mm", "10mm", "15mm", "20mm")
         );
 
         var actual = sut.loadFromMap(map, RenderConfig.class);
@@ -98,7 +99,8 @@ final class DefaultConfigLoaderTest {
             List.of(ColumnAttribute.NAME, ColumnAttribute.DESCRIPTION),
             List.of(SequenceAttribute.TYPE_NAME, SequenceAttribute.START),
             "a4",
-            PageOrientation.PORTRAIT
+            PageOrientation.PORTRAIT,
+            List.of("5mm", "10mm", "15mm", "20mm")
         );
 
         assertThat(actual).isEqualTo(expected);
@@ -130,7 +132,10 @@ final class DefaultConfigLoaderTest {
                         "order", "name",
                         "show", Set.of("database", "schema"),
                         "columnAttributes", List.of("name", "description"),
-                        "sequenceAttributes", List.of("type_name", "start")
+                        "sequenceAttributes", List.of("type_name", "start"),
+                        "pageSize", "a4",
+                        "pageOrientation", "portrait",
+                        "pageMargin", List.of("5mm", "10mm", "15mm", "20mm")
                         )
                     )
                 );
@@ -155,7 +160,8 @@ final class DefaultConfigLoaderTest {
                     List.of(ColumnAttribute.NAME, ColumnAttribute.DESCRIPTION),
                     List.of(SequenceAttribute.TYPE_NAME, SequenceAttribute.START),
                     "a4",
-                    PageOrientation.PORTRAIT
+                    PageOrientation.PORTRAIT,
+                    List.of("5mm", "10mm", "15mm", "20mm")
                     )
                 ));
 

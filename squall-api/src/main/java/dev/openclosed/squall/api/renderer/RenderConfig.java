@@ -18,11 +18,26 @@ package dev.openclosed.squall.api.renderer;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.ComponentOrder;
 
+/**
+ * A configuration for renderers.
+ * @param format the output file format.
+ * @param basename the basename of the file.
+ * @param locale the locale used while rendering messages.
+ * @param numbering whether if numbering is enabled or not.
+ * @param order the rendering order of components.
+ * @param show the components to render.
+ * @param columnAttributes the attributes of columns to be rendered.
+ * @param sequenceAttributes the attributes of sequences be rendered.
+ * @param pageSize the size of the page. Used for PDF format.
+ * @param pageOrientation the orientation of the page. Used for PDF format.
+ * @param pageMargin the margin of the page. Used for PDF format.
+ */
 public record RenderConfig(
         String format,
         String basename,
@@ -33,7 +48,8 @@ public record RenderConfig(
         List<ColumnAttribute> columnAttributes,
         List<SequenceAttribute> sequenceAttributes,
         String pageSize,
-        PageOrientation pageOrientation) {
+        PageOrientation pageOrientation,
+        List<String> pageMargin) {
 
     private static final RenderConfig DEFAULT = new RenderConfig();
 
@@ -51,7 +67,16 @@ public record RenderConfig(
             ColumnAttribute.defaultList(),
             SequenceAttribute.defaultList(),
             "a4",
-            PageOrientation.PORTRAIT
+            PageOrientation.PORTRAIT,
+            List.of("10mm", "10mm", "10mm", "10mm")
         );
+    }
+
+    public RenderConfig {
+        Objects.requireNonNull(pageMargin);
+        if (pageMargin.isEmpty() || pageMargin.size() > 4) {
+            throw new IllegalArgumentException();
+        }
+        pageMargin = List.copyOf(pageMargin);
     }
 }

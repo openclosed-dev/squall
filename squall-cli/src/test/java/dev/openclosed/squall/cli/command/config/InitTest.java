@@ -61,7 +61,8 @@ public final class InitTest {
                             ColumnAttribute.defaultList(),
                             SequenceAttribute.defaultList(),
                             "a4",
-                            PageOrientation.PORTRAIT
+                            PageOrientation.PORTRAIT,
+                            List.of("10mm", "10mm", "10mm", "10mm")
                         )
                     )
             );

@@ -19,6 +19,10 @@ module dev.openclosed.squall.renderer.asciidoc {
 
     requires asciidoctorj.api;
 
+    // AsciiDoctor reads PDF themes from the package in runtime.
+    opens dev.openclosed.squall.renderer.asciidoc.fonts;
+    opens dev.openclosed.squall.renderer.asciidoc.themes;
+
     provides dev.openclosed.squall.api.renderer.RendererFactory
         with dev.openclosed.squall.renderer.asciidoc.AsciiDocRendererFactory,
             dev.openclosed.squall.renderer.asciidoc.HtmlRendererFactory,

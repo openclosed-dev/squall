@@ -4,5 +4,6 @@
   "numbering": true,
   "order": "name",
   "pageSize": "a4",
-  "pageOrientation": "landscape"
+  "pageOrientation": "landscape",
+  "pageMargin": ["10mm", "10mm", "10mm", "10mm"]
 }

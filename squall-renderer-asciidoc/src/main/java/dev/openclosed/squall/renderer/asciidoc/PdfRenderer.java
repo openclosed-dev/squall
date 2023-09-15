@@ -28,11 +28,16 @@ import org.asciidoctor.SafeMode;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Locale;
+import java.util.stream.Collectors;
 
 final class PdfRenderer implements Renderer {
 
     private static final String BACKEND_NAME = "pdf";
+
+    private static final String BASE_RESOURCE_DIR = "uri:classloader:/"
+        + PdfRenderer.class.getPackageName().replaceAll("\\.", "/");
+    private static final String FONTS_DIR = BASE_RESOURCE_DIR + "/fonts";
+    private static final String THEMES_DIR = BASE_RESOURCE_DIR + "/themes";
 
     private final AsciiDocRenderer asciiDocRenderer;
     private final Attributes attributes;
@@ -66,10 +71,19 @@ final class PdfRenderer implements Renderer {
             .attribute("title-page")
             .attribute("pdf-page-size", config.pageSize().toUpperCase())
             .attribute("pdf-page-layout", config.pageOrientation().name().toLowerCase())
-            .attribute("pdf-theme", "default-with-fallback-font");
+            .attribute("pdf-page-margin",
+                config.pageMargin().stream().collect(Collectors.joining(",", "[", "]")))
+            .attribute("pdf-fontsdir", FONTS_DIR)
+            .attribute("pdf-themesdir", THEMES_DIR);
 
-        if (Locale.JAPANESE.equals(config.locale())) {
-            builder.attribute("scripts", "cjk");
+        switch (config.locale().getLanguage()) {
+            case "ja" -> {
+                builder.attribute("pdf-theme", "squall-ja")
+                    .attribute("scripts", "cjk");
+            }
+            default -> {
+                builder.attribute("pdf-theme", "squall");
+            }
         }
 
         return builder.build();
