@@ -32,17 +32,26 @@ final class MapperContext {
 
     private final Consumer<Problem> problemHandler;
     private final MessageBundle messageBundle;
+    private final TypeResolver typeResolver;
     private final List<String> tokens = new ArrayList<>();
     private final Map<Class<? extends Record>, RecordType<?>> recordCache = new HashMap<>();
 
-    MapperContext(Consumer<Problem> problemHandler, MessageBundle messageBundle) {
+    MapperContext(
+        Consumer<Problem> problemHandler,
+        MessageBundle messageBundle,
+        TypeResolver typeResolver) {
         this.problemHandler = problemHandler;
         this.messageBundle = messageBundle;
+        this.typeResolver = typeResolver;
     }
 
     @SuppressWarnings("unchecked")
     <T extends Record> RecordType<T> getRecordType(Class<T> target) {
         return (RecordType<T>) recordCache.computeIfAbsent(target, RecordType::of);
+    }
+
+    Class<?> resolveType(Class<?> type) {
+        return typeResolver.resolveType(type);
     }
 
     void push() {

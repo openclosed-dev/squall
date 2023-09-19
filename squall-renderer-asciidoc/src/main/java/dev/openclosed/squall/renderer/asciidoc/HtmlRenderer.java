@@ -31,6 +31,8 @@ import java.nio.file.Path;
 
 final class HtmlRenderer implements TextRenderer {
 
+    private static final String STYLE_DIR = AsciiDocRenderer.RESOURCE_DIR + "/style";
+
     private final AsciiDocRenderer asciiDocRenderer;
     private static final String BACKEND_NAME = "html5";
     private final Attributes attributes;
@@ -58,15 +60,25 @@ final class HtmlRenderer implements TextRenderer {
 
     @Override
     public String renderToString(DatabaseSpec spec) {
-        String asciiDocText = this.asciiDocRenderer.renderToString(spec);
-        return asciiDocText;
+        return this.asciiDocRenderer.renderToString(spec);
     }
 
     private static Attributes buildAttributes(RenderConfig config) {
         var builder = Attributes.builder()
+            .attribute("lang", config.locale().getLanguage())
             .sectionNumbers(config.numbering())
             .tableOfContents(true)
-            .tableOfContents(Placement.LEFT);
+            .tableOfContents(Placement.LEFT)
+            .stylesDir(STYLE_DIR);
+
+        switch (config.locale().getLanguage()) {
+            case "ja" -> {
+                builder.styleSheetName("style-ja.css");
+            }
+            default -> {
+                builder.styleSheetName("style.css");
+            }
+        }
 
         return builder.build();
     }

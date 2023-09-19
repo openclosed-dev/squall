@@ -22,6 +22,7 @@ import java.util.ServiceLoader;
 
 import dev.openclosed.squall.api.base.Problem;
 import dev.openclosed.squall.api.renderer.RenderConfig;
+import dev.openclosed.squall.api.spec.SpecMetadata;
 
 /**
  * A loader of the configurations.
@@ -35,6 +36,8 @@ public interface ConfigLoader {
      * @throws ConfigurationException if the input text is invalid.
      */
     RootConfig loadFromJson(String text);
+
+    SpecMetadata loadMetadataFromJson(String text);
 
     /**
      * Creates an instance of {@link RenderConfig} from JSON document.

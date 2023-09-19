@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import dev.openclosed.squall.api.renderer.PageOrientation;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.spec.MajorDialect;
+import dev.openclosed.squall.core.spec.DefaultSpecMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -116,7 +117,9 @@ final class DefaultConfigLoaderTest {
     @Test
     public void generateRootConfig() {
         Map<String, Object> map = Map.of(
-                "title", "this is a title",
+                "metadata", Map.of(
+                    "title", "title of the spec"
+                ),
                 "sources", List.of(
                     "create-db.sql",
                     "create-schema.sql"
@@ -143,7 +146,12 @@ final class DefaultConfigLoaderTest {
         var actual = sut.loadFromMap(map, RootConfig.class);
 
         var expected = new RootConfig(
-                Optional.of("this is a title"),
+                Optional.of(new DefaultSpecMetadata(
+                    "title of the spec",
+                    Optional.empty(),
+                    Optional.empty(),
+                    Optional.empty()
+                )),
                 List.of(
                     "create-db.sql",
                     "create-schema.sql"

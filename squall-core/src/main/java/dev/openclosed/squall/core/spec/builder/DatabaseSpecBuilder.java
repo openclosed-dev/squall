@@ -30,6 +30,7 @@ import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.IntegerDataType;
 import dev.openclosed.squall.api.spec.SchemaObjectRef;
+import dev.openclosed.squall.api.spec.SpecMetadata;
 import dev.openclosed.squall.core.spec.DefaultDatabaseSpec;
 
 /**
@@ -37,17 +38,17 @@ import dev.openclosed.squall.core.spec.DefaultDatabaseSpec;
  */
 public final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
 
+    private SpecMetadata metadata;
     private final Map<String, DatabaseBuilder> databaseBuilders = new LinkedHashMap<>();
     private DatabaseBuilder currentDatabaseBuilder;
     private TableBuilder currentTableBuilder;
     private ColumnBuilder currentColumnBuilder;
     private SequenceBuilder currentSequenceBuilder;
-    private String title;
 
     @Override
-    public DatabaseSpec.Builder setTitle(String title) {
-        Objects.requireNonNull(title);
-        this.title = title;
+    public DatabaseSpec.Builder setMetadata(SpecMetadata metadata) {
+        Objects.requireNonNull(metadata);
+        this.metadata = metadata;
         return this;
     }
 
@@ -191,7 +192,8 @@ public final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
         var databases = this.databaseBuilders.values().stream()
                 .map(DatabaseBuilder::build).toList();
         return new DefaultDatabaseSpec(
-                Optional.ofNullable(title), databases);
+            Optional.ofNullable(metadata),
+            databases);
     }
 
     //

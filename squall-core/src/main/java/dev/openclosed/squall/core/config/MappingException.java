@@ -17,29 +17,31 @@
 package dev.openclosed.squall.core.config;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import dev.openclosed.squall.api.base.Message;
+import dev.openclosed.squall.api.config.MessageBundle;
 
 final class MappingException extends RuntimeException {
 
     private static final long serialVersionUID = -9081164663612375584L;
 
-    private final Message message;
+    private final Function<MessageBundle, Message> messageProvider;
 
     MappingException() {
-        this.message = null;
+        this.messageProvider = bundle -> null;
     }
 
-    MappingException(Message message) {
-        this.message = message;
+    MappingException(Function<MessageBundle, Message> messageProvider) {
+        this.messageProvider = messageProvider;
     }
 
     MappingException(Throwable cause) {
         super(cause);
-        this.message = null;
+        this.messageProvider = bundle -> null;
     }
 
-    Optional<Message> getMessageObject() {
-        return Optional.ofNullable(message);
+    Optional<Message> getMessage(MessageBundle bundle) {
+        return Optional.ofNullable(messageProvider.apply(bundle));
     }
 }

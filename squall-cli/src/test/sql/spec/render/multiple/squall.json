@@ -1,18 +1,20 @@
 {
-    "title": "Untitled",
-    "sources": [
-        "schema.sql"
-    ],
-    "parser": {
-        "dialect": "postgresql",
-        "defaultSchema": "public"
+  "metadata": {
+    "title": "Database Specification"
+  },
+  "sources": [
+    "schema.sql"
+  ],
+  "parser": {
+    "dialect": "postgresql",
+    "defaultSchema": "public"
+  },
+  "renderers": {
+    "json": {
+      "format": "json"
     },
-    "renderers": {
-        "json": {
-            "format": "json"
-        },
-        "markdown": {
-            "format": "markdown"
-        }
+    "markdown": {
+      "format": "markdown"
     }
+  }
 }

@@ -19,6 +19,7 @@ package dev.openclosed.squall.renderer.asciidoc;
 import dev.openclosed.squall.api.config.ConfigLoader;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.spec.Dialect;
+import dev.openclosed.squall.api.spec.SpecMetadata;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +28,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public record TestCase(String title, String sqlName, String configName, Dialect dialect) {
+public record TestCase(
+    String title, String sqlName, String configName, String metadata, Dialect dialect) {
 
     private static ConfigLoader configLoader;
 
@@ -36,7 +38,11 @@ public record TestCase(String title, String sqlName, String configName, Dialect 
     }
 
     String configFileName() {
-        return configName() + ".config.json";
+        return configName() + ".json";
+    }
+
+    String metadataFileName() {
+        return metadata() + ".json";
     }
 
     String expectedTextFileName() {
@@ -49,6 +55,10 @@ public record TestCase(String title, String sqlName, String configName, Dialect 
 
     RenderConfig getConfig() throws IOException {
         return getConfigLoader().loadRenderConfigFromJson(readText(configFileName()));
+    }
+
+    SpecMetadata getMetadata() throws IOException {
+        return getConfigLoader().loadMetadataFromJson(readText(metadataFileName()));
     }
 
     Optional<String> getExpectedText() throws IOException {

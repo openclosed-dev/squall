@@ -82,7 +82,7 @@ final class Render implements Subcommand {
 
     private DatabaseSpec readDatabaseSpec(RootConfig config) {
         var specBuilder = DatabaseSpec.builder();
-        config.title().ifPresent(specBuilder::setTitle);
+        config.metadata().ifPresent(specBuilder::setMetadata);
         parseSqlSources(config.sources(), config.parser(), specBuilder);
         return specBuilder.build();
     }

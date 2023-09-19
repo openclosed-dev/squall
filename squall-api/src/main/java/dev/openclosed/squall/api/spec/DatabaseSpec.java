@@ -30,10 +30,12 @@ import java.util.function.Predicate;
 public interface DatabaseSpec extends MapSource {
 
     /**
-     * Returns the title of the specification.
-     * @return the title of the specification.
+     * Returns the metadata of the specification.
+     * @return the metadata of the specification.
      */
-    Optional<String> title();
+    Optional<SpecMetadata> metadata();
+
+    SpecMetadata getMetadataOrDefault();
 
     /**
      * Returns the list of the databases defined in this specification.
@@ -73,7 +75,7 @@ public interface DatabaseSpec extends MapSource {
      */
     interface Builder {
 
-        default Builder setTitle(String title) {
+        default Builder setMetadata(SpecMetadata metadata) {
             return this;
         }
 

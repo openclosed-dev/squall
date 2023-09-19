@@ -1,24 +1,26 @@
 {
-    "title": "Redmine Database Specification",
-    "sources": [
-        "redmine-schema.sql"
-    ],
-    "parser": {
-        "dialect": "postgresql",
-        "defaultSchema": "public"
-    },
-    "renderers": {
-        "markdown": {
-            "format": "markdown",
-          "columnAttributes": [
-            "ordinal",
-            "name",
-            "type",
-            "nullable",
-            "unique",
-            "default_value",
-            "foreign_key"
-          ]
-        }
+  "metadata": {
+    "title": "Redmine Database Specification"
+  },
+  "sources": [
+    "redmine-schema.sql"
+  ],
+  "parser": {
+    "dialect": "postgresql",
+    "defaultSchema": "public"
+  },
+  "renderers": {
+    "markdown": {
+      "format": "markdown",
+      "columnAttributes": [
+        "ordinal",
+        "name",
+        "type",
+        "nullable",
+        "unique",
+        "default_value",
+        "foreign_key"
+      ]
     }
+  }
 }

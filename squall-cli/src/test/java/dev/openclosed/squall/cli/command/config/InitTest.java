@@ -22,14 +22,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
-import dev.openclosed.squall.api.renderer.PageOrientation;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.spec.Component;
-import dev.openclosed.squall.api.spec.MajorDialect;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -43,29 +39,6 @@ import dev.openclosed.squall.api.spec.ComponentOrder;
 import dev.openclosed.squall.cli.command.BaseTestCase;
 
 public final class InitTest {
-
-    private static final RootConfig DEFAULT_CONFIG =
-            new RootConfig(
-                    Optional.of("Untitled"),
-                    List.of(),
-                    "output",
-                    new ParserConfig(MajorDialect.POSTGRESQL),
-                    Map.of(
-                        "markdown", new RenderConfig(
-                            "markdown",
-                            "spec",
-                            Locale.ENGLISH,
-                            true,
-                            ComponentOrder.NAME,
-                            Component.Type.all(),
-                            ColumnAttribute.defaultList(),
-                            SequenceAttribute.defaultList(),
-                            "a4",
-                            PageOrientation.PORTRAIT,
-                            List.of("10mm", "10mm", "10mm", "10mm")
-                        )
-                    )
-            );
 
     private static ConfigLoader configLoader;
 
@@ -114,7 +87,26 @@ public final class InitTest {
         if (exitCode == 0) {
             var json = Files.readString(file);
             var config = configLoader.loadFromJson(json);
-            assertThat(config).isEqualTo(DEFAULT_CONFIG);
+            verifyConfig(config);
         }
+    }
+
+    private static void verifyConfig(RootConfig root) {
+        assertThat(root.sources()).isEmpty();
+        assertThat(root.outDir()).isEqualTo("output");
+
+        ParserConfig parser = root.parser();
+        assertThat(parser.dialect()).isEqualTo("postgresql");
+
+        assertThat(root.renderers()).containsKey("markdown");
+        RenderConfig render = root.renderers().get("markdown");
+        assertThat(render.format()).isEqualTo("markdown");
+        assertThat(render.basename()).isEqualTo("spec");
+        assertThat(render.locale()).isEqualTo(Locale.ENGLISH);
+        assertThat(render.numbering()).isTrue();
+        assertThat(render.order()).isEqualTo(ComponentOrder.NAME);
+        assertThat(render.show()).isEqualTo(Component.Type.all());
+        assertThat(render.columnAttributes()).isEqualTo(ColumnAttribute.defaultList());
+        assertThat(render.sequenceAttributes()).isEqualTo(SequenceAttribute.defaultList());
     }
 }

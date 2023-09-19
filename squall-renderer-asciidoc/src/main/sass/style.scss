@@ -1,0 +1,12 @@
+@use 'font';
+@use 'asciidoctor';
+
+.type {
+  font-family: font.$code;
+  font-size: 0.8rem;
+  color: #999;
+  border: 1px solid #999;
+  border-radius: 4px;
+  padding: 0 2px;
+  vertical-align: middle;
+}

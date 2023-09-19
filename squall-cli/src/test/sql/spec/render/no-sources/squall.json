@@ -1,14 +1,16 @@
 {
-    "title": "Untitled",
-    "sources": [
-    ],
-    "parser": {
-        "dialect": "postgresql",
-        "defaultSchema": "public"
-    },
-    "renderers": {
-        "json": {
-            "format": "json"
-        }
+  "metadata": {
+    "title": "Untitled"
+  },
+  "sources": [
+  ],
+  "parser": {
+    "dialect": "postgresql",
+    "defaultSchema": "public"
+  },
+  "renderers": {
+    "json": {
+      "format": "json"
     }
+  }
 }

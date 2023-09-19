@@ -1,15 +1,17 @@
 {
-    "title": "Untitled",
-    "sources": [
-        "schema.sql"
-    ],
-    "parser": {
-        "dialect": "postgresql",
-        "defaultSchema": "public"
-    },
-    "renderers": {
-        "makrdown": {
-            "format": "makrdown"
-        }
+  "metadata": {
+    "title": "Untitled"
+  },
+  "sources": [
+    "schema.sql"
+  ],
+  "parser": {
+    "dialect": "postgresql",
+    "defaultSchema": "public"
+  },
+  "renderers": {
+    "makrdown": {
+      "format": "makrdown"
     }
+  }
 }

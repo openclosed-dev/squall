@@ -86,8 +86,8 @@ class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
 
     @Override
     public void visit(DatabaseSpec spec, Context context) {
-        String title = spec.title().orElse("Untitled");
-        append("# ").append(title).appendNewLine();
+        var metadata = spec.getMetadataOrDefault();
+        append("# ").append(metadata.title()).appendNewLine();
 
         enterLevel();
     }

@@ -23,22 +23,23 @@ import java.util.Optional;
 
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.parser.ParserConfig;
+import dev.openclosed.squall.api.spec.SpecMetadata;
 
 /**
  * The top-level configuration.
- * @param title the title of the database specification
+ * @param metadata specification metadata.
  * @param sources the SQL source files to be parsed.
  * @param outDir the output directory.
  * @param parser the configuration for the parser
  * @param renderers the configuration for one or more renderers.
  */
 public record RootConfig(
-        Optional<String> title,
-        List<String> sources,
-        String outDir,
-        ParserConfig parser,
-        Map<String, RenderConfig> renderers
-        ) {
+    Optional<SpecMetadata> metadata,
+    List<String> sources,
+    String outDir,
+    ParserConfig parser,
+    Map<String, RenderConfig> renderers
+    ) {
 
     /**
      * Create a configuration with default settings.

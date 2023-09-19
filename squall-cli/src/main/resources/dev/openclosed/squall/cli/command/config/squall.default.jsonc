@@ -1,41 +1,43 @@
 {
-    "title": "Untitled",
-    "sources": [
-        // source SQL files
-    ],
-    "outDir": "output",
-    "parser": {
-        "dialect": "postgresql",
-        "defaultSchema": "public"
-    },
-    "renderers": {
-        "markdown": {
-            "format": "markdown",
-            "locale": "en",
-            "numbering": true,
-            "order": "name",
-            "columnAttributes": [
-              "ordinal",
-              "name",
-              "label",
-              "type",
-              //"type_name",
-              //"precision_length",
-              //"scale",
-              "nullable",
-              //"required"
-              "unique",
-              "default_value",
-              "foreign_key",
-              "description"
-            ],
-            "sequenceAttributes": [
-              "type_name",
-              "start",
-              "increment",
-              "minimum",
-              "maximum"
-            ]
-        }
+  "metadata": {
+    "title": "Untitled"
+  },
+  "sources": [
+    // source SQL files
+  ],
+  "outDir": "output",
+  "parser": {
+    "dialect": "postgresql",
+    "defaultSchema": "public"
+  },
+  "renderers": {
+    "markdown": {
+      "format": "markdown",
+      "locale": "en",
+      "numbering": true,
+      "order": "name",
+      "columnAttributes": [
+        "ordinal",
+        "name",
+        "label",
+        "type",
+        //"type_name",
+        //"precision_length",
+        //"scale",
+        "nullable",
+        //"required"
+        "unique",
+        "default_value",
+        "foreign_key",
+        "description"
+      ],
+      "sequenceAttributes": [
+        "type_name",
+        "start",
+        "increment",
+        "minimum",
+        "maximum"
+      ]
     }
+  }
 }

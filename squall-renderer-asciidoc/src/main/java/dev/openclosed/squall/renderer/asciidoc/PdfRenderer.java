@@ -34,10 +34,8 @@ final class PdfRenderer implements Renderer {
 
     private static final String BACKEND_NAME = "pdf";
 
-    private static final String BASE_RESOURCE_DIR = "uri:classloader:/"
-        + PdfRenderer.class.getPackageName().replaceAll("\\.", "/");
-    private static final String FONTS_DIR = BASE_RESOURCE_DIR + "/fonts";
-    private static final String THEMES_DIR = BASE_RESOURCE_DIR + "/themes";
+    private static final String FONTS_DIR = AsciiDocRenderer.RESOURCE_DIR + "/fonts";
+    private static final String THEMES_DIR = AsciiDocRenderer.RESOURCE_DIR + "/themes";
 
     private final AsciiDocRenderer asciiDocRenderer;
     private final Attributes attributes;

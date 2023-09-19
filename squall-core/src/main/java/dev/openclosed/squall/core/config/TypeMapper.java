@@ -16,6 +16,8 @@
 
 package dev.openclosed.squall.core.config;
 
+import dev.openclosed.squall.api.spec.SpecMetadata;
+
 import java.lang.System.Logger.Level;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.RecordComponent;
@@ -36,37 +38,37 @@ enum TypeMapper {
     BOOLEAN {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            return requireType(source, Boolean.class, context);
+            return requireType(source, Boolean.class);
         }
     },
     INTEGER {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            return requireType(source, Integer.class, context);
+            return requireType(source, Integer.class);
         }
     },
     LONG {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            return requireType(source, Long.class, context);
+            return requireType(source, Long.class);
         }
     },
     SHORT {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            return requireType(source, Short.class, context);
+            return requireType(source, Short.class);
         }
     },
     STRING {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            return requireType(source, String.class, context);
+            return requireType(source, String.class);
         }
     },
     ENUM {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            String s = requireType(source, String.class, context);
+            String s = requireType(source, String.class);
             return mapToEnum(s, target, context);
         }
 
@@ -77,14 +79,14 @@ enum TypeMapper {
             try {
                 return Enum.valueOf(enumType, source.toUpperCase());
             } catch (IllegalArgumentException e) {
-                throw new MappingException(context.messages().ILLEGAL_VALUE(target, source));
+                throw new MappingException(bundle -> bundle.ILLEGAL_VALUE(target, source));
             }
         }
     },
     LIST {
         @Override
         protected Object map(Object source, RecordComponent target, MapperContext context) {
-            var collection = requireType(source, Collection.class, context);
+            var collection = requireType(source, Collection.class);
             if (collection.isEmpty()) {
                 return Collections.emptyList();
             }
@@ -95,14 +97,14 @@ enum TypeMapper {
     LOCALE {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            String s = requireType(source, String.class, context);
+            String s = requireType(source, String.class);
             return Locale.forLanguageTag(s);
         }
     },
     MAP {
         @Override
         protected Object map(Object source, RecordComponent target, MapperContext context) {
-            Map<?, ?> map = requireType(source, Map.class, context);
+            Map<?, ?> map = requireType(source, Map.class);
             if (map.isEmpty()) {
                 return Collections.emptyMap();
             }
@@ -120,7 +122,8 @@ enum TypeMapper {
         }
 
         private static Map<String, ?> map(Map<?, ?> source, Class<?> elementClass, MapperContext context) {
-            var mapper = findMapper(elementClass, context);
+            elementClass = context.resolveType(elementClass);
+            var mapper = findMapper(elementClass);
             var map = new HashMap<String, Object>();
             boolean failed = false;
             context.push();
@@ -150,7 +153,8 @@ enum TypeMapper {
             var parameterizedType = (ParameterizedType) target.getGenericType();
             var parameterType = parameterizedType.getActualTypeArguments()[0];
             if (parameterType instanceof Class<?> targetClass) {
-                var mapper = findMapper(targetClass, context);
+                targetClass = context.resolveType(targetClass);
+                var mapper = findMapper(targetClass);
                 return Optional.ofNullable(mapper.map(source, targetClass, context));
             }
             throw new IllegalStateException();
@@ -159,7 +163,7 @@ enum TypeMapper {
     RECORD {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
-            Map<?, ?> map = requireType(source, Map.class, context);
+            Map<?, ?> map = requireType(source, Map.class);
             @SuppressWarnings("unchecked")
             var recordTarget = (Class<? extends Record>) target;
             return mapToRecord(map, context.getRecordType(recordTarget), context);
@@ -208,7 +212,8 @@ enum TypeMapper {
             Map<String, Object> defaultValues,
             MapperContext context) {
             if (source != null) {
-                var mapper = findMapper(component.getType(), context);
+                var type = context.resolveType(component.getType());
+                var mapper = findMapper(type);
                 return mapper.map(source, component, context);
             } else if (defaultValues.containsKey(name)) {
                 return defaultValues.get(name);
@@ -230,7 +235,7 @@ enum TypeMapper {
     SET {
         @Override
         protected Object map(Object source, RecordComponent target, MapperContext context) {
-            var collection = requireType(source, Collection.class, context);
+            var collection = requireType(source, Collection.class);
             if (collection.isEmpty()) {
                 return Collections.emptySet();
             }
@@ -246,7 +251,7 @@ enum TypeMapper {
         return target.cast(source);
     }
 
-    static TypeMapper findMapper(Class<?> target, MapperContext context) {
+    static TypeMapper findMapper(Class<?> target) {
         if (target.isPrimitive()) {
             return getSimpleTypeMapper(target.getName());
         } else if (target.isEnum()) {
@@ -256,14 +261,14 @@ enum TypeMapper {
         } else if (MAPPERS.containsKey(target)) {
             return MAPPERS.get(target);
         } else {
-            throw new MappingException(context.messages().UNSUPPORTED_TARGET_TYPE(target));
+            throw new MappingException(bundle -> bundle.UNSUPPORTED_TARGET_TYPE(target));
         }
     }
 
     static Object getDefaultValueForType(Class<?> target, MapperContext context) {
         var value = DEFAULT_VALUES.get(target);
         if (value == null) {
-            throw new MappingException(context.messages().UNSUPPORTED_TARGET_TYPE(target));
+            throw new MappingException(bundle -> bundle.UNSUPPORTED_TARGET_TYPE(target));
         }
         return value;
     }
@@ -283,7 +288,8 @@ enum TypeMapper {
     }
 
     private Object[] mapToArray(Collection<?> source, Class<?> elementClass, MapperContext context) {
-        var mapper = findMapper(elementClass, context);
+        elementClass = context.resolveType(elementClass);
+        var mapper = findMapper(elementClass);
         Object[] array = new Object[source.size()];
 
         boolean failed = false;
@@ -308,9 +314,9 @@ enum TypeMapper {
         return array;
     }
 
-    private static <T> T requireType(Object value, Class<T> target, MapperContext context) {
+    private static <T> T requireType(Object value, Class<T> target) {
         if (!target.isInstance(value)) {
-            throw new MappingException(context.messages().TYPE_MISMATCH(target, value.getClass()));
+            throw new MappingException(bundle -> bundle.TYPE_MISMATCH(target, value.getClass()));
         }
         return target.cast(value);
     }
@@ -327,7 +333,7 @@ enum TypeMapper {
 
     private static void handleMappingException(Exception e, MapperContext context) {
         if (e instanceof MappingException me) {
-            me.getMessageObject().ifPresent(message -> {
+            me.getMessage(context.messages()).ifPresent(message -> {
                 context.addProblem(Level.ERROR, message);
             });
         }
@@ -335,6 +341,7 @@ enum TypeMapper {
 
     private static Map<Type, TypeMapper> buildMapperMap() {
         var map = new HashMap<Type, TypeMapper>();
+
         map.put(Boolean.class, BOOLEAN);
         map.put(Integer.class, INTEGER);
         map.put(List.class, LIST);
@@ -345,6 +352,9 @@ enum TypeMapper {
         map.put(Set.class, SET);
         map.put(Short.class, SHORT);
         map.put(String.class, STRING);
+
+        map.put(SpecMetadata.class, RECORD);
+
         return Map.copyOf(map);
     }
 

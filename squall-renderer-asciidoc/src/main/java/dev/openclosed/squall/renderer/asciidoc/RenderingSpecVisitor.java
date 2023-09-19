@@ -31,6 +31,7 @@ import dev.openclosed.squall.api.spec.Table;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Optional;
 
 final class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
 
@@ -69,8 +70,12 @@ final class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
 
     @Override
     public void visit(DatabaseSpec spec, Context context) {
-        String title = spec.title().orElse("Untitled");
-        append("= ").append(title).appendNewLine();
+        var metadata = spec.getMetadataOrDefault();
+        append("= ").append(metadata.title()).appendNewLine();
+
+        writeMetadata(":author:", metadata.author());
+        writeMetadata(":revnumber:", metadata.version());
+        writeMetadata(":revdate:", metadata.date());
 
         append(":icons: font").appendNewLine();
         append(":icon-set: fas").appendNewLine();
@@ -177,6 +182,10 @@ final class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
             },
             () -> writeName(name, deprecated)
         );
+        // component type
+        appendSpace().append("[.type]#")
+            .append(component.type().name().toLowerCase())
+            .append("#");
     }
 
     private void writeName(String name, boolean deprecated) {
@@ -227,5 +236,10 @@ final class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
     private void writeColumnAnchor(Column column) {
         String fullName = column.fullName();
         append("[[").append(fullName).append("]]");
+    }
+
+    private void writeMetadata(String attribute, Optional<String> metadata) {
+        metadata.ifPresent(
+            value -> append(attribute).appendSpace().append(value).appendNewLine());
     }
 }

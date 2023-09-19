@@ -28,4 +28,19 @@ font:
       bold_italic: GEM_FONTS_DIR/mplus1mn-bold_italic-subset.ttf
 base:
   font_family: Noto Sans
-  font_size: 9
+  font_size: 10.5
+role:
+  type:
+    font_size: $base_font_size_min
+    font_family: $codespan_font_family
+    font_color: $role_subtitle_font_color
+    border_color: $role_subtitle_font_color
+    border_radius: 2
+    border_offset: 2
+    border_width: 0.5
+title_page:
+  text_align: left
+  title:
+    top: 40%
+table:
+  font_size: $base_font_size_small

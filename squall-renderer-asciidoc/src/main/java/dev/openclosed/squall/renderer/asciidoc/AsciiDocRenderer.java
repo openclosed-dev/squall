@@ -31,6 +31,9 @@ import java.util.Objects;
 
 final class AsciiDocRenderer implements TextRenderer {
 
+    static final String RESOURCE_DIR = "uri:classloader:/"
+        + PdfRenderer.class.getPackageName().replaceAll("\\.", "/");
+
     private final RenderConfig config;
     private final MessageBundle bundle;
 

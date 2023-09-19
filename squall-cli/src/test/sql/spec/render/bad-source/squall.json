@@ -1,15 +1,17 @@
 {
-    "title": "Database Specification",
-    "sources": [
-        "schema.sql"
-    ],
-    "parser": {
-        "dialect": "postgresql",
-        "defaultSchema": "public"
-    },
-    "renderers": {
-        "markdown": {
-            "format": "markdown"
-        }
+  "metadata": {
+    "title": "Database Specification"
+  },
+  "sources": [
+    "schema.sql"
+  ],
+  "parser": {
+    "dialect": "postgresql",
+    "defaultSchema": "public"
+  },
+  "renderers": {
+    "markdown": {
+      "format": "markdown"
     }
+  }
 }

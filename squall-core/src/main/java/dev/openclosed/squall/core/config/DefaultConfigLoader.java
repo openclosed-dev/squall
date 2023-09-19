@@ -34,9 +34,11 @@ import dev.openclosed.squall.api.config.ConfigurationException;
 import dev.openclosed.squall.api.config.MessageBundle;
 import dev.openclosed.squall.api.config.RootConfig;
 import dev.openclosed.squall.api.renderer.RenderConfig;
+import dev.openclosed.squall.api.spec.SpecMetadata;
 import dev.openclosed.squall.api.spi.JsonReader;
 import dev.openclosed.squall.api.spi.JsonReadingException;
 import dev.openclosed.squall.core.base.SnippetExtractor;
+import dev.openclosed.squall.core.spec.DefaultSpecMetadata;
 
 /**
  * Default implementation of {@link ConfigLoader}.
@@ -45,11 +47,15 @@ public final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem
 
     private final JsonReader reader;
     private final MessageBundle messageBundle;
+    private final TypeResolver typeResolver;
     private List<Problem> problems;
 
     public DefaultConfigLoader() {
         this.reader = JsonReader.get();
         this.messageBundle = MessageBundle.forLocale(Locale.getDefault());
+        this.typeResolver = TypeResolver.builder()
+            .addMapping(SpecMetadata.class, DefaultSpecMetadata.class)
+            .build();
     }
 
     // ConfigLoader
@@ -57,6 +63,11 @@ public final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem
     @Override
     public RootConfig loadFromJson(String text) {
         return loadFromJson(text, RootConfig.class);
+    }
+
+    @Override
+    public SpecMetadata loadMetadataFromJson(String text) {
+        return loadFromJson(text, DefaultSpecMetadata.class);
     }
 
     @Override
@@ -95,7 +106,7 @@ public final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem
 
     @SuppressWarnings("unchecked")
     <T extends Record> T loadFromMap(Map<String, ?> map, Class<T> targetClass) {
-        var context = new MapperContext(this, messages());
+        var context = new MapperContext(this, messages(), this.typeResolver);
         try {
             return (T) TypeMapper.RECORD.map(map, targetClass, context);
         } catch (MappingException e) {

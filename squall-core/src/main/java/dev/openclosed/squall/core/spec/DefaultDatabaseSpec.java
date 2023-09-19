@@ -20,6 +20,7 @@ import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.ComponentOrder;
 import dev.openclosed.squall.api.spec.Database;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
+import dev.openclosed.squall.api.spec.SpecMetadata;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.core.base.RecordMapSource;
 
@@ -30,9 +31,16 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public record DefaultDatabaseSpec(
-        Optional<String> title,
+        Optional<SpecMetadata> metadata,
         List<Database> databases
         ) implements DatabaseSpec, RecordMapSource {
+
+
+
+    @Override
+    public SpecMetadata getMetadataOrDefault() {
+        return metadata().orElse(DefaultSpecMetadata.getDefault());
+    }
 
     @Override
     public void walkSpec(ComponentOrder order, SpecVisitor visitor) {
