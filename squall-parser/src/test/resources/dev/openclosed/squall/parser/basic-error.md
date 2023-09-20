@@ -18,6 +18,18 @@ CREATE TABLE "hello
 ERROR: Unexpected end of input. [line 1, column 20]
 ```
 
+# open comment
+
+```sql
+/**
+ * table 1
+CREATE TABLE t1();
+```
+
+```
+ERROR: Unexpected end of input. [line 3, column 19]
+```
+
 # string literal
 
 ```sql

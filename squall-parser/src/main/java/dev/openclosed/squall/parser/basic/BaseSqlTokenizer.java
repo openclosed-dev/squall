@@ -306,7 +306,9 @@ public abstract class BaseSqlTokenizer implements SqlTokenizer {
         int nests = 1;
         do {
             int c = nextChar();
-            if (c == '*') {
+            if (c == EOI) {
+                throw newUnexpectedEndException();
+            } else if (c == '*') {
                 consumeChar();
                 c = nextChar();
                 if (c == '/') {
