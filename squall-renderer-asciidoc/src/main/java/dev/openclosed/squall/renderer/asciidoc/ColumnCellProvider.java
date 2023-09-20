@@ -134,7 +134,7 @@ enum ColumnCellProvider implements CellProvider<Column> {
             String value = table.foreignKeysContaining(columnName)
                 .map(fk -> foreignKeyToString(fk, columnName))
                 .distinct()
-                .collect(Collectors.joining("<br>"));
+                .collect(Collectors.joining(HARD_BREAK));
             return value.isEmpty() ? "-" : value;
         }
 
@@ -174,6 +174,8 @@ enum ColumnCellProvider implements CellProvider<Column> {
             return sb.toString();
         }
     };
+
+    private static final String HARD_BREAK = " +\n";
 
     private final String specifier;
 
