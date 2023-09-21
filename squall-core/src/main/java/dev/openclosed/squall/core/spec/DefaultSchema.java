@@ -17,12 +17,14 @@
 package dev.openclosed.squall.core.spec;
 
 import dev.openclosed.squall.api.spec.Component;
+import dev.openclosed.squall.api.spec.ComponentOrder;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Schema;
 import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.Table;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public record DefaultSchema(
         String name,
@@ -43,5 +45,13 @@ public record DefaultSchema(
     @Override
     public Type type() {
         return Type.SCHEMA;
+    }
+
+    @Override
+    public Stream<? extends Component> children(ComponentOrder order) {
+        return Stream.concat(
+            order.reorder(sequences().stream()),
+            order.reorder(tables.stream())
+        );
     }
 }

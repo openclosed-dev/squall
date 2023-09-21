@@ -18,6 +18,7 @@ package dev.openclosed.squall.renderer.markdown;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Set;
 
 import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
@@ -35,17 +36,20 @@ import dev.openclosed.squall.api.spec.Table;
 /**
  * Spec visitor to render document.
  */
-class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
+class RenderingSpecVisitor implements SpecVisitor, RenderContext, DelegatingAppender {
 
     private final RenderConfig config;
     private final MessageBundle bundle;
     private final Appendable appender;
+
+    private final Set<Component.Type> show;
 
     private final HeadingNumberGenerator headingNumberGenerator;
     private final MarkdownTableWriter<Column> columnWriter;
     private final MarkdownTableWriter<Sequence> sequenceWriter;
 
     private int level;
+    private Table currentTable;
     private int databaseCount;
 
     private static final String[] HEADING_PREFIX = {
@@ -57,22 +61,128 @@ class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
         this.bundle = bundle;
         this.appender = appender;
 
+        this.show = config.show();
+
         this.headingNumberGenerator = HeadingNumberGenerator.create(config.numbering());
+
         this.columnWriter = MarkdownTableWriter.forColumn(
             config.columnAttributes(),
-            bundle,
+            this,
             this::writeColumnAnchor);
-        this.sequenceWriter = MarkdownTableWriter.forSequence(config.sequenceAttributes(), bundle);
+        this.sequenceWriter = MarkdownTableWriter.forSequence(config.sequenceAttributes(), this);
     }
 
     void writeSpec(DatabaseSpec spec) throws IOException {
         this.level = 0;
+        this.currentTable = null;
         this.databaseCount = spec.databases().size();
         try {
-            spec.walkSpec(config.order(), config.show(), this);
+            startSpec(spec);
+            spec.walkSpec(config.order(), this);
+            finishSpec();
         } catch (UncheckedIOException e) {
             throw e.getCause();
         }
+    }
+
+    // SpecVisitor
+
+    @Override
+    public void visit(Database database) {
+        if (!shouldRender(Component.Type.DATABASE)) {
+            visitChildren(database);
+            return;
+        }
+
+        if (databaseCount > 1) {
+            writeHeading(database);
+            enterLevel();
+        }
+
+        writeDescription(database);
+        visitChildren(database);
+
+        if (databaseCount > 1) {
+            leaveLevel();
+        }
+    }
+
+    @Override
+    public void visit(Schema schema) {
+        if (!shouldRender(Component.Type.SCHEMA)) {
+            visitChildren(schema);
+            return;
+        }
+
+        writeHeading(schema);
+        enterLevel();
+
+        writeDescription(schema);
+
+        visitChildren(schema);
+
+        leaveLevel();
+    }
+
+    @Override
+    public void visit(Sequence sequence) {
+        if (!shouldRender(Component.Type.SEQUENCE)) {
+            return;
+        }
+
+        writeHeading(sequence);
+        writeDescription(sequence);
+
+        appendNewLine();
+        sequenceWriter.writeHeaderRow(this);
+        sequenceWriter.writeDelimiterRow(this);
+        sequenceWriter.writeDataRow(this, sequence);
+    }
+
+    @Override
+    public void visit(Table table) {
+        if (!shouldRender(Component.Type.TABLE)) {
+            return;
+        }
+
+        this.currentTable = table;
+
+        writeHeading(table);
+        writeDescription(table);
+
+        if (shouldRender(Component.Type.COLUMN) && table.hasColumns()) {
+            appendNewLine();
+            columnWriter.writeHeaderRow(this);
+            columnWriter.writeDelimiterRow(this);
+
+            visitChildren(table);
+        }
+
+        this.currentTable = null;
+    }
+
+    @Override
+    public void visit(Column column) {
+        if (shouldRender(Component.Type.COLUMN)) {
+            this.columnWriter.writeDataRow(this, column);
+        }
+    }
+
+    @Override
+    public void visitChildren(Component component) {
+        visitChildren(component, config.order());
+    }
+
+    // RenderContext
+
+    @Override
+    public MessageBundle bundle() {
+        return this.bundle;
+    }
+
+    @Override
+    public Table currentTable() {
+        return this.currentTable;
     }
 
     // DelegatingAppender
@@ -82,78 +192,20 @@ class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
         return appender;
     }
 
-    // SpecVisitor
-
-    @Override
-    public void visit(DatabaseSpec spec, Context context) {
+    private void startSpec(DatabaseSpec spec) {
         var metadata = spec.getMetadataOrDefault();
         append("# ").append(metadata.title()).appendNewLine();
 
         enterLevel();
     }
 
-    @Override
-    public void leave(DatabaseSpec spec) {
+    private void finishSpec() {
         leaveLevel();
         writeImageDefinitions();
     }
 
-    @Override
-    public void visit(Database database, Context context) {
-        if (databaseCount > 1) {
-            writeHeading(database);
-            enterLevel();
-        }
-
-        writeDescription(database);
-    }
-
-    @Override
-    public void leave(Database database) {
-        if (databaseCount > 1) {
-            leaveLevel();
-        }
-    }
-
-    @Override
-    public void visit(Schema schema, Context context) {
-        writeHeading(schema);
-        enterLevel();
-
-        writeDescription(schema);
-    }
-
-    @Override
-    public void leave(Schema schema) {
-        leaveLevel();
-    }
-
-    @Override
-    public void visit(Sequence sequence, Context context) {
-        writeHeading(sequence);
-        writeDescription(sequence);
-
-        appendNewLine();
-        sequenceWriter.writeHeaderRow(this);
-        sequenceWriter.writeDelimiterRow(this);
-        sequenceWriter.writeDataRow(this, sequence, context);
-    }
-
-    @Override
-    public void visit(Table table, Context context) {
-        writeHeading(table);
-        writeDescription(table);
-
-        if (table.hasColumns()) {
-            appendNewLine();
-            columnWriter.writeHeaderRow(this);
-            columnWriter.writeDelimiterRow(this);
-        }
-    }
-
-    @Override
-    public void visit(Column column, Context context) {
-        this.columnWriter.writeDataRow(this, column, context);
+    private boolean shouldRender(Component.Type type) {
+        return this.show.contains(type);
     }
 
     private void enterLevel() {

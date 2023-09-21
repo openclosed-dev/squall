@@ -16,96 +16,58 @@
 
 package dev.openclosed.squall.api.spec;
 
+import java.util.Objects;
+
 /**
  * A visitor of components in the database specification.
  */
 public interface SpecVisitor {
 
     /**
-     * Visiting context.
-     */
-    interface Context {
-
-        Database currentDatabase();
-
-        Schema currentSchema();
-
-        Table currentTable();
-    }
-
-    /**
-     * Visits the database specification.
-     * @param spec the visited database specification.
-     * @param context the context of this visiting.
-     */
-    default void visit(DatabaseSpec spec, Context context) {
-    }
-
-    /**
-     * Leaves the database specification.
-     * @param spec the visited database specification.
-     */
-    default void leave(DatabaseSpec spec) {
-    }
-
-    /**
      * Visits a database.
      * @param database the visited database.
-     * @param context the context of this visiting.
      */
-    default void visit(Database database, Context context) {
-    }
-
-    /**
-     * Leaves the database.
-     * @param database the visited database.
-     */
-    default void leave(Database database) {
+    default void visit(Database database) {
+        visitChildren(database);
     }
 
     /**
      * Visits a schema.
      * @param schema the visited schema.
-     * @param context the context of this visiting.
      */
-    default void visit(Schema schema, Context context) {
-    }
-
-    /**
-     * Leaves the schema.
-     * @param schema the visited schema.
-     */
-    default void leave(Schema schema) {
+    default void visit(Schema schema) {
+        visitChildren(schema);
     }
 
     /**
      * Visits a sequence.
      * @param sequence the visited sequence.
-     * @param context the context of this visiting.
      */
-    default void visit(Sequence sequence, Context context) {
+    default void visit(Sequence sequence) {
     }
 
     /**
      * Visits a table.
      * @param table the visited table.
-     * @param context the context of this visiting.
      */
-    default void visit(Table table, Context context) {
-    }
-
-    /**
-     * Leaves the table.
-     * @param table the visited table.
-     */
-    default void leave(Table table) {
+    default void visit(Table table) {
+        visitChildren(table);
     }
 
     /**
      * Visits a column in a table.
      * @param column the visited column.
-     * @param context the context of this visiting.
      */
-    default void visit(Column column, Context context) {
+    default void visit(Column column) {
+    }
+
+    default void visitChildren(Component component) {
+        visitChildren(component, ComponentOrder.NAME);
+    }
+
+    default void visitChildren(Component component, ComponentOrder order) {
+        Objects.requireNonNull(component);
+        Objects.requireNonNull(order);
+        component.children(order).forEach(child -> child.accept(this));
     }
 }

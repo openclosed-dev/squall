@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.stream.Stream;
 
 /**
  * Order of specification components.
@@ -36,6 +37,11 @@ public enum ComponentOrder {
         public <T extends Component> Collection<T> reorder(Collection<T> collection) {
             return collection;
         }
+
+        @Override
+        public <T extends Component> Stream<T> reorder(Stream<T> stream) {
+            return stream;
+        }
     };
 
     /**
@@ -48,6 +54,10 @@ public enum ComponentOrder {
         var list = new ArrayList<T>(components);
         Collections.sort(list, comparator());
         return list;
+    }
+
+    public <T extends Component> Stream<T> reorder(Stream<T> stream) {
+        return stream.sorted(comparator());
     }
 
     protected Comparator<Component> comparator() {

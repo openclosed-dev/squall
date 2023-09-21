@@ -23,6 +23,11 @@ public interface Sequence extends Component {
         return Type.SEQUENCE;
     }
 
+    @Override
+    default void accept(SpecVisitor visitor) {
+        visitor.visit(this);
+    }
+
     String typeName();
 
     long start();

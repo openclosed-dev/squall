@@ -29,20 +29,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-final class AsciiDocRenderer implements TextRenderer {
+public final class AsciiDocRenderer implements TextRenderer {
 
-    static final String RESOURCE_DIR = "uri:classloader:/"
-        + PdfRenderer.class.getPackageName().replaceAll("\\.", "/");
+    public static final String RESOURCE_DIR = "uri:classloader:/"
+        + AsciiDocRenderer.class.getPackageName().replaceAll("\\.", "/");
 
     private final RenderConfig config;
     private final MessageBundle bundle;
 
-    AsciiDocRenderer(RenderConfig config, MessageBundle bundle) {
+    public AsciiDocRenderer(RenderConfig config, MessageBundle bundle) {
         this.config = config;
         this.bundle = bundle;
     }
 
-    Path renderToFile(DatabaseSpec spec, Path dir) throws IOException {
+    public Path renderToFile(DatabaseSpec spec, Path dir) throws IOException {
         Objects.requireNonNull(spec);
         Objects.requireNonNull(dir);
         Files.createDirectories(dir);

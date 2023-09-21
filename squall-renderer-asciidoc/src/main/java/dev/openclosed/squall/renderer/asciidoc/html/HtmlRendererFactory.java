@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.renderer.asciidoc;
+package dev.openclosed.squall.renderer.asciidoc.html;
 
 import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.Renderer;
 import dev.openclosed.squall.api.renderer.RendererFactory;
 
-public class PdfRendererFactory implements RendererFactory {
+public class HtmlRendererFactory implements RendererFactory {
 
     @Override
     public String format() {
-        return "pdf";
+        return "html";
     }
 
     @Override
     public Renderer createRenderer(RenderConfig config, MessageBundle bundle) {
-        return new PdfRenderer(config, bundle);
+        return new HtmlRenderer(config, bundle);
     }
 }

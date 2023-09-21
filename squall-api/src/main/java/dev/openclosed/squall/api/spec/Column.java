@@ -28,6 +28,11 @@ public interface Column extends Component, DataType {
         return Type.COLUMN;
     }
 
+    @Override
+    default void accept(SpecVisitor visitor) {
+        visitor.visit(this);
+    }
+
     boolean isRequired();
 
     default boolean isNullable() {

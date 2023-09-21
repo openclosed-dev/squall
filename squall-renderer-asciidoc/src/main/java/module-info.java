@@ -26,6 +26,6 @@ module dev.openclosed.squall.renderer.asciidoc {
 
     provides dev.openclosed.squall.api.renderer.RendererFactory
         with dev.openclosed.squall.renderer.asciidoc.AsciiDocRendererFactory,
-            dev.openclosed.squall.renderer.asciidoc.HtmlRendererFactory,
-            dev.openclosed.squall.renderer.asciidoc.PdfRendererFactory;
+            dev.openclosed.squall.renderer.asciidoc.html.HtmlRendererFactory,
+            dev.openclosed.squall.renderer.asciidoc.pdf.PdfRendererFactory;
 }

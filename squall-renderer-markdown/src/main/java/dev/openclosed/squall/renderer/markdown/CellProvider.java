@@ -16,9 +16,7 @@
 
 package dev.openclosed.squall.renderer.markdown;
 
-import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.spec.Component;
-import dev.openclosed.squall.api.spec.SpecVisitor;
 
 public interface CellProvider<T extends Component> {
 
@@ -32,11 +30,7 @@ public interface CellProvider<T extends Component> {
         return ALIGN_LEFT;
     }
 
-    default String getLocalizedValue(T component, int ordinal, SpecVisitor.Context context, MessageBundle bundle) {
-        return getValue(component, ordinal, context);
-    }
-
-    default String getValue(T component, int ordinal, SpecVisitor.Context context) {
+    default String getValue(T component, int ordinal, RenderContext context) {
         return "-";
     }
 }

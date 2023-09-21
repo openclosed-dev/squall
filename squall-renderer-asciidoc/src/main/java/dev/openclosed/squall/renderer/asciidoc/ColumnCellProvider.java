@@ -17,12 +17,10 @@
 package dev.openclosed.squall.renderer.asciidoc;
 
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
-import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.DocAnnotationType;
 import dev.openclosed.squall.api.spec.Expression;
 import dev.openclosed.squall.api.spec.ForeignKey;
-import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.api.spec.Table;
 
 import java.util.stream.Collectors;
@@ -30,13 +28,13 @@ import java.util.stream.Collectors;
 enum ColumnCellProvider implements CellProvider<Column> {
     ORDINAL(">.^2") {
         @Override
-        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
+        public String getValue(Column column, int ordinal, RenderContext context) {
             return String.valueOf(ordinal);
         }
     },
     NAME("<.^8") {
         @Override
-        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
+        public String getValue(Column column, int ordinal, RenderContext context) {
             var sb = new StringBuilder();
             if (column.isDeprecated()) {
                 sb.append("[.line-through]#").append(column.name()).append("#");
@@ -51,7 +49,7 @@ enum ColumnCellProvider implements CellProvider<Column> {
     },
     LABEL("<.^8") {
         @Override
-        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
+        public String getValue(Column column, int ordinal, RenderContext context) {
             return column.label().map(label -> {
                 if (column.isDeprecated()) {
                     return "[.line-through]#" + label + "#";
@@ -63,19 +61,19 @@ enum ColumnCellProvider implements CellProvider<Column> {
     },
     TYPE("<.^6") {
         @Override
-        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
+        public String getValue(Column column, int ordinal, RenderContext context) {
             return column.toSqlType();
         }
     },
     TYPE_NAME("<.^4") {
         @Override
-        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
+        public String getValue(Column column, int ordinal, RenderContext context) {
             return column.typeName();
         }
     },
     PRECISION_LENGTH(">.^3") {
         @Override
-        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
+        public String getValue(Column column, int ordinal, RenderContext context) {
             var value = column.precision();
             if (value.isPresent()) {
                 return String.valueOf(value.getAsInt());
@@ -91,7 +89,7 @@ enum ColumnCellProvider implements CellProvider<Column> {
     },
     SCALE(">.^3") {
         @Override
-        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
+        public String getValue(Column column, int ordinal, RenderContext context) {
             var value = column.scale();
             if (value.isPresent()) {
                 return String.valueOf(value.getAsInt());
@@ -102,25 +100,25 @@ enum ColumnCellProvider implements CellProvider<Column> {
     },
     NULLABLE("^.^3") {
         @Override
-        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
+        public String getValue(Column column, int ordinal, RenderContext context) {
             return column.isNullable() ? Icons.CHECK : "-";
         }
     },
     REQUIRED("^.^3") {
         @Override
-        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
+        public String getValue(Column column, int ordinal, RenderContext context) {
             return column.isRequired() ? Icons.CHECK : "-";
         }
     },
     UNIQUE("^.^3") {
         @Override
-        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
+        public String getValue(Column column, int ordinal, RenderContext context) {
             return column.isUnique() ? Icons.CHECK : "-";
         }
     },
     DEFAULT_VALUE("<.^6") {
         @Override
-        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
+        public String getValue(Column column, int ordinal, RenderContext context) {
             return column.defaultValue()
                 .map(ColumnCellProvider::expressionToCode)
                 .orElse("-");
@@ -128,7 +126,7 @@ enum ColumnCellProvider implements CellProvider<Column> {
     },
     FOREIGN_KEY("<.^6") {
         @Override
-        public String getValue(Column column, int ordinal, SpecVisitor.Context context) {
+        public String getValue(Column column, int ordinal, RenderContext context) {
             final String columnName = column.name();
             Table table = context.currentTable();
             String value = table.foreignKeysContaining(columnName)
@@ -153,17 +151,18 @@ enum ColumnCellProvider implements CellProvider<Column> {
     },
     DESCRIPTION("<.<12a") {
         @Override
-        public String getLocalizedValue(
-            Column column, int ordinal, SpecVisitor.Context context, MessageBundle bundle) {
+        public String getValue(
+            Column column, int ordinal, RenderContext context) {
             return column.description()
-                .map(d -> withDeprecationNotice(d, column, bundle))
+                .map(d -> withDeprecationNotice(d, column, context))
                 .orElse("-");
         }
 
-        private static String withDeprecationNotice(String description, Column column, MessageBundle bundle) {
+        private static String withDeprecationNotice(String description, Column column, RenderContext context) {
             if (!column.isDeprecated()) {
                 return description;
             }
+            var bundle = context.bundle();
             var sb = new StringBuilder();
             sb.append("*").append(bundle.deprecated()).append("*");
             String notice = column.getFirstAnnotation(DocAnnotationType.DEPRECATED).get().value();

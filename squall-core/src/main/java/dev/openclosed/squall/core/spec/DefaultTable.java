@@ -17,6 +17,8 @@
 package dev.openclosed.squall.core.spec;
 
 import dev.openclosed.squall.api.spec.Column;
+import dev.openclosed.squall.api.spec.Component;
+import dev.openclosed.squall.api.spec.ComponentOrder;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.ForeignKey;
 import dev.openclosed.squall.api.spec.PrimaryKey;
@@ -26,6 +28,7 @@ import dev.openclosed.squall.api.spec.Unique;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public record DefaultTable(
     String name,
@@ -48,5 +51,11 @@ public record DefaultTable(
     @Override
     public boolean hasColumns() {
         return !columns.isEmpty();
+    }
+
+    @Override
+    public Stream<? extends Component> children(ComponentOrder order) {
+        // always definition order
+        return columns().stream();
     }
 }

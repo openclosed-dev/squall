@@ -2,7 +2,6 @@ package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.spec.Sequence;
-import dev.openclosed.squall.api.spec.SpecVisitor;
 
 import java.util.function.Function;
 
@@ -27,7 +26,7 @@ enum SequenceCellProvider implements CellProvider<Sequence> {
     }
 
     @Override
-    public String getValue(Sequence sequence, int ordinal, SpecVisitor.Context context) {
+    public String getValue(Sequence sequence, int ordinal, RenderContext context) {
         return valueMapper.apply(sequence);
     }
 

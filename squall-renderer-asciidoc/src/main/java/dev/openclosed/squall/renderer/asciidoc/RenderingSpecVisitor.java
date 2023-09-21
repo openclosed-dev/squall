@@ -32,17 +32,23 @@ import dev.openclosed.squall.api.spec.Table;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Optional;
+import java.util.Set;
 
-final class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
+final class RenderingSpecVisitor
+    implements SpecVisitor, RenderContext, DelegatingAppender {
 
     private final RenderConfig config;
     private final MessageBundle bundle;
     private final Appendable appender;
 
+    private final Set<Component.Type> show;
+
     private final AsciiDocTableWriter<Column> columnWriter;
     private final AsciiDocTableWriter<Sequence> sequenceWriter;
 
     private int level;
+
+    private Table currentTable;
 
     private static final String[] HEADING_PREFIX = {
         "=", "==", "===", "====", "=====", "======", "======="
@@ -52,15 +58,21 @@ final class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
         this.config = config;
         this.bundle = bundle;
         this.appender = appender;
+
+        this.show = config.show();
+
         this.columnWriter = AsciiDocTableWriter.forColumn(
-            config.columnAttributes(), bundle, this::writeColumnAnchor);
-        this.sequenceWriter = AsciiDocTableWriter.forSequence(config.sequenceAttributes(), bundle);
+            config.columnAttributes(), this, this::writeColumnAnchor);
+        this.sequenceWriter = AsciiDocTableWriter.forSequence(config.sequenceAttributes(), this);
     }
 
     void writeSpec(DatabaseSpec spec) throws IOException {
         this.level = 0;
+        this.currentTable = null;
         try {
-            spec.walkSpec(config.order(), config.show(), this);
+            startSpec(spec);
+            spec.walkSpec(config.order(), this);
+            finishSpec();
         } catch (UncheckedIOException e) {
             throw e.getCause();
         }
@@ -69,7 +81,104 @@ final class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
     // SpecVisitor
 
     @Override
-    public void visit(DatabaseSpec spec, Context context) {
+    public void visit(Database database) {
+        if (!shouldRender(Component.Type.DATABASE)) {
+            visitChildren(database);
+            return;
+        }
+
+        writeDescription(database);
+
+        visitChildren(database);
+    }
+
+    @Override
+    public void visit(Schema schema) {
+        if (!shouldRender(Component.Type.SCHEMA)) {
+            visitChildren(schema);
+            return;
+        }
+
+        writeHeading(schema);
+        enterLevel();
+
+        writeDescription(schema);
+
+        visitChildren(schema);
+
+        leaveLevel();
+    }
+
+    @Override
+    public void visit(Sequence sequence) {
+        if (!shouldRender(Component.Type.SEQUENCE)) {
+            return;
+        }
+
+        writeHeading(sequence);
+        writeDescription(sequence);
+
+        appendNewLine();
+        this.sequenceWriter.writeHeader(this);
+        this.sequenceWriter.writeDataRow(this, sequence);
+        this.sequenceWriter.writeFooter(this);
+    }
+
+    @Override
+    public void visit(Table table) {
+        if (!shouldRender(Component.Type.TABLE)) {
+            return;
+        }
+
+        this.currentTable = table;
+        writeHeading(table);
+        writeDescription(table);
+
+        if (shouldRender(Component.Type.COLUMN) && table.hasColumns()) {
+            appendNewLine();
+            this.columnWriter.writeHeader(this);
+
+            visitChildren(table);
+        }
+
+        this.columnWriter.writeFooter(this);
+        this.currentTable = null;
+    }
+
+    @Override
+    public void visit(Column column) {
+        if (shouldRender(Component.Type.COLUMN)) {
+            this.columnWriter.writeDataRow(this, column);
+        }
+    }
+
+    @Override
+    public void visitChildren(Component component) {
+        visitChildren(component, config.order());
+    }
+
+    // RenderContext
+
+    @Override
+    public MessageBundle bundle() {
+        return this.bundle;
+    }
+
+    @Override
+    public Table currentTable() {
+        return this.currentTable;
+    }
+
+    // DelegatingAppender
+
+    @Override
+    public Appendable getDelegate() {
+        return appender;
+    }
+
+    //
+
+    private void startSpec(DatabaseSpec spec) {
         var metadata = spec.getMetadataOrDefault();
         append("= ").append(metadata.title()).appendNewLine();
 
@@ -83,73 +192,13 @@ final class RenderingSpecVisitor implements SpecVisitor, DelegatingAppender {
         enterLevel();
     }
 
-    @Override
-    public void leave(DatabaseSpec spec) {
+    private void finishSpec() {
         leaveLevel();
     }
 
-    @Override
-    public void visit(Database database, Context context) {
-        writeDescription(database);
+    private boolean shouldRender(Component.Type type) {
+        return this.show.contains(type);
     }
-
-    @Override
-    public void leave(Database database) {
-    }
-
-    @Override
-    public void visit(Schema schema, Context context) {
-        writeHeading(schema);
-        enterLevel();
-
-        writeDescription(schema);
-    }
-
-    @Override
-    public void leave(Schema schema) {
-        leaveLevel();
-    }
-
-    @Override
-    public void visit(Sequence sequence, Context context) {
-        writeHeading(sequence);
-        writeDescription(sequence);
-
-        appendNewLine();
-        this.sequenceWriter.writeHeader(this);
-        this.sequenceWriter.writeDataRow(this, sequence, context);
-        this.sequenceWriter.writeFooter(this);
-    }
-
-    @Override
-    public void visit(Table table, Context context) {
-        writeHeading(table);
-        writeDescription(table);
-
-        if (table.hasColumns()) {
-            appendNewLine();
-            this.columnWriter.writeHeader(this);
-        }
-    }
-
-    @Override
-    public void leave(Table table) {
-        this.columnWriter.writeFooter(this);
-    }
-
-    @Override
-    public void visit(Column column, Context context) {
-        this.columnWriter.writeDataRow(this, column, context);
-    }
-
-    // DelegatingAppender
-
-    @Override
-    public Appendable getDelegate() {
-        return appender;
-    }
-
-    //
 
     private void enterLevel() {
         this.level++;

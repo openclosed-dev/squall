@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * A component in the database specification.
@@ -128,5 +129,20 @@ public interface Component extends MapSource {
         return annotations().stream()
                 .filter(a -> a.type() == type)
                 .findFirst();
+    }
+
+    /**
+     * Accepts a visitor of components.
+     * @param visitor the spec component visitor.
+     */
+    void accept(SpecVisitor visitor);
+
+    /**
+     * Returns the children of this component.
+     * @param order the order of the children.
+     * @return sorted children.
+     */
+    default Stream<? extends Component> children(ComponentOrder order) {
+        return Stream.empty();
     }
 }

@@ -17,13 +17,11 @@
 package dev.openclosed.squall.renderer.asciidoc;
 
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
-import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.renderer.support.Appender;
 import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.Sequence;
-import dev.openclosed.squall.api.spec.SpecVisitor;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -42,30 +40,30 @@ interface AsciiDocTableWriter<T extends Component> {
     default void writeFooter(Appender appender) {
     }
 
-    default void writeDataRow(Appender appender, T component, SpecVisitor.Context context) {
+    default void writeDataRow(Appender appender, T component) {
     }
 
     static AsciiDocTableWriter<Column> forColumn(
         List<ColumnAttribute> attributes,
-        MessageBundle bundle,
+        RenderContext context,
         Consumer<Column> anchorWriter) {
         List<ColumnCellProvider> providers = attributes.stream()
             .map(ColumnCellProvider::provider).toList();
         if (providers.isEmpty()) {
             return empty();
         }
-        return new AsciiDocTableWriterImpl<>(providers, bundle, anchorWriter);
+        return new AsciiDocTableWriterImpl<>(providers, context, anchorWriter);
     }
 
     static AsciiDocTableWriter<Sequence> forSequence(
         List<SequenceAttribute> attributes,
-        MessageBundle bundle) {
+        RenderContext context) {
         List<SequenceCellProvider> providers = attributes.stream()
             .map(SequenceCellProvider::provider).toList();
         if (providers.isEmpty()) {
             return empty();
         }
-        return new AsciiDocTableWriterImpl<>(providers, bundle, t -> { });
+        return new AsciiDocTableWriterImpl<>(providers, context, t -> { });
     }
 
     @SuppressWarnings("unchecked")
@@ -77,7 +75,7 @@ interface AsciiDocTableWriter<T extends Component> {
 final class AsciiDocTableWriterImpl<T extends Component> implements AsciiDocTableWriter<T> {
 
     private final List<? extends CellProvider<T>> providers;
-    private final MessageBundle bundle;
+    private final RenderContext context;
     private final Consumer<T> anchorWriter;
     private final List<String> titles;
 
@@ -85,11 +83,12 @@ final class AsciiDocTableWriterImpl<T extends Component> implements AsciiDocTabl
 
     AsciiDocTableWriterImpl(
         List<? extends CellProvider<T>> providers,
-        MessageBundle bundle,
+        RenderContext context,
         Consumer<T> anchorWriter) {
         this.providers = providers;
-        this.bundle = bundle;
+        this.context = context;
         this.anchorWriter = anchorWriter;
+        final var bundle = context.bundle();
         this.titles = providers.stream()
             .map(p -> bundle.columnHeader(p.name()))
             .toList();
@@ -123,7 +122,7 @@ final class AsciiDocTableWriterImpl<T extends Component> implements AsciiDocTabl
     }
 
     @Override
-    public void writeDataRow(Appender appender, T component, SpecVisitor.Context context) {
+    public void writeDataRow(Appender appender, T component) {
         final int rowNo = this.nextRowNo++;
         appender.appendNewLine();
         int columns = 0;
@@ -132,7 +131,7 @@ final class AsciiDocTableWriterImpl<T extends Component> implements AsciiDocTabl
             if (columns++ == 0) {
                 this.anchorWriter.accept(component);
             }
-            var value = provider.getLocalizedValue(component, rowNo, context, this.bundle);
+            var value = provider.getValue(component, rowNo, this.context);
             appender.append(value).appendNewLine();
         }
     }

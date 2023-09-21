@@ -27,6 +27,11 @@ public interface Table extends Component {
         return Type.TABLE;
     }
 
+    @Override
+    default void accept(SpecVisitor visitor) {
+        visitor.visit(this);
+    }
+
     List<Column> columns();
 
     Optional<PrimaryKey> primaryKey();

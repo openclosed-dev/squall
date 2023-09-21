@@ -25,6 +25,11 @@ public interface Schema extends Component {
         return Type.SCHEMA;
     }
 
+    @Override
+    default void accept(SpecVisitor visitor) {
+        visitor.visit(this);
+    }
+
     List<Sequence> sequences();
 
     List<Table> tables();

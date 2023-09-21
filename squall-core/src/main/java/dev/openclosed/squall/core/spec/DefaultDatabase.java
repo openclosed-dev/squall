@@ -17,11 +17,13 @@
 package dev.openclosed.squall.core.spec;
 
 import dev.openclosed.squall.api.spec.Component;
+import dev.openclosed.squall.api.spec.ComponentOrder;
 import dev.openclosed.squall.api.spec.Database;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Schema;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public record DefaultDatabase(
         String name,
@@ -33,5 +35,10 @@ public record DefaultDatabase(
     @Override
     public Type type() {
         return Type.DATABASE;
+    }
+
+    @Override
+    public Stream<? extends Component> children(ComponentOrder order) {
+        return order.reorder(schemas().stream());
     }
 }

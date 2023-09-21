@@ -16,7 +16,6 @@
 
 package dev.openclosed.squall.core.spec;
 
-import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.ComponentOrder;
 import dev.openclosed.squall.api.spec.Database;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
@@ -27,8 +26,6 @@ import dev.openclosed.squall.core.base.RecordMapSource;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
 
 public record DefaultDatabaseSpec(
         Optional<SpecMetadata> metadata,
@@ -44,20 +41,7 @@ public record DefaultDatabaseSpec(
 
     @Override
     public void walkSpec(ComponentOrder order, SpecVisitor visitor) {
-        walkSpec(order, component -> true, visitor);
-    }
-
-    @Override
-    public void walkSpec(ComponentOrder order, Set<Component.Type> types, SpecVisitor visitor) {
-        Objects.requireNonNull(types);
-        walkSpec(order, component -> types.contains(component.type()), visitor);
-    }
-
-    @Override
-    public void walkSpec(ComponentOrder order, Predicate<Component> filter, SpecVisitor visitor) {
-        Objects.requireNonNull(order);
-        Objects.requireNonNull(filter);
         Objects.requireNonNull(visitor);
-        new SpecWalker(order, filter, visitor).walkOnSpec(this);
+        databases().stream().forEach(c -> c.accept(visitor));
     }
 }
