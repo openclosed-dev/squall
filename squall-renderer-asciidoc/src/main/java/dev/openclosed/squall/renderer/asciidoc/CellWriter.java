@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.renderer.markdown;
+package dev.openclosed.squall.renderer.asciidoc;
 
 import dev.openclosed.squall.api.spec.Component;
 
-public interface CellProvider<T extends Component> {
-
-    String ALIGN_LEFT = ":--";
-    String ALIGN_RIGHT = "--:";
-    String ALIGN_CENTER = ":-:";
+public interface CellWriter<T extends Component> {
 
     String name();
 
-    default String getSeparator() {
-        return ALIGN_LEFT;
+    default String specifier() {
+        return "";
     }
 
-    default String getValue(T component, int ordinal, RenderContext context) {
-        return "-";
-    }
+    void writeValue(T component, int rowNo, Appender appender, RenderContext context);
 }

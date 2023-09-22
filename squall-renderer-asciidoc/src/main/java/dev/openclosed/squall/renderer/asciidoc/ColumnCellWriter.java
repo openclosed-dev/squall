@@ -25,55 +25,56 @@ import dev.openclosed.squall.api.spec.Table;
 
 import java.util.stream.Collectors;
 
-enum ColumnCellProvider implements CellProvider<Column> {
+enum ColumnCellWriter implements CellWriter<Column> {
     ORDINAL(">.^2") {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
-            return String.valueOf(ordinal);
+        String getValue(Column column, int rowNo, RenderContext context) {
+            return String.valueOf(rowNo);
         }
     },
     NAME("<.^8") {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
-            var sb = new StringBuilder();
+        public void writeValue(Column column, int rowNo, Appender appender, RenderContext context) {
             if (column.isDeprecated()) {
-                sb.append("[.line-through]#").append(column.name()).append("#");
+                appender.append("[.line-through]#").append(column.name()).append("#");
             } else {
-                sb.append(column.name());
+                appender.append(column.name());
             }
             if (column.isPrimaryKey()) {
-                sb.append(' ').append(Icons.KEY);
+                appender.appendSpace().append(Icons.KEY);
             }
-            return sb.toString();
         }
     },
     LABEL("<.^8") {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
-            return column.label().map(label -> {
+        public void writeValue(Column column, int rowNo, Appender appender, RenderContext context) {
+            if (column.label().isPresent()) {
+                var label = column.label().get();
                 if (column.isDeprecated()) {
-                    return "[.line-through]#" + label + "#";
+                    appender.append("[.line-through]#" + label + "#");
                 } else {
-                    return label;
+                    appender.append(label);
                 }
-            }).orElse("-");
+            } else {
+                appender.append('-');
+            }
         }
     },
     TYPE("<.^6") {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             return column.toSqlType();
         }
     },
     TYPE_NAME("<.^4") {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             return column.typeName();
         }
     },
     PRECISION_LENGTH(">.^3") {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             var value = column.precision();
             if (value.isPresent()) {
                 return String.valueOf(value.getAsInt());
@@ -89,7 +90,7 @@ enum ColumnCellProvider implements CellProvider<Column> {
     },
     SCALE(">.^3") {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             var value = column.scale();
             if (value.isPresent()) {
                 return String.valueOf(value.getAsInt());
@@ -100,33 +101,33 @@ enum ColumnCellProvider implements CellProvider<Column> {
     },
     NULLABLE("^.^3") {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             return column.isNullable() ? Icons.CHECK : "-";
         }
     },
     REQUIRED("^.^3") {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             return column.isRequired() ? Icons.CHECK : "-";
         }
     },
     UNIQUE("^.^3") {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             return column.isUnique() ? Icons.CHECK : "-";
         }
     },
     DEFAULT_VALUE("<.^6") {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             return column.defaultValue()
-                .map(ColumnCellProvider::expressionToCode)
+                .map(ColumnCellWriter::expressionToCode)
                 .orElse("-");
         }
     },
     FOREIGN_KEY("<.^6") {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             final String columnName = column.name();
             Table table = context.currentTable();
             String value = table.foreignKeysContaining(columnName)
@@ -151,26 +152,27 @@ enum ColumnCellProvider implements CellProvider<Column> {
     },
     DESCRIPTION("<.<12a") {
         @Override
-        public String getValue(
-            Column column, int ordinal, RenderContext context) {
-            return column.description()
-                .map(d -> withDeprecationNotice(d, column, context))
-                .orElse("-");
+        public void writeValue(Column column, int rowNo, Appender appender, RenderContext context) {
+            if (column.isDeprecated()) {
+                writeDeprecationNode(column, appender, context);
+                column.description().ifPresent(
+                    description -> appender.append(" +\n").append(description)
+                );
+            } else {
+                column.description().ifPresentOrElse(
+                    description -> appender.append(description),
+                    () -> appender.append('-')
+                );
+            }
         }
 
-        private static String withDeprecationNotice(String description, Column column, RenderContext context) {
-            if (!column.isDeprecated()) {
-                return description;
-            }
+        private static void writeDeprecationNode(Column column, Appender appender, RenderContext context) {
             var bundle = context.bundle();
-            var sb = new StringBuilder();
-            sb.append("*").append(bundle.deprecated()).append("*");
+            appender.append("*").append(bundle.deprecated()).append("*");
             String notice = column.getFirstAnnotation(DocAnnotationType.DEPRECATED).get().value();
             if (!notice.isEmpty()) {
-                sb.append(' ').append(notice);
+                appender.appendSpace().append(notice);
             }
-            sb.append(" +\n").append(description);
-            return sb.toString();
         }
     };
 
@@ -178,7 +180,7 @@ enum ColumnCellProvider implements CellProvider<Column> {
 
     private final String specifier;
 
-    ColumnCellProvider(String specifier) {
+    ColumnCellWriter(String specifier) {
         this.specifier = specifier;
     }
 
@@ -187,11 +189,20 @@ enum ColumnCellProvider implements CellProvider<Column> {
         return this.specifier;
     }
 
+    @Override
+    public void writeValue(Column column, int rowNo, Appender appender, RenderContext context) {
+        appender.append(getValue(column, rowNo, context));
+    }
+
+    String getValue(Column column, int rowNo, RenderContext context) {
+        return "-";
+    }
+
     private static String expressionToCode(Expression expression) {
         return "`" + expression.toSql() + "`";
     }
 
-    static ColumnCellProvider provider(ColumnAttribute attribute) {
+    static ColumnCellWriter writing(ColumnAttribute attribute) {
         // Mapping of ColumnAttribute to this type.
         return switch (attribute) {
             case ORDINAL -> ORDINAL;

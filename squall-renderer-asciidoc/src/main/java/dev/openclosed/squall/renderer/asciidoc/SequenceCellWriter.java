@@ -5,7 +5,7 @@ import dev.openclosed.squall.api.spec.Sequence;
 
 import java.util.function.Function;
 
-enum SequenceCellProvider implements CellProvider<Sequence> {
+enum SequenceCellWriter implements CellWriter<Sequence> {
     TYPE_NAME("<3", Sequence::typeName),
     START(">2", seq -> String.valueOf(seq.start())),
     INCREMENT(">2", seq -> String.valueOf(seq.increment())),
@@ -15,7 +15,7 @@ enum SequenceCellProvider implements CellProvider<Sequence> {
     private final String specifier;
     private final Function<Sequence, String> valueMapper;
 
-    SequenceCellProvider(String specifier, Function<Sequence, String> valueMapper) {
+    SequenceCellWriter(String specifier, Function<Sequence, String> valueMapper) {
         this.specifier = specifier;
         this.valueMapper = valueMapper;
     }
@@ -26,11 +26,11 @@ enum SequenceCellProvider implements CellProvider<Sequence> {
     }
 
     @Override
-    public final String getValue(Sequence sequence, int ordinal, RenderContext context) {
-        return valueMapper.apply(sequence);
+    public void writeValue(Sequence sequence, int rowNo, Appender appender, RenderContext context) {
+        appender.append(valueMapper.apply(sequence));
     }
 
-    static SequenceCellProvider provider(SequenceAttribute attribute) {
+    static SequenceCellWriter writing(SequenceAttribute attribute) {
         return switch (attribute) {
             case TYPE_NAME -> TYPE_NAME;
             case START -> START;

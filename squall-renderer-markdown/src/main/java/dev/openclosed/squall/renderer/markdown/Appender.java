@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.renderer.support;
+package dev.openclosed.squall.renderer.markdown;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-public interface DelegatingAppender extends Appender {
+final class Appender implements Appendable {
 
-    Appendable getDelegate();
+    private final Appendable appendable;
+
+    Appender(Appendable appendable) {
+        this.appendable = appendable;
+    }
 
     @Override
-    default Appender append(CharSequence csq) {
+    public Appender append(CharSequence csq) {
         try {
-            getDelegate().append(csq);
+            appendable.append(csq);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -34,9 +38,9 @@ public interface DelegatingAppender extends Appender {
     }
 
     @Override
-    default Appender append(CharSequence csq, int start, int end) {
+    public Appender append(CharSequence csq, int start, int end) {
         try {
-            getDelegate().append(csq, start, end);
+            appendable.append(csq, start, end);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -44,12 +48,20 @@ public interface DelegatingAppender extends Appender {
     }
 
     @Override
-    default Appender append(char c) {
+    public Appender append(char c) {
         try {
-            getDelegate().append(c);
+            appendable.append(c);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
         return this;
+    }
+
+    Appender appendSpace() {
+        return append(' ');
+    }
+
+    Appender appendNewLine() {
+        return append('\n');
     }
 }

@@ -18,7 +18,6 @@ package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
-import dev.openclosed.squall.api.renderer.support.Appender;
 import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.Sequence;
@@ -34,36 +33,41 @@ interface MarkdownTableWriter<T extends Component> {
 
     MarkdownTableWriter<?> EMPTY = new MarkdownTableWriter<>() { };
 
-    default void writeHeaderRow(Appender appender) {
+    default void writeHeader() {
     }
 
-    default void writeDelimiterRow(Appender appender) {
-    }
-
-    default void writeDataRow(Appender appender, T component) {
+    default void writeDataRow(T component) {
     }
 
     static MarkdownTableWriter<Column> forColumn(
         List<ColumnAttribute> attributes,
+        Appender appender,
         RenderContext context,
         Consumer<Column> anchorWriter) {
-        List<ColumnCellProvider> providers = attributes.stream()
-            .map(ColumnCellProvider::provider).toList();
-        if (providers.isEmpty()) {
+
+        if (attributes.isEmpty()) {
             return empty();
         }
-        return new MarkdownTableWriterImpl<>(providers, context, anchorWriter);
+
+        List<ColumnCellWriter> writers = attributes.stream()
+            .map(ColumnCellWriter::writing).toList();
+
+        return new MarkdownTableWriterImpl<>(writers, appender, context, anchorWriter);
     }
 
     static MarkdownTableWriter<Sequence> forSequence(
         List<SequenceAttribute> attributes,
+        Appender appender,
         RenderContext context) {
-        List<SequenceCellProvider> providers = attributes.stream()
-            .map(SequenceCellProvider::provider).toList();
-        if (providers.isEmpty()) {
+
+        if (attributes.isEmpty()) {
             return empty();
         }
-        return new MarkdownTableWriterImpl<>(providers, context, t -> { });
+
+        List<SequenceCellWriter> writers = attributes.stream()
+            .map(SequenceCellWriter::writing).toList();
+
+        return new MarkdownTableWriterImpl<>(writers, appender, context, t -> { });
     }
 
     @SuppressWarnings("unchecked")
@@ -74,7 +78,8 @@ interface MarkdownTableWriter<T extends Component> {
 
 final class MarkdownTableWriterImpl<T extends Component> implements MarkdownTableWriter<T> {
 
-    private final List<? extends CellProvider<T>> providers;
+    private final List<? extends CellWriter<T>> writers;
+    private final Appender appender;
     private final RenderContext context;
     private final Consumer<T> anchorWriter;
     private final List<String> titles;
@@ -82,21 +87,33 @@ final class MarkdownTableWriterImpl<T extends Component> implements MarkdownTabl
     private int nextRowNo;
 
     MarkdownTableWriterImpl(
-        List<? extends CellProvider<T>> providers,
+        List<? extends CellWriter<T>> writers,
+        Appender appender,
         RenderContext context,
         Consumer<T> anchorWriter) {
-        this.providers = providers;
+        this.writers = writers;
+        this.appender = appender;
         this.context = context;
         this.anchorWriter = anchorWriter;
         final var bundle = context.bundle();
-        this.titles = providers.stream()
+        this.titles = writers.stream()
             .map(p -> bundle.columnHeader(p.name()))
             .toList();
     }
 
     @Override
-    public void writeHeaderRow(Appender appender) {
+    public void writeHeader() {
         this.nextRowNo = 1;
+        writeHeaderRow(appender);
+        writeDelimiterRow(appender);
+    }
+
+    @Override
+    public void writeDataRow(T component) {
+        writeDataRow(component, this.nextRowNo++, this.appender, this.context);
+    }
+
+    private void writeHeaderRow(Appender appender) {
         appender.append("|");
         for (var title : this.titles) {
             appender.appendSpace().append(title).append(" |");
@@ -104,23 +121,21 @@ final class MarkdownTableWriterImpl<T extends Component> implements MarkdownTabl
         appender.appendNewLine();
     }
 
-    @Override
-    public void writeDelimiterRow(Appender appender) {
+    private void writeDelimiterRow(Appender appender) {
         appender.append("|");
-        for (var provider : providers) {
-            appender.appendSpace().append(provider.getSeparator()).append(" |");
+        for (var writer : writers) {
+            appender.appendSpace().append(writer.getSeparator()).append(" |");
         }
         appender.appendNewLine();
     }
 
-    @Override
-    public void writeDataRow(Appender appender, T component) {
-        final int rowNo = this.nextRowNo++;
+    private void writeDataRow(T component, int rowNo, Appender appender, RenderContext context) {
         appender.append("|");
         this.anchorWriter.accept(component);
-        for (var provider : this.providers) {
-            String value = provider.getValue(component, rowNo, this.context);
-            appender.appendSpace().append(value).append(" |");
+        for (var writer : this.writers) {
+            appender.appendSpace();
+            writer.writeValue(component, rowNo, appender, context);
+            appender.append(" |");
         }
         appender.appendNewLine();
     }

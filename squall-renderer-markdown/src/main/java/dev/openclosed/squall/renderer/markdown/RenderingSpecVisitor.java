@@ -22,7 +22,6 @@ import java.util.Set;
 
 import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
-import dev.openclosed.squall.api.renderer.support.DelegatingAppender;
 import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.Database;
@@ -36,11 +35,11 @@ import dev.openclosed.squall.api.spec.Table;
 /**
  * Spec visitor to render document.
  */
-class RenderingSpecVisitor implements SpecVisitor, RenderContext, DelegatingAppender {
+class RenderingSpecVisitor implements SpecVisitor, RenderContext {
 
     private final RenderConfig config;
     private final MessageBundle bundle;
-    private final Appendable appender;
+    private final Appender appender;
 
     private final Set<Component.Type> show;
 
@@ -56,10 +55,10 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext, DelegatingAppe
         "#", "##", "###", "####", "#####", "######", "#######"
     };
 
-    RenderingSpecVisitor(RenderConfig config, MessageBundle bundle, Appendable appender) {
+    RenderingSpecVisitor(RenderConfig config, MessageBundle bundle, Appendable appendable) {
         this.config = config;
         this.bundle = bundle;
-        this.appender = appender;
+        this.appender = new Appender(appendable);
 
         this.show = config.show();
 
@@ -67,9 +66,11 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext, DelegatingAppe
 
         this.columnWriter = MarkdownTableWriter.forColumn(
             config.columnAttributes(),
+            this.appender,
             this,
             this::writeColumnAnchor);
-        this.sequenceWriter = MarkdownTableWriter.forSequence(config.sequenceAttributes(), this);
+        this.sequenceWriter = MarkdownTableWriter.forSequence(
+            config.sequenceAttributes(), this.appender, this);
     }
 
     void writeSpec(DatabaseSpec spec) throws IOException {
@@ -133,10 +134,9 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext, DelegatingAppe
         writeHeading(sequence);
         writeDescription(sequence);
 
-        appendNewLine();
-        sequenceWriter.writeHeaderRow(this);
-        sequenceWriter.writeDelimiterRow(this);
-        sequenceWriter.writeDataRow(this, sequence);
+        appender.appendNewLine();
+        sequenceWriter.writeHeader();
+        sequenceWriter.writeDataRow(sequence);
     }
 
     @Override
@@ -151,9 +151,8 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext, DelegatingAppe
         writeDescription(table);
 
         if (shouldRender(Component.Type.COLUMN) && table.hasColumns()) {
-            appendNewLine();
-            columnWriter.writeHeaderRow(this);
-            columnWriter.writeDelimiterRow(this);
+            appender.appendNewLine();
+            columnWriter.writeHeader();
 
             visitChildren(table);
         }
@@ -164,7 +163,7 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext, DelegatingAppe
     @Override
     public void visit(Column column) {
         if (shouldRender(Component.Type.COLUMN)) {
-            this.columnWriter.writeDataRow(this, column);
+            this.columnWriter.writeDataRow(column);
         }
     }
 
@@ -185,16 +184,11 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext, DelegatingAppe
         return this.currentTable;
     }
 
-    // DelegatingAppender
-
-    @Override
-    public Appendable getDelegate() {
-        return appender;
-    }
+    //
 
     private void startSpec(DatabaseSpec spec) {
         var metadata = spec.getMetadataOrDefault();
-        append("# ").append(metadata.title()).appendNewLine();
+        appender.append("# ").append(metadata.title()).appendNewLine();
 
         enterLevel();
     }
@@ -220,16 +214,17 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext, DelegatingAppe
     }
 
     private void writeHeading(Component component) {
-        appendNewLine();
-        append(HEADING_PREFIX[level]);
-
-        this.headingNumberGenerator.generate(this);
+        appender
+            .appendNewLine()
+            .append(HEADING_PREFIX[level])
+            .append(this.headingNumberGenerator.generate());
 
         writeHeadingText(component);
 
         Badge badge = Badge.mapComponentType(component.type());
-        appendSpace();
-        append("![").append(badge.label()).append(']').appendNewLine();
+        appender
+            .appendSpace()
+            .append("![").append(badge.label()).append(']').appendNewLine();
     }
 
     private void writeHeadingText(Component component) {
@@ -247,11 +242,11 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext, DelegatingAppe
         if (name.isEmpty()) {
             return;
         }
-        appendSpace();
+        appender.appendSpace();
         if (deprecated) {
-            append("~~").append(name).append("~~");
+            appender.append("~~").append(name).append("~~");
         } else {
-            append(name);
+            appender.append(name);
         }
     }
 
@@ -259,11 +254,11 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext, DelegatingAppe
         if (name.isEmpty()) {
             return;
         }
-        appendSpace();
+        appender.appendSpace();
         if (deprecated) {
-            append("~~`").append(name).append("`~~");
+            appender.append("~~`").append(name).append("`~~");
         } else {
-            append('`').append(name).append('`');
+            appender.append('`').append(name).append('`');
         }
     }
 
@@ -272,35 +267,37 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext, DelegatingAppe
             writeDeprecationNotice(component);
         }
         component.description().ifPresent(description ->
-            appendNewLine().append(description).appendNewLine()
-            );
+            appender.appendNewLine().append(description).appendNewLine()
+        );
     }
 
     private void writeDeprecationNotice(Component component) {
-        appendNewLine();
-        append("**").append(bundle.deprecated()).append("**");
+        appender.appendNewLine()
+            .append("**").append(bundle.deprecated()).append("**");
         component.getFirstAnnotation(DocAnnotationType.DEPRECATED).ifPresent(a -> {
             String text = a.value();
             if (!text.isEmpty()) {
-                appendSpace().append(text);
+                appender.appendSpace().append(text);
             }
         });
-        appendNewLine();
+        appender.appendNewLine();
     }
 
     private void writeImageDefinitions() {
-        appendNewLine();
+        appender.appendNewLine();
         for (var badge : Badge.values()) {
-            append('[').append(badge.name()).append("]: ");
-            append(badge.url()).appendNewLine();
+            appender
+                .append('[').append(badge.name()).append("]: ")
+                .append(badge.url()).appendNewLine();
         }
     }
 
     private void writeColumnAnchor(Column column) {
         String fullName = column.fullName();
-        appendSpace();
-        append("<a id=\"").append(fullName);
-        append("\" name=\"").append(fullName);
-        append("\"></a>");
+        appender
+            .appendSpace()
+            .append("<a id=\"").append(fullName)
+            .append("\" name=\"").append(fullName)
+            .append("\"></a>");
     }
 }

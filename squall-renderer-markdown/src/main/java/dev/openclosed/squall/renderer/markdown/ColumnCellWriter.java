@@ -25,57 +25,56 @@ import dev.openclosed.squall.api.spec.Table;
 
 import java.util.stream.Collectors;
 
-enum ColumnCellProvider implements CellProvider<Column> {
+enum ColumnCellWriter implements CellWriter<Column> {
     ORDINAL(ALIGN_RIGHT) {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
-            return String.valueOf(ordinal);
+        String getValue(Column column, int rowNo, RenderContext context) {
+            return String.valueOf(rowNo);
         }
     },
     NAME(ALIGN_LEFT) {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
-            var sb = new StringBuilder();
+        public void writeValue(Column column, int rowNo, Appender appender, RenderContext context) {
             if (column.isDeprecated()) {
-                sb.append("~~").append(column.name()).append("~~");
+                appender.append("~~").append(column.name()).append("~~");
             } else {
-                sb.append(column.name());
+                appender.append(column.name());
             }
             if (column.isPrimaryKey()) {
-                sb.append(' ').append(KEY_MARK);
+                appender.appendSpace().append(KEY_MARK);
             }
-            return sb.toString();
         }
     },
     LABEL(ALIGN_LEFT) {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
-            return column.label().map(label -> {
+        public void writeValue(Column column, int rowNo, Appender appender, RenderContext context) {
+            if (column.label().isPresent()) {
+                var label = column.label().get();
                 if (column.isDeprecated()) {
-                    return new StringBuilder()
-                        .append("~~").append(label).append("~~")
-                        .toString();
+                    appender.append("~~").append(label).append("~~");
                 } else {
-                    return label;
+                    appender.append(label);
                 }
-            }).orElse("-");
+            } else {
+                appender.append("-");
+            }
         }
     },
     TYPE(ALIGN_LEFT) {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             return column.toSqlType();
         }
     },
     TYPE_NAME(ALIGN_LEFT) {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             return column.typeName();
         }
     },
     PRECISION_LENGTH(ALIGN_RIGHT) {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             var value = column.precision();
             if (value.isPresent()) {
                 return String.valueOf(value.getAsInt());
@@ -91,7 +90,7 @@ enum ColumnCellProvider implements CellProvider<Column> {
     },
     SCALE(ALIGN_RIGHT) {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             var value = column.scale();
             if (value.isPresent()) {
                 return String.valueOf(value.getAsInt());
@@ -102,33 +101,33 @@ enum ColumnCellProvider implements CellProvider<Column> {
     },
     NULLABLE(ALIGN_CENTER) {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             return column.isNullable() ? CHECK_MARK : "-";
         }
     },
     REQUIRED(ALIGN_CENTER) {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             return column.isRequired() ? CHECK_MARK : "-";
         }
     },
     UNIQUE(ALIGN_CENTER) {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             return column.isUnique() ? CHECK_MARK : "-";
         }
     },
     DEFAULT_VALUE(ALIGN_LEFT) {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             return column.defaultValue()
-                .map(ColumnCellProvider::expressionToCode)
+                .map(ColumnCellWriter::expressionToCode)
                 .orElse("-");
         }
     },
     FOREIGN_KEY(ALIGN_LEFT) {
         @Override
-        public String getValue(Column column, int ordinal, RenderContext context) {
+        String getValue(Column column, int rowNo, RenderContext context) {
             final String columnName = column.name();
             Table table = context.currentTable();
             String value = table.foreignKeysContaining(columnName)
@@ -155,26 +154,26 @@ enum ColumnCellProvider implements CellProvider<Column> {
     },
     DESCRIPTION(ALIGN_LEFT) {
         @Override
-        public String getValue(
-            Column column, int ordinal, RenderContext context) {
-            return column.description()
-                .map(d -> withDeprecationNotice(d, column, context))
-                .map(ColumnCellProvider::inlined)
-                .orElse("-");
+        public void writeValue(Column column, int rowNo, Appender appender, RenderContext context) {
+            if (column.isDeprecated()) {
+                writeDeprecationNote(column, appender, context);
+                column.description().ifPresent(
+                    description -> appender.append("<br>").append(inlined(description))
+                );
+            } else {
+                column.description().ifPresentOrElse(
+                    description -> appender.append(inlined(description)),
+                    () -> appender.append('-')
+                );
+            }
         }
 
-        private static String withDeprecationNotice(String description, Column column, RenderContext context) {
-            if (!column.isDeprecated()) {
-                return description;
-            }
-            var sb = new StringBuilder();
-            sb.append("**").append(context.bundle().deprecated()).append("**");
+        private void writeDeprecationNote(Column column, Appender appender, RenderContext context) {
+            appender.append("**").append(context.bundle().deprecated()).append("**");
             String notice = column.getFirstAnnotation(DocAnnotationType.DEPRECATED).get().value();
             if (!notice.isEmpty()) {
-                sb.append(' ').append(notice);
+                appender.appendSpace().append(notice);
             }
-            sb.append("<br>").append(description);
-            return sb.toString();
         }
     };
 
@@ -183,13 +182,22 @@ enum ColumnCellProvider implements CellProvider<Column> {
 
     private final String separator;
 
-    ColumnCellProvider(String separator) {
+    ColumnCellWriter(String separator) {
         this.separator = separator;
     }
 
     @Override
     public String getSeparator() {
         return this.separator;
+    }
+
+    @Override
+    public void writeValue(Column component, int rowNo, Appender appender, RenderContext context) {
+        appender.append(getValue(component, rowNo, context));
+    }
+
+    String getValue(Column column, int rowNo, RenderContext context) {
+        return "-";
     }
 
     private static String inlined(String text) {
@@ -202,7 +210,7 @@ enum ColumnCellProvider implements CellProvider<Column> {
             .toString();
     }
 
-    static ColumnCellProvider provider(ColumnAttribute attribute) {
+    static ColumnCellWriter writing(ColumnAttribute attribute) {
         // Mapping of ColumnAttribute to this type.
         return switch (attribute) {
             case ORDINAL -> ORDINAL;

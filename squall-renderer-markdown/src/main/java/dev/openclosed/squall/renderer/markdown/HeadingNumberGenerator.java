@@ -16,8 +16,6 @@
 
 package dev.openclosed.squall.renderer.markdown;
 
-import dev.openclosed.squall.api.renderer.support.Appender;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -31,7 +29,8 @@ interface HeadingNumberGenerator {
     default void leaveLevel() {
     }
 
-    default void generate(Appender appender) {
+    default String generate() {
+        return "";
     }
 
     static HeadingNumberGenerator create(boolean enabled) {
@@ -49,6 +48,7 @@ final class HeadingNumberGeneratorImpl implements HeadingNumberGenerator {
     private final Deque<Level> levels = new ArrayDeque<>();
 
     HeadingNumberGeneratorImpl() {
+        stringBuilder.append(' ');
     }
 
     @Override
@@ -62,11 +62,11 @@ final class HeadingNumberGeneratorImpl implements HeadingNumberGenerator {
     }
 
     @Override
-    public void generate(Appender appender) {
+    public String generate() {
         Level level = this.levels.getLast();
         stringBuilder.setLength(level.baseLength());
         stringBuilder.append(level.nextOrdinal()).append('.');
-        appender.appendSpace().append(stringBuilder);
+        return stringBuilder.toString();
     }
 
     private static class Level {
