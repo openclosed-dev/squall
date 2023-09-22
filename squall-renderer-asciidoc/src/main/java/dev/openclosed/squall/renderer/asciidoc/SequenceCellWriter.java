@@ -3,21 +3,19 @@ package dev.openclosed.squall.renderer.asciidoc;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.spec.Sequence;
 
-import java.util.function.Function;
-
 enum SequenceCellWriter implements CellWriter<Sequence> {
-    TYPE_NAME("<3", Sequence::typeName),
-    START(">2", seq -> String.valueOf(seq.start())),
-    INCREMENT(">2", seq -> String.valueOf(seq.increment())),
-    MINIMUM(">2", seq -> String.valueOf(seq.minValue())),
-    MAXIMUM(">2", seq -> String.valueOf(seq.maxValue()));
+    TYPE_NAME("<3", SequenceAttribute.TYPE_NAME),
+    START(">2", SequenceAttribute.START),
+    INCREMENT(">2", SequenceAttribute.INCREMENT),
+    MINIMUM(">2", SequenceAttribute.MINIMUM),
+    MAXIMUM(">2", SequenceAttribute.MAXIMUM);
 
     private final String specifier;
-    private final Function<Sequence, String> valueMapper;
+    private final SequenceAttribute attribute;
 
-    SequenceCellWriter(String specifier, Function<Sequence, String> valueMapper) {
+    SequenceCellWriter(String specifier, SequenceAttribute attribute) {
         this.specifier = specifier;
-        this.valueMapper = valueMapper;
+        this.attribute = attribute;
     }
 
     @Override
@@ -27,7 +25,7 @@ enum SequenceCellWriter implements CellWriter<Sequence> {
 
     @Override
     public void writeValue(Sequence sequence, int rowNo, Appender appender, RenderContext context) {
-        appender.append(valueMapper.apply(sequence));
+        appender.append(this.attribute.extractValue(sequence));
     }
 
     static SequenceCellWriter writing(SequenceAttribute attribute) {

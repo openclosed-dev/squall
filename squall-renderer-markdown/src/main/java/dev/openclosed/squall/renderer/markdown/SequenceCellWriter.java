@@ -3,21 +3,19 @@ package dev.openclosed.squall.renderer.markdown;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.spec.Sequence;
 
-import java.util.function.Function;
-
 enum SequenceCellWriter implements CellWriter<Sequence> {
-    TYPE_NAME(ALIGN_LEFT, Sequence::typeName),
-    START(ALIGN_RIGHT, seq -> String.valueOf(seq.start())),
-    INCREMENT(ALIGN_RIGHT, seq -> String.valueOf(seq.increment())),
-    MINIMUM(ALIGN_RIGHT, seq -> String.valueOf(seq.minValue())),
-    MAXIMUM(ALIGN_RIGHT, seq -> String.valueOf(seq.maxValue()));
+    TYPE_NAME(ALIGN_LEFT, SequenceAttribute.TYPE_NAME),
+    START(ALIGN_RIGHT, SequenceAttribute.START),
+    INCREMENT(ALIGN_RIGHT, SequenceAttribute.INCREMENT),
+    MINIMUM(ALIGN_RIGHT, SequenceAttribute.MINIMUM),
+    MAXIMUM(ALIGN_RIGHT, SequenceAttribute.MAXIMUM);
 
     private final String separator;
-    private final Function<Sequence, String> valueMapper;
+    private final SequenceAttribute attribute;
 
-    SequenceCellWriter(String separator, Function<Sequence, String> valueMapper) {
+    SequenceCellWriter(String separator, SequenceAttribute attribute) {
         this.separator = separator;
-        this.valueMapper = valueMapper;
+        this.attribute = attribute;
     }
 
     @Override
@@ -27,7 +25,7 @@ enum SequenceCellWriter implements CellWriter<Sequence> {
 
     @Override
     public void writeValue(Sequence sequence, int ordinal, Appender appender, RenderContext context) {
-        appender.append(valueMapper.apply(sequence));
+        appender.append(this.attribute.extractValue(sequence));
     }
 
     static SequenceCellWriter writing(SequenceAttribute attribute) {
