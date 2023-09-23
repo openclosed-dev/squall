@@ -3,7 +3,7 @@ package dev.openclosed.squall.renderer.markdown;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.spec.Sequence;
 
-enum SequenceCellWriter implements CellWriter<Sequence> {
+enum SequenceAttributeWriter implements AttributeWriter<Sequence> {
     TYPE_NAME(ALIGN_LEFT, SequenceAttribute.TYPE_NAME),
     START(ALIGN_RIGHT, SequenceAttribute.START),
     INCREMENT(ALIGN_RIGHT, SequenceAttribute.INCREMENT),
@@ -13,7 +13,7 @@ enum SequenceCellWriter implements CellWriter<Sequence> {
     private final String separator;
     private final SequenceAttribute attribute;
 
-    SequenceCellWriter(String separator, SequenceAttribute attribute) {
+    SequenceAttributeWriter(String separator, SequenceAttribute attribute) {
         this.separator = separator;
         this.attribute = attribute;
     }
@@ -24,11 +24,11 @@ enum SequenceCellWriter implements CellWriter<Sequence> {
     }
 
     @Override
-    public void writeValue(Sequence sequence, int ordinal, Appender appender, RenderContext context) {
+    public void writeValue(Sequence sequence, int ordinal, Appender appender, WriterContext context) {
         appender.append(this.attribute.extractValue(sequence));
     }
 
-    static SequenceCellWriter writing(SequenceAttribute attribute) {
+    static SequenceAttributeWriter writing(SequenceAttribute attribute) {
         return switch (attribute) {
             case TYPE_NAME -> TYPE_NAME;
             case START -> START;

@@ -25,16 +25,16 @@ import dev.openclosed.squall.api.spec.Table;
 
 import java.util.stream.Collectors;
 
-enum ColumnCellWriter implements CellWriter<Column> {
+enum ColumnAttributeWriter implements AttributeWriter<Column> {
     ORDINAL(">.^2") {
         @Override
-        String getValue(Column column, int rowNo, RenderContext context) {
+        String getValue(Column column, int rowNo, WriterContext context) {
             return String.valueOf(rowNo);
         }
     },
     NAME("<.^8") {
         @Override
-        public void writeValue(Column column, int rowNo, Appender appender, RenderContext context) {
+        public void writeValue(Column column, int rowNo, Appender appender, WriterContext context) {
             if (column.isDeprecated()) {
                 appender.append("[.line-through]#").append(column.name()).append("#");
             } else {
@@ -47,7 +47,7 @@ enum ColumnCellWriter implements CellWriter<Column> {
     },
     LABEL("<.^8") {
         @Override
-        public void writeValue(Column column, int rowNo, Appender appender, RenderContext context) {
+        public void writeValue(Column column, int rowNo, Appender appender, WriterContext context) {
             if (column.label().isPresent()) {
                 var label = column.label().get();
                 if (column.isDeprecated()) {
@@ -62,19 +62,19 @@ enum ColumnCellWriter implements CellWriter<Column> {
     },
     TYPE("<.^6") {
         @Override
-        String getValue(Column column, int rowNo, RenderContext context) {
+        String getValue(Column column, int rowNo, WriterContext context) {
             return column.toSqlType();
         }
     },
     TYPE_NAME("<.^4") {
         @Override
-        String getValue(Column column, int rowNo, RenderContext context) {
+        String getValue(Column column, int rowNo, WriterContext context) {
             return column.typeName();
         }
     },
     PRECISION_LENGTH(">.^3") {
         @Override
-        String getValue(Column column, int rowNo, RenderContext context) {
+        String getValue(Column column, int rowNo, WriterContext context) {
             var value = column.precision();
             if (value.isPresent()) {
                 return String.valueOf(value.getAsInt());
@@ -90,7 +90,7 @@ enum ColumnCellWriter implements CellWriter<Column> {
     },
     SCALE(">.^3") {
         @Override
-        String getValue(Column column, int rowNo, RenderContext context) {
+        String getValue(Column column, int rowNo, WriterContext context) {
             var value = column.scale();
             if (value.isPresent()) {
                 return String.valueOf(value.getAsInt());
@@ -101,33 +101,33 @@ enum ColumnCellWriter implements CellWriter<Column> {
     },
     NULLABLE("^.^3") {
         @Override
-        String getValue(Column column, int rowNo, RenderContext context) {
+        String getValue(Column column, int rowNo, WriterContext context) {
             return column.isNullable() ? Icons.CHECK : "-";
         }
     },
     REQUIRED("^.^3") {
         @Override
-        String getValue(Column column, int rowNo, RenderContext context) {
+        String getValue(Column column, int rowNo, WriterContext context) {
             return column.isRequired() ? Icons.CHECK : "-";
         }
     },
     UNIQUE("^.^3") {
         @Override
-        String getValue(Column column, int rowNo, RenderContext context) {
+        String getValue(Column column, int rowNo, WriterContext context) {
             return column.isUnique() ? Icons.CHECK : "-";
         }
     },
     DEFAULT_VALUE("<.^6") {
         @Override
-        String getValue(Column column, int rowNo, RenderContext context) {
+        String getValue(Column column, int rowNo, WriterContext context) {
             return column.defaultValue()
-                .map(ColumnCellWriter::expressionToCode)
+                .map(ColumnAttributeWriter::expressionToCode)
                 .orElse("-");
         }
     },
     FOREIGN_KEY("<.^6") {
         @Override
-        String getValue(Column column, int rowNo, RenderContext context) {
+        String getValue(Column column, int rowNo, WriterContext context) {
             final String columnName = column.name();
             Table table = context.currentTable();
             String value = table.foreignKeysContaining(columnName)
@@ -152,7 +152,7 @@ enum ColumnCellWriter implements CellWriter<Column> {
     },
     DESCRIPTION("<.<12a") {
         @Override
-        public void writeValue(Column column, int rowNo, Appender appender, RenderContext context) {
+        public void writeValue(Column column, int rowNo, Appender appender, WriterContext context) {
             if (column.isDeprecated()) {
                 writeDeprecationNode(column, appender, context);
                 column.description().ifPresent(
@@ -166,7 +166,7 @@ enum ColumnCellWriter implements CellWriter<Column> {
             }
         }
 
-        private static void writeDeprecationNode(Column column, Appender appender, RenderContext context) {
+        private static void writeDeprecationNode(Column column, Appender appender, WriterContext context) {
             var bundle = context.bundle();
             appender.append("*").append(bundle.deprecated()).append("*");
             String notice = column.getFirstAnnotation(DocAnnotationType.DEPRECATED).get().value();
@@ -180,7 +180,7 @@ enum ColumnCellWriter implements CellWriter<Column> {
 
     private final String specifier;
 
-    ColumnCellWriter(String specifier) {
+    ColumnAttributeWriter(String specifier) {
         this.specifier = specifier;
     }
 
@@ -190,11 +190,11 @@ enum ColumnCellWriter implements CellWriter<Column> {
     }
 
     @Override
-    public void writeValue(Column column, int rowNo, Appender appender, RenderContext context) {
+    public void writeValue(Column column, int rowNo, Appender appender, WriterContext context) {
         appender.append(getValue(column, rowNo, context));
     }
 
-    String getValue(Column column, int rowNo, RenderContext context) {
+    String getValue(Column column, int rowNo, WriterContext context) {
         return "-";
     }
 
@@ -202,7 +202,7 @@ enum ColumnCellWriter implements CellWriter<Column> {
         return "`" + expression.toSql() + "`";
     }
 
-    static ColumnCellWriter writing(ColumnAttribute attribute) {
+    static ColumnAttributeWriter writing(ColumnAttribute attribute) {
         // Mapping of ColumnAttribute to this type.
         return switch (attribute) {
             case ORDINAL -> ORDINAL;

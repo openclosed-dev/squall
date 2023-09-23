@@ -55,8 +55,7 @@ class MarkdownRenderer implements TextRenderer {
     @Override
     public String renderToString(DatabaseSpec spec) {
         Objects.requireNonNull(spec);
-        try {
-            var writer = new StringWriter();
+        try (var writer = new StringWriter()) {
             render(spec, writer);
             return writer.toString();
         } catch (IOException e) {
@@ -65,7 +64,7 @@ class MarkdownRenderer implements TextRenderer {
     }
 
     private void render(DatabaseSpec spec, Writer writer) throws IOException {
-        new RenderingSpecVisitor(this.config, this.bundle, writer).writeSpec(spec);
+        new SpecDocumentWriter(this.config, this.bundle, writer).writeSpec(spec);
         writer.flush();
     }
 

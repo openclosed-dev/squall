@@ -19,7 +19,10 @@ package dev.openclosed.squall.renderer.asciidoc;
 import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.spec.Table;
 
-interface RenderContext {
+/**
+ * Shared context for writers.
+ */
+interface WriterContext {
 
     MessageBundle bundle();
 

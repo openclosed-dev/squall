@@ -18,7 +18,11 @@ package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.spec.Component;
 
-public interface CellWriter<T extends Component> {
+/**
+ * Writer of component attributes.
+ * @param <T> type of spec component.
+ */
+interface AttributeWriter<T extends Component> {
 
     String ALIGN_LEFT = ":--";
     String ALIGN_RIGHT = "--:";
@@ -30,5 +34,5 @@ public interface CellWriter<T extends Component> {
         return ALIGN_LEFT;
     }
 
-    void writeValue(T component, int rowNo, Appender appender, RenderContext context);
+    void writeValue(T component, int rowNo, Appender appender, WriterContext context);
 }

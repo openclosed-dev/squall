@@ -73,7 +73,7 @@ public final class AsciiDocRenderer implements TextRenderer {
     }
 
     private void render(DatabaseSpec spec, Writer writer) throws IOException {
-        new RenderingSpecVisitor(this.config, this.bundle, writer).writeSpec(spec);
+        new SpecDocumentWriter(this.config, this.bundle, writer).writeSpec(spec);
         writer.flush();
     }
 }

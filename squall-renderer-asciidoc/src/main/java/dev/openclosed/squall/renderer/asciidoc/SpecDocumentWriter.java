@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.renderer.markdown;
-
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.Set;
+package dev.openclosed.squall.renderer.asciidoc;
 
 import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
@@ -32,10 +28,15 @@ import dev.openclosed.squall.api.spec.Sequence;
 import dev.openclosed.squall.api.spec.SpecVisitor;
 import dev.openclosed.squall.api.spec.Table;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.Optional;
+import java.util.Set;
+
 /**
- * Spec visitor to render document.
+ * A writer of specification document.
  */
-class RenderingSpecVisitor implements SpecVisitor, RenderContext {
+final class SpecDocumentWriter implements SpecVisitor, WriterContext {
 
     private final RenderConfig config;
     private final MessageBundle bundle;
@@ -43,40 +44,33 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext {
 
     private final Set<Component.Type> show;
 
-    private final HeadingNumberGenerator headingNumberGenerator;
-    private final MarkdownTableWriter<Column> columnWriter;
-    private final MarkdownTableWriter<Sequence> sequenceWriter;
+    private final TabularComponentWriter<Column> columnWriter;
+    private final TabularComponentWriter<Sequence> sequenceWriter;
 
     private int level;
+
     private Table currentTable;
-    private int databaseCount;
 
     private static final String[] HEADING_PREFIX = {
-        "#", "##", "###", "####", "#####", "######", "#######"
+        "=", "==", "===", "====", "=====", "======", "======="
     };
 
-    RenderingSpecVisitor(RenderConfig config, MessageBundle bundle, Appendable appendable) {
+    SpecDocumentWriter(RenderConfig config, MessageBundle bundle, Appendable appendable) {
         this.config = config;
         this.bundle = bundle;
         this.appender = new Appender(appendable);
 
         this.show = config.show();
 
-        this.headingNumberGenerator = HeadingNumberGenerator.create(config.numbering());
-
-        this.columnWriter = MarkdownTableWriter.forColumn(
-            config.columnAttributes(),
-            this.appender,
-            this,
-            this::writeColumnAnchor);
-        this.sequenceWriter = MarkdownTableWriter.forSequence(
+        this.columnWriter = TabularComponentWriter.columnWriter(
+            config.columnAttributes(), this.appender, this, this::writeColumnAnchor);
+        this.sequenceWriter = TabularComponentWriter.sequenceWriter(
             config.sequenceAttributes(), this.appender, this);
     }
 
     void writeSpec(DatabaseSpec spec) throws IOException {
         this.level = 0;
         this.currentTable = null;
-        this.databaseCount = spec.databases().size();
         try {
             startSpec(spec);
             spec.walkSpec(config.order(), this);
@@ -95,17 +89,9 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext {
             return;
         }
 
-        if (databaseCount > 1) {
-            writeHeading(database);
-            enterLevel();
-        }
-
         writeDescription(database);
-        visitChildren(database);
 
-        if (databaseCount > 1) {
-            leaveLevel();
-        }
+        visitChildren(database);
     }
 
     @Override
@@ -135,8 +121,9 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext {
         writeDescription(sequence);
 
         appender.appendNewLine();
-        sequenceWriter.writeHeader();
-        sequenceWriter.writeDataRow(sequence);
+        this.sequenceWriter.writeHeader();
+        this.sequenceWriter.writeDataRow(sequence);
+        this.sequenceWriter.writeFooter();
     }
 
     @Override
@@ -146,17 +133,17 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext {
         }
 
         this.currentTable = table;
-
         writeHeading(table);
         writeDescription(table);
 
         if (shouldRender(Component.Type.COLUMN) && table.hasColumns()) {
             appender.appendNewLine();
-            columnWriter.writeHeader();
+            this.columnWriter.writeHeader();
 
             visitChildren(table);
         }
 
+        this.columnWriter.writeFooter();
         this.currentTable = null;
     }
 
@@ -188,14 +175,21 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext {
 
     private void startSpec(DatabaseSpec spec) {
         var metadata = spec.getMetadataOrDefault();
-        appender.append("# ").append(metadata.title()).appendNewLine();
+        appender.append("= ").append(metadata.title()).appendNewLine();
+
+        writeMetadata(":author:", metadata.author());
+        writeMetadata(":revnumber:", metadata.version());
+        writeMetadata(":revdate:", metadata.date());
+
+        appender
+            .append(":icons: font").appendNewLine()
+            .append(":icon-set: fas").appendNewLine();
 
         enterLevel();
     }
 
     private void finishSpec() {
         leaveLevel();
-        writeImageDefinitions();
     }
 
     private boolean shouldRender(Component.Type type) {
@@ -204,38 +198,40 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext {
 
     private void enterLevel() {
         this.level++;
-        this.headingNumberGenerator.enterLevel();
     }
 
     private void leaveLevel() {
         assert this.level > 0;
         this.level--;
-        this.headingNumberGenerator.leaveLevel();
     }
 
     private void writeHeading(Component component) {
-        appender
-            .appendNewLine()
-            .append(HEADING_PREFIX[level])
-            .append(this.headingNumberGenerator.generate());
+        appender.appendNewLine();
+        writeSectionAnchor(component);
+        appender.append(HEADING_PREFIX[level]);
 
         writeHeadingText(component);
+        appender.appendNewLine();
+    }
 
-        Badge badge = Badge.mapComponentType(component.type());
-        appender
-            .appendSpace()
-            .append("![").append(badge.label()).append(']').appendNewLine();
+    private void writeSectionAnchor(Component component) {
+        appender.append("[id=").append(component.fullName()).append(']').appendNewLine();
     }
 
     private void writeHeadingText(Component component) {
         final String name = component.qualifiedName();
         final boolean deprecated = component.isDeprecated();
         component.label().ifPresentOrElse(label -> {
-            writeName(label, deprecated);
-            writeNameAsCode(name, deprecated);
+                writeName(label, deprecated);
+                writeNameAsCode(name, deprecated);
             },
             () -> writeName(name, deprecated)
         );
+        // component type
+        appender
+            .appendSpace().append("[.type]#")
+            .append(component.type().name().toLowerCase())
+            .append("#");
     }
 
     private void writeName(String name, boolean deprecated) {
@@ -244,7 +240,7 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext {
         }
         appender.appendSpace();
         if (deprecated) {
-            appender.append("~~").append(name).append("~~");
+            appender.append("[.line-through]#").append(name).append("#");
         } else {
             appender.append(name);
         }
@@ -256,7 +252,7 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext {
         }
         appender.appendSpace();
         if (deprecated) {
-            appender.append("~~`").append(name).append("`~~");
+            appender.append("[.line-through]#`").append(name).append("`#");
         } else {
             appender.append('`').append(name).append('`');
         }
@@ -272,8 +268,9 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext {
     }
 
     private void writeDeprecationNotice(Component component) {
-        appender.appendNewLine()
-            .append("**").append(bundle.deprecated()).append("**");
+        appender.
+            appendNewLine()
+            .append("*").append(bundle.deprecated()).append("*");
         component.getFirstAnnotation(DocAnnotationType.DEPRECATED).ifPresent(a -> {
             String text = a.value();
             if (!text.isEmpty()) {
@@ -283,21 +280,13 @@ class RenderingSpecVisitor implements SpecVisitor, RenderContext {
         appender.appendNewLine();
     }
 
-    private void writeImageDefinitions() {
-        appender.appendNewLine();
-        for (var badge : Badge.values()) {
-            appender
-                .append('[').append(badge.name()).append("]: ")
-                .append(badge.url()).appendNewLine();
-        }
-    }
-
     private void writeColumnAnchor(Column column) {
         String fullName = column.fullName();
-        appender
-            .appendSpace()
-            .append("<a id=\"").append(fullName)
-            .append("\" name=\"").append(fullName)
-            .append("\"></a>");
+        appender.append("[[").append(fullName).append("]]");
+    }
+
+    private void writeMetadata(String attribute, Optional<String> metadata) {
+        metadata.ifPresent(
+            value -> appender.append(attribute).appendSpace().append(value).appendNewLine());
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.renderer.asciidoc;
+package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
@@ -29,78 +29,74 @@ import java.util.function.Consumer;
  * A table writer in Markdown format.
  * @param <T> the type of the component written as the table rows.
  */
-interface AsciiDocTableWriter<T extends Component> {
+interface TabularComponentWriter<T extends Component> {
 
-    AsciiDocTableWriter<?> EMPTY = new AsciiDocTableWriter<>() { };
+    TabularComponentWriter<?> EMPTY = new TabularComponentWriter<>() { };
 
     default void writeHeader() {
-    }
-
-    default void writeFooter() {
     }
 
     default void writeDataRow(T component) {
     }
 
-    static AsciiDocTableWriter<Column> forColumn(
+    static TabularComponentWriter<Column> columnWriter(
         List<ColumnAttribute> attributes,
         Appender appender,
-        RenderContext context,
+        WriterContext context,
         Consumer<Column> anchorWriter) {
 
         if (attributes.isEmpty()) {
-            return empty();
+            return emptyWriter();
         }
 
-        List<ColumnCellWriter> writers = attributes.stream()
-            .map(ColumnCellWriter::writing).toList();
-        return new AsciiDocTableWriterImpl<>(writers, appender, context, anchorWriter);
+        List<ColumnAttributeWriter> writers = attributes.stream()
+            .map(ColumnAttributeWriter::writing).toList();
+
+        return new TabularComponentWriterImpl<>(writers, appender, context, anchorWriter);
     }
 
-    static AsciiDocTableWriter<Sequence> forSequence(
+    static TabularComponentWriter<Sequence> sequenceWriter(
         List<SequenceAttribute> attributes,
         Appender appender,
-        RenderContext context) {
+        WriterContext context) {
 
         if (attributes.isEmpty()) {
-            return empty();
+            return emptyWriter();
         }
 
-        List<SequenceCellWriter> writers = attributes.stream()
-            .map(SequenceCellWriter::writing).toList();
+        List<SequenceAttributeWriter> writers = attributes.stream()
+            .map(SequenceAttributeWriter::writing).toList();
 
-        return new AsciiDocTableWriterImpl<>(writers, appender, context, t -> { });
+        return new TabularComponentWriterImpl<>(writers, appender, context, t -> { });
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends Component> AsciiDocTableWriter<T> empty() {
-        return (AsciiDocTableWriter<T>) EMPTY;
+    private static <T extends Component> TabularComponentWriter<T> emptyWriter() {
+        return (TabularComponentWriter<T>) EMPTY;
     }
 }
 
-final class AsciiDocTableWriterImpl<T extends Component> implements AsciiDocTableWriter<T> {
+final class TabularComponentWriterImpl<T extends Component> implements TabularComponentWriter<T> {
 
-    private final List<? extends CellWriter<T>> writers;
+    private final List<? extends AttributeWriter<T>> attributeWriters;
     private final Appender appender;
-    private final RenderContext context;
+    private final WriterContext context;
     private final Consumer<T> anchorWriter;
     private final List<String> titles;
 
     private int nextRowNo;
 
-    AsciiDocTableWriterImpl(
-        List<? extends CellWriter<T>> writers,
+    TabularComponentWriterImpl(
+        List<? extends AttributeWriter<T>> attributeWriters,
         Appender appender,
-        RenderContext context,
+        WriterContext context,
         Consumer<T> anchorWriter) {
-
-        this.writers = writers;
+        this.attributeWriters = attributeWriters;
         this.appender = appender;
         this.context = context;
         this.anchorWriter = anchorWriter;
-
         final var bundle = context.bundle();
-        this.titles = writers.stream()
+        this.titles = attributeWriters.stream()
             .map(p -> bundle.columnHeader(p.name()))
             .toList();
     }
@@ -108,25 +104,8 @@ final class AsciiDocTableWriterImpl<T extends Component> implements AsciiDocTabl
     @Override
     public void writeHeader() {
         this.nextRowNo = 1;
-
-        appender.append("[cols=\"");
-        int columns = 0;
-        for (var writer : this.writers) {
-            if (columns++ > 0) {
-                appender.append(',');
-            }
-            appender.append(writer.specifier());
-        }
-        // options value must be quoted.
-        appender.append("\", options=\"header\"]").appendNewLine();
-        appender.append("|===").appendNewLine();
-
         writeHeaderRow(appender);
-    }
-
-    @Override
-    public void writeFooter() {
-        appender.append("|===").appendNewLine();
+        writeDelimiterRow(appender);
     }
 
     @Override
@@ -135,21 +114,29 @@ final class AsciiDocTableWriterImpl<T extends Component> implements AsciiDocTabl
     }
 
     private void writeHeaderRow(Appender appender) {
+        appender.append("|");
         for (var title : this.titles) {
-            appender.append("^|").append(title).appendNewLine();
+            appender.appendSpace().append(title).append(" |");
         }
+        appender.appendNewLine();
     }
 
-    private void writeDataRow(T component, int rowNo, Appender appender, RenderContext context) {
-        appender.appendNewLine();
-        int columns = 0;
-        for (var writer : this.writers) {
-            appender.append('|');
-            if (columns++ == 0) {
-                this.anchorWriter.accept(component);
-            }
-            writer.writeValue(component, rowNo, appender, context);
-            appender.appendNewLine();
+    private void writeDelimiterRow(Appender appender) {
+        appender.append("|");
+        for (var writer : attributeWriters) {
+            appender.appendSpace().append(writer.getSeparator()).append(" |");
         }
+        appender.appendNewLine();
+    }
+
+    private void writeDataRow(T component, int rowNo, Appender appender, WriterContext context) {
+        appender.append("|");
+        this.anchorWriter.accept(component);
+        for (var writer : this.attributeWriters) {
+            appender.appendSpace();
+            writer.writeValue(component, rowNo, appender, context);
+            appender.append(" |");
+        }
+        appender.appendNewLine();
     }
 }

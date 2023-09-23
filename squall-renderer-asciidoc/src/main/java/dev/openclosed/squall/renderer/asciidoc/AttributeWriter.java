@@ -18,7 +18,7 @@ package dev.openclosed.squall.renderer.asciidoc;
 
 import dev.openclosed.squall.api.spec.Component;
 
-public interface CellWriter<T extends Component> {
+interface AttributeWriter<T extends Component> {
 
     String name();
 
@@ -26,5 +26,5 @@ public interface CellWriter<T extends Component> {
         return "";
     }
 
-    void writeValue(T component, int rowNo, Appender appender, RenderContext context);
+    void writeValue(T component, int rowNo, Appender appender, WriterContext context);
 }
