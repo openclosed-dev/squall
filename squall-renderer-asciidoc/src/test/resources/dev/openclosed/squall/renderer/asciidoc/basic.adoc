@@ -1,0 +1,76 @@
+__Italic__
+
+__Italic__
+
+**Bold**
+
+**Bold**
+
+== Heading 1
+
+== Heading 1
+
+=== Heading 2
+
+=== Heading 2
+
+http://example.org[Link]
+
+image:https://commonmark.org/help/images/favicon.png[Image]
+
+____
+Quoted text.
+
+Another paragraph in quote.
+____
+
+* apples
+* oranges
+** temple
+** navel
+* bananas
+
+* apples
+* oranges
+** temple
+** navel
+* bananas
+
+. One
+. Two
+. Three
+
+. One
+. Two
+. Three
+
+'''
+
+'''
+
+`+Inline code+` with backticks
+
+----
+# code block
+print '3 backticks or'
+print 'indent 4 spaces'
+----
+
+----
+# code block
+print '3 backticks or'
+print 'indent 4 spaces'
+----
+
+[source,java]
+----
+public class Person {
+  private String name;
+  public Person(String name) {
+    this.name = name;
+  }
+}
+----
+
+A sentence. +
+Another sentence.

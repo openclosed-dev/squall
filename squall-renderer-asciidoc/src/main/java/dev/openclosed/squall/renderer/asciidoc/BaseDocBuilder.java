@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.renderer.markdown;
+package dev.openclosed.squall.renderer.asciidoc;
 
-import dev.openclosed.squall.api.spec.Component;
+interface BaseDocBuilder extends Appendable {
 
-/**
- * Writer of component attributes.
- * @param <T> type of spec component.
- */
-interface AttributeWriter<T extends Component> {
+    BaseDocBuilder append(CharSequence csq);
 
-    String ALIGN_LEFT = ":--";
-    String ALIGN_RIGHT = "--:";
-    String ALIGN_CENTER = ":-:";
+    BaseDocBuilder append(CharSequence csq, int start, int end);
 
-    String name();
+    BaseDocBuilder append(char c);
 
-    default String getSeparator() {
-        return ALIGN_LEFT;
-    }
+    BaseDocBuilder appendSpace();
 
-    void writeValue(T component, int rowNo, DocBuilder builder, WriterContext context);
+    BaseDocBuilder appendNewLine();
+
+    BaseDocBuilder appendSectionMarker(int level);
+
+    BaseDocBuilder appendCode(CharSequence csq);
+
+    BaseDocBuilder appendHardLineBreak();
 }

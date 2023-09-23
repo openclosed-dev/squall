@@ -19,16 +19,22 @@ package dev.openclosed.squall.renderer.asciidoc;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-final class Appender implements Appendable {
+final class DocBuilder implements BaseDocBuilder {
 
     private final Appendable appendable;
+    private final MarkdownConverter converter;
 
-    Appender(Appendable appendable) {
+    private static final String[] SECTION_MARKER = {
+        "=", "==", "===", "====", "=====", "======", "======="
+    };
+
+    DocBuilder(Appendable appendable) {
         this.appendable = appendable;
+        this.converter = new MarkdownConverter(this);
     }
 
     @Override
-    public Appender append(CharSequence csq) {
+    public DocBuilder append(CharSequence csq) {
         try {
             appendable.append(csq);
         } catch (IOException e) {
@@ -38,7 +44,7 @@ final class Appender implements Appendable {
     }
 
     @Override
-    public Appender append(CharSequence csq, int start, int end) {
+    public DocBuilder append(CharSequence csq, int start, int end) {
         try {
             appendable.append(csq, start, end);
         } catch (IOException e) {
@@ -48,7 +54,7 @@ final class Appender implements Appendable {
     }
 
     @Override
-    public Appender append(char c) {
+    public DocBuilder append(char c) {
         try {
             appendable.append(c);
         } catch (IOException e) {
@@ -57,11 +63,40 @@ final class Appender implements Appendable {
         return this;
     }
 
-    Appender appendSpace() {
+    @Override
+    public DocBuilder appendSpace() {
         return append(' ');
     }
 
-    Appender appendNewLine() {
+    @Override
+    public DocBuilder appendNewLine() {
         return append('\n');
+    }
+
+    @Override
+    public DocBuilder appendSectionMarker(int level) {
+        if (level < 0) {
+            throw new IllegalArgumentException();
+        }
+        if (level < SECTION_MARKER.length) {
+            append(SECTION_MARKER[level]);
+        }
+        return this;
+    }
+
+    @Override
+    public DocBuilder appendCode(CharSequence csq) {
+        return append("`+").append(csq).append("+`");
+    }
+
+    @Override
+    public DocBuilder appendHardLineBreak() {
+        return append(" +").appendNewLine();
+    }
+
+    //
+    DocBuilder appendMarkdownText(CharSequence csq) {
+        this.converter.writeText(csq);
+        return this;
     }
 }

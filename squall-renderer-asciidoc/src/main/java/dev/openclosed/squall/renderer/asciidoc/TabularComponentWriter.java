@@ -44,7 +44,7 @@ interface TabularComponentWriter<T extends Component> {
 
     static TabularComponentWriter<Column> columnWriter(
         List<ColumnAttribute> attributes,
-        Appender appender,
+        DocBuilder builder,
         WriterContext context,
         Consumer<Column> anchorWriter) {
 
@@ -54,12 +54,12 @@ interface TabularComponentWriter<T extends Component> {
 
         List<ColumnAttributeWriter> writers = attributes.stream()
             .map(ColumnAttributeWriter::writing).toList();
-        return new TabularComponentWriterImpl<>(writers, appender, context, anchorWriter);
+        return new TabularComponentWriterImpl<>(writers, builder, context, anchorWriter);
     }
 
     static TabularComponentWriter<Sequence> sequenceWriter(
         List<SequenceAttribute> attributes,
-        Appender appender,
+        DocBuilder builder,
         WriterContext context) {
 
         if (attributes.isEmpty()) {
@@ -69,7 +69,7 @@ interface TabularComponentWriter<T extends Component> {
         List<SequenceAttributeWriter> writers = attributes.stream()
             .map(SequenceAttributeWriter::writing).toList();
 
-        return new TabularComponentWriterImpl<>(writers, appender, context, t -> { });
+        return new TabularComponentWriterImpl<>(writers, builder, context, t -> { });
     }
 
     @SuppressWarnings("unchecked")
@@ -81,7 +81,7 @@ interface TabularComponentWriter<T extends Component> {
 final class TabularComponentWriterImpl<T extends Component> implements TabularComponentWriter<T> {
 
     private final List<? extends AttributeWriter<T>> attributeWriters;
-    private final Appender appender;
+    private final DocBuilder builder;
     private final WriterContext context;
     private final Consumer<T> anchorWriter;
     private final List<String> titles;
@@ -90,12 +90,12 @@ final class TabularComponentWriterImpl<T extends Component> implements TabularCo
 
     TabularComponentWriterImpl(
         List<? extends AttributeWriter<T>> attributeWriters,
-        Appender appender,
+        DocBuilder builder,
         WriterContext context,
         Consumer<T> anchorWriter) {
 
         this.attributeWriters = attributeWriters;
-        this.appender = appender;
+        this.builder = builder;
         this.context = context;
         this.anchorWriter = anchorWriter;
 
@@ -109,47 +109,47 @@ final class TabularComponentWriterImpl<T extends Component> implements TabularCo
     public void writeHeader() {
         this.nextRowNo = 1;
 
-        appender.append("[cols=\"");
+        builder.append("[cols=\"");
         int columns = 0;
         for (var writer : this.attributeWriters) {
             if (columns++ > 0) {
-                appender.append(',');
+                builder.append(',');
             }
-            appender.append(writer.specifier());
+            builder.append(writer.specifier());
         }
         // options value must be quoted.
-        appender.append("\", options=\"header\"]").appendNewLine();
-        appender.append("|===").appendNewLine();
+        builder.append("\", options=\"header\"]").appendNewLine();
+        builder.append("|===").appendNewLine();
 
-        writeHeaderRow(appender);
+        writeHeaderRow(builder);
     }
 
     @Override
     public void writeFooter() {
-        appender.append("|===").appendNewLine();
+        builder.append("|===").appendNewLine();
     }
 
     @Override
     public void writeDataRow(T component) {
-        writeDataRow(component, this.nextRowNo++, this.appender, this.context);
+        writeDataRow(component, this.nextRowNo++, this.builder, this.context);
     }
 
-    private void writeHeaderRow(Appender appender) {
+    private void writeHeaderRow(DocBuilder builder) {
         for (var title : this.titles) {
-            appender.append("^|").append(title).appendNewLine();
+            builder.append("^|").append(title).appendNewLine();
         }
     }
 
-    private void writeDataRow(T component, int rowNo, Appender appender, WriterContext context) {
-        appender.appendNewLine();
+    private void writeDataRow(T component, int rowNo, DocBuilder builder, WriterContext context) {
+        builder.appendNewLine();
         int columns = 0;
         for (var writer : this.attributeWriters) {
-            appender.append('|');
+            builder.append('|');
             if (columns++ == 0) {
                 this.anchorWriter.accept(component);
             }
-            writer.writeValue(component, rowNo, appender, context);
-            appender.appendNewLine();
+            writer.writeValue(component, rowNo, builder, context);
+            builder.appendNewLine();
         }
     }
 }

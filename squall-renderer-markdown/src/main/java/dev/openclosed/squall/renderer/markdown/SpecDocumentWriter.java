@@ -39,7 +39,7 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
 
     private final RenderConfig config;
     private final MessageBundle bundle;
-    private final Appender appender;
+    private final DocBuilder builder;
 
     private final Set<Component.Type> show;
 
@@ -58,7 +58,7 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
     SpecDocumentWriter(RenderConfig config, MessageBundle bundle, Appendable appendable) {
         this.config = config;
         this.bundle = bundle;
-        this.appender = new Appender(appendable);
+        this.builder = new DocBuilder(appendable);
 
         this.show = config.show();
 
@@ -66,11 +66,11 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
 
         this.columnWriter = TabularComponentWriter.columnWriter(
             config.columnAttributes(),
-            this.appender,
+            this.builder,
             this,
             this::writeColumnAnchor);
         this.sequenceWriter = TabularComponentWriter.sequenceWriter(
-            config.sequenceAttributes(), this.appender, this);
+            config.sequenceAttributes(), this.builder, this);
     }
 
     void writeSpec(DatabaseSpec spec) throws IOException {
@@ -134,7 +134,7 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
         writeHeading(sequence);
         writeDescription(sequence);
 
-        appender.appendNewLine();
+        builder.appendNewLine();
         sequenceWriter.writeHeader();
         sequenceWriter.writeDataRow(sequence);
     }
@@ -151,7 +151,7 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
         writeDescription(table);
 
         if (shouldRender(Component.Type.COLUMN) && table.hasColumns()) {
-            appender.appendNewLine();
+            builder.appendNewLine();
             columnWriter.writeHeader();
 
             visitChildren(table);
@@ -188,7 +188,7 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
 
     private void startSpec(DatabaseSpec spec) {
         var metadata = spec.getMetadataOrDefault();
-        appender.append("# ").append(metadata.title()).appendNewLine();
+        builder.append("# ").append(metadata.title()).appendNewLine();
 
         enterLevel();
     }
@@ -214,7 +214,7 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
     }
 
     private void writeHeading(Component component) {
-        appender
+        builder
             .appendNewLine()
             .append(HEADING_PREFIX[level])
             .append(this.headingNumberGenerator.generate());
@@ -222,7 +222,7 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
         writeHeadingText(component);
 
         Badge badge = Badge.mapComponentType(component.type());
-        appender
+        builder
             .appendSpace()
             .append("![").append(badge.label()).append(']').appendNewLine();
     }
@@ -242,11 +242,11 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
         if (name.isEmpty()) {
             return;
         }
-        appender.appendSpace();
+        builder.appendSpace();
         if (deprecated) {
-            appender.append("~~").append(name).append("~~");
+            builder.append("~~").append(name).append("~~");
         } else {
-            appender.append(name);
+            builder.append(name);
         }
     }
 
@@ -254,11 +254,11 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
         if (name.isEmpty()) {
             return;
         }
-        appender.appendSpace();
+        builder.appendSpace();
         if (deprecated) {
-            appender.append("~~`").append(name).append("`~~");
+            builder.append("~~`").append(name).append("`~~");
         } else {
-            appender.append('`').append(name).append('`');
+            builder.append('`').append(name).append('`');
         }
     }
 
@@ -267,26 +267,26 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
             writeDeprecationNotice(component);
         }
         component.description().ifPresent(description ->
-            appender.appendNewLine().append(description).appendNewLine()
+            builder.appendNewLine().append(description).appendNewLine()
         );
     }
 
     private void writeDeprecationNotice(Component component) {
-        appender.appendNewLine()
+        builder.appendNewLine()
             .append("**").append(bundle.deprecated()).append("**");
         component.getFirstAnnotation(DocAnnotationType.DEPRECATED).ifPresent(a -> {
             String text = a.value();
             if (!text.isEmpty()) {
-                appender.appendSpace().append(text);
+                builder.appendSpace().append(text);
             }
         });
-        appender.appendNewLine();
+        builder.appendNewLine();
     }
 
     private void writeImageDefinitions() {
-        appender.appendNewLine();
+        builder.appendNewLine();
         for (var badge : Badge.values()) {
-            appender
+            builder
                 .append('[').append(badge.name()).append("]: ")
                 .append(badge.url()).appendNewLine();
         }
@@ -294,7 +294,7 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
 
     private void writeColumnAnchor(Column column) {
         String fullName = column.fullName();
-        appender
+        builder
             .appendSpace()
             .append("<a id=\"").append(fullName)
             .append("\" name=\"").append(fullName)

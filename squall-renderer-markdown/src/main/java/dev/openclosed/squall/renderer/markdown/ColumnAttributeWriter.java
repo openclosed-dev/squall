@@ -34,29 +34,29 @@ enum ColumnAttributeWriter implements AttributeWriter<Column> {
     },
     NAME(ALIGN_LEFT) {
         @Override
-        public void writeValue(Column column, int rowNo, Appender appender, WriterContext context) {
+        public void writeValue(Column column, int rowNo, DocBuilder builder, WriterContext context) {
             if (column.isDeprecated()) {
-                appender.append("~~").append(column.name()).append("~~");
+                builder.append("~~").append(column.name()).append("~~");
             } else {
-                appender.append(column.name());
+                builder.append(column.name());
             }
             if (column.isPrimaryKey()) {
-                appender.appendSpace().append(KEY_MARK);
+                builder.appendSpace().append(KEY_MARK);
             }
         }
     },
     LABEL(ALIGN_LEFT) {
         @Override
-        public void writeValue(Column column, int rowNo, Appender appender, WriterContext context) {
+        public void writeValue(Column column, int rowNo, DocBuilder builder, WriterContext context) {
             if (column.label().isPresent()) {
                 var label = column.label().get();
                 if (column.isDeprecated()) {
-                    appender.append("~~").append(label).append("~~");
+                    builder.append("~~").append(label).append("~~");
                 } else {
-                    appender.append(label);
+                    builder.append(label);
                 }
             } else {
-                appender.append("-");
+                builder.append("-");
             }
         }
     },
@@ -154,25 +154,25 @@ enum ColumnAttributeWriter implements AttributeWriter<Column> {
     },
     DESCRIPTION(ALIGN_LEFT) {
         @Override
-        public void writeValue(Column column, int rowNo, Appender appender, WriterContext context) {
+        public void writeValue(Column column, int rowNo, DocBuilder builder, WriterContext context) {
             if (column.isDeprecated()) {
-                writeDeprecationNote(column, appender, context);
+                writeDeprecationNote(column, builder, context);
                 column.description().ifPresent(
-                    description -> appender.append("<br>").append(inlined(description))
+                    description -> builder.append("<br>").append(inlined(description))
                 );
             } else {
                 column.description().ifPresentOrElse(
-                    description -> appender.append(inlined(description)),
-                    () -> appender.append('-')
+                    description -> builder.append(inlined(description)),
+                    () -> builder.append('-')
                 );
             }
         }
 
-        private void writeDeprecationNote(Column column, Appender appender, WriterContext context) {
-            appender.append("**").append(context.bundle().deprecated()).append("**");
+        private void writeDeprecationNote(Column column, DocBuilder builder, WriterContext context) {
+            builder.append("**").append(context.bundle().deprecated()).append("**");
             String notice = column.getFirstAnnotation(DocAnnotationType.DEPRECATED).get().value();
             if (!notice.isEmpty()) {
-                appender.appendSpace().append(notice);
+                builder.appendSpace().append(notice);
             }
         }
     };
@@ -192,8 +192,8 @@ enum ColumnAttributeWriter implements AttributeWriter<Column> {
     }
 
     @Override
-    public void writeValue(Column component, int rowNo, Appender appender, WriterContext context) {
-        appender.append(getValue(component, rowNo, context));
+    public void writeValue(Column component, int rowNo, DocBuilder builder, WriterContext context) {
+        builder.append(getValue(component, rowNo, context));
     }
 
     String getValue(Column column, int rowNo, WriterContext context) {

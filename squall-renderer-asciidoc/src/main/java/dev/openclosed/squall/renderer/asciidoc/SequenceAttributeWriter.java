@@ -24,8 +24,8 @@ enum SequenceAttributeWriter implements AttributeWriter<Sequence> {
     }
 
     @Override
-    public void writeValue(Sequence sequence, int rowNo, Appender appender, WriterContext context) {
-        appender.append(this.attribute.extractValue(sequence));
+    public void writeValue(Sequence sequence, int rowNo, DocBuilder builder, WriterContext context) {
+        builder.append(this.attribute.extractValue(sequence));
     }
 
     static SequenceAttributeWriter writing(SequenceAttribute attribute) {

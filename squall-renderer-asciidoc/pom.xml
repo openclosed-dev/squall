@@ -61,6 +61,10 @@
             <artifactId>asciidoctorj-pdf</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark</artifactId>
+        </dependency>
         <!-- test dependencies -->
         <dependency>
             <groupId>${project.groupId}</groupId>

@@ -40,7 +40,7 @@ final class SpecDocumentWriter implements SpecVisitor, WriterContext {
 
     private final RenderConfig config;
     private final MessageBundle bundle;
-    private final Appender appender;
+    private final DocBuilder builder;
 
     private final Set<Component.Type> show;
 
@@ -51,21 +51,17 @@ final class SpecDocumentWriter implements SpecVisitor, WriterContext {
 
     private Table currentTable;
 
-    private static final String[] HEADING_PREFIX = {
-        "=", "==", "===", "====", "=====", "======", "======="
-    };
-
     SpecDocumentWriter(RenderConfig config, MessageBundle bundle, Appendable appendable) {
         this.config = config;
         this.bundle = bundle;
-        this.appender = new Appender(appendable);
+        this.builder = new DocBuilder(appendable);
 
         this.show = config.show();
 
         this.columnWriter = TabularComponentWriter.columnWriter(
-            config.columnAttributes(), this.appender, this, this::writeColumnAnchor);
+            config.columnAttributes(), this.builder, this, this::writeColumnAnchor);
         this.sequenceWriter = TabularComponentWriter.sequenceWriter(
-            config.sequenceAttributes(), this.appender, this);
+            config.sequenceAttributes(), this.builder, this);
     }
 
     void writeSpec(DatabaseSpec spec) throws IOException {
@@ -120,7 +116,7 @@ final class SpecDocumentWriter implements SpecVisitor, WriterContext {
         writeHeading(sequence);
         writeDescription(sequence);
 
-        appender.appendNewLine();
+        builder.appendNewLine();
         this.sequenceWriter.writeHeader();
         this.sequenceWriter.writeDataRow(sequence);
         this.sequenceWriter.writeFooter();
@@ -137,7 +133,7 @@ final class SpecDocumentWriter implements SpecVisitor, WriterContext {
         writeDescription(table);
 
         if (shouldRender(Component.Type.COLUMN) && table.hasColumns()) {
-            appender.appendNewLine();
+            builder.appendNewLine();
             this.columnWriter.writeHeader();
 
             visitChildren(table);
@@ -175,13 +171,13 @@ final class SpecDocumentWriter implements SpecVisitor, WriterContext {
 
     private void startSpec(DatabaseSpec spec) {
         var metadata = spec.getMetadataOrDefault();
-        appender.append("= ").append(metadata.title()).appendNewLine();
+        builder.append("= ").append(metadata.title()).appendNewLine();
 
         writeMetadata(":author:", metadata.author());
         writeMetadata(":revnumber:", metadata.version());
         writeMetadata(":revdate:", metadata.date());
 
-        appender
+        builder
             .append(":icons: font").appendNewLine()
             .append(":icon-set: fas").appendNewLine();
 
@@ -206,16 +202,16 @@ final class SpecDocumentWriter implements SpecVisitor, WriterContext {
     }
 
     private void writeHeading(Component component) {
-        appender.appendNewLine();
+        builder.appendNewLine();
         writeSectionAnchor(component);
-        appender.append(HEADING_PREFIX[level]);
+        builder.appendSectionMarker(level);
 
         writeHeadingText(component);
-        appender.appendNewLine();
+        builder.appendNewLine();
     }
 
     private void writeSectionAnchor(Component component) {
-        appender.append("[id=").append(component.fullName()).append(']').appendNewLine();
+        builder.append("[id=").append(component.fullName()).append(']').appendNewLine();
     }
 
     private void writeHeadingText(Component component) {
@@ -228,7 +224,7 @@ final class SpecDocumentWriter implements SpecVisitor, WriterContext {
             () -> writeName(name, deprecated)
         );
         // component type
-        appender
+        builder
             .appendSpace().append("[.type]#")
             .append(component.type().name().toLowerCase())
             .append("#");
@@ -238,11 +234,11 @@ final class SpecDocumentWriter implements SpecVisitor, WriterContext {
         if (name.isEmpty()) {
             return;
         }
-        appender.appendSpace();
+        builder.appendSpace();
         if (deprecated) {
-            appender.append("[.line-through]#").append(name).append("#");
+            builder.append("[.line-through]#").append(name).append("#");
         } else {
-            appender.append(name);
+            builder.append(name);
         }
     }
 
@@ -250,11 +246,11 @@ final class SpecDocumentWriter implements SpecVisitor, WriterContext {
         if (name.isEmpty()) {
             return;
         }
-        appender.appendSpace();
+        builder.appendSpace();
         if (deprecated) {
-            appender.append("[.line-through]#`").append(name).append("`#");
+            builder.append("[.line-through]#").appendCode(name).append("#");
         } else {
-            appender.append('`').append(name).append('`');
+            builder.appendCode(name);
         }
     }
 
@@ -263,30 +259,30 @@ final class SpecDocumentWriter implements SpecVisitor, WriterContext {
             writeDeprecationNotice(component);
         }
         component.description().ifPresent(description ->
-            appender.appendNewLine().append(description).appendNewLine()
+            builder.appendNewLine().appendMarkdownText(description).appendNewLine()
         );
     }
 
     private void writeDeprecationNotice(Component component) {
-        appender.
+        builder.
             appendNewLine()
             .append("*").append(bundle.deprecated()).append("*");
         component.getFirstAnnotation(DocAnnotationType.DEPRECATED).ifPresent(a -> {
             String text = a.value();
             if (!text.isEmpty()) {
-                appender.appendSpace().append(text);
+                builder.appendSpace().appendMarkdownText(text);
             }
         });
-        appender.appendNewLine();
+        builder.appendNewLine();
     }
 
     private void writeColumnAnchor(Column column) {
         String fullName = column.fullName();
-        appender.append("[[").append(fullName).append("]]");
+        builder.append("[[").append(fullName).append("]]");
     }
 
     private void writeMetadata(String attribute, Optional<String> metadata) {
         metadata.ifPresent(
-            value -> appender.append(attribute).appendSpace().append(value).appendNewLine());
+            value -> builder.append(attribute).appendSpace().append(value).appendNewLine());
     }
 }

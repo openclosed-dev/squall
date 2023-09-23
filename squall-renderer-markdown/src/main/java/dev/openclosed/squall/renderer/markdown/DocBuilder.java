@@ -19,16 +19,16 @@ package dev.openclosed.squall.renderer.markdown;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-final class Appender implements Appendable {
+final class DocBuilder implements Appendable {
 
     private final Appendable appendable;
 
-    Appender(Appendable appendable) {
+    DocBuilder(Appendable appendable) {
         this.appendable = appendable;
     }
 
     @Override
-    public Appender append(CharSequence csq) {
+    public DocBuilder append(CharSequence csq) {
         try {
             appendable.append(csq);
         } catch (IOException e) {
@@ -38,7 +38,7 @@ final class Appender implements Appendable {
     }
 
     @Override
-    public Appender append(CharSequence csq, int start, int end) {
+    public DocBuilder append(CharSequence csq, int start, int end) {
         try {
             appendable.append(csq, start, end);
         } catch (IOException e) {
@@ -48,7 +48,7 @@ final class Appender implements Appendable {
     }
 
     @Override
-    public Appender append(char c) {
+    public DocBuilder append(char c) {
         try {
             appendable.append(c);
         } catch (IOException e) {
@@ -57,11 +57,11 @@ final class Appender implements Appendable {
         return this;
     }
 
-    Appender appendSpace() {
+    public DocBuilder appendSpace() {
         return append(' ');
     }
 
-    Appender appendNewLine() {
+    public DocBuilder appendNewLine() {
         return append('\n');
     }
 }

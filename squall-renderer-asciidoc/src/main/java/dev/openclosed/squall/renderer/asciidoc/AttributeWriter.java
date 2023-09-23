@@ -26,5 +26,5 @@ interface AttributeWriter<T extends Component> {
         return "";
     }
 
-    void writeValue(T component, int rowNo, Appender appender, WriterContext context);
+    void writeValue(T component, int rowNo, DocBuilder builder, WriterContext context);
 }

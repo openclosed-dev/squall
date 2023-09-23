@@ -32,6 +32,7 @@
     <properties>
         <explicit.modules>
             asciidoctorj-api,
+            commonmark,
             picocli,
             jackson-annotations,
             jackson-core,
