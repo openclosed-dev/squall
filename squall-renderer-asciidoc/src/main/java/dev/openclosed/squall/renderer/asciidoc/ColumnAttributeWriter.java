@@ -141,9 +141,9 @@ enum ColumnAttributeWriter implements AttributeWriter<Column> {
             String targetColumn = foreignKey.columnMapping().get(columnName);
             String fullTableName = foreignKey.fullTableName();
             return new StringBuilder()
-                .append("<<").append(fullTableName)
+                .append("<<_").append(fullTableName)
                 .append(',').append(foreignKey.qualifiedTableName())
-                .append(">> (<<")
+                .append(">> (<<_")
                 .append(fullTableName).append('.').append(targetColumn)
                 .append(",").append(targetColumn)
                 .append(">>)")

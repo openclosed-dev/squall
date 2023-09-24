@@ -211,7 +211,7 @@ final class SpecDocumentWriter implements SpecVisitor, WriterContext {
     }
 
     private void writeSectionAnchor(Component component) {
-        builder.append("[id=").append(component.fullName()).append(']').appendNewLine();
+        builder.append("[id=_").append(component.fullName()).append(']').appendNewLine();
     }
 
     private void writeHeadingText(Component component) {
@@ -278,7 +278,7 @@ final class SpecDocumentWriter implements SpecVisitor, WriterContext {
 
     private void writeColumnAnchor(Column column) {
         String fullName = column.fullName();
-        builder.append("[[").append(fullName).append("]]");
+        builder.append("[[_").append(fullName).append("]]");
     }
 
     private void writeMetadata(String attribute, Optional<String> metadata) {
