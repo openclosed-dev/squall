@@ -11,6 +11,52 @@
     "defaultSchema": "public"
   },
   "renderers": {
+    "html": {
+      "format": "html",
+      "locale": "en",
+      "numbering": true,
+      "order": "name",
+      "columnAttributes": [
+        "ordinal",
+        "name",
+        "label",
+        "type",
+        //"type_name",
+        //"precision_length",
+        //"scale",
+        "nullable",
+        //"required"
+        "unique",
+        "default_value",
+        "foreign_key",
+        "description"
+      ],
+      "sequenceAttributes": [ "type_name", "start", "increment", "minimum", "maximum" ]
+    },
+    "pdf": {
+      "format": "pdf",
+      "locale": "en",
+      "numbering": true,
+      "order": "name",
+      "columnAttributes": [
+        "ordinal",
+        "name",
+        "label",
+        "type",
+        //"type_name",
+        //"precision_length",
+        //"scale",
+        "nullable",
+        //"required"
+        "unique",
+        "default_value",
+        "foreign_key",
+        "description"
+      ],
+      "sequenceAttributes": [ "type_name", "start", "increment", "minimum", "maximum" ],
+      "pageSize": "a4",
+      "pageOrientation": "landscape"
+    },
     "markdown": {
       "format": "markdown",
       "locale": "en",
@@ -31,13 +77,7 @@
         "foreign_key",
         "description"
       ],
-      "sequenceAttributes": [
-        "type_name",
-        "start",
-        "increment",
-        "minimum",
-        "maximum"
-      ]
+      "sequenceAttributes": [ "type_name", "start", "increment", "minimum", "maximum" ]
     }
   }
 }

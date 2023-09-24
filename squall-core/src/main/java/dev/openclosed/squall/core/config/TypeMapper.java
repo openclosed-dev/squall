@@ -24,6 +24,7 @@ import java.lang.reflect.RecordComponent;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -69,10 +70,10 @@ enum TypeMapper {
         @Override
         Object map(Object source, Class<?> target, MapperContext context) {
             String s = requireType(source, String.class);
-            return mapToEnum(s, target, context);
+            return mapToEnum(s, target);
         }
 
-        private static <T extends Enum<T>> Enum<T> mapToEnum(String source, Class<?> target, MapperContext context) {
+        private static <T extends Enum<T>> Enum<T> mapToEnum(String source, Class<?> target) {
             assert target.isEnum();
             @SuppressWarnings("unchecked")
             Class<T> enumType = (Class<T>) target;
@@ -124,7 +125,7 @@ enum TypeMapper {
         private static Map<String, ?> map(Map<?, ?> source, Class<?> elementClass, MapperContext context) {
             elementClass = context.resolveType(elementClass);
             var mapper = findMapper(elementClass);
-            var map = new HashMap<String, Object>();
+            var map = new LinkedHashMap<String, Object>();
             boolean failed = false;
             context.push();
             for (var entry : source.entrySet()) {
@@ -141,7 +142,7 @@ enum TypeMapper {
             if (failed) {
                 throw new MappingException();
             }
-            return Map.copyOf(map);
+            return Collections.unmodifiableMap(map);
         }
     },
     /**
@@ -218,7 +219,7 @@ enum TypeMapper {
             } else if (defaultValues.containsKey(name)) {
                 return defaultValues.get(name);
             } else {
-                return getDefaultValueForType(component.getType(), context);
+                return getDefaultValueForType(component.getType());
             }
         }
 
@@ -265,7 +266,7 @@ enum TypeMapper {
         }
     }
 
-    static Object getDefaultValueForType(Class<?> target, MapperContext context) {
+    static Object getDefaultValueForType(Class<?> target) {
         var value = DEFAULT_VALUES.get(target);
         if (value == null) {
             throw new MappingException(bundle -> bundle.UNSUPPORTED_TARGET_TYPE(target));

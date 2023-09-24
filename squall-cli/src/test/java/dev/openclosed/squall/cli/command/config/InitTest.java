@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 
+import dev.openclosed.squall.api.renderer.PageOrientation;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.spec.Component;
 import org.junit.jupiter.api.BeforeAll;
@@ -92,21 +93,35 @@ public final class InitTest {
     }
 
     private static void verifyConfig(RootConfig root) {
+        var metadata = root.metadata();
+        assertThat(metadata).isNotEmpty();
+
         assertThat(root.sources()).isEmpty();
         assertThat(root.outDir()).isEqualTo("output");
 
         ParserConfig parser = root.parser();
         assertThat(parser.dialect()).isEqualTo("postgresql");
 
-        assertThat(root.renderers()).containsKey("markdown");
-        RenderConfig render = root.renderers().get("markdown");
-        assertThat(render.format()).isEqualTo("markdown");
-        assertThat(render.basename()).isEqualTo("spec");
-        assertThat(render.locale()).isEqualTo(Locale.ENGLISH);
-        assertThat(render.numbering()).isTrue();
-        assertThat(render.order()).isEqualTo(ComponentOrder.NAME);
-        assertThat(render.show()).isEqualTo(Component.Type.all());
-        assertThat(render.columnAttributes()).isEqualTo(ColumnAttribute.defaultList());
-        assertThat(render.sequenceAttributes()).isEqualTo(SequenceAttribute.defaultList());
+        assertThat(root.renderers().keySet()).containsExactly("html", "pdf", "markdown");
+        verifyRenderConfig(root.renderers().get("html"), "html");
+        verifyPdfRenderConfig(root.renderers().get("pdf"), "pdf");
+        verifyRenderConfig(root.renderers().get("markdown"), "markdown");
+    }
+
+    private static void verifyRenderConfig(RenderConfig config, String format) {
+        assertThat(config.format()).isEqualTo(format);
+        assertThat(config.basename()).isEqualTo("spec");
+        assertThat(config.locale()).isEqualTo(Locale.ENGLISH);
+        assertThat(config.numbering()).isTrue();
+        assertThat(config.order()).isEqualTo(ComponentOrder.NAME);
+        assertThat(config.show()).isEqualTo(Component.Type.all());
+        assertThat(config.columnAttributes()).isEqualTo(ColumnAttribute.defaultList());
+        assertThat(config.sequenceAttributes()).isEqualTo(SequenceAttribute.defaultList());
+    }
+
+    private static void verifyPdfRenderConfig(RenderConfig config, String format) {
+        verifyRenderConfig(config, format);
+        assertThat(config.pageSize()).isEqualTo("a4");
+        assertThat(config.pageOrientation()).isEqualTo(PageOrientation.LANDSCAPE);
     }
 }

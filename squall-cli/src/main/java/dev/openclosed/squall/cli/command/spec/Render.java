@@ -135,8 +135,8 @@ final class Render implements Subcommand {
         }
 
         if (names == null || names.length == 0) {
-            names = renderers.keySet().stream()
-                .limit(1).toArray(String[]::new);
+            names = new String[1];
+            names[0] = renderers.keySet().iterator().next();
         }
 
         return Stream.of(names)
