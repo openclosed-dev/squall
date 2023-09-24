@@ -1,6 +1,6 @@
 #!/bin/bash
 
-options='--no-charset --no-source-map'
+options='--no-charset --no-source-map --style compressed'
 sourcedir='src/main/sass'
 source="$sourcedir/style.scss"
 outdir='src/main/resources/dev/openclosed/squall/renderer/asciidoc/style'
