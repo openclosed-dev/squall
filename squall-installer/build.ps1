@@ -3,14 +3,23 @@ Remove-Item ./target/squall -Force -Recurse -ErrorAction SilentlyContinue
 Remove-Item ./target/temp -Force -Recurse -ErrorAction SilentlyContinue
 Remove-Item ./target/*.msi
 
+if ($null -ne $env:JAVA_17_HOME) {
+  $toolDir = "$env:JAVA_17_HOME\bin"
+} elseif ($null -ne $env:JAVA_HOME) {
+  $toolDir = "$env:JAVA_HOME\bin"
+} else {
+  Write-Host 'Please define enviroment variable "JAVA_HOME"'
+  exit 1
+}
+
 # Generates slim Java runtime
-jlink `
+& "$toolDir\jlink" `
   --add-modules java.base,java.logging,java.management,jdk.unsupported `
   --strip-native-commands --strip-debug --no-man-pages --no-header-files `
   --output target/runtime `
   --verbose
 
-jpackage `
+& "$toolDir\jpackage" `
   --type app-image `
   --dest target `
   --runtime-image target/runtime `
@@ -24,7 +33,7 @@ jpackage `
   --win-console `
   --verbose
 
-jpackage `
+& "$toolDir\jpackage" `
   --type msi `
   --dest target `
   --app-image target/squall `
