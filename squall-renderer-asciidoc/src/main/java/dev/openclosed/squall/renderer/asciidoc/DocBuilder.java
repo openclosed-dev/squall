@@ -86,7 +86,7 @@ final class DocBuilder implements BaseDocBuilder {
 
     @Override
     public DocBuilder appendCode(CharSequence csq) {
-        return append("`+").append(csq).append("+`");
+        return append("``").append(csq).append("``");
     }
 
     @Override

@@ -99,7 +99,7 @@ CREATE TABLE book.book_author(
   author_id bigint NOT NULL,
   /**
    * この本における著者の序数。
-   * 番号は `1` から開始し、これは第一執筆者を意味する。
+   * 番号は`1`から開始し、これは第一執筆者を意味する。
    * @label 序数
    */
   ordinal_number integer NOT NULL DEFAULT 0,
