@@ -24,7 +24,6 @@ import dev.openclosed.squall.renderer.asciidoc.AsciiDocRenderer;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Attributes;
 import org.asciidoctor.Options;
-import org.asciidoctor.Placement;
 import org.asciidoctor.SafeMode;
 
 import java.io.IOException;
@@ -66,7 +65,6 @@ final class PdfRenderer implements Renderer {
         var builder = Attributes.builder()
             .sectionNumbers(config.numbering())
             .tableOfContents(true)
-            .tableOfContents(Placement.PREAMBLE)
             .attribute("title-page")
             .attribute("pdf-page-size", config.pageSize().toUpperCase())
             .attribute("pdf-page-layout", config.pageOrientation().name().toLowerCase())
