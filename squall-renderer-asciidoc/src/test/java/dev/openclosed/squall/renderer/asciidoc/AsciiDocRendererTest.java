@@ -26,7 +26,7 @@ import dev.openclosed.squall.api.spec.MajorDialect;
 import dev.openclosed.squall.doc.DocCommentProcessor;
 import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -68,7 +68,7 @@ public class AsciiDocRendererTest {
         testRenderer(test, "html");
     }
 
-    @Disabled
+    @EnabledIfSystemProperty(named = "test.full", matches = ".*")
     @ParameterizedTest
     @MethodSource("testsForPostgresql")
     public void testPdfForPostgresql(TestCase test) throws IOException {
