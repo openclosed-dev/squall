@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 
 import dev.openclosed.squall.api.parser.SqlSyntaxException;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
-import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.expression.Expression;
 import dev.openclosed.squall.api.spec.Table;
 import dev.openclosed.squall.api.spi.JsonWriter;
 import org.junit.jupiter.api.BeforeEach;

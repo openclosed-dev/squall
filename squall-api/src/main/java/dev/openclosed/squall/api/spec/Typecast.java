@@ -1,5 +1,7 @@
 package dev.openclosed.squall.api.spec;
 
+import dev.openclosed.squall.api.expression.Expression;
+
 /**
  * Typecast expression.
  */

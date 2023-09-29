@@ -19,7 +19,7 @@ package dev.openclosed.squall.core.spec;
 import dev.openclosed.squall.api.spec.Component;
 import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.DocAnnotation;
-import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.expression.Expression;
 
 import java.util.List;
 import java.util.Optional;

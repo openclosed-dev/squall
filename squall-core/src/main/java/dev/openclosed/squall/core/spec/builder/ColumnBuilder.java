@@ -19,7 +19,7 @@ package dev.openclosed.squall.core.spec.builder;
 import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.DocAnnotation;
-import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.expression.Expression;
 import dev.openclosed.squall.api.spec.Typecast;
 import dev.openclosed.squall.core.spec.DefaultColumn;
 

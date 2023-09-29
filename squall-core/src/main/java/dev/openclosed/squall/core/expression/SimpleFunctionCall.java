@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,14 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.spec;
+package dev.openclosed.squall.core.expression;
 
 import dev.openclosed.squall.api.expression.Expression;
 
-import java.util.Optional;
-
-/**
- * A column in table.
- */
-public interface Column extends Component, DataType {
+record SimpleFunctionCall(Expression.Type type, String name) implements MapSourceExpression {
 
     @Override
-    default Type type() {
-        return Type.COLUMN;
+    public String toSql() {
+        return name();
     }
-
-    @Override
-    default void accept(SpecVisitor visitor) {
-        visitor.visit(this);
-    }
-
-    boolean isRequired();
-
-    default boolean isNullable() {
-        return !isRequired();
-    }
-
-    boolean isPrimaryKey();
-
-    boolean isUnique();
-
-    Optional<Expression> defaultValue();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.spec.expression;
+package dev.openclosed.squall.core.expression;
 
-import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.expression.Expression;
 
-record StringLiteral(Expression.Type type, String value) implements MapSourceExpression {
+import java.math.BigDecimal;
+
+record NumberLiteral(Expression.Type type, String value) implements MapSourceExpression {
+
+    public BigDecimal numericValue() {
+        return new BigDecimal(value());
+    }
 
     @Override
     public String toSql() {
-        return new StringBuilder()
-            .append('\'').append(value()).append('\'')
-            .toString();
+        return value();
     }
 }

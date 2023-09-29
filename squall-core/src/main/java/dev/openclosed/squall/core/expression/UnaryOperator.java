@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,11 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.spec.expression;
+package dev.openclosed.squall.core.expression;
 
-import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.expression.Expression;
 
-import java.util.Objects;
-
-record Is(Type type, Expression subject, String predicate) implements MapSourceExpression {
-
-    Is(Expression subject, String predicate) {
-        this(Type.IS, subject, predicate);
-    }
-
-    Is {
-        Objects.requireNonNull(subject);
-        Objects.requireNonNull(predicate);
-        predicate = predicate.toLowerCase();
-    }
+record UnaryOperator(Expression.Type type, String operator, Expression operand) implements MapSourceExpression {
 
     @Override
     public boolean isComplex() {
@@ -40,9 +28,10 @@ record Is(Type type, Expression subject, String predicate) implements MapSourceE
     @Override
     public String toSql() {
         return new SqlStringBuilder()
-            .appendGroupedIfComplex(subject())
-            .append(' ')
-            .append(predicate().replaceAll("_", " ").toUpperCase())
+            .append(operator)
+            .append('(')
+            .append(operand)
+            .append(')')
             .toString();
     }
 }

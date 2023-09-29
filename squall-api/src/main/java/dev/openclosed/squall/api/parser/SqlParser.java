@@ -17,7 +17,7 @@
 package dev.openclosed.squall.api.parser;
 
 import dev.openclosed.squall.api.base.Problem;
-import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.expression.Expression;
 
 import java.util.List;
 

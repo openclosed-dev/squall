@@ -27,23 +27,30 @@ import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.DocAnnotation;
 import dev.openclosed.squall.api.spec.Component.State;
 import dev.openclosed.squall.api.spec.DataType;
-import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.expression.Expression;
+import dev.openclosed.squall.api.expression.ExpressionFactory;
 import dev.openclosed.squall.api.spec.IntegerDataType;
 import dev.openclosed.squall.api.spec.SchemaObjectRef;
 import dev.openclosed.squall.api.spec.SpecMetadata;
 import dev.openclosed.squall.core.spec.DefaultDatabaseSpec;
+import dev.openclosed.squall.core.expression.DefaultExpressionFactory;
 
 /**
  * The default implementation of {@link DatabaseSpec.Builder}.
  */
 public final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
 
-    private SpecMetadata metadata;
+    private final ExpressionFactory expressionFactory;
     private final Map<String, DatabaseBuilder> databaseBuilders = new LinkedHashMap<>();
+    private SpecMetadata metadata;
     private DatabaseBuilder currentDatabaseBuilder;
     private TableBuilder currentTableBuilder;
     private ColumnBuilder currentColumnBuilder;
     private SequenceBuilder currentSequenceBuilder;
+
+    public DatabaseSpecBuilder() {
+        this.expressionFactory = new DefaultExpressionFactory();
+    }
 
     @Override
     public DatabaseSpec.Builder setMetadata(SpecMetadata metadata) {
@@ -194,6 +201,11 @@ public final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
         return new DefaultDatabaseSpec(
             Optional.ofNullable(metadata),
             databases);
+    }
+
+    @Override
+    public ExpressionFactory getExpressionFactory() {
+        return this.expressionFactory;
     }
 
     //

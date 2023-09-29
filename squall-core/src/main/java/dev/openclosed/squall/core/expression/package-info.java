@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.spec.expression;
-
-import dev.openclosed.squall.api.spec.Expression;
-
-record SimpleFunctionCall(Expression.Type type, String name) implements MapSourceExpression {
-
-    @Override
-    public String toSql() {
-        return name();
-    }
-}
+/**
+ * Provides expression implementations.
+ */
+package dev.openclosed.squall.core.expression;

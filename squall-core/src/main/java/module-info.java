@@ -28,6 +28,4 @@ module dev.openclosed.squall.core {
         with DatabaseSpecBuilder;
     provides dev.openclosed.squall.api.spi.MessagesProvider
         with dev.openclosed.squall.core.base.DefaultMessagesProvider;
-    provides dev.openclosed.squall.api.spec.ExpressionFactory
-        with dev.openclosed.squall.core.spec.expression.DefaultExpressionFactory;
 }

@@ -18,6 +18,7 @@ module dev.openclosed.squall.api {
 
     exports dev.openclosed.squall.api.base;
     exports dev.openclosed.squall.api.config;
+    exports dev.openclosed.squall.api.expression;
     exports dev.openclosed.squall.api.parser;
     exports dev.openclosed.squall.api.renderer;
     exports dev.openclosed.squall.api.spi;
@@ -26,7 +27,6 @@ module dev.openclosed.squall.api {
     uses dev.openclosed.squall.api.config.ConfigLoader;
     uses dev.openclosed.squall.api.parser.SqlParserFactory;
     uses dev.openclosed.squall.api.renderer.RendererFactory;
-    uses dev.openclosed.squall.api.spec.ExpressionFactory;
     uses dev.openclosed.squall.api.spec.DatabaseSpec.Builder;
     uses dev.openclosed.squall.api.spi.JsonReader;
     uses dev.openclosed.squall.api.spi.JsonWriter;

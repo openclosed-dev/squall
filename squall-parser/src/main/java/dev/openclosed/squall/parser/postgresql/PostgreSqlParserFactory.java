@@ -23,7 +23,7 @@ import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.spec.DatabaseSpec;
 import dev.openclosed.squall.api.spec.Dialect;
-import dev.openclosed.squall.api.spec.ExpressionFactory;
+import dev.openclosed.squall.api.expression.ExpressionFactory;
 import dev.openclosed.squall.api.spec.MajorDialect;
 import dev.openclosed.squall.parser.basic.Keyword;
 
@@ -55,17 +55,9 @@ public final class PostgreSqlParserFactory implements SqlParserFactory {
         return new PostgreSqlParser(
             config,
             builder,
-            getExpressionFactory(),
             commentProcessor,
             messageBundle,
             getKeywords());
-    }
-
-    private ExpressionFactory getExpressionFactory() {
-        if (this.expressionFactory == null) {
-            this.expressionFactory = ExpressionFactory.newFactory();
-        }
-        return this.expressionFactory;
     }
 
     private Map<String, Keyword> getKeywords() {

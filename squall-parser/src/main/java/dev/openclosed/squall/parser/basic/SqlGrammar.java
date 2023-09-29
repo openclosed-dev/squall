@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import dev.openclosed.squall.api.spec.DocAnnotation;
-import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.expression.Expression;
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.IntegerDataType;
 import dev.openclosed.squall.api.spec.SchemaObjectRef;

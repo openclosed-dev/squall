@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.spec.expression;
+package dev.openclosed.squall.core.expression;
 
-import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.expression.Expression;
 
-record BitStringLiteral(Expression.Type type, String value) implements MapSourceExpression {
+import java.util.Objects;
+
+record ColumnReference(Expression.Type type, String name) implements MapSourceExpression {
+
+    ColumnReference(String name) {
+        this(Type.COLUMN_REFERENCE, name);
+    }
+
+    ColumnReference {
+        Objects.requireNonNull(name);
+    }
 
     @Override
     public String toSql() {
-        return new StringBuilder()
-            .append("b'").append(value()).append('\'')
-            .toString();
+        return name();
     }
 }

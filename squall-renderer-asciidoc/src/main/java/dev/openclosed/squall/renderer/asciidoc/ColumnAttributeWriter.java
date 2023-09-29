@@ -19,7 +19,7 @@ package dev.openclosed.squall.renderer.asciidoc;
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
 import dev.openclosed.squall.api.spec.Column;
 import dev.openclosed.squall.api.spec.DocAnnotationType;
-import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.expression.Expression;
 import dev.openclosed.squall.api.spec.ForeignKey;
 import dev.openclosed.squall.api.spec.Table;
 

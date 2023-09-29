@@ -17,6 +17,8 @@
 package dev.openclosed.squall.api.spec;
 
 import dev.openclosed.squall.api.base.MapSource;
+import dev.openclosed.squall.api.expression.Expression;
+import dev.openclosed.squall.api.expression.ExpressionFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,14 +56,6 @@ public interface DatabaseSpec extends MapSource {
      */
     static Builder builder() {
         return ServiceLoader.load(Builder.class).findFirst().get();
-    }
-
-    /**
-     * Returns an empty builder.
-     * @return an empty builder.
-     */
-    static Builder emptyBuilder() {
-        return EMPTY_BUILDER;
     }
 
     /**
@@ -154,7 +148,11 @@ public interface DatabaseSpec extends MapSource {
         default DatabaseSpec build() {
             throw new UnsupportedOperationException();
         }
-    }
 
-    Builder EMPTY_BUILDER = new Builder() { };
+        /**
+         * Returns the expression factory for creating expression.
+         * @return the expression factory
+         */
+        ExpressionFactory getExpressionFactory();
+    }
 }

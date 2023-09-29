@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.spec;
+package dev.openclosed.squall.api.expression;
+
+import dev.openclosed.squall.api.spec.DataType;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.ServiceLoader;
 
 /**
  * A factory for creating basic expressions.
  */
 public interface ExpressionFactory {
-
-    /**
-     * Create a new instance of this type.
-     * @return newly created instance.
-     * @throws java.util.NoSuchElementException if the creation failed.
-     */
-    static ExpressionFactory newFactory() {
-        return ServiceLoader.load(ExpressionFactory.class).findFirst().get();
-    }
 
     Expression string(String value);
 

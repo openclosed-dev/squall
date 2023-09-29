@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,16 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.spec.expression;
+package dev.openclosed.squall.core.expression;
 
-import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.expression.Expression;
 
-import java.util.List;
-
-record FunctionCall(Expression.Type type, String name, List<Expression> arguments)
-    implements MapSourceExpression {
+record BitStringLiteral(Expression.Type type, String value) implements MapSourceExpression {
 
     @Override
     public String toSql() {
-        var sb = new SqlStringBuilder()
-            .append(name())
-            .append('(');
-        for (int i = 0; i < arguments.size(); i++) {
-            if (i > 0) {
-                sb.append(", ");
-            }
-            sb.append(arguments.get(i));
-        }
-        return sb.append(')').toString();
+        return new StringBuilder()
+            .append("b'").append(value()).append('\'')
+            .toString();
     }
 }

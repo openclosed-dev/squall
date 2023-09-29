@@ -18,7 +18,7 @@ package dev.openclosed.squall.parser.postgresql;
 
 import dev.openclosed.squall.api.spec.DataType;
 import dev.openclosed.squall.api.spec.DocAnnotation;
-import dev.openclosed.squall.api.spec.Expression;
+import dev.openclosed.squall.api.expression.Expression;
 import dev.openclosed.squall.parser.basic.IsPredicate;
 import dev.openclosed.squall.api.spec.StandardDataType;
 import dev.openclosed.squall.parser.basic.IdentifierType;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.spec.expression;
-
-import dev.openclosed.squall.api.spec.Expression;
-
-record EmptyStringLiteral(Expression.Type type, String value) implements MapSourceExpression {
-
-    static final EmptyStringLiteral EMPTY = new EmptyStringLiteral(Type.STRING, "");
-
-    @Override
-    public String toSql() {
-        return "''";
-    }
-}
+/**
+ * Provides SQL expressions.
+ */
+package dev.openclosed.squall.api.expression;
