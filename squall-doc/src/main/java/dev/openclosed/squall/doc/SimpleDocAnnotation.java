@@ -16,8 +16,8 @@
 
 package dev.openclosed.squall.doc;
 
-import dev.openclosed.squall.api.spec.DocAnnotation;
-import dev.openclosed.squall.api.spec.DocAnnotationType;
+import dev.openclosed.squall.api.sql.spec.DocAnnotation;
+import dev.openclosed.squall.api.sql.spec.DocAnnotationType;
 
 import java.util.Map;
 

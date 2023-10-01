@@ -34,11 +34,11 @@ import dev.openclosed.squall.api.config.ConfigurationException;
 import dev.openclosed.squall.api.config.MessageBundle;
 import dev.openclosed.squall.api.config.RootConfig;
 import dev.openclosed.squall.api.renderer.RenderConfig;
-import dev.openclosed.squall.api.spec.SpecMetadata;
+import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 import dev.openclosed.squall.api.spi.JsonReader;
 import dev.openclosed.squall.api.spi.JsonReadingException;
 import dev.openclosed.squall.core.base.SnippetExtractor;
-import dev.openclosed.squall.core.spec.DefaultSpecMetadata;
+import dev.openclosed.squall.core.sql.spec.DefaultSpecMetadata;
 
 /**
  * Default implementation of {@link ConfigLoader}.

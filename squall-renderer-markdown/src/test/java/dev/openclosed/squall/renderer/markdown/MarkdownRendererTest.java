@@ -26,8 +26,8 @@ import java.util.Locale;
 import java.util.stream.Stream;
 
 import dev.openclosed.squall.api.parser.SqlParser;
-import dev.openclosed.squall.api.spec.DatabaseSpec;
-import dev.openclosed.squall.api.spec.Dialect;
+import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
+import dev.openclosed.squall.api.sql.spec.Dialect;
 import org.apache.commons.io.file.PathUtils;
 
 import dev.openclosed.squall.api.config.ConfigLoader;

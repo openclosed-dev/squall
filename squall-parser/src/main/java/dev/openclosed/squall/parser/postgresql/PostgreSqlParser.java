@@ -19,10 +19,11 @@ package dev.openclosed.squall.parser.postgresql;
 import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.parser.MessageBundle;
 import dev.openclosed.squall.api.parser.ParserConfig;
-import dev.openclosed.squall.api.spec.DatabaseSpec;
-import dev.openclosed.squall.api.expression.ExpressionFactory;
+import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
+import dev.openclosed.squall.api.sql.expression.ExpressionFactory;
 import dev.openclosed.squall.parser.basic.BaseSqlParser;
 import dev.openclosed.squall.parser.basic.Keyword;
+import dev.openclosed.squall.parser.basic.NameResolver;
 import dev.openclosed.squall.parser.basic.SqlTokenizer;
 
 import java.util.Map;
@@ -31,6 +32,7 @@ final class PostgreSqlParser extends BaseSqlParser implements PostgreSqlGrammar 
 
     private final DatabaseSpec.Builder builder;
     private final ExpressionFactory expressionFactory;
+    private final NameResolver resolver;
     private final Map<String, Keyword> keywords;
 
     PostgreSqlParser(
@@ -42,6 +44,7 @@ final class PostgreSqlParser extends BaseSqlParser implements PostgreSqlGrammar 
         super(config, commentProcessor, messageBundle);
         this.builder = builder;
         this.expressionFactory = builder.getExpressionFactory();
+        this.resolver = new NameResolver(config.defaultSchema());
         this.keywords = keywords;
     }
 
@@ -62,6 +65,11 @@ final class PostgreSqlParser extends BaseSqlParser implements PostgreSqlGrammar 
     @Override
     public ExpressionFactory expressionFactory() {
         return this.expressionFactory;
+    }
+
+    @Override
+    public NameResolver resolver() {
+        return this.resolver;
     }
 }
 

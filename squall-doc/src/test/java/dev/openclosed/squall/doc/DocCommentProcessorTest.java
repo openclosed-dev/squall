@@ -17,7 +17,7 @@
 package dev.openclosed.squall.doc;
 
 import dev.openclosed.squall.api.base.Location;
-import dev.openclosed.squall.api.spec.DocAnnotation;
+import dev.openclosed.squall.api.sql.spec.DocAnnotation;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

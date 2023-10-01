@@ -23,7 +23,7 @@ import java.util.Optional;
 
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.parser.ParserConfig;
-import dev.openclosed.squall.api.spec.SpecMetadata;
+import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 
 /**
  * The top-level configuration.

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import dev.openclosed.squall.core.spec.builder.DatabaseSpecBuilder;
-
 module dev.openclosed.squall.core {
 
     requires dev.openclosed.squall.api;
@@ -24,8 +22,8 @@ module dev.openclosed.squall.core {
 
     provides dev.openclosed.squall.api.config.ConfigLoader
         with dev.openclosed.squall.core.config.DefaultConfigLoader;
-    provides dev.openclosed.squall.api.spec.DatabaseSpec.Builder
-        with DatabaseSpecBuilder;
+    provides dev.openclosed.squall.api.sql.spec.DatabaseSpec.Builder
+        with dev.openclosed.squall.core.sql.spec.builder.DatabaseSpecBuilder;
     provides dev.openclosed.squall.api.spi.MessagesProvider
         with dev.openclosed.squall.core.base.DefaultMessagesProvider;
 }

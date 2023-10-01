@@ -17,11 +17,11 @@
 package dev.openclosed.squall.renderer.asciidoc;
 
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
-import dev.openclosed.squall.api.spec.Column;
-import dev.openclosed.squall.api.spec.DocAnnotationType;
-import dev.openclosed.squall.api.expression.Expression;
-import dev.openclosed.squall.api.spec.ForeignKey;
-import dev.openclosed.squall.api.spec.Table;
+import dev.openclosed.squall.api.sql.spec.Column;
+import dev.openclosed.squall.api.sql.spec.DocAnnotationType;
+import dev.openclosed.squall.api.sql.expression.Expression;
+import dev.openclosed.squall.api.sql.spec.ForeignKey;
+import dev.openclosed.squall.api.sql.spec.Table;
 
 import java.util.stream.Collectors;
 
@@ -142,7 +142,7 @@ enum ColumnAttributeWriter implements AttributeWriter<Column> {
             String fullTableName = foreignKey.fullTableName();
             return new StringBuilder()
                 .append("<<_").append(fullTableName)
-                .append(',').append(foreignKey.qualifiedTableName())
+                .append(',').append(foreignKey.simpleTableName())
                 .append(">> (<<_")
                 .append(fullTableName).append('.').append(targetColumn)
                 .append(",").append(targetColumn)

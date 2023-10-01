@@ -19,8 +19,8 @@ package dev.openclosed.squall.doc;
 import dev.openclosed.squall.api.base.Location;
 import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.parser.ParserContext;
-import dev.openclosed.squall.api.spec.DocAnnotation;
-import dev.openclosed.squall.api.spec.DocAnnotationType;
+import dev.openclosed.squall.api.sql.spec.DocAnnotation;
+import dev.openclosed.squall.api.sql.spec.DocAnnotationType;
 
 import java.util.ArrayList;
 import java.util.List;

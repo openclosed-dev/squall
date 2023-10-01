@@ -21,8 +21,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
-import dev.openclosed.squall.api.spec.Component;
-import dev.openclosed.squall.api.spec.ComponentOrder;
+import dev.openclosed.squall.api.sql.spec.Component;
+import dev.openclosed.squall.api.sql.spec.ComponentOrder;
 
 /**
  * A configuration for renderers.

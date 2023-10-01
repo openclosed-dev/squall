@@ -19,7 +19,7 @@ package dev.openclosed.squall.renderer.asciidoc.html;
 import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.TextRenderer;
-import dev.openclosed.squall.api.spec.DatabaseSpec;
+import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.renderer.asciidoc.AsciiDocRenderer;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Attributes;

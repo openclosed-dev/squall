@@ -18,7 +18,7 @@ package dev.openclosed.squall.api.parser;
 
 import dev.openclosed.squall.api.base.Location;
 import dev.openclosed.squall.api.base.Message;
-import dev.openclosed.squall.api.spec.DocAnnotation;
+import dev.openclosed.squall.api.sql.spec.DocAnnotation;
 
 import java.util.List;
 

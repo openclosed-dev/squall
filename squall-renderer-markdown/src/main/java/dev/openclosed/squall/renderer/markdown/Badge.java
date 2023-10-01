@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.renderer.markdown;
 
-import dev.openclosed.squall.api.spec.Component;
+import dev.openclosed.squall.api.sql.spec.Component;
 
 import java.io.InputStream;
 import java.util.NoSuchElementException;

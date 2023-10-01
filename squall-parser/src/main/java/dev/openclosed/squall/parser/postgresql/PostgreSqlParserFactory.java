@@ -21,10 +21,10 @@ import dev.openclosed.squall.api.parser.MessageBundle;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
-import dev.openclosed.squall.api.spec.DatabaseSpec;
-import dev.openclosed.squall.api.spec.Dialect;
-import dev.openclosed.squall.api.expression.ExpressionFactory;
-import dev.openclosed.squall.api.spec.MajorDialect;
+import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
+import dev.openclosed.squall.api.sql.spec.Dialect;
+import dev.openclosed.squall.api.sql.expression.ExpressionFactory;
+import dev.openclosed.squall.api.sql.spec.MajorDialect;
 import dev.openclosed.squall.parser.basic.Keyword;
 
 import java.util.Map;

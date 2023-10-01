@@ -25,12 +25,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import dev.openclosed.squall.api.spec.DocAnnotation;
-import dev.openclosed.squall.api.expression.Expression;
-import dev.openclosed.squall.api.spec.DataType;
-import dev.openclosed.squall.api.spec.IntegerDataType;
-import dev.openclosed.squall.api.spec.SchemaObjectRef;
-import dev.openclosed.squall.api.spec.StandardDataType;
+import dev.openclosed.squall.api.sql.expression.ObjectRef;
+import dev.openclosed.squall.api.sql.spec.DocAnnotation;
+import dev.openclosed.squall.api.sql.expression.Expression;
+import dev.openclosed.squall.api.sql.datatype.DataType;
+import dev.openclosed.squall.api.sql.datatype.IntegerDataType;
+import dev.openclosed.squall.api.sql.datatype.StandardDataType;
 
 /**
  * Standard SQL grammar.
@@ -104,6 +104,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
         var databaseName = expectIdentifier(IdentifierType.OBJECT_NAME);
         consume();
         builder().addDatabase(databaseName, annotations);
+        resolver().setCurrentDatabase(databaseName);
     }
 
     default void createSchema(List<DocAnnotation> annotations) {
@@ -565,7 +566,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
     default void references(String constraintName, List<String> columns) {
         expect(StandardKeyword.REFERENCES);
         consume();
-        SchemaObjectRef tableRef = tableReference();
+        ObjectRef tableRef = tableReference();
         List<String> refColumns = Collections.emptyList();
         if (next() == SpecialSymbol.OPEN_PAREN) {
             refColumns = columnNameList();
@@ -585,19 +586,18 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
         builder().addTableForeignKey(constraintName, tableRef, columns, refColumns);
     }
 
-    default SchemaObjectRef tableReference() {
-        String firstPart;
+    default ObjectRef tableReference() {
         String secondPart = expectIdentifier(IdentifierType.OBJECT_NAME);
         consume();
         if (next() == SpecialSymbol.PERIOD) {
             consume();
-            firstPart = secondPart;
+            String firstPart = secondPart;
             secondPart = expectIdentifier(IdentifierType.OBJECT_NAME);
             consume();
+            return resolver().resolveName(firstPart, secondPart);
         } else {
-            firstPart = config().defaultSchema();
+            return resolver().resolveName(secondPart);
         }
-        return SchemaObjectRef.schemaQualified(secondPart, firstPart);
     }
 
     default boolean nullsDistinct() {
@@ -1050,17 +1050,21 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
         String functionName = keyword.canonicalName();
         consume();
         if (next() == SpecialSymbol.OPEN_PAREN) {
-            return expressionFactory().functionCall(functionName, functionArguments());
+            return functionCall(functionName);
         } else {
             return expressionFactory().functionCall(functionName);
         }
+    }
+
+    default Expression functionCall(String functionName) {
+        return expressionFactory().functionCall(functionName, functionArguments());
     }
 
     default Expression functionCallOrColumnReference() {
         var token = next();
         consume();
         if (next() == SpecialSymbol.OPEN_PAREN) {
-            return expressionFactory().functionCall(token.toIdentifier(), functionArguments());
+            return functionCall(token.toIdentifier());
         } else if (token.isIdentifier(IdentifierType.OBJECT_NAME)) {
             return expressionFactory().columnReference(token.toIdentifier());
         }

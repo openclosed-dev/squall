@@ -1,6 +1,6 @@
 package dev.openclosed.squall.api.renderer;
 
-import dev.openclosed.squall.api.spec.Sequence;
+import dev.openclosed.squall.api.sql.spec.Sequence;
 
 import java.util.List;
 

@@ -60,13 +60,13 @@ CREATE TABLE table1();
       "state": "undefined",
       "schemas": [
         {
-          "name": "",
+          "name": "defaultschema",
           "parents": [""],
           "state": "undefined",
           "tables": [
             {
               "name": "table1",
-              "parents": ["", ""]
+              "parents": ["", "defaultschema"]
             }
           ]
         }

@@ -18,8 +18,8 @@ package dev.openclosed.squall.renderer.asciidoc;
 
 import dev.openclosed.squall.api.config.ConfigLoader;
 import dev.openclosed.squall.api.renderer.RenderConfig;
-import dev.openclosed.squall.api.spec.Dialect;
-import dev.openclosed.squall.api.spec.SpecMetadata;
+import dev.openclosed.squall.api.sql.spec.Dialect;
+import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 
 import java.io.BufferedReader;
 import java.io.IOException;

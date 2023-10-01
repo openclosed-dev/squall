@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.TextRenderer;
-import dev.openclosed.squall.api.spec.DatabaseSpec;
+import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 
 final class JacksonJsonRenderer implements TextRenderer {
 

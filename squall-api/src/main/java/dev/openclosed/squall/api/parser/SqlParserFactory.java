@@ -20,8 +20,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.ServiceLoader;
 
-import dev.openclosed.squall.api.spec.DatabaseSpec;
-import dev.openclosed.squall.api.spec.Dialect;
+import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
+import dev.openclosed.squall.api.sql.spec.Dialect;
 
 /**
  * A factory of SQL parsers.

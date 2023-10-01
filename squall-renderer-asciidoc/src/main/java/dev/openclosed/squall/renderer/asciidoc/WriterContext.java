@@ -17,7 +17,7 @@
 package dev.openclosed.squall.renderer.asciidoc;
 
 import dev.openclosed.squall.api.renderer.MessageBundle;
-import dev.openclosed.squall.api.spec.Table;
+import dev.openclosed.squall.api.sql.spec.Table;
 
 /**
  * Shared context for writers.

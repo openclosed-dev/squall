@@ -16,8 +16,8 @@
 
 package dev.openclosed.squall.parser.basic;
 
-import dev.openclosed.squall.api.expression.Expression;
-import dev.openclosed.squall.api.expression.ExpressionFactory;
+import dev.openclosed.squall.api.sql.expression.Expression;
+import dev.openclosed.squall.api.sql.expression.ExpressionFactory;
 
 public enum IsPredicate {
     IS_NULL,

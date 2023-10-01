@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 
 import dev.openclosed.squall.api.renderer.PageOrientation;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
-import dev.openclosed.squall.api.spec.Component;
+import dev.openclosed.squall.api.sql.spec.Component;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -36,7 +36,7 @@ import dev.openclosed.squall.api.config.RootConfig;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
 import dev.openclosed.squall.api.renderer.RenderConfig;
-import dev.openclosed.squall.api.spec.ComponentOrder;
+import dev.openclosed.squall.api.sql.spec.ComponentOrder;
 import dev.openclosed.squall.cli.command.BaseTestCase;
 
 public final class InitTest {

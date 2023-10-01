@@ -9,7 +9,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "numeric",
   "defaultValue" : {
     "type": "number",
@@ -29,7 +29,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "text",
   "defaultValue" : {
     "type": "string",
@@ -49,7 +49,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "text",
   "defaultValue" : {
     "type": "string",
@@ -69,7 +69,7 @@ CREATE TABLE example (
 ```json
 {
   "name": "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName": "bit varying",
   "defaultValue": {
     "type": "bit_string",
@@ -89,7 +89,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "boolean",
   "defaultValue" : {
     "type": "boolean",
@@ -109,7 +109,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "boolean",
   "defaultValue" : {
     "type": "boolean",
@@ -129,7 +129,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "timestamp",
   "defaultValue" : {
     "type": "function",
@@ -149,7 +149,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "character varying",
   "defaultValue" : {
     "type": "null"
@@ -168,7 +168,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "integer",
   "isRequired": true
 }
@@ -185,7 +185,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "text"
 }
 ```
@@ -201,7 +201,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "numeric",
   "defaultValue" : {
     "type": "number",

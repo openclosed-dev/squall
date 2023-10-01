@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.core.config;
 
-import dev.openclosed.squall.api.spec.SpecMetadata;
+import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 
 import java.lang.System.Logger.Level;
 import java.lang.reflect.ParameterizedType;

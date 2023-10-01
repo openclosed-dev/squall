@@ -19,7 +19,7 @@ package dev.openclosed.squall.parser.postgresql;
 import java.util.HashMap;
 import java.util.Map;
 
-import dev.openclosed.squall.api.spec.DataType;
+import dev.openclosed.squall.api.sql.datatype.DataType;
 
 enum PostgreSqlDataType implements DataType {
     BIGSERIAL,

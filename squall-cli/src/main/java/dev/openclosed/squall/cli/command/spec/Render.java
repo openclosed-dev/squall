@@ -22,7 +22,7 @@ import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.RendererFactory;
-import dev.openclosed.squall.api.spec.DatabaseSpec;
+import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.cli.spi.CommandException;
 import dev.openclosed.squall.cli.spi.Subcommand;
 import dev.openclosed.squall.doc.DocCommentProcessor;

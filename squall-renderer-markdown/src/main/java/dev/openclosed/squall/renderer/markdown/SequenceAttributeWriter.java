@@ -1,7 +1,7 @@
 package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
-import dev.openclosed.squall.api.spec.Sequence;
+import dev.openclosed.squall.api.sql.spec.Sequence;
 
 enum SequenceAttributeWriter implements AttributeWriter<Sequence> {
     TYPE_NAME(ALIGN_LEFT, SequenceAttribute.TYPE_NAME),

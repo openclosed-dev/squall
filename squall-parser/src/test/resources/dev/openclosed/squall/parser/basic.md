@@ -25,22 +25,22 @@ CREATE TABLE example(
       "state": "undefined",
       "schemas" : [
         {
-          "name" : "",
+          "name" : "defaultschema",
           "parents": [""],
           "state": "undefined",
           "tables": [
             {
               "name": "example",
-              "parents": ["", ""],
+              "parents": ["", "defaultschema"],
               "columns": [
                 {
                   "name": "a",
-                  "parents": ["", "", "example"],
+                  "parents": ["", "defaultschema", "example"],
                   "typeName": "integer"
                 },
                 {
                   "name": "b",
-                  "parents": ["", "", "example"],
+                  "parents": ["", "defaultschema", "example"],
                   "typeName": "integer"
                 }
               ]
@@ -73,22 +73,22 @@ CREATE TABLE example(
       "state": "undefined",
       "schemas" : [
         {
-          "name" : "",
+          "name" : "defaultschema",
           "parents": [""],
           "state": "undefined",
           "tables": [
             {
               "name": "example",
-              "parents": ["", ""],
+              "parents": ["", "defaultschema"],
               "columns": [
                 {
                   "name": "a",
-                  "parents": ["", "", "example"],
+                  "parents": ["", "defaultschema", "example"],
                   "typeName": "integer"
                 },
                 {
                   "name": "b",
-                  "parents": ["", "", "example"],
+                  "parents": ["", "defaultschema", "example"],
                   "typeName": "integer"
                 }
               ]
@@ -123,28 +123,28 @@ CREATE TABLE table2(
       "state": "undefined",
       "schemas" : [
         {
-          "name" : "",
+          "name" : "defaultschema",
           "parents": [""],
           "state": "undefined",
           "tables": [
             {
               "name": "table1",
-              "parents": ["", ""],
+              "parents": ["", "defaultschema"],
               "columns": [
                 {
                   "name": "a",
-                  "parents": ["", "", "table1"],
+                  "parents": ["", "defaultschema", "table1"],
                   "typeName": "integer"
                 }
               ]
             },
             {
               "name": "table2",
-              "parents": ["", ""],
+              "parents": ["", "defaultschema"],
               "columns": [
                 {
                   "name": "b",
-                  "parents": ["", "", "table2"],
+                  "parents": ["", "defaultschema", "table2"],
                   "typeName": "integer"
                 }
               ]

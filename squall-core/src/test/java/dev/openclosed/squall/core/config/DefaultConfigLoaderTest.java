@@ -29,8 +29,8 @@ import java.util.stream.Stream;
 
 import dev.openclosed.squall.api.renderer.PageOrientation;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
-import dev.openclosed.squall.api.spec.MajorDialect;
-import dev.openclosed.squall.core.spec.DefaultSpecMetadata;
+import dev.openclosed.squall.api.sql.spec.MajorDialect;
+import dev.openclosed.squall.core.sql.spec.DefaultSpecMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -42,8 +42,8 @@ import dev.openclosed.squall.api.config.RootConfig;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
 import dev.openclosed.squall.api.renderer.RenderConfig;
-import dev.openclosed.squall.api.spec.Component;
-import dev.openclosed.squall.api.spec.ComponentOrder;
+import dev.openclosed.squall.api.sql.spec.Component;
+import dev.openclosed.squall.api.sql.spec.ComponentOrder;
 
 final class DefaultConfigLoaderTest {
 

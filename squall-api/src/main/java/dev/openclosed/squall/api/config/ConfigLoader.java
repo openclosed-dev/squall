@@ -22,7 +22,7 @@ import java.util.ServiceLoader;
 
 import dev.openclosed.squall.api.base.Problem;
 import dev.openclosed.squall.api.renderer.RenderConfig;
-import dev.openclosed.squall.api.spec.SpecMetadata;
+import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 
 /**
  * A loader of the configurations.

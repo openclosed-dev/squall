@@ -18,9 +18,9 @@ package dev.openclosed.squall.renderer.asciidoc;
 
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
-import dev.openclosed.squall.api.spec.Column;
-import dev.openclosed.squall.api.spec.Component;
-import dev.openclosed.squall.api.spec.Sequence;
+import dev.openclosed.squall.api.sql.spec.Column;
+import dev.openclosed.squall.api.sql.spec.Component;
+import dev.openclosed.squall.api.sql.spec.Sequence;
 
 import java.util.List;
 import java.util.function.Consumer;

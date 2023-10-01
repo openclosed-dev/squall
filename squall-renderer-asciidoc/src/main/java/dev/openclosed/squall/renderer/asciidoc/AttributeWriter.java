@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.renderer.asciidoc;
 
-import dev.openclosed.squall.api.spec.Component;
+import dev.openclosed.squall.api.sql.spec.Component;
 
 interface AttributeWriter<T extends Component> {
 

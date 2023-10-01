@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.api.renderer;
 
-import dev.openclosed.squall.api.spec.DatabaseSpec;
+import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 
 public interface TextRenderer extends Renderer {
 

@@ -19,12 +19,15 @@ package dev.openclosed.squall.parser.basic;
 import dev.openclosed.squall.api.parser.MessageBundle;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlSyntaxException;
-import dev.openclosed.squall.api.spec.DatabaseSpec;
-import dev.openclosed.squall.api.spec.DocAnnotation;
-import dev.openclosed.squall.api.expression.ExpressionFactory;
+import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
+import dev.openclosed.squall.api.sql.spec.DocAnnotation;
+import dev.openclosed.squall.api.sql.expression.ExpressionFactory;
 
 import java.util.List;
 
+/**
+ * Supporting interface for grammar writers.
+ */
 public interface SqlGrammarSupport {
 
     ParserConfig config();
@@ -36,6 +39,8 @@ public interface SqlGrammarSupport {
     ExpressionFactory expressionFactory();
 
     MessageBundle messages();
+
+    NameResolver resolver();
 
     void withRecovery(Runnable runnable);
 

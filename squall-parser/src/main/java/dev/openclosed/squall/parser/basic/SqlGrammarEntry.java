@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.parser.basic;
 
-import dev.openclosed.squall.api.expression.Expression;
+import dev.openclosed.squall.api.sql.expression.Expression;
 
 public interface SqlGrammarEntry {
 

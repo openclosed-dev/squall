@@ -11,21 +11,21 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "parents": ["", ""],
+  "parents": ["", "defaultschema"],
   "columns": [
     {
       "name": "product_no",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "integer"
     },
     {
       "name": "name",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "text"
     },
     {
       "name": "price",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "numeric"
     }
   ]
@@ -43,11 +43,11 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "parents": ["", ""],
+  "parents": ["", "defaultschema"],
   "columns": [
     {
       "name": "price",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "numeric"
     }
   ]
@@ -65,11 +65,11 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "parents": ["", ""],
+  "parents": ["", "defaultschema"],
   "columns": [
     {
       "name": "product_no",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "integer",
       "isUnique": true
     }
@@ -93,11 +93,11 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "parents": ["", ""],
+  "parents": ["", "defaultschema"],
   "columns": [
     {
       "name": "product_no",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "integer",
       "isUnique": true
     }
@@ -121,11 +121,11 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "parents": ["", ""],
+  "parents": ["", "defaultschema"],
   "columns": [
     {
       "name": "product_no",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "integer",
       "isRequired": true,
       "isPrimaryKey": true,
@@ -152,23 +152,23 @@ CREATE TABLE example (
 ```json
 {
   "name": "example",
-  "parents": ["", ""],
+  "parents": ["", "defaultschema"],
   "columns": [
     {
       "name": "a",
-      "parents": ["", "", "example"],
+      "parents": ["", "defaultschema", "example"],
       "typeName": "integer",
       "isPrimaryKey": true,
       "isRequired": true
     },
     {
       "name": "b",
-      "parents": ["", "", "example"],
+      "parents": ["", "defaultschema", "example"],
       "typeName": "integer"
     },
     {
       "name": "c",
-      "parents": ["", "", "example"],
+      "parents": ["", "defaultschema", "example"],
       "typeName": "integer",
       "isPrimaryKey": true,
       "isRequired": true
@@ -194,23 +194,23 @@ CREATE TABLE example (
 ```json
 {
   "name": "example",
-  "parents": ["", ""],
+  "parents": ["", "defaultschema"],
   "columns": [
     {
       "name": "a",
-      "parents": ["", "", "example"],
+      "parents": ["", "defaultschema", "example"],
       "typeName": "integer",
       "isRequired": true,
       "isPrimaryKey": true
     },
     {
       "name": "b",
-      "parents": ["", "", "example"],
+      "parents": ["", "defaultschema", "example"],
       "typeName": "integer"
     },
     {
       "name": "c",
-      "parents": ["", "", "example"],
+      "parents": ["", "defaultschema", "example"],
       "typeName": "integer",
       "isRequired": true,
       "isPrimaryKey": true
@@ -237,22 +237,22 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "parents": ["", ""],
+  "parents": ["", "defaultschema"],
   "columns": [
     {
       "name": "product_no",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "integer",
       "isUnique": true
     },
     {
       "name": "name",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "text"
     },
     {
       "name": "price",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "numeric"
     }
   ],
@@ -278,21 +278,21 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "parents": ["", ""],
+  "parents": ["", "defaultschema"],
   "columns": [
     {
       "name": "a",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "integer"
     },
     {
       "name": "b",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "integer"
     },
     {
       "name": "c",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "integer"
     }
   ],
@@ -318,22 +318,22 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "parents": ["", ""],
+  "parents": ["", "defaultschema"],
   "columns": [
     {
       "name": "product_no",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "integer",
       "isUnique": true
     },
     {
       "name": "name",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "text"
     },
     {
       "name": "price",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "numeric"
     }
   ],
@@ -360,22 +360,22 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "parents": ["", ""],
+  "parents": ["", "defaultschema"],
   "columns": [
     {
       "name": "product_no",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "integer",
       "isUnique": true
     },
     {
       "name": "name",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "text"
     },
     {
       "name": "price",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "numeric"
     }
   ],
@@ -401,16 +401,16 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "parents": ["", ""],
+  "parents": ["", "defaultschema"],
   "columns": [
     {
       "name": "price",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "numeric"
     },
     {
       "name": "discounted_price",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "numeric"
     }
   ]
@@ -430,16 +430,16 @@ CREATE TABLE products (
 ```json
 {
   "name": "products",
-  "parents": ["", ""],
+  "parents": ["", "defaultschema"],
   "columns": [
     {
       "name": "price",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "numeric"
     },
     {
       "name": "discounted_price",
-      "parents": ["", "", "products"],
+      "parents": ["", "defaultschema", "products"],
       "typeName": "numeric"
     }
   ]
@@ -462,29 +462,28 @@ CREATE TABLE tb (
 [
   {
     "name": "ta",
-    "parents": ["", ""],
+    "parents": ["", "defaultschema"],
     "columns": [
       {
         "name": "a",
-        "parents": ["", "", "ta"],
+        "parents": ["", "defaultschema", "ta"],
         "typeName": "integer"
       }
     ]
   },
   {
     "name": "tb",
-    "parents": ["", ""],
+    "parents": ["", "defaultschema"],
     "columns": [
       {
         "name": "b",
-        "parents": ["", "", "tb"],
+        "parents": ["", "defaultschema", "tb"],
         "typeName": "integer"
       }
     ],
     "foreignKeys": [
       {
-        "tableName": "ta",
-        "tableParents": ["", ""],
+        "tableName": ["", "defaultschema", "ta"],
         "columnMapping": {
           "b": "a"
         }
@@ -513,39 +512,38 @@ CREATE TABLE tb (
 [
   {
     "name": "ta",
-    "parents": ["", ""],
+    "parents": ["", "defaultschema"],
     "columns": [
       {
         "name": "a1",
-        "parents": ["", "", "ta"],
+        "parents": ["", "defaultschema", "ta"],
         "typeName": "integer"
       },
       {
         "name": "a2",
-        "parents": ["", "", "ta"],
+        "parents": ["", "defaultschema", "ta"],
         "typeName": "integer"
       }
     ]
   },
   {
     "name": "tb",
-    "parents": ["", ""],
+    "parents": ["", "defaultschema"],
     "columns": [
       {
         "name": "b1",
-        "parents": ["", "", "tb"],
+        "parents": ["", "defaultschema", "tb"],
         "typeName": "integer"
       },
       {
         "name": "b2",
-        "parents": ["", "", "tb"],
+        "parents": ["", "defaultschema", "tb"],
         "typeName": "integer"
       }
     ],
     "foreignKeys": [
       {
-        "tableName": "ta",
-        "tableParents": ["", ""],
+        "tableName": ["", "defaultschema", "ta"],
         "columnMapping": {
           "b1": "a1",
           "b2": "a2"
@@ -573,29 +571,28 @@ CREATE TABLE tb (
 [
   {
     "name": "ta",
-    "parents": ["", ""],
+    "parents": ["", "defaultschema"],
     "columns": [
       {
         "name": "a",
-        "parents": ["", "", "ta"],
+        "parents": ["", "defaultschema", "ta"],
         "typeName": "integer"
       }
     ]
   },
   {
     "name": "tb",
-    "parents": ["", ""],
+    "parents": ["", "defaultschema"],
     "columns": [
       {
         "name": "b",
-        "parents": ["", "", "tb"],
+        "parents": ["", "defaultschema", "tb"],
         "typeName": "integer"
       }
     ],
     "foreignKeys": [
       {
-        "tableName": "ta",
-        "tableParents": ["", ""],
+        "tableName": ["", "defaultschema", "ta"],
         "columnMapping": {
           "b": "a"
         }
@@ -622,29 +619,28 @@ CREATE TABLE tb (
 [
   {
     "name": "ta",
-    "parents": ["", ""],
+    "parents": ["", "defaultschema"],
     "columns": [
       {
         "name": "a",
-        "parents": ["", "", "ta"],
+        "parents": ["", "defaultschema", "ta"],
         "typeName": "integer"
       }
     ]
   },
   {
     "name": "tb",
-    "parents": ["", ""],
+    "parents": ["", "defaultschema"],
     "columns": [
       {
         "name": "b",
-        "parents": ["", "", "tb"],
+        "parents": ["", "defaultschema", "tb"],
         "typeName": "integer"
       }
     ],
     "foreignKeys": [
       {
-        "tableName": "ta",
-        "tableParents": ["", ""],
+        "tableName": ["", "defaultschema", "ta"],
         "columnMapping": {
           "b": "a"
         }

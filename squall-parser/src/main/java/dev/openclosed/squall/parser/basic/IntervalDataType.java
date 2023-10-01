@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.parser.basic;
 
-import dev.openclosed.squall.api.spec.DataType;
+import dev.openclosed.squall.api.sql.datatype.DataType;
 
 enum IntervalDataType implements DataType {
     INTERVAL {

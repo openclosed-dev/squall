@@ -9,7 +9,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "smallserial"
 }
 ```
@@ -25,7 +25,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "serial"
 }
 ```
@@ -41,7 +41,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "bigserial"
 }
 ```
@@ -57,7 +57,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "bytea"
 }
 ```
@@ -73,7 +73,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "uuid"
 }
 ```
@@ -89,7 +89,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "money"
 }
 ```
@@ -105,7 +105,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "timestamptz"
 }
 ```
@@ -121,7 +121,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "json"
 }
 ```
@@ -137,7 +137,7 @@ CREATE TABLE example (
 ```json
 {
   "name" : "a",
-  "parents": ["", "", "example"],
+  "parents": ["", "defaultschema", "example"],
   "typeName" : "jsonb"
 }
 ```

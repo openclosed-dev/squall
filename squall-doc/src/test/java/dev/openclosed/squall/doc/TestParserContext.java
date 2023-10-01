@@ -21,8 +21,8 @@ import dev.openclosed.squall.api.base.Message;
 import dev.openclosed.squall.api.base.Problem;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.ParserContext;
-import dev.openclosed.squall.api.spec.DatabaseSpec;
-import dev.openclosed.squall.api.spec.DocAnnotation;
+import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
+import dev.openclosed.squall.api.sql.spec.DocAnnotation;
 
 import java.util.ArrayList;
 import java.util.List;

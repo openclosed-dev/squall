@@ -16,8 +16,8 @@
 
 package dev.openclosed.squall.api.parser;
 
-import dev.openclosed.squall.api.spec.Dialect;
-import dev.openclosed.squall.api.spec.MajorDialect;
+import dev.openclosed.squall.api.sql.spec.Dialect;
+import dev.openclosed.squall.api.sql.spec.MajorDialect;
 
 /**
  * A configuration for SQL parsers.

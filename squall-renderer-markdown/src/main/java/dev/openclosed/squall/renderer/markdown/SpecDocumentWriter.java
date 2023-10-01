@@ -22,15 +22,15 @@ import java.util.Set;
 
 import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
-import dev.openclosed.squall.api.spec.Column;
-import dev.openclosed.squall.api.spec.Component;
-import dev.openclosed.squall.api.spec.Database;
-import dev.openclosed.squall.api.spec.DatabaseSpec;
-import dev.openclosed.squall.api.spec.DocAnnotationType;
-import dev.openclosed.squall.api.spec.Schema;
-import dev.openclosed.squall.api.spec.Sequence;
-import dev.openclosed.squall.api.spec.SpecVisitor;
-import dev.openclosed.squall.api.spec.Table;
+import dev.openclosed.squall.api.sql.spec.Column;
+import dev.openclosed.squall.api.sql.spec.Component;
+import dev.openclosed.squall.api.sql.spec.Database;
+import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
+import dev.openclosed.squall.api.sql.spec.DocAnnotationType;
+import dev.openclosed.squall.api.sql.spec.Schema;
+import dev.openclosed.squall.api.sql.spec.Sequence;
+import dev.openclosed.squall.api.sql.spec.SpecVisitor;
+import dev.openclosed.squall.api.sql.spec.Table;
 
 /**
  * A writer of specification document.

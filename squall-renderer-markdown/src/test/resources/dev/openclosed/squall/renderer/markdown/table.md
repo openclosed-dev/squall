@@ -222,7 +222,7 @@ CREATE TABLE orders (
 | No. | Name | Display name | Type | Nullable | Unique | Default | Foreign key | Description |
 | --: | :-- | :-- | :-- | :-: | :-: | :-- | :-- | :-- |
 | <a id=".public.orders.order_id" name=".public.orders.order_id"></a> 1 | order_id &#x1F511; | - | integer | - | &#x2705; | - | - | - |
-| <a id=".public.orders.product_no" name=".public.orders.product_no"></a> 2 | product_no | - | integer | &#x2705; | - | - | public.products ([product_no](#.public.products.product_no)) | - |
+| <a id=".public.orders.product_no" name=".public.orders.product_no"></a> 2 | product_no | - | integer | &#x2705; | - | - | products ([product_no](#.public.products.product_no)) | - |
 | <a id=".public.orders.quantity" name=".public.orders.quantity"></a> 3 | quantity | - | integer | &#x2705; | - | - | - | - |
 
 ### 1.2. public.products ![table]
