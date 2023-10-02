@@ -17,6 +17,7 @@
 package dev.openclosed.squall.renderer.asciidoc;
 
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
+import dev.openclosed.squall.api.sql.expression.SequenceFunctionCall;
 import dev.openclosed.squall.api.sql.spec.Column;
 import dev.openclosed.squall.api.sql.spec.DocAnnotationType;
 import dev.openclosed.squall.api.sql.expression.Expression;
@@ -119,10 +120,27 @@ enum ColumnAttributeWriter implements AttributeWriter<Column> {
     },
     DEFAULT_VALUE("<.^6") {
         @Override
-        String getValue(Column column, int rowNo, WriterContext context) {
-            return column.defaultValue()
-                .map(ColumnAttributeWriter::expressionToCode)
-                .orElse("-");
+        public void writeValue(Column column, int rowNo, DocBuilder builder, WriterContext context) {
+            column.defaultValue().ifPresentOrElse(
+                value -> writeDefault(value, builder),
+                () -> builder.append('-')
+            );
+        }
+
+        private void writeDefault(Expression value, DocBuilder builder) {
+            if (value instanceof SequenceFunctionCall sequence) {
+                writeSequenceFunction(sequence, builder);
+            } else {
+                builder.appendCode(value.toSql());
+            }
+        }
+
+        private void writeSequenceFunction(SequenceFunctionCall sequence, DocBuilder builder) {
+            builder.append(sequence.name())
+                .append('(')
+                .append("<<_").append(sequence.fullSequenceName())
+                .append(",").append(sequence.simpleSequenceName())
+                .append(">>)");
         }
     },
     FOREIGN_KEY("<.^6") {

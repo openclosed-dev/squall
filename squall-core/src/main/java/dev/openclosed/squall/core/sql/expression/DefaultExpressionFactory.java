@@ -51,12 +51,12 @@ public final class DefaultExpressionFactory implements ExpressionFactory {
     }
 
     @Override
-    public Expression functionCall(String name) {
+    public SimpleFunctionCall functionCall(String name) {
         return new SimpleFunctionCall(Expression.Type.FUNCTION, name);
     }
 
     @Override
-    public Expression functionCall(String name, List<Expression> arguments) {
+    public FunctionCall functionCall(String name, List<Expression> arguments) {
         return new FunctionCall(Expression.Type.FUNCTION, name, List.copyOf(arguments));
     }
 
@@ -108,14 +108,17 @@ public final class DefaultExpressionFactory implements ExpressionFactory {
     }
 
     @Override
-    public SequenceFunction sequenceFunction(String functionName, ObjectRef sequenceRef) {
+    public SequenceFunctionCall sequenceFunction(
+        String name, List<Expression> arguments, ObjectRef sequenceRef) {
 
-        Objects.requireNonNull(functionName);
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(arguments);
         Objects.requireNonNull(sequenceRef);
 
-        return new SequenceFunction(
+        return new SequenceFunctionCall(
             Expression.Type.SEQUENCE_FUNCTION,
-            functionName,
+            name,
+            arguments,
             sequenceRef.toList());
     }
 }

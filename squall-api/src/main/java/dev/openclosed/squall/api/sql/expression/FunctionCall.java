@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.sql.expression;
+package dev.openclosed.squall.api.sql.expression;
 
-import dev.openclosed.squall.api.sql.expression.Expression;
-
-import java.util.Collections;
 import java.util.List;
 
-record SimpleFunctionCall(Expression.Type type, String name)
-    implements dev.openclosed.squall.api.sql.expression.FunctionCall, MapSourceExpression {
+public interface FunctionCall extends Expression {
 
-    @Override
-    public String toSql() {
-        return name();
-    }
+    /**
+     * Returns the name of the function.
+     * @return the name of the function.
+     */
+    String name();
 
-    @Override
-    public List<Expression> arguments() {
-        return Collections.emptyList();
-    }
+    List<Expression> arguments();
 }

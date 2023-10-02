@@ -32,9 +32,9 @@ public interface ExpressionFactory {
 
     Expression number(String value);
 
-    Expression functionCall(String name);
+    FunctionCall functionCall(String name);
 
-    Expression functionCall(String name, List<Expression> arguments);
+    FunctionCall functionCall(String name, List<Expression> arguments);
 
     Expression unaryOperator(String operator, Expression operand);
 
@@ -56,9 +56,11 @@ public interface ExpressionFactory {
 
     /**
      * Creates a sequence manipulation function.
-     * @param functionName the name of the function.
+     * @param name the name of the function.
+     * @param arguments the arguments of the function.
      * @param sequenceRef the reference to the sequence.
      * @return sequence manipulation function.
      */
-    SequenceFunction sequenceFunction(String functionName, ObjectRef sequenceRef);
+    SequenceFunctionCall sequenceFunction(
+        String name, List<Expression> arguments, ObjectRef sequenceRef);
 }

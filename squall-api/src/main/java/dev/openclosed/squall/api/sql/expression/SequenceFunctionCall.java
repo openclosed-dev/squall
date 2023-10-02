@@ -19,17 +19,30 @@ package dev.openclosed.squall.api.sql.expression;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public interface SequenceFunction extends Expression {
+/**
+ * A sequence manipulation function.
+ */
+public interface SequenceFunctionCall extends FunctionCall {
 
-    String functionName();
-
+    /**
+     * Returns all components of sequence name.
+     * @return all components of sequence name.
+     */
     List<String> sequenceName();
 
+    /**
+     * Returns the name of the sequence.
+     * @return the name of the sequence.
+     */
     default String simpleSequenceName() {
         var name = sequenceName();
         return name.get(name.size() - 1);
     }
 
+    /**
+     * Returns the fully qualified name of the sequence.
+     * @return the fully qualified name of the sequence.
+     */
     default String fullSequenceName() {
         return sequenceName().stream().collect(Collectors.joining("."));
     }

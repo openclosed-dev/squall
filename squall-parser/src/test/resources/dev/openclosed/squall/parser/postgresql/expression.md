@@ -7,13 +7,19 @@ nextval('serial')
 ```json
 {
   "type": "sequence_function",
-  "functionName": "nextval",
+  "name": "nextval",
+  "arguments": [
+    {
+      "type": "string",
+      "value": "serial"
+    }
+  ],
   "sequenceName": ["", "defaultschema", "serial"]
 }
 ```
 
 ```text
-nextval('defaultschema.serial')
+nextval('serial')
 ```
 
 # currval of unqualified sequence
@@ -25,13 +31,19 @@ currval('serial')
 ```json
 {
   "type": "sequence_function",
-  "functionName": "currval",
+  "name": "currval",
+  "arguments": [
+    {
+      "type": "string",
+      "value": "serial"
+    }
+  ],
   "sequenceName": ["", "defaultschema", "serial"]
 }
 ```
 
 ```text
-currval('defaultschema.serial')
+currval('serial')
 ```
 
 # nextval of qualified sequence
@@ -43,7 +55,13 @@ nextval('public.serial')
 ```json
 {
   "type": "sequence_function",
-  "functionName": "nextval",
+  "name": "nextval",
+  "arguments": [
+    {
+      "type": "string",
+      "value": "public.serial"
+    }
+  ],
   "sequenceName": ["", "public", "serial"]
 }
 ```
@@ -61,7 +79,13 @@ currval('public.serial')
 ```json
 {
   "type": "sequence_function",
-  "functionName": "currval",
+  "name": "currval",
+  "arguments": [
+    {
+      "type": "string",
+      "value": "public.serial"
+    }
+  ],
   "sequenceName": ["", "public", "serial"]
 }
 ```

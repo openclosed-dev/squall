@@ -22,26 +22,23 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-record SequenceFunction(
+record SequenceFunctionCall(
     Expression.Type type,
-    String functionName,
+    String name,
+    List<Expression> arguments,
     List<String> sequenceName)
-    implements dev.openclosed.squall.api.sql.expression.SequenceFunction, MapSourceExpression {
+    implements dev.openclosed.squall.api.sql.expression.SequenceFunctionCall, MapSourceExpression {
 
-    SequenceFunction {
+    SequenceFunctionCall {
         Objects.requireNonNull(type);
-        Objects.requireNonNull(functionName);
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(arguments);
         Objects.requireNonNull(sequenceName);
     }
 
     @Override
     public String toSql() {
-        return new SqlStringBuilder()
-            .append(functionName())
-            .append("('")
-            .append(qualifiedSequenceName())
-            .append("')")
-            .toString();
+        return FunctionCall.toSql(name(), arguments());
     }
 
     private String qualifiedSequenceName() {

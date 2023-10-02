@@ -21,12 +21,16 @@ import dev.openclosed.squall.api.sql.expression.Expression;
 import java.util.List;
 
 record FunctionCall(Expression.Type type, String name, List<Expression> arguments)
-    implements MapSourceExpression {
+    implements dev.openclosed.squall.api.sql.expression.FunctionCall, MapSourceExpression {
 
     @Override
     public String toSql() {
+        return toSql(name(), arguments());
+    }
+
+    static String toSql(String name, List<Expression> arguments) {
         var sb = new SqlStringBuilder()
-            .append(name())
+            .append(name)
             .append('(');
         for (int i = 0; i < arguments.size(); i++) {
             if (i > 0) {

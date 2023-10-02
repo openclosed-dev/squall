@@ -17,7 +17,7 @@
 package dev.openclosed.squall.parser.postgresql;
 
 import dev.openclosed.squall.api.sql.datatype.DataType;
-import dev.openclosed.squall.api.sql.expression.ObjectRef;
+import dev.openclosed.squall.api.sql.expression.FunctionCall;
 import dev.openclosed.squall.api.sql.expression.StringLiteral;
 import dev.openclosed.squall.api.sql.spec.DocAnnotation;
 import dev.openclosed.squall.api.sql.expression.Expression;
@@ -25,7 +25,6 @@ import dev.openclosed.squall.api.sql.expression.Typecast;
 import dev.openclosed.squall.parser.basic.IsPredicate;
 import dev.openclosed.squall.api.sql.datatype.StandardDataType;
 import dev.openclosed.squall.parser.basic.IdentifierType;
-import dev.openclosed.squall.parser.basic.SpecialSymbol;
 import dev.openclosed.squall.parser.basic.SqlGrammar;
 import dev.openclosed.squall.parser.basic.Token;
 
@@ -109,28 +108,29 @@ interface PostgreSqlGrammar extends SqlGrammar, PostgreSqlPredicates {
     }
 
     @Override
-    default Expression functionCall(String functionName) {
-        return switch (functionName.toLowerCase()) {
-            case "nextval", "currval" -> sequenceManipulationFunction(functionName);
-            default -> SqlGrammar.super.functionCall(functionName);
-        };
-    }
+    default FunctionCall functionCall(String functionName) {
+        FunctionCall functionCall = SqlGrammar.super.functionCall(functionName);
 
-    default Expression sequenceManipulationFunction(String functionName) {
-        expect(SpecialSymbol.OPEN_PAREN);
-        consume();
-        var exp = expression(0);
-        if (exp instanceof Typecast typecast) {
-            exp = typecast.source();
-        }
-        expect(SpecialSymbol.CLOSE_PAREN);
-        consume();
-        String sequenceName = "";
-        if (exp instanceof StringLiteral literal) {
-            sequenceName = literal.value();
+        String name = functionName.toLowerCase();
+        if (!name.equals("nextval") && !name.equals("currval")) {
+            return functionCall;
         }
 
-        ObjectRef sequenceRef = resolver().resolveDotNotation(sequenceName);
-        return expressionFactory().sequenceFunction(functionName, sequenceRef);
+        var arguments = functionCall.arguments();
+        if (arguments.size() == 1) {
+            var argument = arguments.get(0);
+            if (argument instanceof Typecast typecast) {
+                argument = typecast.source();
+            }
+            if (argument instanceof StringLiteral literal) {
+                return expressionFactory().sequenceFunction(
+                    functionCall.name(),
+                    functionCall.arguments(),
+                    resolver().resolveDotNotation(literal.value())
+                );
+            }
+        }
+
+        return functionCall;
     }
 }

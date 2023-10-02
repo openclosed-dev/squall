@@ -40,6 +40,7 @@ public interface Expression extends MapSource {
         /** NULL literal. */
         NULL,
         FUNCTION,
+        SEQUENCE_FUNCTION,
         UNARY_OPERATOR,
         BINARY_OPERATOR,
         COLUMN_REFERENCE,
@@ -52,8 +53,7 @@ public interface Expression extends MapSource {
         /** NOT IN comparison. */
         NOT_IN,
         CASE,
-        WHEN,
-        SEQUENCE_FUNCTION
+        WHEN
     }
 
     /**

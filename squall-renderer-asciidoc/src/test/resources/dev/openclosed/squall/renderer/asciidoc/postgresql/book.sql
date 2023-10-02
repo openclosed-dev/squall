@@ -31,7 +31,7 @@ CREATE TABLE book.author (
    * The identifier of this author.
    * @label Author ID
    */
-  id bigserial PRIMARY KEY,
+  id integer DEFAULT nextval('book.author_id') PRIMARY KEY,
   /**
    * The name of this author.
    * @label Author Name
@@ -58,7 +58,7 @@ CREATE TABLE book.book (
    * The identifier of this book.
    * @label Book ID
    */
-  id bigserial PRIMARY KEY,
+  id integer DEFAULT nextval('book.book_id') PRIMARY KEY,
   /**
    * The title of this book.
    * @label Title

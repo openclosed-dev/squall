@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import dev.openclosed.squall.api.sql.expression.FunctionCall;
 import dev.openclosed.squall.api.sql.expression.ObjectRef;
 import dev.openclosed.squall.api.sql.spec.DocAnnotation;
 import dev.openclosed.squall.api.sql.expression.Expression;
@@ -1056,10 +1057,6 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
         }
     }
 
-    default Expression functionCall(String functionName) {
-        return expressionFactory().functionCall(functionName, functionArguments());
-    }
-
     default Expression functionCallOrColumnReference() {
         var token = next();
         consume();
@@ -1070,6 +1067,10 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
         }
         syntaxError(token);
         return null;
+    }
+
+    default FunctionCall functionCall(String functionName) {
+        return expressionFactory().functionCall(functionName, functionArguments());
     }
 
     default List<Expression> functionArguments() {
