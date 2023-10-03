@@ -65,17 +65,24 @@ public class AsciiDocRendererTest {
     @ParameterizedTest
     @MethodSource("testsForPostgresql")
     public void testHtmlForPostgresql(TestCase test) throws IOException {
-        testRenderer(test, "html");
+        Path outputDir = testRenderer(test, "html");
+        Path outputFile = outputDir.resolve("spec.html");
+        assertThat(Files.exists(outputFile)).isTrue();
+        assertThat(readTextFromFile(outputFile))
+            .startsWith("<!DOCTYPE html>")
+            .endsWith("</html>");
     }
 
     @EnabledIfSystemProperty(named = "test.full", matches = ".*")
     @ParameterizedTest
     @MethodSource("testsForPostgresql")
     public void testPdfForPostgresql(TestCase test) throws IOException {
-        testRenderer(test, "pdf");
+        Path outputDir = testRenderer(test, "pdf");
+        Path outputFile = outputDir.resolve("spec.pdf");
+        assertThat(Files.exists(outputFile)).isTrue();
     }
 
-    private void testRenderer(TestCase test, String format) throws IOException {
+    private Path testRenderer(TestCase test, String format) throws IOException {
         var dialect = test.dialect();
         var builder = DatabaseSpec.builder();
         builder.setMetadata(test.getMetadata());
@@ -85,13 +92,15 @@ public class AsciiDocRendererTest {
         var rendererFactory = RendererFactory.get(format);
         var renderer = rendererFactory.createRenderer(test.getConfig());
 
-        Path dir = prepareDirectory(dialect, test.title(), format);
-        renderer.render(spec, dir);
+        Path outputDir = prepareDirectory(dialect, test.title(), format);
+        renderer.render(spec, outputDir);
 
         test.getExpectedText().ifPresent(expected -> {
-            var actual = readRenderedFile(dir);
+            var actual = readTextFromFile(outputDir.resolve("spec.adoc"));
             assertThat(actual).isEqualTo(expected);
         });
+
+        return outputDir;
     }
 
     private SqlParser createParser(Dialect dialect, DatabaseSpec.Builder builder) {
@@ -118,8 +127,7 @@ public class AsciiDocRendererTest {
         return dir;
     }
 
-    private static String readRenderedFile(Path dir) {
-        Path path = dir.resolve("spec.adoc");
+    private static String readTextFromFile(Path path) {
         try {
             return Files.readString(path);
         } catch (IOException e) {

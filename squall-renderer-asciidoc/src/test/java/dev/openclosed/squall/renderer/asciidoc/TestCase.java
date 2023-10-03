@@ -29,7 +29,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public record TestCase(
-    String title, String sqlName, String configName, String metadata, Dialect dialect) {
+    String title,
+    String sqlName,
+    String configName,
+    String metadata,
+    Dialect dialect) {
 
     private static ConfigLoader configLoader;
 
