@@ -1,0 +1,3 @@
+CREATE DATABASE database1;
+
+CREATE SCHEMA schema1;

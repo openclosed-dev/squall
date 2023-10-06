@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,82 +18,151 @@ package dev.openclosed.squall.renderer.markdown;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Locale;
-import java.util.stream.Stream;
-
+import dev.openclosed.squall.api.config.ConfigLoader;
+import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
+import dev.openclosed.squall.api.parser.SqlParserFactory;
+import dev.openclosed.squall.api.renderer.RenderConfig;
+import dev.openclosed.squall.api.renderer.RendererFactory;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.Dialect;
+import dev.openclosed.squall.api.sql.spec.MajorDialect;
+import dev.openclosed.squall.doc.DocCommentProcessor;
 import org.apache.commons.io.file.PathUtils;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import dev.openclosed.squall.api.config.ConfigLoader;
-import dev.openclosed.squall.api.renderer.RendererFactory;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Collectors;
 
-abstract class MarkdownRendererTest {
+public class MarkdownRendererTest {
 
-    private static final Path BASE_DIR = Path.of("target", "test-runs");
-    private static RendererFactory rendererFactory;
+    static final Path BASE_DIR = Path.of("target", "test-runs");
+
     private static ConfigLoader configLoader;
 
-    public static void setUpBase(Dialect dialect) throws IOException {
-        Locale.setDefault(Locale.ENGLISH);
-        Files.createDirectories(BASE_DIR.resolve((dialect.dialectName())));
-        rendererFactory = RendererFactory.get("markdown");
+    private RendererFactory renderFactory;
+
+    @BeforeAll
+    public static void setUpOnce() {
         configLoader = ConfigLoader.get();
     }
 
-    protected void testRenderer(RenderTest test, Dialect dialect) throws IOException {
-        var builder = DatabaseSpec.builder();
-        var parser = createParser(builder);
+    @BeforeEach
+    public void setUp() {
+        renderFactory = new MarkdownRendererFactory();
+    }
 
-        for (var sql : test.sql()) {
-            parser.parse(sql);
-        }
-        var spec = builder.build();
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "column-description-blank-line",
+        "column-description-multiple-lines",
+        "database",
+        "database-with-comment",
+        "deprecated-column",
+        "deprecated-table",
+        "foreign-key",
+        "foreign-key-in-qualified-table",
+        "hide-database-and-schema",
+        "schema",
+        "sequence-qualified",
+        "schema-with-comment",
+        "table-in-default-schema",
+        "table-qualified"
+    })
+    public void testPostgresql(String title) throws IOException {
+        testWithDialect(title, MajorDialect.POSTGRESQL);
+    }
 
-        var config = configLoader.loadRenderConfigFromJson(test.json());
-        var renderer = rendererFactory.createRenderer(config);
-
-        Path dir = prepareDirectory(dialect, test.title());
-
+    void testWithDialect(String title, Dialect dialect) throws IOException {
+        var spec = parseSql(title, dialect);
+        var config = loadRenderConfig(dialect, title);
+        var renderer = renderFactory.createRenderer(config, config.locale());
+        var dir = prepareDirectory(dialect, title);
         renderer.render(spec, dir);
 
-        String actual = readRenderedFile(dir);
-        assertThat(convertRenderedContent(actual)).isEqualTo(test.expected());
+        var path = dir.resolve("spec.md");
+        assertThat(Files.exists(path)).isTrue();
+        var expected = readTextResource(dialect.dialectName(), title, "expected.md");
+        assertThat(readRenderedText(path)).isEqualTo(expected);
     }
 
-    protected static Stream<RenderTest> loadTest(String name) {
-        var filename = name + ".md";
-        var in = MarkdownRendererTest.class.getResourceAsStream(filename);
-        return RenderTest.loadFrom(in).stream();
+    static DatabaseSpec parseSql(String title, Dialect dialect) {
+        var builder = DatabaseSpec.builder();
+        var parser = createParser(dialect, builder);
+        String sql = readTextResource(dialect.dialectName(), title, "input.sql");
+        parser.parse(sql);
+        return builder.build();
     }
 
-    protected abstract SqlParser createParser(DatabaseSpec.Builder builder);
+    static SqlParser createParser(Dialect dialect, DatabaseSpec.Builder builder) {
+        var config = new ParserConfig(dialect.dialectName(), dialect.defaultSchema());
+        return SqlParserFactory.get(dialect).createParser(
+            config,
+            builder,
+            new DocCommentProcessor());
+    }
 
-    private static Path prepareDirectory(Dialect dialect, String title) throws IOException {
+    static RenderConfig loadRenderConfig(Dialect dialect, String title) {
+        String text = findTextResource(dialect, title, "config.json");
+        return configLoader.loadRenderConfigFromJson(text);
+    }
+
+    static String findTextResource(Dialect dialect, String title, String name) {
+        return findTextResource(dialect.dialectName(), title, name);
+    }
+
+    static String findTextResource(String dialect, String title, String name) {
+        String text = readTextResource(dialect, title, name);
+        if (text == null) {
+            text = readTextResource(dialect, name);
+            if (text == null) {
+                throw new IllegalStateException();
+            }
+        }
+        return text;
+    }
+
+    static String readTextResource(String... names) {
+        return readTextResource(String.join("/", names));
+    }
+
+    static String readTextResource(String name) {
+        var in = MarkdownRendererTest.class.getResourceAsStream(name);
+        if (in == null) {
+            return null;
+        }
+        try (var reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+            return reader.lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    static Path prepareDirectory(Dialect dialect, String title) throws IOException {
         Path parentDir = BASE_DIR.resolve(dialect.dialectName());
-        Path dir = parentDir.resolve(title.replaceAll("\s", "-"));
+        Path dir = parentDir.resolve(title.replaceAll("\\s", "-"));
         if (Files.exists(dir)) {
             PathUtils.cleanDirectory(dir);
         }
         return dir;
     }
 
-    private static String readRenderedFile(Path dir) {
-        Path path = dir.resolve("spec.md");
-        try {
-            return Files.readString(path);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+    static String readRenderedText(Path path) throws IOException {
+        String text = Files.readString(path);
+        return convertRenderedContent(text);
     }
 
     private static String convertRenderedContent(String content) {
-        content = content.replaceAll("\\[\\w+\\]: .+", "");
+        content = content.replaceAll("\\[\\w+]: .+", "");
         content = content.stripTrailing();
         return content;
     }

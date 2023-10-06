@@ -16,27 +16,33 @@
 
 package dev.openclosed.squall.renderer.asciidoc;
 
+import dev.openclosed.squall.api.config.ConfigLoader;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
-import dev.openclosed.squall.api.renderer.RendererFactory;
+import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.Dialect;
 import dev.openclosed.squall.api.sql.spec.MajorDialect;
+import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 import dev.openclosed.squall.doc.DocCommentProcessor;
+import dev.openclosed.squall.renderer.asciidoc.html.HtmlRendererFactory;
+import dev.openclosed.squall.renderer.asciidoc.pdf.PdfRendererFactory;
 import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,94 +50,123 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AsciiDocRendererTest {
 
     private static final Path BASE_DIR = Path.of("target", "test-runs");
-    private static Map<Dialect, SqlParserFactory> parserFactories;
+
+    private static ConfigLoader configLoader;
 
     @BeforeAll
     public static void setUpOnce() {
         Locale.setDefault(Locale.ENGLISH);
-        parserFactories = new HashMap<>();
+        configLoader = ConfigLoader.get();
     }
 
-    public static Stream<TestCase> testsForPostgresql() {
-        var dialect = MajorDialect.POSTGRESQL;
+    public static Stream<String> postgresqlTests() {
         return Stream.of(
-            new TestCase(
-                "book", "book", "config", "metadata-book", dialect),
-            new TestCase(
-                "book-ja", "book-ja", "config-ja", "metadata-book-ja", dialect)
+            "book",
+            "book-ja"
         );
     }
 
     @ParameterizedTest
-    @MethodSource("testsForPostgresql")
-    public void testHtmlForPostgresql(TestCase test) throws IOException {
-        Path outputDir = testRenderer(test, "html");
+    @MethodSource("postgresqlTests")
+    public void testHtmlRendererForPostgresql(String title) throws IOException {
+        Path outputDir = testRenderer(title, MajorDialect.POSTGRESQL, "html");
         Path outputFile = outputDir.resolve("spec.html");
         assertThat(Files.exists(outputFile)).isTrue();
-        assertThat(readTextFromFile(outputFile))
+        assertThat(Files.readString(outputFile))
             .startsWith("<!DOCTYPE html>")
             .endsWith("</html>");
     }
 
     @EnabledIfSystemProperty(named = "test.full", matches = ".*")
-    @ParameterizedTest
-    @MethodSource("testsForPostgresql")
-    public void testPdfForPostgresql(TestCase test) throws IOException {
-        Path outputDir = testRenderer(test, "pdf");
+    @ParameterizedTest()
+    @MethodSource("postgresqlTests")
+    public void testPdfRendererForPostgresql(String title) throws IOException {
+        Path outputDir = testRenderer(title, MajorDialect.POSTGRESQL, "pdf");
         Path outputFile = outputDir.resolve("spec.pdf");
         assertThat(Files.exists(outputFile)).isTrue();
     }
 
-    private Path testRenderer(TestCase test, String format) throws IOException {
-        var dialect = test.dialect();
-        var builder = DatabaseSpec.builder();
-        builder.setMetadata(test.getMetadata());
-        createParser(dialect, builder).parse(test.getSql());
-        var spec = builder.build();
+    Path testRenderer(String title, Dialect dialect, String format) throws IOException {
+        var spec = parseSql(title, dialect);
 
-        var rendererFactory = RendererFactory.get(format);
-        var renderer = rendererFactory.createRenderer(test.getConfig());
+        var rendererFactory = switch (format) {
+            case "html" -> new HtmlRendererFactory();
+            case "pdf" -> new PdfRendererFactory();
+            default -> throw new IllegalArgumentException(format);
+        };
+        var config = loadRenderConfig(dialect, title);
+        var renderer = rendererFactory.createRenderer(config, config.locale());
+        var dir = prepareDirectory(dialect, title, format);
+        renderer.render(spec, dir);
 
-        Path outputDir = prepareDirectory(dialect, test.title(), format);
-        renderer.render(spec, outputDir);
-
-        test.getExpectedText().ifPresent(expected -> {
-            var actual = readTextFromFile(outputDir.resolve("spec.adoc"));
-            assertThat(actual).isEqualTo(expected);
-        });
-
-        return outputDir;
+        return dir;
     }
 
-    private SqlParser createParser(Dialect dialect, DatabaseSpec.Builder builder) {
-        return getParserFactoryFor(dialect).createParser(
-            ParserConfig.getDefault(),
+    static DatabaseSpec parseSql(String title, Dialect dialect) {
+        var builder = DatabaseSpec.builder();
+        var metadata = loadMetadata(dialect, title);
+        builder.setMetadata(metadata);
+        var parser = createParser(dialect, builder);
+        String sql = readTextResource(dialect.dialectName(), title, "input.sql");
+        parser.parse(sql);
+        return builder.build();
+    }
+
+    static SqlParser createParser(Dialect dialect, DatabaseSpec.Builder builder) {
+        var config = new ParserConfig(dialect.dialectName(), dialect.defaultSchema());
+        return SqlParserFactory.get(dialect).createParser(
+            config,
             builder,
             new DocCommentProcessor());
     }
 
-    private SqlParserFactory getParserFactoryFor(Dialect dialect) {
-        if (!parserFactories.containsKey(dialect)) {
-            parserFactories.put(dialect, SqlParserFactory.get(dialect));
-        }
-        return parserFactories.get(dialect);
+    static RenderConfig loadRenderConfig(Dialect dialect, String title) {
+        String text = findTextResource(dialect, title, "config.json");
+        return configLoader.loadRenderConfigFromJson(text);
     }
 
-    private static Path prepareDirectory(Dialect dialect, String title, String format) throws IOException {
-        Path dir = BASE_DIR.resolve(dialect.dialectName()).resolve(title).resolve(format);
-        if (Files.exists(dir)) {
-            PathUtils.cleanDirectory(dir);
-        } else {
-            Files.createDirectories(dir);
-        }
-        return dir;
+    static SpecMetadata loadMetadata(Dialect dialect, String title) {
+        String text = findTextResource(dialect, title, "metadata.json");
+        return configLoader.loadMetadataFromJson(text);
     }
 
-    private static String readTextFromFile(Path path) {
-        try {
-            return Files.readString(path);
+    static String findTextResource(Dialect dialect, String title, String name) {
+        return findTextResource(dialect.dialectName(), title, name);
+    }
+
+    static String findTextResource(String dialect, String title, String name) {
+        String text = readTextResource(dialect, title, name);
+        if (text == null) {
+            text = readTextResource(dialect, name);
+            if (text == null) {
+                throw new IllegalStateException();
+            }
+        }
+        return text;
+    }
+
+    static String readTextResource(String... names) {
+        return readTextResource(String.join("/", names));
+    }
+
+    static String readTextResource(String name) {
+        var in = AsciiDocRendererTest.class.getResourceAsStream(name);
+        if (in == null) {
+            return null;
+        }
+        try (var reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+            return reader.lines().collect(Collectors.joining("\n"));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    static Path prepareDirectory(Dialect dialect, String title, String format) throws IOException {
+        Path parentDir = BASE_DIR.resolve(dialect.dialectName());
+        Path dir = parentDir.resolve(title).resolve(format);
+        if (Files.exists(dir)) {
+            PathUtils.cleanDirectory(dir);
+        }
+        return dir;
     }
 }
