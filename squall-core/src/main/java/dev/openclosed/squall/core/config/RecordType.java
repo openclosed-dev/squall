@@ -22,48 +22,64 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public record RecordType<T extends Record>(
-        Class<T> type,
-        Constructor<T> constructor,
-        Map<String, Object> defaulValueMap) {
+    Class<T> recordClass,
+    Set<String> componentNames,
+    Constructor<T> constructor,
+    Map<String, Object> defaulValueMap) {
 
-    public static <T extends Record> RecordType<T> of(Class<T> type) {
+    public static <T extends Record> RecordType<T> of(Class<T> recordClass) {
         try {
-            return new RecordType<T>(
-                    type,
-                    getDefaultConstructor(type),
-                    buildDefaultValueMap(type)
-                    );
+            return new RecordType<>(
+                recordClass,
+                getComponentNames(recordClass),
+                getDefaultConstructor(recordClass),
+                buildDefaultValueMap(recordClass)
+            );
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean containsKey(Object key) {
+        return componentNames().contains(key);
+    }
+
+    public RecordComponent[] components() {
+        return recordClass().getRecordComponents();
     }
 
     public T newInstance(Object... args) throws ReflectiveOperationException {
         return constructor().newInstance(args);
     }
 
-    public RecordComponent[] components() {
-        return type().getRecordComponents();
+    private static Set<String> getComponentNames(Class<?> recordClass) {
+        RecordComponent[] components = recordClass.getRecordComponents();
+        return Stream.of(components)
+            .map(RecordComponent::getName)
+            .collect(Collectors.toSet());
     }
 
-    private static <T extends Record> Constructor<T> getDefaultConstructor(Class<T> type)
+    private static <T extends Record> Constructor<T> getDefaultConstructor(Class<T> clazz)
             throws NoSuchMethodException {
-        var components = type.getRecordComponents();
+        var components = clazz.getRecordComponents();
         Class<?>[] types = new Class<?>[components.length];
         int i = 0;
         for (var component : components) {
             types[i++] = component.getType();
         }
-        return type.getConstructor(types);
+        return clazz.getConstructor(types);
     }
 
-    private static <T extends Record> Map<String, Object> buildDefaultValueMap(Class<T> type)
+    private static <T extends Record> Map<String, Object> buildDefaultValueMap(Class<T> clazz)
             throws ReflectiveOperationException {
         Constructor<T> noArgsConstructor;
         try {
-            noArgsConstructor = type.getConstructor();
+            noArgsConstructor = clazz.getConstructor();
         } catch (NoSuchMethodException e) {
             return Collections.emptyMap();
         }

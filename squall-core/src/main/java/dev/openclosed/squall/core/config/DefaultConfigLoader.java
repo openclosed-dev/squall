@@ -48,6 +48,7 @@ public final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem
     private final JsonReader reader;
     private final MessageBundle messageBundle;
     private final TypeResolver typeResolver;
+    private final ObjectFactory objectFactory;
     private List<Problem> problems;
 
     public DefaultConfigLoader() {
@@ -56,6 +57,9 @@ public final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem
         this.typeResolver = TypeResolver.builder()
             .addMapping(SpecMetadata.class, DefaultSpecMetadata.class)
             .build();
+        this.objectFactory = new ObjectFactory(
+            this.messageBundle,
+            this.typeResolver);
     }
 
     // ConfigLoader
@@ -104,12 +108,10 @@ public final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem
         return loadFromMap(map, targetClass);
     }
 
-    @SuppressWarnings("unchecked")
     <T extends Record> T loadFromMap(Map<String, ?> map, Class<T> targetClass) {
-        var context = new MapperContext(this, messages(), this.typeResolver);
         try {
-            return (T) TypeMapper.RECORD.map(map, targetClass, context);
-        } catch (MappingException e) {
+            return objectFactory.createRecord(map, targetClass, this::accept);
+        } catch (Exception e) {
             throw new ConfigurationException(messages().BAD_CONFIGURATION(), getProblems());
         }
     }
