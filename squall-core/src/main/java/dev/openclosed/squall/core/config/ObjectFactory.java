@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -186,7 +187,11 @@ class ObjectFactory {
                     return Collections.emptySet();
                 }
                 Object[] array = convertToArray(collection, component, context);
-                return Set.of(array);
+                var orderedSet = new LinkedHashSet<>(array.length);
+                for (var item : array) {
+                    orderedSet.add(item);
+                }
+                return Collections.unmodifiableSet(orderedSet);
             }
         },
         MAP(Map.class, Collections.emptyMap()) {

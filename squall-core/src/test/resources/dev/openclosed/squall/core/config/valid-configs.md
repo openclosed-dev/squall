@@ -22,14 +22,14 @@
   },
   "renderers": {
     "default": {
-      "format": "html"
+      "format": "html",
+      "show": ["database", "schema", "table", "column", "sequence"]
     }
   }
 }
 ```
 
 # redundant properties
-
 
 ```json
 {
@@ -42,4 +42,16 @@
 
 ```
 WARNING: Unknown property "greeting" was found. [/greeting]
+```
+
+# duplicates in set
+
+```json
+{
+  "renderers": {
+    "default": {
+      "show": ["database", "schema", "table", "column", "table", "sequence"]
+    }
+  }
+}
 ```
