@@ -64,31 +64,31 @@ public record RecordType<T extends Record>(
             .collect(Collectors.toSet());
     }
 
-    private static <T extends Record> Constructor<T> getDefaultConstructor(Class<T> clazz)
+    private static <T extends Record> Constructor<T> getDefaultConstructor(Class<T> recordClass)
             throws NoSuchMethodException {
-        var components = clazz.getRecordComponents();
+        var components = recordClass.getRecordComponents();
         Class<?>[] types = new Class<?>[components.length];
         int i = 0;
         for (var component : components) {
             types[i++] = component.getType();
         }
-        return clazz.getConstructor(types);
+        return recordClass.getDeclaredConstructor(types);
     }
 
-    private static <T extends Record> Map<String, Object> buildDefaultValueMap(Class<T> clazz)
+    private static <T extends Record> Map<String, Object> buildDefaultValueMap(Class<T> recordClass)
             throws ReflectiveOperationException {
         Constructor<T> noArgsConstructor;
         try {
-            noArgsConstructor = clazz.getConstructor();
+            noArgsConstructor = recordClass.getConstructor();
         } catch (NoSuchMethodException e) {
             return Collections.emptyMap();
         }
 
         T object = noArgsConstructor.newInstance();
-        return toShallowMap(object);
+        return toMap(object);
     }
 
-    private static Map<String, Object> toShallowMap(Record rec) {
+    private static Map<String, Object> toMap(Record rec) {
         Objects.requireNonNull(rec);
 
         var map = new LinkedHashMap<String, Object>();

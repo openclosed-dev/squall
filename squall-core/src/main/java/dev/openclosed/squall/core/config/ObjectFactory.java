@@ -43,10 +43,11 @@ class ObjectFactory {
     private final MessageBundle messageBundle;
     private final TypeResolver typeResolver;
 
-    ObjectFactory(
-        MessageBundle messageBundle,
-        TypeResolver typeResolver) {
+    ObjectFactory(MessageBundle messageBundle) {
+        this(messageBundle, TypeResolver.builder().build());
+    }
 
+    ObjectFactory(MessageBundle messageBundle, TypeResolver typeResolver) {
         this.messageBundle = messageBundle;
         this.typeResolver = typeResolver;
     }
@@ -128,8 +129,24 @@ class ObjectFactory {
     enum TypeConverter {
         BOOLEAN(Boolean.class, Boolean.FALSE),
         INTEGER(Integer.class, 0),
-        LONG(Long.class, 0L),
-        SHORT(Short.class, (short) 0),
+        LONG(Long.class, 0L) {
+            @Override
+            Object convertNonNull(Object source, Class<?> targetClass, Context context) {
+                if (source instanceof Integer i) {
+                    return i.longValue();
+                }
+                return super.convertNonNull(source, targetClass, context);
+            }
+        },
+        SHORT(Short.class, (short) 0) {
+            @Override
+            Object convertNonNull(Object source, Class<?> targetClass, Context context) {
+                if (source instanceof Integer i) {
+                    return i.shortValue();
+                }
+                return super.convertNonNull(source, targetClass, context);
+            }
+        },
         STRING(String.class, ""),
         LOCALE(Locale.class, Locale.getDefault()) {
             @Override
@@ -188,9 +205,7 @@ class ObjectFactory {
                 }
                 Object[] array = convertToArray(collection, component, context);
                 var orderedSet = new LinkedHashSet<>(array.length);
-                for (var item : array) {
-                    orderedSet.add(item);
-                }
+                Collections.addAll(orderedSet, array);
                 return Collections.unmodifiableSet(orderedSet);
             }
         },
