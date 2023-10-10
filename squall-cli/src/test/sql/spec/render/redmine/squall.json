@@ -10,7 +10,7 @@
     "defaultSchema": "public"
   },
   "renderers": {
-    "markdown": {
+    "default": {
       "format": "markdown",
       "columnAttributes": [
         "ordinal",

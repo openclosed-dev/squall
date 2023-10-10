@@ -11,7 +11,7 @@
     "defaultSchema": "public"
   },
   "renderers": {
-    "html": {
+    "default": {
       "format": "html",
       "locale": "en",
       "numbering": true,

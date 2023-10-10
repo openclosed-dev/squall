@@ -52,9 +52,10 @@ final class Render implements Subcommand {
     @Parameters(
         paramLabel = "NAME",
         description = {
-            "Name of the renderer defined in the configuration.",
-            "When omitted, the first renderer defined will be selected."
-        }
+            "Name of renderer defined in the configuration.",
+            "When no name is specified, \"default\" will be selected."
+        },
+        defaultValue = "default"
     )
     private String[] names;
 
@@ -129,14 +130,13 @@ final class Render implements Subcommand {
     }
 
     private Map<String, RenderConfig> selectRenderers(RootConfig rootConfig, String[] names) {
+        if (names == null || names.length == 0) {
+            names = new String[] {"default"};
+        }
+
         var renderers = rootConfig.renderers();
         if (renderers.isEmpty()) {
             throw new CommandException(messages().NO_RENDERER_DEFINED());
-        }
-
-        if (names == null || names.length == 0) {
-            names = new String[1];
-            names[0] = renderers.keySet().iterator().next();
         }
 
         return Stream.of(names)

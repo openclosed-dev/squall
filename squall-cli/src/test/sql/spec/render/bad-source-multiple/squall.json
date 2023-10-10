@@ -11,7 +11,7 @@
     "defaultSchema": "public"
   },
   "renderers": {
-    "markdown": {
+    "default": {
       "format": "markdown"
     }
   }

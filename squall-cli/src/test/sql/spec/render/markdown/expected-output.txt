@@ -2,6 +2,6 @@ Loading the configuration "squall.json"...
 Loaded the configuration successfully.
 Parsing a SQL source file "schema.sql"...
 Parsed a SQL source file "schema.sql" successfully.
-Renderer "markdown" is rendering the spec into "./target/test-runs/spec/render/markdown/output".
-Renderer "markdown" has rendered the spec into "./target/test-runs/spec/render/markdown/output" successfully.
+Renderer "default" is rendering the spec into "./target/test-runs/spec/render/markdown/output".
+Renderer "default" has rendered the spec into "./target/test-runs/spec/render/markdown/output" successfully.
 Command render was completed. (### ms)

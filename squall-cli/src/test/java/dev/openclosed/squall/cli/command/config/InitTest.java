@@ -102,8 +102,8 @@ public final class InitTest {
         ParserConfig parser = root.parser();
         assertThat(parser.dialect()).isEqualTo("postgresql");
 
-        assertThat(root.renderers().keySet()).containsExactly("html", "pdf", "markdown");
-        verifyRenderConfig(root.renderers().get("html"), "html");
+        assertThat(root.renderers().keySet()).containsExactly("default", "pdf", "markdown");
+        verifyRenderConfig(root.renderers().get("default"), "html");
         verifyPdfRenderConfig(root.renderers().get("pdf"), "pdf");
         verifyRenderConfig(root.renderers().get("markdown"), "markdown");
     }

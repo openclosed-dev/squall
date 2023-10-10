@@ -10,7 +10,7 @@
     "defaultSchema": "public"
   },
   "renderers": {
-    "json": {
+    "default": {
       "format": "json"
     }
   }

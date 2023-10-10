@@ -1,8 +1,7 @@
 Usage: squall spec render [-h] [--verbose] [-C=DIR] [-f=FILE] [NAME...]
 Generate specification documents from SQL sources.
-      [NAME...]         Name of the renderer defined in the configuration.
-                        When omitted, the first renderer defined will be
-                          selected.
+      [NAME...]         Name of renderer defined in the configuration.
+                        When no name is specified, "default" will be selected.
   -C, --directory=DIR   Change to directory DIR.
   -f, --file=FILE       Path to the configuration file.
   -h, --help            Show this help message and exit.
