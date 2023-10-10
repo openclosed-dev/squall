@@ -102,10 +102,11 @@ public final class InitTest {
         ParserConfig parser = root.parser();
         assertThat(parser.dialect()).isEqualTo("postgresql");
 
-        assertThat(root.renderers().keySet()).containsExactly("default", "pdf", "markdown");
+        assertThat(root.renderers().keySet()).containsExactly("default", "pdf", "markdown", "json");
         verifyRenderConfig(root.renderers().get("default"), "html");
-        verifyPdfRenderConfig(root.renderers().get("pdf"), "pdf");
+        verifyPdfRenderConfig(root.renderers().get("pdf"));
         verifyRenderConfig(root.renderers().get("markdown"), "markdown");
+        verifyJsonRenderConfig(root.renderers().get("json"));
     }
 
     private static void verifyRenderConfig(RenderConfig config, String format) {
@@ -119,9 +120,13 @@ public final class InitTest {
         assertThat(config.sequenceAttributes()).isEqualTo(SequenceAttribute.defaultList());
     }
 
-    private static void verifyPdfRenderConfig(RenderConfig config, String format) {
-        verifyRenderConfig(config, format);
+    private static void verifyPdfRenderConfig(RenderConfig config) {
+        verifyRenderConfig(config, "pdf");
         assertThat(config.pageSize()).isEqualTo("a4");
         assertThat(config.pageOrientation()).isEqualTo(PageOrientation.LANDSCAPE);
+    }
+
+    private static void verifyJsonRenderConfig(RenderConfig config) {
+        verifyRenderConfig(config, "json");
     }
 }

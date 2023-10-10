@@ -78,6 +78,9 @@
         "description"
       ],
       "sequenceAttributes": [ "type_name", "start", "increment", "minimum", "maximum" ]
+    },
+    "json": {
+      "format": "json"
     }
   }
 }
