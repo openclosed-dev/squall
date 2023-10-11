@@ -30,7 +30,6 @@ import dev.openclosed.squall.api.renderer.PageOrientation;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
 import dev.openclosed.squall.api.sql.spec.MajorDialect;
 import dev.openclosed.squall.api.sql.spec.SpecMetadata;
-import dev.openclosed.squall.core.sql.spec.DefaultSpecMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -66,7 +65,7 @@ final class DefaultConfigLoaderTest {
             }
             """;
 
-        var expected = new DefaultSpecMetadata(
+        var expected = new SpecMetadata(
             "title1",
             Optional.of("author1"),
             Optional.of("1.0.0"),
@@ -80,7 +79,7 @@ final class DefaultConfigLoaderTest {
     @Test
     public void shouldLoadDefaultSpecMetadataFromEmptyJson() {
         String text = "{}";
-        var expected = new DefaultSpecMetadata();
+        var expected = SpecMetadata.DEFAULT;
         var actual = sut.loadMetadataFromJson(text);
         assertThat(actual).isEqualTo(expected);
     }
@@ -169,7 +168,7 @@ final class DefaultConfigLoaderTest {
             """;
 
         var expected = new RootConfig(
-            Optional.of(new DefaultSpecMetadata(
+            Optional.of(new SpecMetadata(
                 "title1",
                 Optional.of("author1"),
                 Optional.of("1.0.0"),

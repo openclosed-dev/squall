@@ -32,11 +32,9 @@ public record DefaultDatabaseSpec(
         List<Database> databases
         ) implements DatabaseSpec, RecordMapSource {
 
-
-
     @Override
     public SpecMetadata getMetadataOrDefault() {
-        return metadata().orElse(DefaultSpecMetadata.getDefault());
+        return metadata().orElse(SpecMetadata.DEFAULT);
     }
 
     @Override

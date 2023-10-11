@@ -16,15 +16,32 @@
 
 package dev.openclosed.squall.api.sql.spec;
 
+import java.util.Objects;
 import java.util.Optional;
 
-public interface SpecMetadata {
+/**
+ * Metadata of specification.
+ * @param title the title of the specification.
+ * @param author the author of the specification.
+ * @param version the version of the specification.
+ * @param date the release date.
+ */
+public record SpecMetadata(
+    String title,
+    Optional<String> author,
+    Optional<String> version,
+    Optional<String> date) {
 
-    String title();
+    public static final SpecMetadata DEFAULT = new SpecMetadata();
 
-    Optional<String> author();
+    public SpecMetadata() {
+        this("Untitled", Optional.empty(), Optional.empty(), Optional.empty());
+    }
 
-    Optional<String> version();
-
-    Optional<String> date();
+    public SpecMetadata {
+        Objects.requireNonNull(title);
+        Objects.requireNonNull(author);
+        Objects.requireNonNull(version);
+        Objects.requireNonNull(date);
+    }
 }

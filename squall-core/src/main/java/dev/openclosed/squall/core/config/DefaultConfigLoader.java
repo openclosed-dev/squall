@@ -38,7 +38,6 @@ import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 import dev.openclosed.squall.api.spi.JsonReader;
 import dev.openclosed.squall.api.spi.JsonReadingException;
 import dev.openclosed.squall.core.base.SnippetExtractor;
-import dev.openclosed.squall.core.sql.spec.DefaultSpecMetadata;
 
 /**
  * Default implementation of {@link ConfigLoader}.
@@ -54,9 +53,7 @@ public final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem
     public DefaultConfigLoader() {
         this.reader = JsonReader.get();
         this.messageBundle = MessageBundle.forLocale(Locale.getDefault());
-        this.typeResolver = TypeResolver.builder()
-            .addMapping(SpecMetadata.class, DefaultSpecMetadata.class)
-            .build();
+        this.typeResolver = TypeResolver.builder().build();
         this.objectFactory = new ObjectFactory(
             this.messageBundle,
             this.typeResolver);
@@ -71,7 +68,7 @@ public final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem
 
     @Override
     public SpecMetadata loadMetadataFromJson(String text) {
-        return loadFromJson(text, DefaultSpecMetadata.class);
+        return loadFromJson(text, SpecMetadata.class);
     }
 
     @Override
