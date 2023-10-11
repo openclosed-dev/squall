@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 
 import dev.openclosed.squall.api.renderer.PageOrientation;
 import dev.openclosed.squall.api.renderer.SequenceAttribute;
-import dev.openclosed.squall.api.sql.spec.MajorDialect;
+import dev.openclosed.squall.api.sql.spec.Dialect;
 import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -180,7 +180,7 @@ final class DefaultConfigLoaderTest {
             ),
             "output",
             new ParserConfig(
-                MajorDialect.POSTGRESQL.dialectName(),
+                Dialect.POSTGRESQL.name(),
                 "public"
             ),
             Map.of("default", new RenderConfig(

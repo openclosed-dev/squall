@@ -26,7 +26,6 @@ import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.RendererFactory;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.Dialect;
-import dev.openclosed.squall.api.sql.spec.MajorDialect;
 import dev.openclosed.squall.doc.DocCommentProcessor;
 import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.BeforeAll;
@@ -79,7 +78,7 @@ public class MarkdownRendererTest {
         "table-qualified"
     })
     public void testPostgresql(String title) throws IOException {
-        testWithDialect(title, MajorDialect.POSTGRESQL);
+        testWithDialect(title, Dialect.POSTGRESQL);
     }
 
     void testWithDialect(String title, Dialect dialect) throws IOException {
@@ -91,20 +90,20 @@ public class MarkdownRendererTest {
 
         var path = dir.resolve("spec.md");
         assertThat(Files.exists(path)).isTrue();
-        var expected = readTextResource(dialect.dialectName(), title, "expected.md");
+        var expected = readTextResource(dialect.name(), title, "expected.md");
         assertThat(readRenderedText(path)).isEqualTo(expected);
     }
 
     static DatabaseSpec parseSql(String title, Dialect dialect) {
         var builder = DatabaseSpec.builder();
         var parser = createParser(dialect, builder);
-        String sql = readTextResource(dialect.dialectName(), title, "input.sql");
+        String sql = readTextResource(dialect.name(), title, "input.sql");
         parser.parse(sql);
         return builder.build();
     }
 
     static SqlParser createParser(Dialect dialect, DatabaseSpec.Builder builder) {
-        var config = new ParserConfig(dialect.dialectName(), dialect.defaultSchema());
+        var config = new ParserConfig(dialect.name(), dialect.defaultSchema());
         return SqlParserFactory.get(dialect).createParser(
             config,
             builder,
@@ -117,7 +116,7 @@ public class MarkdownRendererTest {
     }
 
     static String findTextResource(Dialect dialect, String title, String name) {
-        return findTextResource(dialect.dialectName(), title, name);
+        return findTextResource(dialect.name(), title, name);
     }
 
     static String findTextResource(String dialect, String title, String name) {
@@ -148,7 +147,7 @@ public class MarkdownRendererTest {
     }
 
     static Path prepareDirectory(Dialect dialect, String title) throws IOException {
-        Path parentDir = BASE_DIR.resolve(dialect.dialectName());
+        Path parentDir = BASE_DIR.resolve(dialect.name());
         Path dir = parentDir.resolve(title.replaceAll("\\s", "-"));
         if (Files.exists(dir)) {
             PathUtils.cleanDirectory(dir);

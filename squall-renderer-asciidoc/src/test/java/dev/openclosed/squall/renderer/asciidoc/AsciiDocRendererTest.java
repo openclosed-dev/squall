@@ -23,7 +23,6 @@ import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.Dialect;
-import dev.openclosed.squall.api.sql.spec.MajorDialect;
 import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 import dev.openclosed.squall.doc.DocCommentProcessor;
 import dev.openclosed.squall.renderer.asciidoc.html.HtmlRendererFactory;
@@ -69,7 +68,7 @@ public class AsciiDocRendererTest {
     @ParameterizedTest
     @MethodSource("postgresqlTests")
     public void testHtmlRendererForPostgresql(String title) throws IOException {
-        Path outputDir = testRenderer(title, MajorDialect.POSTGRESQL, "html");
+        Path outputDir = testRenderer(title, Dialect.POSTGRESQL, "html");
         Path outputFile = outputDir.resolve("spec.html");
         assertThat(Files.exists(outputFile)).isTrue();
         assertThat(Files.readString(outputFile))
@@ -81,7 +80,7 @@ public class AsciiDocRendererTest {
     @ParameterizedTest()
     @MethodSource("postgresqlTests")
     public void testPdfRendererForPostgresql(String title) throws IOException {
-        Path outputDir = testRenderer(title, MajorDialect.POSTGRESQL, "pdf");
+        Path outputDir = testRenderer(title, Dialect.POSTGRESQL, "pdf");
         Path outputFile = outputDir.resolve("spec.pdf");
         assertThat(Files.exists(outputFile)).isTrue();
     }
@@ -107,13 +106,13 @@ public class AsciiDocRendererTest {
         var metadata = loadMetadata(dialect, title);
         builder.setMetadata(metadata);
         var parser = createParser(dialect, builder);
-        String sql = readTextResource(dialect.dialectName(), title, "input.sql");
+        String sql = readTextResource(dialect.name(), title, "input.sql");
         parser.parse(sql);
         return builder.build();
     }
 
     static SqlParser createParser(Dialect dialect, DatabaseSpec.Builder builder) {
-        var config = new ParserConfig(dialect.dialectName(), dialect.defaultSchema());
+        var config = new ParserConfig(dialect.name(), dialect.defaultSchema());
         return SqlParserFactory.get(dialect).createParser(
             config,
             builder,
@@ -131,7 +130,7 @@ public class AsciiDocRendererTest {
     }
 
     static String findTextResource(Dialect dialect, String title, String name) {
-        return findTextResource(dialect.dialectName(), title, name);
+        return findTextResource(dialect.name(), title, name);
     }
 
     static String findTextResource(String dialect, String title, String name) {
@@ -162,7 +161,7 @@ public class AsciiDocRendererTest {
     }
 
     static Path prepareDirectory(Dialect dialect, String title, String format) throws IOException {
-        Path parentDir = BASE_DIR.resolve(dialect.dialectName());
+        Path parentDir = BASE_DIR.resolve(dialect.name());
         Path dir = parentDir.resolve(title).resolve(format);
         if (Files.exists(dir)) {
             PathUtils.cleanDirectory(dir);

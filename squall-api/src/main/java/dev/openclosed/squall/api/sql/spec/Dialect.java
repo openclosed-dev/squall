@@ -25,11 +25,19 @@ public interface Dialect {
      * Returns the name of this dialect.
      * @return the name of this dialect.
      */
-    String dialectName();
+    String name();
 
     /**
      * Returns the default schema of this dialect.
      * @return the default schema of this dialect.
      */
     String defaultSchema();
+
+    /**
+     * PostgreSQL.
+     */
+    Dialect POSTGRESQL = new SimpleDialect("postgresql", "public");
+}
+
+record SimpleDialect(String name, String defaultSchema) implements Dialect {
 }

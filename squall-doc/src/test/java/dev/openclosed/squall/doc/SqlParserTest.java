@@ -22,7 +22,6 @@ import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.Dialect;
-import dev.openclosed.squall.api.sql.spec.MajorDialect;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,10 +34,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public final class SqlParserTest {
 
-    private static final Dialect DIALECT = MajorDialect.POSTGRESQL;
+    private static final Dialect DIALECT = Dialect.POSTGRESQL;
     private static SqlParserFactory parserFactory;
     private static final ParserConfig PARSER_CONFIG = new ParserConfig(
-        DIALECT.dialectName(), ""
+        DIALECT.name(), ""
     );
 
     private DatabaseSpec.Builder builder;

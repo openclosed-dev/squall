@@ -31,7 +31,7 @@ public interface SqlParserFactory {
     Dialect dialect();
 
     default String dialectName() {
-        return dialect().dialectName();
+        return dialect().name();
     }
 
     /**
@@ -75,7 +75,7 @@ public interface SqlParserFactory {
 
     static SqlParserFactory get(Dialect dialect) {
         Objects.requireNonNull(dialect);
-        return get(dialect.dialectName());
+        return get(dialect.name());
     }
 
     static SqlParserFactory get(String dialectName) {

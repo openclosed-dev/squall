@@ -23,8 +23,6 @@ import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.Dialect;
-import dev.openclosed.squall.api.sql.expression.ExpressionFactory;
-import dev.openclosed.squall.api.sql.spec.MajorDialect;
 import dev.openclosed.squall.parser.basic.Keyword;
 
 import java.util.Map;
@@ -32,12 +30,11 @@ import java.util.Objects;
 
 public final class PostgreSqlParserFactory implements SqlParserFactory {
 
-    private ExpressionFactory expressionFactory;
     private Map<String, Keyword> keywords;
 
     @Override
     public Dialect dialect() {
-        return MajorDialect.POSTGRESQL;
+        return Dialect.POSTGRESQL;
     }
 
     @Override

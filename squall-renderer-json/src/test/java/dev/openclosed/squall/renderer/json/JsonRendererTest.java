@@ -25,7 +25,7 @@ import java.nio.file.Path;
 import java.util.stream.Collectors;
 
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
-import dev.openclosed.squall.api.sql.spec.MajorDialect;
+import dev.openclosed.squall.api.sql.spec.Dialect;
 import dev.openclosed.squall.doc.DocCommentProcessor;
 import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.BeforeAll;
@@ -46,7 +46,7 @@ public final class JsonRendererTest {
 
     @BeforeAll
     public static void setUpOnce() {
-        parserFactory = SqlParserFactory.get(MajorDialect.POSTGRESQL);
+        parserFactory = SqlParserFactory.get(Dialect.POSTGRESQL);
         rendererFactory = RendererFactory.get("json");
     }
 
@@ -68,7 +68,7 @@ public final class JsonRendererTest {
         var sql = readResource(name);
         var builder = DatabaseSpec.builder();
         var parser = parserFactory.createParser(
-            ParserConfig.getDefault(),
+            ParserConfig.DEFAULT,
             builder,
             new DocCommentProcessor());
         parser.parse(sql);

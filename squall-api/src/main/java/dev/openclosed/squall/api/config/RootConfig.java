@@ -48,7 +48,7 @@ public record RootConfig(
         this(Optional.empty(),
             Collections.emptyList(),
             "output",
-            ParserConfig.getDefault(),
+            ParserConfig.DEFAULT,
             Collections.emptyMap());
     }
 }

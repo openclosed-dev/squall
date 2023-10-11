@@ -19,7 +19,7 @@ package dev.openclosed.squall.parser.postgresql;
 import java.util.stream.Stream;
 
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
-import dev.openclosed.squall.api.sql.spec.MajorDialect;
+import dev.openclosed.squall.api.sql.spec.Dialect;
 import dev.openclosed.squall.parser.SqlParserTest;
 import dev.openclosed.squall.parser.SqlTestCase;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,7 +32,7 @@ public final class PostgreSqlParserTest extends SqlParserTest {
 
     private static final PostgreSqlParserFactory PARSER_FACTORY = new PostgreSqlParserFactory();
     private static final ParserConfig PARSER_CONFIG = new ParserConfig(
-        MajorDialect.POSTGRESQL.dialectName(), "defaultschema"
+        Dialect.POSTGRESQL.name(), "defaultschema"
     );
 
     @Override

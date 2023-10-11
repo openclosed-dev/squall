@@ -35,7 +35,7 @@ class TestParserContext implements ParserContext {
     private final List<Problem> problems = new ArrayList<>();
 
     TestParserContext() {
-        this.config = ParserConfig.getDefault();
+        this.config = ParserConfig.DEFAULT;
         this.builder = DatabaseSpec.builder();
     }
 
