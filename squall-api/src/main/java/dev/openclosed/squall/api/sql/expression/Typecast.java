@@ -23,11 +23,11 @@ import java.util.OptionalInt;
 
 /**
  * Typecast expression.
- * @param source the source expression to be typecasted.
- * @param typeName the name of the type.
- * @param length the maximum length of this type.
- * @param precision the total number of digits, or empty if not specified.
- * @param scale the number of digits after the decimal point.
+ * @param source the source expression to be cast.
+ * @param typeName the name of the target type.
+ * @param length the maximum length of the target type, may be empty.
+ * @param precision the total number of digits, may be empty.
+ * @param scale the number of digits after the decimal point, may be empty.
  */
 public record Typecast(
     Expression source,
@@ -38,9 +38,9 @@ public record Typecast(
 
     /**
      * Creates a typecast expression.
-     * @param source the original expression to be typecasted.
-     * @param dataType the data type.
-     * @return created expression.
+     * @param source the original expression to be cast.
+     * @param dataType the target data type.
+     * @return created typecast expression.
      */
     public static Typecast of(Expression source, DataType dataType) {
         Objects.requireNonNull(source);
