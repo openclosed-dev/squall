@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.sql.expression;
+package dev.openclosed.squall.api.sql.expression;
 
-import dev.openclosed.squall.api.sql.expression.Expression;
+/**
+ * NULL constant.
+ */
+public record Null() implements Expression {
 
-record EmptyStringLiteral(Expression.Type type, String value) implements MapSourceExpression {
-
-    static final EmptyStringLiteral EMPTY = new EmptyStringLiteral(Type.STRING, "");
+    @Override
+    public Type type() {
+        return Type.NULL;
+    }
 
     @Override
     public String toSql() {
-        return "''";
+        return "null";
     }
 }

@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.sql.expression;
+package dev.openclosed.squall.api.sql.expression;
 
-import dev.openclosed.squall.api.sql.expression.Expression;
+/**
+ * An unary operator.
+ * @param operator the operator.
+ * @param operand the operand of the operator.
+ */
+public record UnaryOperator(String operator, Expression operand) implements Expression {
 
-import java.util.Objects;
-
-record Is(Type type, Expression subject, String predicate) implements MapSourceExpression {
-
-    Is(Expression subject, String predicate) {
-        this(Type.IS, subject, predicate);
-    }
-
-    Is {
-        Objects.requireNonNull(subject);
-        Objects.requireNonNull(predicate);
-        predicate = predicate.toLowerCase();
+    @Override
+    public Type type() {
+        return Type.UNARY_OPERATOR;
     }
 
     @Override
@@ -40,9 +36,10 @@ record Is(Type type, Expression subject, String predicate) implements MapSourceE
     @Override
     public String toSql() {
         return new SqlStringBuilder()
-            .appendGroupedIfComplex(subject())
-            .append(' ')
-            .append(predicate().replaceAll("_", " ").toUpperCase())
+            .append(operator)
+            .append('(')
+            .append(operand)
+            .append(')')
             .toString();
     }
 }

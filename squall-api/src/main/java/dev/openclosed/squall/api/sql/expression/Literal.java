@@ -22,8 +22,8 @@ package dev.openclosed.squall.api.sql.expression;
 public interface Literal extends Expression {
 
     /**
-     * Returns the value of the literal as a string.
-     * @return the value of the literal.
+     * Returns the value of the literal.
+     * @return the value of the literal as a string, never be {@code null}.
      */
     String value();
 }

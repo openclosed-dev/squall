@@ -26,6 +26,7 @@ module dev.openclosed.squall.api {
     exports dev.openclosed.squall.api.sql.spec;
     exports dev.openclosed.squall.api.sql.datatype;
     exports dev.openclosed.squall.api.sql.expression;
+    exports dev.openclosed.squall.api.util;
 
     uses dev.openclosed.squall.api.config.ConfigLoader;
     uses dev.openclosed.squall.api.parser.SqlParserFactory;

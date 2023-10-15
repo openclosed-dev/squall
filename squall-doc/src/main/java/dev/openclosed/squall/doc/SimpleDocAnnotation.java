@@ -19,20 +19,10 @@ package dev.openclosed.squall.doc;
 import dev.openclosed.squall.api.sql.spec.DocAnnotation;
 import dev.openclosed.squall.api.sql.spec.DocAnnotationType;
 
-import java.util.Map;
-
 /**
  * Simple implementation of {@link DocAnnotation}.
  * @param type the type of the annotation.
  * @param value the value given for this annotation.
  */
 record SimpleDocAnnotation(DocAnnotationType type, String value) implements DocAnnotation {
-
-    @Override
-    public Map<String, Object> toMap() {
-        return Map.of(
-            "type", type().name().toLowerCase(),
-            "value", value()
-        );
-    }
 }

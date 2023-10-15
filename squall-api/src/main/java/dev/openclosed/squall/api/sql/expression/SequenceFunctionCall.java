@@ -17,33 +17,71 @@
 package dev.openclosed.squall.api.sql.expression;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
  * A sequence manipulation function.
+ * @param name the name of the function.
+ * @param arguments the arguments given to the function.
+ * @param sequenceName the name of the sequence.
  */
-public interface SequenceFunctionCall extends FunctionCall {
+public record SequenceFunctionCall(
+    String name,
+    List<Expression> arguments,
+    List<String> sequenceName) implements FunctionCall {
 
     /**
-     * Returns all components of sequence name.
-     * @return all components of sequence name.
+     * Creates a sequence manipulation function.
+     * @param name the name of the function.
+     * @param arguments the arguments given to the function.
+     * @param sequenceRef the reference to the sequence.
+     * @return newly created function.
      */
-    List<String> sequenceName();
+    public static SequenceFunctionCall of(String name, List<Expression> arguments, ObjectRef sequenceRef) {
+        Objects.requireNonNull(sequenceRef);
+        return new SequenceFunctionCall(name, arguments, sequenceRef.toList());
+    }
+
+    public SequenceFunctionCall {
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(arguments);
+        Objects.requireNonNull(sequenceName);
+        if (name.isBlank()) {
+            throw new IllegalArgumentException();
+        }
+        if (sequenceName.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+
+        arguments = List.copyOf(arguments);
+        sequenceName = List.copyOf(sequenceName);
+    }
+
+    @Override
+    public Type type() {
+        return Type.SEQUENCE_FUNCTION;
+    }
+
+    @Override
+    public String toSql() {
+        return BasicFunctionCall.toSql(name(), arguments());
+    }
 
     /**
      * Returns the name of the sequence.
      * @return the name of the sequence.
      */
-    default String simpleSequenceName() {
-        var name = sequenceName();
-        return name.get(name.size() - 1);
+    public String simpleSequenceName() {
+        var sequencedName = sequenceName();
+        return sequencedName.get(sequencedName.size() - 1);
     }
 
     /**
      * Returns the fully qualified name of the sequence.
      * @return the fully qualified name of the sequence.
      */
-    default String fullSequenceName() {
+    public String fullSequenceName() {
         return sequenceName().stream().collect(Collectors.joining("."));
     }
 }

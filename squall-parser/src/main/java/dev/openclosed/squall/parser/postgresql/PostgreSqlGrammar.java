@@ -18,6 +18,7 @@ package dev.openclosed.squall.parser.postgresql;
 
 import dev.openclosed.squall.api.sql.datatype.DataType;
 import dev.openclosed.squall.api.sql.expression.FunctionCall;
+import dev.openclosed.squall.api.sql.expression.SequenceFunctionCall;
 import dev.openclosed.squall.api.sql.expression.StringLiteral;
 import dev.openclosed.squall.api.sql.spec.DocAnnotation;
 import dev.openclosed.squall.api.sql.expression.Expression;
@@ -91,8 +92,8 @@ interface PostgreSqlGrammar extends SqlGrammar, PostgreSqlPredicates {
     default Expression keywordBinaryOperator(Expression leftOperand, int rightPrecedence) {
         PostgreSqlKeyword keyword = (PostgreSqlKeyword) expectKeyword();
         return switch (keyword) {
-            case ISNULL -> IsPredicate.IS_NULL.toExpression(leftOperand, expressionFactory());
-            case NOTNULL -> IsPredicate.IS_NOT_NULL.toExpression(leftOperand, expressionFactory());
+            case ISNULL -> IsPredicate.IS_NULL.toExpression(leftOperand);
+            case NOTNULL -> IsPredicate.IS_NOT_NULL.toExpression(leftOperand);
             default -> SqlGrammar.super.keywordBinaryOperator(leftOperand, rightPrecedence);
         };
     }
@@ -102,7 +103,7 @@ interface PostgreSqlGrammar extends SqlGrammar, PostgreSqlPredicates {
         Token token = next();
         if (token == OperatorSymbol.DOUBLE_COLON) {
             consume();
-            return expressionFactory().typecast(leftOperand, dataType());
+            return Typecast.of(leftOperand, dataType());
         }
         return SqlGrammar.super.symbolBinaryOperator(leftOperand, rightPrecedence);
     }
@@ -123,7 +124,7 @@ interface PostgreSqlGrammar extends SqlGrammar, PostgreSqlPredicates {
                 argument = typecast.source();
             }
             if (argument instanceof StringLiteral literal) {
-                return expressionFactory().sequenceFunction(
+                return SequenceFunctionCall.of(
                     functionCall.name(),
                     functionCall.arguments(),
                     resolver().resolveDotNotation(literal.value())

@@ -51,7 +51,7 @@ true IS TRUE
   "type" : "is",
   "subject" : {
     "type": "boolean",
-    "value": "true"
+    "value": true
   },
   "predicate": "is_true"
 }
@@ -72,7 +72,7 @@ true IS NOT TRUE
   "type" : "is",
   "subject" : {
     "type": "boolean",
-    "value": "true"
+    "value": true
   },
   "predicate": "is_not_true"
 }
@@ -93,7 +93,7 @@ true IS FALSE
   "type" : "is",
   "subject" : {
     "type": "boolean",
-    "value": "true"
+    "value": true
   },
   "predicate": "is_false"
 }
@@ -114,7 +114,7 @@ true IS NOT FALSE
   "type" : "is",
   "subject" : {
     "type": "boolean",
-    "value": "true"
+    "value": true
   },
   "predicate": "is_not_false"
 }
@@ -135,7 +135,7 @@ true IS UNKNOWN
   "type" : "is",
   "subject" : {
     "type": "boolean",
-    "value": "true"
+    "value": true
   },
   "predicate": "is_unknown"
 }
@@ -156,7 +156,7 @@ true IS NOT UNKNOWN
   "type" : "is",
   "subject" : {
     "type": "boolean",
-    "value": "true"
+    "value": true
   },
   "predicate": "is_not_unknown"
 }

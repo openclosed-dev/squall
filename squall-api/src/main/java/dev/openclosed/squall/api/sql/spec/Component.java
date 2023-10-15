@@ -16,8 +16,6 @@
 
 package dev.openclosed.squall.api.sql.spec;
 
-import dev.openclosed.squall.api.base.MapSource;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +25,7 @@ import java.util.stream.Stream;
 /**
  * A component in the database specification.
  */
-public interface Component extends MapSource {
+public interface Component {
 
     /**
      * Type of the component.

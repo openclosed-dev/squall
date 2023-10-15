@@ -18,7 +18,6 @@ package dev.openclosed.squall.core.sql.spec;
 
 import dev.openclosed.squall.api.sql.spec.Component;
 import dev.openclosed.squall.api.sql.spec.DocAnnotationType;
-import dev.openclosed.squall.core.base.RecordMapSource;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,7 +25,7 @@ import java.util.stream.Stream;
 /**
  * Basic implementation of {@link Component}.
  */
-interface BasicComponent extends Component, RecordMapSource {
+interface BasicComponent extends Component {
 
     @Override
     default String fullName() {

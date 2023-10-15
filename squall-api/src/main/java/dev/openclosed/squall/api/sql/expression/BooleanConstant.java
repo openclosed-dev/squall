@@ -14,13 +14,31 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.sql.expression;
-
-import dev.openclosed.squall.api.sql.expression.Expression;
-import dev.openclosed.squall.core.base.RecordMapSource;
+package dev.openclosed.squall.api.sql.expression;
 
 /**
- * Record-based expression.
+ * Boolean constants.
+ * @param value the constant value.
  */
-interface MapSourceExpression extends Expression, RecordMapSource {
+public record BooleanConstant(boolean value) implements Expression {
+
+    /**
+     * TRUE constant.
+     */
+    public static final BooleanConstant TRUE = new BooleanConstant(true);
+
+    /**
+     * FALSE constant.
+     */
+    public static final BooleanConstant FALSE = new BooleanConstant(false);
+
+    @Override
+    public Type type() {
+        return Type.BOOLEAN;
+    }
+
+    @Override
+    public String toSql() {
+        return value() ? "true" : "false";
+    }
 }

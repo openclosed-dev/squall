@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides expressions in SQL language.
+ * Provides expression constructs in SQL language.
  */
 package dev.openclosed.squall.api.sql.expression;

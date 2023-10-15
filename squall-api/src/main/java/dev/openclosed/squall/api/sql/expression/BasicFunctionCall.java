@@ -14,14 +14,27 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.sql.expression;
-
-import dev.openclosed.squall.api.sql.expression.Expression;
+package dev.openclosed.squall.api.sql.expression;
 
 import java.util.List;
+import java.util.Objects;
 
-record FunctionCall(Expression.Type type, String name, List<Expression> arguments)
-    implements dev.openclosed.squall.api.sql.expression.FunctionCall, MapSourceExpression {
+/**
+ * Function call with arguments.
+ * @param name the name of the function.
+ * @param arguments the arguments given to the function.
+ */
+public record BasicFunctionCall(String name, List<Expression> arguments)
+    implements FunctionCall {
+
+    public BasicFunctionCall {
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(arguments);
+        if (name.isBlank()) {
+            throw new IllegalArgumentException();
+        }
+        arguments = List.copyOf(arguments);
+    }
 
     @Override
     public String toSql() {

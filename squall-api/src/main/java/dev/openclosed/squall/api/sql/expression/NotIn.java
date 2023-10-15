@@ -14,23 +14,36 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.sql.expression;
+package dev.openclosed.squall.api.sql.expression;
 
-import dev.openclosed.squall.api.sql.expression.Expression;
-
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
-record SimpleFunctionCall(Expression.Type type, String name)
-    implements dev.openclosed.squall.api.sql.expression.FunctionCall, MapSourceExpression {
+/**
+ * NOT-IN expression.
+ * @param left the left expression.
+ * @param right the right expression.
+ */
+public record NotIn(Expression left, List<Expression> right) implements Expression {
 
-    @Override
-    public String toSql() {
-        return name();
+    public NotIn {
+        Objects.requireNonNull(left);
+        Objects.requireNonNull(right);
+        right = List.copyOf(right);
     }
 
     @Override
-    public List<Expression> arguments() {
-        return Collections.emptyList();
+    public Type type() {
+        return Type.NOT_IN;
+    }
+
+    @Override
+    public boolean isComplex() {
+        return true;
+    }
+
+    @Override
+    public String toSql() {
+        return In.toSql(left(), "NOT IN", right());
     }
 }

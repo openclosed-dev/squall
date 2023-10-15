@@ -14,23 +14,35 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.sql.expression;
-
-import dev.openclosed.squall.api.sql.expression.Expression;
+package dev.openclosed.squall.api.sql.expression;
 
 /**
- * An implementation of string type literal.
- * @param type the type of the expression.
- * @param value the value of the literal.
+ * Binary operator.
+ * @param operator the operator.
+ * @param left the left expression of the operator.
+ * @param right the right expression of the operator.
  */
-record StringLiteral(Expression.Type type, String value) implements
-    dev.openclosed.squall.api.sql.expression.StringLiteral,
-    MapSourceExpression {
+public record BinaryOperator(String operator, Expression left, Expression right)
+    implements Expression {
+
+    @Override
+    public Type type() {
+        return Type.BINARY_OPERATOR;
+    }
+
+    @Override
+    public boolean isComplex() {
+        return true;
+    }
 
     @Override
     public String toSql() {
-        return new StringBuilder()
-            .append('\'').append(value()).append('\'')
+        return new SqlStringBuilder()
+            .appendGroupedIfComplex(left)
+            .append(' ')
+            .append(operator)
+            .append(' ')
+            .appendGroupedIfComplex(right)
             .toString();
     }
 }

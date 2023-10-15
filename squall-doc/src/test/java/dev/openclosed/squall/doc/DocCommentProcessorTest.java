@@ -17,7 +17,7 @@
 package dev.openclosed.squall.doc;
 
 import dev.openclosed.squall.api.base.Location;
-import dev.openclosed.squall.api.sql.spec.DocAnnotation;
+import dev.openclosed.squall.api.util.Records;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -44,7 +44,7 @@ public final class DocCommentProcessorTest {
         processor.processComment(comment, new Location(1, start + 1, start), context);
         var annotations = context.getAnnotations();
         var problems = context.getProblems();
-        var actual = annotations.stream().map(DocAnnotation::toMap).toList();
+        var actual = annotations.stream().map(Records::toMap).toList();
         var expected = test.jsonAsMaps();
 
         for (var problem : problems) {

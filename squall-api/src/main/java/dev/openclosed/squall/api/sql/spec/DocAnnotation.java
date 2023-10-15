@@ -16,9 +16,7 @@
 
 package dev.openclosed.squall.api.sql.spec;
 
-import dev.openclosed.squall.api.base.MapSource;
-
-public interface DocAnnotation extends MapSource {
+public interface DocAnnotation {
 
     DocAnnotationType type();
 

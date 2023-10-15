@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,31 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.base;
+package dev.openclosed.squall.api.sql.expression;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.math.BigDecimal;
 
 /**
- * A property in JSON object.
+ * Number literal.
+ * @param value the value of the literal.
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.RECORD_COMPONENT)
-public @interface Property {
+public record NumberLiteral(String value) implements Literal {
+
+    @Override
+    public Type type() {
+        return Type.NUMBER;
+    }
+
+    @Override
+    public String toSql() {
+        return value();
+    }
 
     /**
-     * Returns the name of the property.
-     * @return the name of the property.
+     * Returns the value as a BigDecimal.
+     * @return the value as a BigDecimal.
      */
-    String value();
+    public BigDecimal numericValue() {
+        return new BigDecimal(value());
+    }
 }

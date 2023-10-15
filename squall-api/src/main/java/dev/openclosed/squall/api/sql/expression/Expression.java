@@ -16,14 +16,10 @@
 
 package dev.openclosed.squall.api.sql.expression;
 
-import dev.openclosed.squall.api.base.MapSource;
-
-import java.util.Map;
-
 /**
  * An expression.
  */
-public interface Expression extends MapSource {
+public interface Expression {
 
     /**
      * Type of the expression.
@@ -77,75 +73,7 @@ public interface Expression extends MapSource {
     String toSql();
 
     /**
-     * NULL literal.
+     * NULL constant.
      */
-    Expression NULL = new Expression() {
-
-        private static final Map<String, Object> MAP = Map.of("type", "null");
-
-        @Override
-        public Type type() {
-            return Type.NULL;
-        }
-
-        @Override
-        public String toSql() {
-            return "null";
-        }
-
-        @Override
-        public Map<String, Object> toMap() {
-            return MAP;
-        }
-    };
-
-    /**
-     * Boolean TRUE literal.
-     */
-    Expression TRUE = new Expression() {
-
-        private static final Map<String, Object> MAP = Map.of(
-            "type", "boolean",
-            "value", "true");
-
-        @Override
-        public Type type() {
-            return Type.BOOLEAN;
-        }
-
-        @Override
-        public String toSql() {
-            return "true";
-        }
-
-        @Override
-        public Map<String, Object> toMap() {
-            return MAP;
-        }
-    };
-
-    /**
-     * Boolean FALSE literal.
-     */
-    Expression FALSE = new Expression() {
-
-        private static final Map<String, Object> MAP = Map.of(
-            "type", "boolean",
-            "value", "false");
-
-        @Override
-        public Type type() {
-            return Type.BOOLEAN;
-        }
-
-        @Override
-        public String toSql() {
-            return "false";
-        }
-
-        @Override
-        public Map<String, Object> toMap() {
-            return MAP;
-        }
-    };
+    Expression NULL = new Null();
 }

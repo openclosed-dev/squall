@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.sql.expression;
+package dev.openclosed.squall.api.base;
 
-import dev.openclosed.squall.api.sql.expression.Expression;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.math.BigDecimal;
+/**
+ * A property in JSON object.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.RECORD_COMPONENT)
+public @interface Property {
 
-record NumberLiteral(Expression.Type type, String value) implements MapSourceExpression {
-
-    public BigDecimal numericValue() {
-        return new BigDecimal(value());
-    }
-
-    @Override
-    public String toSql() {
-        return value();
-    }
+    /**
+     * Returns the name of the property.
+     * @return the name of the property.
+     */
+    String value();
 }

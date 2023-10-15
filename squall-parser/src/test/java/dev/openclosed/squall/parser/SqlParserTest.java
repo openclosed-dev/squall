@@ -18,6 +18,7 @@ package dev.openclosed.squall.parser;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static dev.openclosed.squall.api.util.Records.toMap;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
 
+import dev.openclosed.squall.api.util.Records;
 import dev.openclosed.squall.api.parser.SqlSyntaxException;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.expression.Expression;
@@ -102,7 +104,7 @@ public abstract class SqlParserTest {
     public void parseExpression(SqlTestCase test) {
         SqlParser parser = getParser();
         Expression expression = parser.parseExpression(test.firstSql());
-        assertThat(expression.toMap()).isEqualTo((test.jsonAsMap()));
+        assertThat(toMap(expression)).isEqualTo((test.jsonAsMap()));
         assertThat(expression.toSql()).isEqualTo(test.text());
     }
 
@@ -175,7 +177,7 @@ public abstract class SqlParserTest {
         }
         assertThat(sqlParser.getProblems()).isEmpty();
         var spec = builder.build();
-        assertThat(spec.toMap()).isEqualTo(test.jsonAsMap());
+        assertThat(toMap(spec)).isEqualTo(test.jsonAsMap());
     }
 
     protected final void testTable(SqlTestCase test) {
@@ -187,11 +189,11 @@ public abstract class SqlParserTest {
                 .tables();
 
         if (tables.size() > 1) {
-            var maps = tables.stream().map(Table::toMap).toList();
+            var maps = tables.stream().map(Records::toMap).toList();
             assertThat(maps).isEqualTo(test.jsonAsMaps());
         } else {
             Table table = tables.iterator().next();
-            assertThat(table.toMap()).isEqualTo(test.jsonAsMap());
+            assertThat(toMap(table)).isEqualTo(test.jsonAsMap());
         }
     }
 
@@ -204,7 +206,7 @@ public abstract class SqlParserTest {
                 .tables().iterator().next()
                 .columns().iterator().next();
 
-        assertThat(column.toMap()).isEqualTo(test.jsonAsMap());
+        assertThat(toMap(column)).isEqualTo(test.jsonAsMap());
     }
 
     protected final void testSequence(SqlTestCase test) {
@@ -215,7 +217,7 @@ public abstract class SqlParserTest {
             .schemas().iterator().next()
             .sequences().iterator().next();
 
-        assertThat(sequence.toMap()).isEqualTo(test.jsonAsMap());
+        assertThat(toMap(sequence)).isEqualTo(test.jsonAsMap());
     }
 
     protected final void testDataType(SqlTestCase test) {
@@ -227,7 +229,7 @@ public abstract class SqlParserTest {
                 .tables().iterator().next()
                 .columns().iterator().next();
 
-        var actual = column.toMap();
+        var actual = toMap(column);
 
         assertThat(actual).isEqualTo(test.jsonAsMap());
     }
@@ -257,7 +259,7 @@ public abstract class SqlParserTest {
         try {
             Path path = BASE_OUTPUT_DIR.resolve(fileName);
             Files.createDirectories(path.getParent());
-            String json = getJsonWriter().writeObject(spec.toMap());
+            String json = getJsonWriter().writeObject(toMap(spec));
             Files.writeString(path, json);
         } catch (IOException e) {
             throw new UncheckedIOException(e);

@@ -21,7 +21,6 @@ import dev.openclosed.squall.api.sql.spec.Database;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 import dev.openclosed.squall.api.sql.spec.SpecVisitor;
-import dev.openclosed.squall.core.base.RecordMapSource;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +29,7 @@ import java.util.Optional;
 public record DefaultDatabaseSpec(
         Optional<SpecMetadata> metadata,
         List<Database> databases
-        ) implements DatabaseSpec, RecordMapSource {
+        ) implements DatabaseSpec {
 
     @Override
     public SpecMetadata getMetadataOrDefault() {

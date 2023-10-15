@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.sql.expression;
+package dev.openclosed.squall.api.sql.expression;
 
-import dev.openclosed.squall.api.sql.expression.Expression;
-
+/**
+ * An internal helper class to build SQL text.
+ */
 final class SqlStringBuilder implements Appendable {
 
     private final StringBuilder builder = new StringBuilder();

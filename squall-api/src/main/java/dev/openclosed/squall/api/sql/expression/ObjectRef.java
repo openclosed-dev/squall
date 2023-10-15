@@ -36,6 +36,10 @@ public record ObjectRef(String databaseName, String schemaName, String objectNam
         }
     }
 
+    /**
+     * Returns the name components as a list.
+     * @return a list of the name components.
+     */
     public List<String> toList() {
         return List.of(databaseName, schemaName, objectName);
     }

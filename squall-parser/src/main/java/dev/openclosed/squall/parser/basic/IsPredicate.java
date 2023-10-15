@@ -17,7 +17,7 @@
 package dev.openclosed.squall.parser.basic;
 
 import dev.openclosed.squall.api.sql.expression.Expression;
-import dev.openclosed.squall.api.sql.expression.ExpressionFactory;
+import dev.openclosed.squall.api.sql.expression.Is;
 
 public enum IsPredicate {
     IS_NULL,
@@ -44,7 +44,7 @@ public enum IsPredicate {
         return negated;
     }
 
-    public Expression toExpression(Expression subject, ExpressionFactory factory) {
-        return factory.is(subject, name());
+    public Expression toExpression(Expression subject) {
+        return new Is(subject, name());
     }
 }

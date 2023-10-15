@@ -21,7 +21,6 @@ import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlSyntaxException;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.DocAnnotation;
-import dev.openclosed.squall.api.sql.expression.ExpressionFactory;
 
 import java.util.List;
 
@@ -35,8 +34,6 @@ public interface SqlGrammarSupport {
     SqlTokenizer getTokenizer();
 
     DatabaseSpec.Builder builder();
-
-    ExpressionFactory expressionFactory();
 
     MessageBundle messages();
 

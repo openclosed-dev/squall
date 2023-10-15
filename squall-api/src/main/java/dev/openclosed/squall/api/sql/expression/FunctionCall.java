@@ -16,9 +16,18 @@
 
 package dev.openclosed.squall.api.sql.expression;
 
+import java.util.Collections;
 import java.util.List;
 
+/**
+ * A function call.
+ */
 public interface FunctionCall extends Expression {
+
+    @Override
+    default Type type() {
+        return Type.FUNCTION;
+    }
 
     /**
      * Returns the name of the function.
@@ -26,5 +35,11 @@ public interface FunctionCall extends Expression {
      */
     String name();
 
-    List<Expression> arguments();
+    /**
+     * Returns the argument given to the function.
+     * @return the argument given to the function.
+     */
+    default List<Expression> arguments() {
+        return Collections.emptyList();
+    }
 }

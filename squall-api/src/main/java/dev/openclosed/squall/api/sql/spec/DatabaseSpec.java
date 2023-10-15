@@ -16,10 +16,8 @@
 
 package dev.openclosed.squall.api.sql.spec;
 
-import dev.openclosed.squall.api.base.MapSource;
 import dev.openclosed.squall.api.sql.datatype.DataType;
 import dev.openclosed.squall.api.sql.expression.Expression;
-import dev.openclosed.squall.api.sql.expression.ExpressionFactory;
 import dev.openclosed.squall.api.sql.datatype.IntegerDataType;
 import dev.openclosed.squall.api.sql.expression.ObjectRef;
 
@@ -30,7 +28,7 @@ import java.util.ServiceLoader;
 /**
  * Database specification.
  */
-public interface DatabaseSpec extends MapSource {
+public interface DatabaseSpec {
 
     /**
      * Returns the metadata of the specification.
@@ -151,11 +149,5 @@ public interface DatabaseSpec extends MapSource {
         default DatabaseSpec build() {
             throw new UnsupportedOperationException();
         }
-
-        /**
-         * Returns the expression factory for creating expression.
-         * @return the expression factory
-         */
-        ExpressionFactory getExpressionFactory();
     }
 }

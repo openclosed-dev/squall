@@ -49,7 +49,7 @@
 42
 ```
 
-# boolean true literal
+# boolean true
 
 ```sql
 true
@@ -58,7 +58,7 @@ true
 ```json
 {
   "type" : "boolean",
-  "value" : "true"
+  "value" : true
 }
 ```
 
@@ -66,7 +66,7 @@ true
 true
 ```
 
-# boolean false literal
+# boolean false
 
 ```sql
 false
@@ -75,7 +75,7 @@ false
 ```json
 {
   "type" : "boolean",
-  "value" : "false"
+  "value" : false
 }
 ```
 
@@ -767,11 +767,11 @@ true AND false
   "operator" : "AND",
   "left": {
     "type": "boolean",
-    "value": "true"
+    "value": true
   },
   "right": {
     "type": "boolean",
-    "value": "false"
+    "value": false
   }
 }
 ```
@@ -792,11 +792,11 @@ true OR false
   "operator" : "OR",
   "left": {
     "type": "boolean",
-    "value": "true"
+    "value": true
   },
   "right": {
     "type": "boolean",
-    "value": "false"
+    "value": false
   }
 }
 ```
@@ -817,7 +817,7 @@ NOT true
   "operator" : "NOT",
   "operand": {
     "type": "boolean",
-    "value": "true"
+    "value": true
   }
 }
 ```

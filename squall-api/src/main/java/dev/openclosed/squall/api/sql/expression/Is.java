@@ -14,11 +14,27 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.sql.expression;
+package dev.openclosed.squall.api.sql.expression;
 
-import dev.openclosed.squall.api.sql.expression.Expression;
+import java.util.Objects;
 
-record UnaryOperator(Expression.Type type, String operator, Expression operand) implements MapSourceExpression {
+/**
+ * IS expression.
+ * @param subject the subject part of the expression.
+ * @param predicate the predicate part of the expression.
+ */
+public record Is(Expression subject, String predicate) implements Expression {
+
+    public Is {
+        Objects.requireNonNull(subject);
+        Objects.requireNonNull(predicate);
+        predicate = predicate.toLowerCase();
+    }
+
+    @Override
+    public Type type() {
+        return Type.IS;
+    }
 
     @Override
     public boolean isComplex() {
@@ -28,10 +44,9 @@ record UnaryOperator(Expression.Type type, String operator, Expression operand) 
     @Override
     public String toSql() {
         return new SqlStringBuilder()
-            .append(operator)
-            .append('(')
-            .append(operand)
-            .append(')')
+            .appendGroupedIfComplex(subject())
+            .append(' ')
+            .append(predicate().replaceAll("_", " ").toUpperCase())
             .toString();
     }
 }

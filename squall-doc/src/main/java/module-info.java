@@ -19,5 +19,7 @@ module dev.openclosed.squall.doc {
     requires dev.openclosed.squall.api;
 
     exports dev.openclosed.squall.doc;
+
+    opens dev.openclosed.squall.doc to dev.openclosed.squall.api;
 }
 

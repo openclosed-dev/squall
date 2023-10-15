@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static dev.openclosed.squall.api.util.Records.toMap;
 
 public final class SqlParserTest {
 
@@ -72,7 +73,7 @@ public final class SqlParserTest {
         }
         assertThat(errors).isEqualTo(0);
         var spec = builder.build();
-        assertThat(spec.toMap()).isEqualTo(test.jsonAsMap());
+        assertThat(toMap(spec)).isEqualTo(test.jsonAsMap());
     }
 
     @ParameterizedTest
@@ -83,7 +84,7 @@ public final class SqlParserTest {
         assertThat(errors).isGreaterThan(0);
 
         var spec = builder.build();
-        assertThat(spec.toMap()).isEqualTo(test.jsonAsMap());
+        assertThat(toMap(spec)).isEqualTo(test.jsonAsMap());
 
         var output = handleProblems(parser.getProblems());
         assertThat(output).isEqualTo(test.output());

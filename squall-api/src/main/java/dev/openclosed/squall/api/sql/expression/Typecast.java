@@ -18,14 +18,70 @@ package dev.openclosed.squall.api.sql.expression;
 
 import dev.openclosed.squall.api.sql.datatype.DataType;
 
+import java.util.Objects;
+import java.util.OptionalInt;
+
 /**
  * Typecast expression.
+ * @param source the source expression to be typecasted.
+ * @param typeName the name of the type.
+ * @param length the maximum length of this type.
+ * @param precision the total number of digits, or empty if not specified.
+ * @param scale the number of digits after the decimal point.
  */
-public interface Typecast extends Expression, DataType {
+public record Typecast(
+    Expression source,
+    String typeName,
+    OptionalInt length,
+    OptionalInt precision,
+    OptionalInt scale) implements Expression, DataType {
 
     /**
-     * Returns the source expression to be typecasted.
-     * @return the source expression.
+     * Creates a typecast expression.
+     * @param source the original expression to be typecasted.
+     * @param dataType the data type.
+     * @return created expression.
      */
-    Expression source();
+    public static Typecast of(Expression source, DataType dataType) {
+        Objects.requireNonNull(source);
+        Objects.requireNonNull(dataType);
+        return new Typecast(source,
+            dataType.typeName(), dataType.length(), dataType.precision(), dataType.scale());
+    }
+
+    public Typecast {
+        Objects.requireNonNull(source);
+        Objects.requireNonNull(typeName);
+        Objects.requireNonNull(length);
+        Objects.requireNonNull(precision);
+        Objects.requireNonNull(scale);
+    }
+
+    @Override
+    public Type type() {
+        return Type.TYPECAST;
+    }
+
+    @Override
+    public String toSql() {
+        var sb = new SqlStringBuilder()
+            .append("CAST(")
+            .appendGroupedIfComplex(source)
+            .append(" AS ")
+            .append(typeName);
+
+        length().ifPresentOrElse(l -> {
+            sb.append('(').append(l).append(')');
+        }, () -> {
+            precision.ifPresent(p -> {
+                sb.append('(').append(p);
+                scale.ifPresent(s -> {
+                    sb.append(", ").append(s);
+                });
+                sb.append(')');
+            });
+        });
+
+        return sb.append(')').toString();
+    }
 }

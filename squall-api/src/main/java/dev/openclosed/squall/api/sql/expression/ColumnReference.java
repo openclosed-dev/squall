@@ -14,7 +14,27 @@
  * limitations under the License.
  */
 
+package dev.openclosed.squall.api.sql.expression;
+
+import java.util.Objects;
+
 /**
- * Provides expression implementations.
+ * A column reference.
+ * @param name the name of the column.
  */
-package dev.openclosed.squall.core.sql.expression;
+public record ColumnReference(String name) implements Expression {
+
+    public ColumnReference {
+        Objects.requireNonNull(name);
+    }
+
+    @Override
+    public Type type() {
+        return Type.COLUMN_REFERENCE;
+    }
+
+    @Override
+    public String toSql() {
+        return name();
+    }
+}

@@ -21,12 +21,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import dev.openclosed.squall.api.sql.expression.BasicFunctionCall;
+import dev.openclosed.squall.api.sql.expression.BinaryOperator;
+import dev.openclosed.squall.api.sql.expression.BooleanConstant;
+import dev.openclosed.squall.api.sql.expression.Case;
+import dev.openclosed.squall.api.sql.expression.ColumnReference;
 import dev.openclosed.squall.api.sql.expression.FunctionCall;
+import dev.openclosed.squall.api.sql.expression.In;
 import dev.openclosed.squall.api.sql.expression.ObjectRef;
+import dev.openclosed.squall.api.sql.expression.UnaryOperator;
+import dev.openclosed.squall.api.sql.expression.ValueFunctionCall;
 import dev.openclosed.squall.api.sql.spec.DocAnnotation;
 import dev.openclosed.squall.api.sql.expression.Expression;
 import dev.openclosed.squall.api.sql.datatype.DataType;
@@ -935,11 +942,11 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
         var text = token.text();
         consume();
         var rightOperand = expression(rightPrecedence);
-        return expressionFactory().binaryOperator(text, leftOperand, rightOperand);
+        return new BinaryOperator(text, leftOperand, rightOperand);
     }
 
     default Expression isPredicate(Expression subject) {
-        return isPredicate().toExpression(subject, expressionFactory());
+        return isPredicate().toExpression(subject);
     }
 
     default IsPredicate isPredicate() {
@@ -973,14 +980,14 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
     default Expression inOperator(Expression leftOperand, boolean negated) {
         expect(StandardKeyword.IN);
         consume();
-        return expressionFactory().in(leftOperand, listOfExpressions(), negated);
+        return In.of(leftOperand, listOfExpressions(), negated);
     }
 
     default Expression genericKeywordBinaryOperator(Expression leftOperand, int rightPrecedence) {
         var text = next().text();
         consume();
         var rightOperand = expression(rightPrecedence);
-        return expressionFactory().binaryOperator(text, leftOperand, rightOperand);
+        return new BinaryOperator(text, leftOperand, rightOperand);
     }
 
     default List<Expression> listOfExpressions() {
@@ -1003,11 +1010,11 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
             switch (keyword.standard()) {
                 case TRUE -> {
                     consume();
-                    return Expression.TRUE;
+                    return BooleanConstant.TRUE;
                 }
                 case FALSE -> {
                     consume();
-                    return Expression.FALSE;
+                    return BooleanConstant.FALSE;
                 }
                 case NULL -> {
                     consume();
@@ -1024,7 +1031,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
             var text = token.text();
             consume();
             var operand = expression(op.precedence());
-            return expressionFactory().unaryOperator(text, operand);
+            return new UnaryOperator(text, operand);
         } else if (token == SpecialSymbol.OPEN_PAREN) {
             consume();
             var group = expression(OperatorGroup.LOWEST_PRECEDENCE);
@@ -1032,7 +1039,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
             consume();
             return group;
         } else if (token.isLiteral()) {
-            var literal = token.toLiteral(expressionFactory());
+            var literal = token.toLiteral();
             consume();
             return literal;
         } else if (token.isFunction()) {
@@ -1053,7 +1060,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
         if (next() == SpecialSymbol.OPEN_PAREN) {
             return functionCall(functionName);
         } else {
-            return expressionFactory().functionCall(functionName);
+            return new ValueFunctionCall(functionName);
         }
     }
 
@@ -1063,14 +1070,14 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
         if (next() == SpecialSymbol.OPEN_PAREN) {
             return functionCall(token.toIdentifier());
         } else if (token.isIdentifier(IdentifierType.OBJECT_NAME)) {
-            return expressionFactory().columnReference(token.toIdentifier());
+            return new ColumnReference(token.toIdentifier());
         }
         syntaxError(token);
         return null;
     }
 
     default FunctionCall functionCall(String functionName) {
-        return expressionFactory().functionCall(functionName, functionArguments());
+        return new BasicFunctionCall(functionName, functionArguments());
     }
 
     default List<Expression> functionArguments() {
@@ -1098,28 +1105,25 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
             expect(StandardKeyword.WHEN);
         }
 
-        List<Expression> when = new ArrayList<>();
-        List<Expression> then = new ArrayList<>();
+        var whenClauses = new ArrayList<Case.When>();
         do {
             consume(); // WHEN
             Expression condition = expression();
             expect(StandardKeyword.THEN);
             consume();
             Expression result = expression();
-            when.add(condition);
-            then.add(result);
+            whenClauses.add(new Case.When(condition, result));
         } while (next().isSameAs(StandardKeyword.WHEN));
 
-        Expression elseExpression = null;
+        Expression elseClause = null;
         if (next().isSameAs(StandardKeyword.ELSE)) {
             consume();
-            elseExpression = expression();
+            elseClause = expression();
         }
 
         expect(StandardKeyword.END);
         consume();
 
-        return expressionFactory().caseExpression(
-            Optional.ofNullable(expression), when, then, Optional.ofNullable(elseExpression));
+        return new Case(expression, whenClauses, elseClause);
     }
 }

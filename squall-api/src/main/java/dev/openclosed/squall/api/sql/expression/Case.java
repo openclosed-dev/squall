@@ -14,36 +14,59 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.sql.expression;
+package dev.openclosed.squall.api.sql.expression;
 
-import dev.openclosed.squall.api.sql.expression.Expression;
-import dev.openclosed.squall.core.base.Property;
+import dev.openclosed.squall.api.base.Property;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-record Case(
-    Type type,
+/**
+ * A CASE expression.
+ * @param expression the expression to evaluate, if exists.
+ * @param when one or more when clauses.
+ * @param elseClause optional else clause.
+ */
+public record Case(
     Optional<Expression> expression,
     List<When> when,
     @Property("else")
-    Optional<Expression> elseExpression) implements MapSourceExpression {
+    Optional<Expression> elseClause) implements Expression {
 
-    record When(Expression condition, Expression result) {
+    /**
+     * WHEN clause.
+     * @param condition the condition or value part of the WHEN clause.
+     * @param result the result part of the WHEN clause.
+     */
+    public record When(Expression condition, Expression result) {
 
-        When {
+        public When {
             Objects.requireNonNull(condition);
             Objects.requireNonNull(result);
         }
     }
 
-    Case(Optional<Expression> expression, List<When> when, Optional<Expression> elseExpression) {
-        this(Type.CASE, expression, when, elseExpression);
+    public Case {
+        Objects.requireNonNull(expression);
+        Objects.requireNonNull(when);
+        Objects.requireNonNull(elseClause);
+        when = List.copyOf(when);
     }
 
-    Case {
-        when = List.copyOf(when);
+    /**
+     * Constructs a CASE expression.
+     * @param expression the expression to evaluate, may be {@code null}.
+     * @param whenClauses one or more WHEN clauses.
+     * @param elseClause the ELSE clause, may be {@code null}.
+     */
+    public Case(Expression expression, List<When> whenClauses, Expression elseClause) {
+        this(Optional.ofNullable(expression), whenClauses, Optional.ofNullable(elseClause));
+    }
+
+    @Override
+    public Type type() {
+        return Type.CASE;
     }
 
     @Override
@@ -65,9 +88,8 @@ record Case(
                 .append(' ');
         }
 
-        elseExpression().ifPresent(e -> {
-            sb.append("ELSE ").appendGroupedIfComplex(e).append(' ');
-        });
+        elseClause().ifPresent(e -> sb.append("ELSE ").appendGroupedIfComplex(e).append(' '));
+
         return sb.append("END").toString();
     }
 }

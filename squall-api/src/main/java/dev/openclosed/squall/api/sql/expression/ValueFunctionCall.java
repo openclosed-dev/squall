@@ -14,16 +14,25 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.core.sql.expression;
+package dev.openclosed.squall.api.sql.expression;
 
-import dev.openclosed.squall.api.sql.expression.Expression;
+import java.util.Objects;
 
-record BitStringLiteral(Expression.Type type, String value) implements MapSourceExpression {
+/**
+ * A function call to retrieve value of a system variable.
+ * @param name the name of the function.
+ */
+public record ValueFunctionCall(String name) implements FunctionCall {
+
+    public ValueFunctionCall {
+        Objects.requireNonNull(name);
+        if (name.isBlank()) {
+            throw new IllegalArgumentException();
+        }
+    }
 
     @Override
     public String toSql() {
-        return new StringBuilder()
-            .append("b'").append(value()).append('\'')
-            .toString();
+        return name();
     }
 }

@@ -19,40 +19,40 @@ package dev.openclosed.squall.api.sql.expression;
 import java.util.Objects;
 
 /**
- * A literal expression of string type.
- * @param value the string value.
+ * Bit string.
+ * @param value the bit string value.
  */
-public record StringLiteral(String value) implements Literal {
+public record BitStringLiteral(String value) implements Literal {
 
-    private static final StringLiteral EMPTY = new StringLiteral("");
+    private static final BitStringLiteral EMPTY = new BitStringLiteral("");
 
     /**
-     * Creates a string literal.
-     * @param value the string value.
-     * @return created literal.
+     * Creates a bit string of the given value.
+     * @param value the bit string value.
+     * @return created bit string.
      */
-    public static StringLiteral of(String value) {
+    public static BitStringLiteral of(String value) {
         Objects.requireNonNull(value);
         if (value.isEmpty()) {
             return EMPTY;
         } else {
-            return new StringLiteral(value);
+            return new BitStringLiteral(value);
         }
     }
 
-    public StringLiteral {
+    public BitStringLiteral {
         Objects.requireNonNull(value);
     }
 
     @Override
     public Type type() {
-        return Type.STRING;
+        return Type.BIT_STRING;
     }
 
     @Override
     public String toSql() {
         return new StringBuilder()
-            .append('\'').append(value()).append('\'')
+            .append("b'").append(value()).append('\'')
             .toString();
     }
 }

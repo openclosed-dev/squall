@@ -29,18 +29,15 @@ import dev.openclosed.squall.api.sql.spec.DocAnnotation;
 import dev.openclosed.squall.api.sql.spec.Component.State;
 import dev.openclosed.squall.api.sql.datatype.DataType;
 import dev.openclosed.squall.api.sql.expression.Expression;
-import dev.openclosed.squall.api.sql.expression.ExpressionFactory;
 import dev.openclosed.squall.api.sql.datatype.IntegerDataType;
 import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 import dev.openclosed.squall.core.sql.spec.DefaultDatabaseSpec;
-import dev.openclosed.squall.core.sql.expression.DefaultExpressionFactory;
 
 /**
  * The default implementation of {@link DatabaseSpec.Builder}.
  */
 public final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
 
-    private final ExpressionFactory expressionFactory;
     private final Map<String, DatabaseBuilder> databaseBuilders = new LinkedHashMap<>();
     private SpecMetadata metadata;
     private DatabaseBuilder currentDatabaseBuilder;
@@ -49,7 +46,6 @@ public final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
     private SequenceBuilder currentSequenceBuilder;
 
     public DatabaseSpecBuilder() {
-        this.expressionFactory = new DefaultExpressionFactory();
     }
 
     @Override
@@ -201,11 +197,6 @@ public final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
         return new DefaultDatabaseSpec(
             Optional.ofNullable(metadata),
             databases);
-    }
-
-    @Override
-    public ExpressionFactory getExpressionFactory() {
-        return this.expressionFactory;
     }
 
     //

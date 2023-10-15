@@ -93,7 +93,7 @@ CREATE TABLE example (
   "typeName" : "boolean",
   "defaultValue" : {
     "type": "boolean",
-    "value": "true"
+    "value": true
   }
 }
 ```
@@ -113,7 +113,7 @@ CREATE TABLE example (
   "typeName" : "boolean",
   "defaultValue" : {
     "type": "boolean",
-    "value": "false"
+    "value": false
   }
 }
 ```
