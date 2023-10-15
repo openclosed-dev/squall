@@ -17,10 +17,8 @@
 package dev.openclosed.squall.api.util;
 
 import dev.openclosed.squall.api.base.Property;
-import dev.openclosed.squall.api.sql.expression.BooleanConstant;
 import dev.openclosed.squall.api.sql.expression.Expression;
 
-import java.lang.reflect.RecordComponent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -105,8 +103,7 @@ enum TypeConverter {
                     newMap.put(key.toString(), newValue);
                 }
             });
-            return newMap;
-            //return Collections.unmodifiableMap(newMap);
+            return Collections.unmodifiableMap(newMap);
         }
     },
     COLLECTION {
@@ -119,20 +116,6 @@ enum TypeConverter {
         List<?> convert(Object value) {
             var collection = (Collection<?>) value;
             return collection.stream().map(TypeConverter::convertUnknown).toList();
-        }
-    },
-    BOOLEAN_CONSTANT {
-
-        private static final Map<String, Object> TRUE = Map.of("type", "boolean", "value", true);
-        private static final Map<String, Object> FALSE = Map.of("type", "boolean", "value", false);
-
-        @Override
-        boolean isTypeOf(Object value) {
-            return value instanceof BooleanConstant;
-        }
-
-        Map<String, Object> convert(Object value) {
-            return (value == BooleanConstant.TRUE) ? TRUE : FALSE;
         }
     },
     EXPRESSION {
@@ -160,8 +143,7 @@ enum TypeConverter {
         Map<String, Object> convert(Object value) {
             var map = new LinkedHashMap<String, Object>();
             convertRecordToMap((Record) value, map);
-            return map;
-            //return Collections.unmodifiableMap(map);
+            return Collections.unmodifiableMap(map);
         }
     };
 
@@ -203,25 +185,18 @@ enum TypeConverter {
     static void convertRecordToMap(Record rec, Map<String, Object> newMap) {
         try {
             for (var component : rec.getClass().getRecordComponents()) {
+                var prop = component.getAnnotation(Property.class);
                 var accessor = component.getAccessor();
                 accessor.setAccessible(true);
                 var original = accessor.invoke(rec);
                 var converted = convertUnknown(original);
-                if (shouldInclude(converted)) {
-                    newMap.put(getPropertyName(component), converted);
+                if ((prop != null && !prop.omit()) || shouldInclude(converted)) {
+                    String propertyName = (prop != null) ? prop.value() : component.getName();
+                    newMap.put(propertyName, converted);
                 }
             }
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    static String getPropertyName(RecordComponent component) {
-        if (component.isAnnotationPresent(Property.class)) {
-            var prop = component.getAnnotation(Property.class);
-            return prop.value();
-        } else {
-            return component.getName();
         }
     }
 }

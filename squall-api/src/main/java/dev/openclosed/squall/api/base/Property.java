@@ -33,4 +33,10 @@ public @interface Property {
      * @return the name of the property.
      */
     String value();
+
+    /**
+     * Returns whether the property can be omitted.
+     * @return {@code true} if the property can be omitted.
+     */
+    boolean omit() default true;
 }

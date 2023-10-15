@@ -16,11 +16,15 @@
 
 package dev.openclosed.squall.api.sql.expression;
 
+import dev.openclosed.squall.api.base.Property;
+
 /**
  * Boolean constants.
  * @param value the constant value.
  */
-public record BooleanConstant(boolean value) implements Expression {
+public record BooleanConstant(
+    @Property(value = "value", omit = false) boolean value)
+    implements Expression {
 
     /**
      * TRUE constant.
