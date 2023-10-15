@@ -1,3 +1,0 @@
---module-path target/dependency
---module dev.openclosed.squall.cli
---add-modules dev.openclosed.squall.core,dev.openclosed.squall.service.json,dev.openclosed.squall.parser,dev.openclosed.squall.renderer.json,dev.openclosed.squall.renderer.markdown

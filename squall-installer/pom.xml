@@ -70,13 +70,11 @@
             <artifactId>squall-parser</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!--
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>squall-renderer-asciidoc</artifactId>
             <version>${project.version}</version>
         </dependency>
-        -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>squall-renderer-json</artifactId>
@@ -110,7 +108,7 @@
                             <name>release.version</name>
                             <value>${project.version}</value>
                             <regex>-SNAPSHOT</regex>
-                            <replacement></replacement>
+                            <replacement />
                             <failIfNoMatch>false</failIfNoMatch>
                         </configuration>
                     </execution>
@@ -160,7 +158,7 @@
                                 <resource>
                                     <directory>src/main/jpackage</directory>
                                     <includes>
-                                        <include>metadata.txt</include>
+                                        <include>version.txt</include>
                                     </includes>
                                     <filtering>true</filtering>
                                 </resource>
