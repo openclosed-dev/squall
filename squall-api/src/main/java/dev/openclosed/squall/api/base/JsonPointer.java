@@ -16,32 +16,54 @@
 
 package dev.openclosed.squall.api.base;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * JSON pointer.
+ * @param tokens reference tokens of this JSON pointer.
  */
-public interface JsonPointer {
+public record JsonPointer(List<String> tokens) {
+
+    private static final JsonPointer ROOT = new JsonPointer(Collections.emptyList());
 
     /**
      * Creates an instance of {@link JsonPointer}.
      * @param tokens the reference tokens composing the pointer.
      * @return created instance of JSON pointer.
      */
-    static JsonPointer of(List<String> tokens) {
-        return JsonPointerImpl.of(tokens);
+    public static JsonPointer of(List<String> tokens) {
+        Objects.requireNonNull(tokens);
+        if (tokens.isEmpty()) {
+            return ROOT;
+        } else {
+            return new JsonPointer(tokens);
+        }
     }
 
-    /**
-     * Returns reference tokens of this pointer.
-     * @return reference tokens.
-     */
-    List<String> tokens();
+    public JsonPointer {
+        Objects.requireNonNull(tokens);
+        tokens = List.copyOf(tokens);
+    }
 
     /**
      * Return the string representation of this pointer.
      * @return the string representation of this pointer.
      */
     @Override
-    String toString();
+    public String toString() {
+        if (tokens.isEmpty()) {
+            return "";
+        }
+        var b = new StringBuilder();
+        for (var token : tokens) {
+            b.append('/').append(escapeToken(token));
+        }
+        return b.toString();
+    }
+
+    private static String escapeToken(String token) {
+        return token.replaceAll("~", "~0").replaceAll("/", "~1");
+    }
 }
