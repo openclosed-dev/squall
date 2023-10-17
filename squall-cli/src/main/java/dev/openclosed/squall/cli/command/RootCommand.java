@@ -163,7 +163,7 @@ public final class RootCommand implements
     }
 
     @Option(
-        names = {"-V", "--version"},
+        names = {"-v", "--version"},
         description = "Print version information and exit.",
         versionHelp = true
     )
