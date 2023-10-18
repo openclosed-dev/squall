@@ -61,7 +61,8 @@ public class AsciiDocRendererTest {
     public static Stream<String> postgresqlTests() {
         return Stream.of(
             "book",
-            "book-ja"
+            "book-ja",
+            "baseball"
         );
     }
 

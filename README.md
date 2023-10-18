@@ -1,17 +1,50 @@
 # Squall
 
-Squall is a suite of tools and libraries for generating database specification documents from DDL/SQL sources annotated with Javadoc/JSDoc-style comments.
+Squall is a suite of tools and libraries for generating database design documents from DDL/SQL source code annotated with Javadoc/JSDoc-style comments.
 
 ## Features
 
 * Parses DDL sources directly without running database server.
-* Generates documents describing database schemas in various kinds of formats: HTML, PDF, AsciiDoc, Markdown, and JSON.
+* Generates documents describing database design in various kinds of formats: HTML, PDF, AsciiDoc, Markdown, and JSON.
 * Recognizes Javadoc/JSDoc-style doc comments including special tags for annotating schema objects.
 * Provides both CLI tool and API for JVM languages.
 
 Note that the only SQL dialect currently supported is PostgreSQL.
 
 ## Doc Comments
+
+A doc comment is a multi-line comment that starts with `/**` and ends with `*/`.
+
+The example below shows how the doc comments are applied to tables and columns in a database schema.
+
+```sql
+/**
+ * Baseball teams in MLB.
+ * @label Baseball team
+ */
+CREATE TABLE baseball_team(
+  /**
+   * Unique ID of the team.
+   * @label ID
+   */
+  id integer PRIMARY KEY,
+  /**
+   * The name of the team.
+   * @label Name
+   */
+  name varchar(128) NOT NULL,
+  /**
+   * The league to which this team belongs.
+   * @label Affiliated league
+   */
+  affiliated_league char(2) NOT NULL REFERENCES league(id),
+  /**
+   * The year when this team was established.
+   * @label Year established
+   */
+  year_established integer NOT NULL
+);
+```
 
 Doc comments are allowed to contain one or more tags for annotating target schema objects.
 
@@ -30,7 +63,7 @@ Doc comments are allowed to contain one or more tags for annotating target schem
 
 Every distribution file includes 64-bit Java runtime. There are no plans to support 32-bit platforms.
 
-After the installation was completed, your console window need to be closed and reopened for reloading the PATH environment variable modified during the process.
+After the installation was completed, your console window need to be closed and reopened for reloading the PATH environment variable modified during the installation process.
 
 If the zip format is convenient, all you have to do is to unpack the archive wherever you prefer and add the directory to the PATH environment variable.
 
@@ -48,7 +81,7 @@ The command provides subcommands shown below.
 | Subcommand | Description |
 | --- | --- |
 | config | Manage configurations. |
-| spec | Manage database specification. |
+| spec | Manage database design specification. |
 
 ### config subcommand
 
@@ -76,10 +109,23 @@ The order of the entries is relevant. The parser processes the source files one 
 
 ### spec subcommand
 
+Database design documents can be generated from parsed DDL sources by invoking `spec render` command as follows.
 
-## Using the API for Java
+```
+squall spec render <name of renderer>
+```
 
-To be added later.
+A set of renderers are predefined in the configuration file. If the renderer of your choice is named `default` in the configuration, the name can be ommited on the command line like this:
+
+```
+squall spec render
+```
+
+Multiple renderers can be specified at the same line. In this case, specified renderers will be executed one by one.
+
+```
+squall spec render default pdf markdown
+```
 
 ## Copyright Notice
 
