@@ -25,7 +25,7 @@
         //"precision_length",
         //"scale",
         "nullable",
-        //"required"
+        //"required",
         "unique",
         "default_value",
         "foreign_key",
@@ -47,7 +47,7 @@
         //"precision_length",
         //"scale",
         "nullable",
-        //"required"
+        //"required",
         "unique",
         "default_value",
         "foreign_key",
@@ -71,7 +71,7 @@
         //"precision_length",
         //"scale",
         "nullable",
-        //"required"
+        //"required",
         "unique",
         "default_value",
         "foreign_key",

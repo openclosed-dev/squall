@@ -20,7 +20,7 @@ CREATE TABLE league(
    * リーグの名前。
    * @label 名前
    */
-  name varchar(128) NOT NULL,
+  name varchar(128) NOT NULL
 );
 
 /**
