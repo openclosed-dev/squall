@@ -49,3 +49,53 @@ CREATE TABLE baseball_team(
    */
   year_established integer NOT NULL
 );
+
+/**
+ * A sequence for generating baseball game IDs.
+ * @label Game ID
+ */
+CREATE SEQUENCE game_id AS bigint;
+
+/**
+ * Ballpark.
+ * @label Ballpark
+ */
+CREATE TABLE ballpark(
+  /**
+   * Unique ID of the ballpark.
+   * @label ID
+   */
+  id integer PRIMARY KEY,
+  /**
+   * The name of the ballpark.
+   * @label Name
+   */
+  name varchar(128) NOT NULL
+);
+
+/**
+ * Baseball game.
+ * @label Baseball game
+ */
+CREATE TABLE baseball_game(
+  /**
+   * Unique ID of the baseball game.
+   * @label Baseball game ID
+   */
+  id bigint DEFAULT nextval('game_id') PRIMARY KEY,
+  /**
+   * The team batting first.
+   * @label Batting first
+   */
+  batting_first integer NOT NULL REFERENCES baseball_team(id),
+  /**
+   * The team fielding first.
+   * @label Fielding first
+   */
+  fielding_first integer NOT NULL REFERENCES baseball_team(id),
+  /**
+   * Ballpark where the game was held.
+   * @label Ballpark.
+   */
+  ballpark integer NOT NULL REFERENCES ballpark(id)
+);

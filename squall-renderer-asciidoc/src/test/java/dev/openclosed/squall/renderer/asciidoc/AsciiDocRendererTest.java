@@ -62,7 +62,8 @@ public class AsciiDocRendererTest {
         return Stream.of(
             "book",
             "book-ja",
-            "baseball"
+            "baseball",
+            "baseball-ja"
         );
     }
 
