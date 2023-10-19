@@ -14,7 +14,7 @@ Note that the only SQL dialect currently supported is PostgreSQL.
 ## Doc Comments
 
 A doc comment is a multi-line comment that starts with `/**` and ends with `*/`.
-
+This type of comment can be used to annotate objects such as database, schema, sequence, table, and table column,  immediately before CREATE statement for these objects begins.
 The example below shows how the doc comments are applied to tables and columns in a database schema.
 
 ```sql
@@ -45,6 +45,8 @@ CREATE TABLE baseball_team(
   year_established integer NOT NULL
 );
 ```
+
+The description part in doc comments, that precedes any tag is treated as content of Markdown, or more specifically of [CommonMark](https://commonmark.org/).
 
 Doc comments are allowed to contain one or more tags for annotating target schema objects.
 
@@ -126,6 +128,13 @@ Multiple renderers can be specified at the same line. In this case, specified re
 ```
 squall spec render default pdf markdown
 ```
+
+## Future Plans
+
+* More rich set of tags for producing testing data. e.g. `@format email`
+* Automatic generation of ER diagrams
+* Verification of database designs, as the Checkstyle is doing to program codes.
+* Support of more SQL dialects.
 
 ## Copyright Notice
 

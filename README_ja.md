@@ -15,7 +15,7 @@ Squall は、Javadoc/JSDoc スタイルのコメントが付けられた DDL/SQL
 ## Docコメント
 
 Doc コメントは、`/**` で始まり `*/` で終わる複数行のコメントです。
-
+このタイプのコメントは、データベース、スキーマ、シーケンス、テーブル、テーブル列などのオブジェクトの CREATE ステートメントが開始される直前に、これらのオブジェクトに注釈を付けるために使用できます。
 以下の例は、Docコメントがデータベーススキーマ内のテーブルとカラムにどのように適用されるかを示しています。
 
 ```sql
@@ -46,6 +46,8 @@ CREATE TABLE baseball_team(
   year_established integer NOT NULL
 );
 ```
+
+タグに先行するドキュメント コメント内の説明部分は、Markdown、より具体的には [CommonMark](https://commonmark.org/) のコンテンツとして扱われます。
 
 Docコメントには、対象のスキーマオブジェクトに注釈を付けるための 1 つ以上のタグを含めることができます。
 
@@ -128,6 +130,13 @@ squall spec render
 ```
 squall spec render default pdf markdown
 ```
+
+## 将来の計画
+
+* テストデータを生成するためのより豊富なタグセット。例. `@format email`
+* ER図の自動生成。　
+* Checkstyle がプログラムコードに対して行っているような、データベース設計の検証。
+* より多くの SQL 言語のサポート。
 
 ## 著作権表示
 
