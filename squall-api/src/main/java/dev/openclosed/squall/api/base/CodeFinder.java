@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,43 +14,49 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.parser;
+package dev.openclosed.squall.api.base;
 
-import dev.openclosed.squall.api.base.Location;
-
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public final class SnippetExtractor {
+/**
+ * A finder of code.
+ */
+public class CodeFinder {
 
     private static final Pattern LINE_TERMINATOR = Pattern.compile("\n");
 
     private final CharSequence text;
-    private String[] splitted;
+    private final String[] split;
 
-    public SnippetExtractor(CharSequence text) {
+    /**
+     * Constructs this object.
+     * @param text the whole text of source code.
+     */
+    public CodeFinder(CharSequence text) {
+        Objects.requireNonNull(text);
         this.text = text;
+        this.split = LINE_TERMINATOR.split(text, -1);
     }
 
-    public Optional<String> extract(Location location) {
-        String[] lines = getLines();
+    /**
+     * Finds code at the specified location.
+     * @param location the location to find code.
+     * @return the code found, or empty.
+     */
+    public Optional<String> findCode(Location location) {
+        String[] lines = this.split;
         if (location.offset() < text.length()) {
             String line = lines[location.lineNo() - 1];
             String spaces = line.substring(0, location.columnNo() - 1).replaceAll("\\S", " ");
             return Optional.of(
-                    new StringBuilder()
+                new StringBuilder()
                     .append(line).append('\n')
                     .append(spaces).append('^')
                     .toString());
         } else {
             return Optional.empty();
         }
-    }
-
-    private String[] getLines() {
-        if (splitted == null) {
-            splitted = LINE_TERMINATOR.split(text, -1);
-        }
-        return splitted;
     }
 }

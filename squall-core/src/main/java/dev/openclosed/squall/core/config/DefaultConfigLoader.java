@@ -29,6 +29,7 @@ import java.util.function.Consumer;
 import dev.openclosed.squall.api.base.Location;
 import dev.openclosed.squall.api.base.Message;
 import dev.openclosed.squall.api.base.Problem;
+import dev.openclosed.squall.api.base.CodeFinder;
 import dev.openclosed.squall.api.config.ConfigLoader;
 import dev.openclosed.squall.api.config.ConfigurationException;
 import dev.openclosed.squall.api.config.MessageBundle;
@@ -37,7 +38,6 @@ import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 import dev.openclosed.squall.api.spi.JsonReader;
 import dev.openclosed.squall.api.spi.JsonReadingException;
-import dev.openclosed.squall.core.base.SnippetExtractor;
 
 /**
  * Default implementation of {@link ConfigLoader}.
@@ -122,7 +122,7 @@ public final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem
             } catch (JsonReadingException e) {
                 var loc = e.getLocation();
                 if (loc.offset() < text.length()) {
-                    var source = new SnippetExtractor(text).extract(e.getLocation());
+                    var source = new CodeFinder(text).findCode(e.getLocation());
                     addProblem(Level.ERROR, messages().JSON_ILL_FORMED(), e.getLocation(), source);
                 } else {
                     addProblem(Level.ERROR, messages().UNEXPECTED_END_OF_INPUT());

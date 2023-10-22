@@ -19,6 +19,7 @@ package dev.openclosed.squall.parser.basic;
 import dev.openclosed.squall.api.base.Location;
 import dev.openclosed.squall.api.base.Message;
 import dev.openclosed.squall.api.base.Problem;
+import dev.openclosed.squall.api.base.CodeFinder;
 import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.parser.MessageBundle;
 import dev.openclosed.squall.api.parser.ParserConfig;
@@ -27,7 +28,6 @@ import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlSyntaxException;
 import dev.openclosed.squall.api.sql.spec.DocAnnotation;
 import dev.openclosed.squall.api.sql.expression.Expression;
-import dev.openclosed.squall.parser.SnippetExtractor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +41,7 @@ public abstract class BaseSqlParser
     private final CommentProcessor commentProcessor;
     private final MessageBundle messageBundle;
 
+    private CharSequence text;
     private SqlTokenizer tokenizer;
     private int tokenNo;
 
@@ -50,7 +51,7 @@ public abstract class BaseSqlParser
     private final List<Problem> problems = new ArrayList<>();
     private int errorCount;
 
-    private SnippetExtractor snippetExtractor;
+    private CodeFinder codeFinder;
 
     protected BaseSqlParser(
         ParserConfig config,
@@ -106,7 +107,7 @@ public abstract class BaseSqlParser
         Objects.requireNonNull(message);
         Objects.requireNonNull(location);
 
-        var source = snippetExtractor.extract(location);
+        var source = getCodeFinder().findCode(location);
         Problem problem = new SqlProblem(severity, message, location, source);
 
         this.problems.add(problem);
@@ -175,11 +176,12 @@ public abstract class BaseSqlParser
     }
 
     protected void reset(CharSequence text) {
+        this.text = text;
         this.problems.clear();
         this.errorCount = 0;
         this.tokenizer = createTokenizer(text, this.messageBundle);
         this.annotations = null;
-        this.snippetExtractor = new SnippetExtractor(text);
+        this.codeFinder = null;
     }
 
     protected abstract SqlTokenizer createTokenizer(
@@ -198,5 +200,12 @@ public abstract class BaseSqlParser
 
     private void handleSyntaxError(SqlSyntaxException e) {
         reportProblem(System.Logger.Level.ERROR, e.getBundledMessage(), e.getLocation());
+    }
+
+    private CodeFinder getCodeFinder() {
+        if (this.codeFinder == null) {
+            this.codeFinder = new CodeFinder(this.text);
+        }
+        return this.codeFinder;
     }
 }
