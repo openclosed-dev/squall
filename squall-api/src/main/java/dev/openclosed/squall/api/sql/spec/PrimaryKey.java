@@ -17,15 +17,39 @@
 package dev.openclosed.squall.api.sql.spec;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Primary key constraint.
+ * @param constraintName the name of the constraint
+ * @param columns the columns composing this primary key
  */
-public interface PrimaryKey extends Constraint {
+public record PrimaryKey(Optional<String> constraintName, List<String> columns)
+    implements Constraint {
 
-    List<String> columns();
+    public PrimaryKey {
+        Objects.requireNonNull(columns);
+        if (columns.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        columns = List.copyOf(columns);
+    }
 
-    boolean containsColumn(String name);
+    /**
+     * Returns whether if this primary key is composed of the specified column.
+     * @param name the name of the column to test.
+     * @return {@code true} if this primary key is composed of the specified column.
+     */
+    public boolean containsColumn(String name) {
+        return columns.contains(name);
+    }
 
-    boolean isComposite();
+    /**
+     * Returns whether if this primary key is composite or not.
+     * @return {@code true} if this primary key is composite.
+     */
+    public boolean isComposite() {
+        return columns.size() > 1;
+    }
 }

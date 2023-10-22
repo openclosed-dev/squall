@@ -18,31 +18,50 @@ package dev.openclosed.squall.api.sql.spec;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * A foreign key constraint.
+ * @param constraintName the name of the constraint.
+ * @param tableName the name of the table including parents.
+ * @param columnMapping the mapping of the columns.
  */
-public interface ForeignKey extends Constraint {
+public record ForeignKey(
+    Optional<String> constraintName,
+    List<String> tableName,
+    Map<String, String> columnMapping
+    ) implements Constraint {
 
-    List<String> tableName();
+    public ForeignKey {
+        Objects.requireNonNull(tableName);
+        Objects.requireNonNull(columnMapping);
+        if (columnMapping.isEmpty()) {
+            throw new IllegalArgumentException("columnMapping must not be empty");
+        }
+        tableName = List.copyOf(tableName);
+        columnMapping = Map.copyOf(columnMapping);
+    }
 
     /**
      * Returns the referenced table name.
      * @return the referenced table name.
      */
-    default String simpleTableName() {
+    public String simpleTableName() {
         var name = tableName();
         return name.get(name.size() - 1);
     }
 
-    default String fullTableName() {
+    /**
+     * Returns the referenced table name in fully qualified form.
+     * @return the referenced table name in fully qualified form.
+     */
+    public String fullTableName() {
         return tableName().stream().collect(Collectors.joining("."));
     }
 
-    Map<String, String> columnMapping();
-
-    default boolean containsKey(String column) {
+    public boolean containsKey(String column) {
         return columnMapping().containsKey(column);
     }
 }

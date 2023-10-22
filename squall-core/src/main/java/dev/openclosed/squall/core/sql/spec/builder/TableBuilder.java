@@ -24,10 +24,7 @@ import dev.openclosed.squall.api.sql.spec.ForeignKey;
 import dev.openclosed.squall.api.sql.spec.PrimaryKey;
 import dev.openclosed.squall.api.sql.spec.Table;
 import dev.openclosed.squall.api.sql.spec.Unique;
-import dev.openclosed.squall.core.sql.spec.DefaultForeignKey;
-import dev.openclosed.squall.core.sql.spec.DefaultPrimaryKey;
 import dev.openclosed.squall.core.sql.spec.DefaultTable;
-import dev.openclosed.squall.core.sql.spec.DefaultUnique;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -66,11 +63,11 @@ final class TableBuilder extends ComponentBuilder {
     }
 
     void setPrimaryKey(String name, List<String> columnNames) {
-        this.primaryKey = new DefaultPrimaryKey(Optional.ofNullable(name), columnNames);
+        this.primaryKey = new PrimaryKey(Optional.ofNullable(name), columnNames);
     }
 
     void addUnique(String name, List<String> columns) {
-        unique.add(new DefaultUnique(Optional.ofNullable(name), columns));
+        unique.add(new Unique(Optional.ofNullable(name), columns));
     }
 
     void addForeignKey(String name, ObjectRef tableRef, List<String> columns, List<String> refColumns) {
@@ -79,7 +76,7 @@ final class TableBuilder extends ComponentBuilder {
             columnMapping.put(columns.get(i), refColumns.get(i));
         }
 
-        foreignKeys.add(new DefaultForeignKey(
+        foreignKeys.add(new ForeignKey(
             Optional.ofNullable(name),
             tableRef.toList(),
             columnMapping

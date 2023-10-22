@@ -17,15 +17,30 @@
 package dev.openclosed.squall.api.sql.spec;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Unique constraint.
+ * @param constraintName the name of the constraint
+ * @param columns the columns composing this unique key
  */
-public interface Unique extends Constraint {
+public record Unique(Optional<String> constraintName, List<String> columns)
+    implements Constraint {
 
-    List<String> columns();
+    public Unique {
+        Objects.requireNonNull(columns);
+        if (columns.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        columns = List.copyOf(columns);
+    }
 
-    boolean containsColumn(String name);
+    public boolean containsColumn(String name) {
+        return columns.contains(name);
+    }
 
-    boolean isComposite();
+    public boolean isComposite() {
+        return columns.size() > 1;
+    }
 }
