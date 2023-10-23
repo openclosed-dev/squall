@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -85,7 +86,15 @@ public interface Component {
      * Returns the fully qualified name of this component, including the parents.
      * @return the fully qualified name.
      */
-    String fullName();
+    default String fullName() {
+        var parents = parents();
+        if (parents.isEmpty()) {
+            return name();
+        } else {
+            return Stream.concat(parents.stream(), Stream.of(name()))
+                .collect(Collectors.joining("."));
+        }
+    }
 
     /**
      * Returns the list of the annotations attached to this component.
@@ -107,7 +116,9 @@ public interface Component {
      * Returns whether this component is deprecated or not.
      * @return {@code true} if this component is deprecated, {@code false} otherwise.
      */
-    boolean isDeprecated();
+    default boolean isDeprecated() {
+        return getFirstAnnotation(DocAnnotationType.DEPRECATED).isPresent();
+    }
 
     /**
      * Returns the label of this component.

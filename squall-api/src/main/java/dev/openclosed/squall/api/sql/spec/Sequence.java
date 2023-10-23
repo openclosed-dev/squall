@@ -16,25 +16,34 @@
 
 package dev.openclosed.squall.api.sql.spec;
 
-public interface Sequence extends Component {
+import java.util.List;
+import java.util.Objects;
+
+public record Sequence(
+    String name,
+    List<String> parents,
+    String typeName,
+    long start,
+    long increment,
+    long maxValue,
+    long minValue,
+    List<DocAnnotation> annotations
+    ) implements SchemaObject {
+
+    public Sequence {
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(typeName);
+        Objects.requireNonNull(annotations);
+        parents = List.copyOf(parents);
+    }
 
     @Override
-    default Type type() {
+    public Type type() {
         return Type.SEQUENCE;
     }
 
     @Override
-    default void accept(SpecVisitor visitor) {
+    public void accept(SpecVisitor visitor) {
         visitor.visit(this);
     }
-
-    String typeName();
-
-    long start();
-
-    long increment();
-
-    long maxValue();
-
-    long minValue();
 }

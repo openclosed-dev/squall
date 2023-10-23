@@ -17,32 +17,49 @@
 package dev.openclosed.squall.api.sql.spec;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public interface Table extends Component {
+public record Table(
+    String name,
+    List<String> parents,
+    List<Column> columns,
+    Optional<PrimaryKey> primaryKey,
+    List<ForeignKey> foreignKeys,
+    List<Unique> unique,
+    List<DocAnnotation> annotations
+    ) implements SchemaObject {
+
+    public Table {
+        Objects.requireNonNull(name);
+        parents = List.copyOf(parents);
+        columns = List.copyOf(columns);
+        foreignKeys = List.copyOf(foreignKeys);
+        unique = List.copyOf(unique);
+    }
 
     @Override
-    default Type type() {
+    public Type type() {
         return Type.TABLE;
     }
 
     @Override
-    default void accept(SpecVisitor visitor) {
+    public void accept(SpecVisitor visitor) {
         visitor.visit(this);
     }
 
-    List<Column> columns();
-
-    Optional<PrimaryKey> primaryKey();
-
-    List<ForeignKey> foreignKeys();
-
-    default Stream<ForeignKey> foreignKeysContaining(String column) {
+    public Stream<ForeignKey> foreignKeysContaining(String column) {
         return foreignKeys().stream().filter(fk -> fk.containsKey(column));
     }
 
-    List<Unique> unique();
+    public boolean hasColumns() {
+        return !columns.isEmpty();
+    }
 
-    boolean hasColumns();
+    @Override
+    public Stream<? extends Component> children(ComponentOrder order) {
+        // always definition order
+        return columns().stream();
+    }
 }

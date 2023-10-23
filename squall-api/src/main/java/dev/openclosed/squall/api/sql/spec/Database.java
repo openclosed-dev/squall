@@ -17,18 +17,37 @@
 package dev.openclosed.squall.api.sql.spec;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
-public interface Database extends Component {
+public record Database(
+    String name,
+    List<Schema> schemas,
+    List<DocAnnotation> annotations,
+    Component.State state
+    ) implements Component {
+
+    public Database {
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(schemas);
+        Objects.requireNonNull(annotations);
+        Objects.requireNonNull(state);
+        schemas = List.copyOf(schemas);
+        annotations = List.copyOf(annotations);
+    }
 
     @Override
-    default Type type() {
+    public Type type() {
         return Type.DATABASE;
     }
 
-    List<Schema> schemas();
+    @Override
+    public void accept(SpecVisitor visitor) {
+        visitor.visit(this);
+    }
 
     @Override
-    default void accept(SpecVisitor visitor) {
-        visitor.visit(this);
+    public Stream<? extends Component> children(ComponentOrder order) {
+        return order.reorder(schemas().stream());
     }
 }

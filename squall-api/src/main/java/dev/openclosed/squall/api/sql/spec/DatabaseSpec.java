@@ -22,47 +22,51 @@ import dev.openclosed.squall.api.sql.datatype.IntegerDataType;
 import dev.openclosed.squall.api.sql.expression.ObjectRef;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.ServiceLoader;
 
 /**
  * Database specification.
+ * @param metadata the metadata of the specification.
+ * @param databases the list of the databases defined in this specification.
  */
-public interface DatabaseSpec {
+public record DatabaseSpec(
+    Optional<SpecMetadata> metadata,
+    List<Database> databases
+    ) {
 
-    /**
-     * Returns the metadata of the specification.
-     * @return the metadata of the specification.
-     */
-    Optional<SpecMetadata> metadata();
+    public DatabaseSpec {
+        Objects.requireNonNull(metadata);
+        Objects.requireNonNull(databases);
+        databases = List.copyOf(databases);
+    }
 
-    SpecMetadata getMetadataOrDefault();
-
-    /**
-     * Returns the list of the databases defined in this specification.
-     * @return the list of the databases.
-     */
-    List<Database> databases();
+    public SpecMetadata getMetadataOrDefault() {
+        return metadata().orElse(SpecMetadata.DEFAULT);
+    }
 
     /**
      * Walks all components in a specification.
      * @param order visiting order.
      * @param visitor the component visitor.
      */
-    void walkSpec(ComponentOrder order, SpecVisitor visitor);
+    public void walkSpec(ComponentOrder order, SpecVisitor visitor) {
+            Objects.requireNonNull(visitor);
+            databases().stream().forEach(c -> c.accept(visitor));
+    }
 
     /**
      * Creates a new builder.
      * @return created builder instance.
      */
-    static Builder builder() {
-        return ServiceLoader.load(Builder.class).findFirst().get();
+    public static Builder builder() {
+        return new DatabaseSpecBuilder();
     }
 
     /**
      * A builder of database specification.
      */
-    interface Builder {
+    public interface Builder {
 
         default Builder setMetadata(SpecMetadata metadata) {
             return this;

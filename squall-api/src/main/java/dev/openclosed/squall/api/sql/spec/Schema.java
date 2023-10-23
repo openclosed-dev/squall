@@ -17,20 +17,46 @@
 package dev.openclosed.squall.api.sql.spec;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
-public interface Schema extends Component {
+public record Schema(
+    String name,
+    List<String> parents,
+    List<Sequence> sequences,
+    List<Table> tables,
+    List<DocAnnotation> annotations,
+    Component.State state
+    ) implements Component {
+
+    public Schema {
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(parents);
+        Objects.requireNonNull(sequences);
+        Objects.requireNonNull(tables);
+        Objects.requireNonNull(annotations);
+        Objects.requireNonNull(state);
+        parents = List.copyOf(parents);
+        sequences = List.copyOf(sequences);
+        tables = List.copyOf(tables);
+        annotations = List.copyOf(annotations);
+    }
 
     @Override
-    default Type type() {
+    public Type type() {
         return Type.SCHEMA;
     }
 
     @Override
-    default void accept(SpecVisitor visitor) {
+    public void accept(SpecVisitor visitor) {
         visitor.visit(this);
     }
 
-    List<Sequence> sequences();
-
-    List<Table> tables();
+    @Override
+    public Stream<? extends Component> children(ComponentOrder order) {
+        return Stream.concat(
+            order.reorder(sequences().stream()),
+            order.reorder(tables.stream())
+        );
+    }
 }

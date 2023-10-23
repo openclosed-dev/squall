@@ -14,7 +14,25 @@
  * limitations under the License.
  */
 
-/**
- * SQL specification builders.
- */
-package dev.openclosed.squall.core.sql.spec.builder;
+package dev.openclosed.squall.api.sql.spec;
+
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public final class DatabaseSpecBuilderTest {
+
+    private DatabaseSpec.Builder sut;
+
+    @BeforeEach
+    public void setUp() {
+        sut = DatabaseSpec.builder();
+    }
+
+    @Test
+    public void shouldBuildEmptySpec() {
+        var spec = sut.build();
+        assertThat(spec.databases()).isEmpty();
+    }
+}

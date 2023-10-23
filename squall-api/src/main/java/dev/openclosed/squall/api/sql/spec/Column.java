@@ -19,32 +19,64 @@ package dev.openclosed.squall.api.sql.spec;
 import dev.openclosed.squall.api.sql.datatype.DataType;
 import dev.openclosed.squall.api.sql.expression.Expression;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * A column in table.
+ * @param name
+ * @param parents
+ * @param typeName
+ * @param length
+ * @param precision
+ * @param scale
+ * @param isRequired
+ * @param isPrimaryKey
+ * @param isUnique
+ * @param defaultValue the default value for this column
+ * @param annotations
  */
-public interface Column extends Component, DataType {
+public record Column(
+    String name,
+    List<String> parents,
+    String typeName,
+    OptionalInt length,
+    OptionalInt precision,
+    OptionalInt scale,
+    boolean isRequired,
+    boolean isPrimaryKey,
+    boolean isUnique,
+    Optional<Expression> defaultValue,
+    List<DocAnnotation> annotations
+    )
+    implements Component, DataType {
+
+    public Column {
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(parents);
+        Objects.requireNonNull(typeName);
+        Objects.requireNonNull(length);
+        Objects.requireNonNull(precision);
+        Objects.requireNonNull(scale);
+        Objects.requireNonNull(defaultValue);
+        Objects.requireNonNull(annotations);
+        parents = List.copyOf(parents);
+        annotations = List.copyOf(annotations);
+    }
 
     @Override
-    default Type type() {
+    public Type type() {
         return Type.COLUMN;
     }
 
     @Override
-    default void accept(SpecVisitor visitor) {
+    public void accept(SpecVisitor visitor) {
         visitor.visit(this);
     }
 
-    boolean isRequired();
-
-    default boolean isNullable() {
+    public boolean isNullable() {
         return !isRequired();
     }
-
-    boolean isPrimaryKey();
-
-    boolean isUnique();
-
-    Optional<Expression> defaultValue();
 }

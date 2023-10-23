@@ -14,7 +14,28 @@
  * limitations under the License.
  */
 
+package dev.openclosed.squall.api.sql.spec;
+
+
 /**
- * Provides database spec implementations.
+ * An object in a schema.
  */
-package dev.openclosed.squall.core.sql.spec;
+public interface SchemaObject extends Component {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    default String qualifiedName() {
+        var parents = parents();
+        String schemaName = parents.get(parents.size() - 1);
+        if (schemaName.isEmpty()) {
+            return name();
+        } else {
+            return new StringBuilder(schemaName)
+                .append('.')
+                .append(name())
+                .toString();
+        }
+    }
+}

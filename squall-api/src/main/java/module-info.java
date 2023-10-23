@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
-
 module dev.openclosed.squall.api {
 
     exports dev.openclosed.squall.api.base;
@@ -31,7 +29,6 @@ module dev.openclosed.squall.api {
     uses dev.openclosed.squall.api.config.ConfigLoader;
     uses dev.openclosed.squall.api.parser.SqlParserFactory;
     uses dev.openclosed.squall.api.renderer.RendererFactory;
-    uses DatabaseSpec.Builder;
     uses dev.openclosed.squall.api.spi.JsonReader;
     uses dev.openclosed.squall.api.spi.JsonWriter;
     uses dev.openclosed.squall.api.spi.MessagesProvider;

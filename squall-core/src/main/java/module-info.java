@@ -22,10 +22,6 @@ module dev.openclosed.squall.core {
 
     provides dev.openclosed.squall.api.config.ConfigLoader
         with dev.openclosed.squall.core.config.DefaultConfigLoader;
-    provides dev.openclosed.squall.api.sql.spec.DatabaseSpec.Builder
-        with dev.openclosed.squall.core.sql.spec.builder.DatabaseSpecBuilder;
     provides dev.openclosed.squall.api.spi.MessagesProvider
         with dev.openclosed.squall.core.base.DefaultMessagesProvider;
-
-    opens dev.openclosed.squall.core.sql.spec to dev.openclosed.squall.api;
 }
