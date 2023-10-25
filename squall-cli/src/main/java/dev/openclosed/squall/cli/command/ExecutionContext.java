@@ -86,7 +86,7 @@ final class ExecutionContext implements Subcommand.ExecutionContext {
         Path dir = workDirectory();
         Path configFile = configFile();
         Path configPath = dir.resolve(configFile);
-        var configLoader = ConfigLoader.get();
+        var configLoader = ConfigLoader.newLoader();
         try {
             logger().log(System.Logger.Level.INFO, messages().LOADING_CONFIGURATION(configFile));
             String json = Files.readString(configPath);

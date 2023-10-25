@@ -55,7 +55,7 @@ public class AsciiDocRendererTest {
     @BeforeAll
     public static void setUpOnce() {
         Locale.setDefault(Locale.ENGLISH);
-        configLoader = ConfigLoader.get();
+        configLoader = ConfigLoader.newLoader();
     }
 
     public static Stream<String> postgresqlTests() {

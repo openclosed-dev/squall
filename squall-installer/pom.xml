@@ -39,7 +39,6 @@
             jackson-databind,
             squall-api,
             squall-cli,
-            squall-core,
             squall-doc,
             squall-parser,
             squall-renderer-asciidoc,
@@ -58,11 +57,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>squall-cli</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>squall-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

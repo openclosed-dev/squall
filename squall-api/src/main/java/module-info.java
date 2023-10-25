@@ -26,10 +26,12 @@ module dev.openclosed.squall.api {
     exports dev.openclosed.squall.api.sql.expression;
     exports dev.openclosed.squall.api.util;
 
-    uses dev.openclosed.squall.api.config.ConfigLoader;
     uses dev.openclosed.squall.api.parser.SqlParserFactory;
     uses dev.openclosed.squall.api.renderer.RendererFactory;
     uses dev.openclosed.squall.api.spi.JsonReader;
     uses dev.openclosed.squall.api.spi.JsonWriter;
     uses dev.openclosed.squall.api.spi.MessagesProvider;
+
+    provides dev.openclosed.squall.api.spi.MessagesProvider
+        with dev.openclosed.squall.api.spi.DefaultMessagesProvider;
 }

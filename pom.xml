@@ -27,8 +27,8 @@
 
     <modules>
         <module>squall-api</module>
+        <module>squall-api-test</module>
         <module>squall-cli</module>
-        <module>squall-core</module>
         <module>squall-doc</module>
         <module>squall-installer</module>
         <module>squall-parser</module>
@@ -96,12 +96,12 @@
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
-                <version>5.9.2</version>
+                <version>5.10.0</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-params</artifactId>
-                <version>5.9.2</version>
+                <version>5.10.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -191,7 +191,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.1.2</version>
                     <configuration>
                         <useModulePath>true</useModulePath>
                         <argLine>-Duser.language=en</argLine>

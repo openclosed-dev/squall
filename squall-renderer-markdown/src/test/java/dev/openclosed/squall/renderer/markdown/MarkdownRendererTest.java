@@ -52,7 +52,7 @@ public class MarkdownRendererTest {
 
     @BeforeAll
     public static void setUpOnce() {
-        configLoader = ConfigLoader.get();
+        configLoader = ConfigLoader.newLoader();
     }
 
     @BeforeEach

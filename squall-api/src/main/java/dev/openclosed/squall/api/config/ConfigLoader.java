@@ -17,8 +17,6 @@
 package dev.openclosed.squall.api.config;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.ServiceLoader;
 
 import dev.openclosed.squall.api.base.Problem;
 import dev.openclosed.squall.api.renderer.RenderConfig;
@@ -54,11 +52,10 @@ public interface ConfigLoader {
     List<Problem> getProblems();
 
     /**
-     * Finds the instance of this type of loader.
-     * @return found instance of loader.
-     * @throws NoSuchElementException if not found.
+     * Creates a new instance of this type of loader.
+     * @return newly created instance of loader.
      */
-    static ConfigLoader get() {
-        return ServiceLoader.load(ConfigLoader.class).findFirst().get();
+    static ConfigLoader newLoader() {
+        return new DefaultConfigLoader();
     }
 }

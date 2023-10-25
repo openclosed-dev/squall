@@ -46,7 +46,7 @@ public final class InitTest {
     @BeforeAll
     public static void setUpOnce() {
         Locale.setDefault(Locale.ENGLISH);
-        configLoader = ConfigLoader.get();
+        configLoader = ConfigLoader.newLoader();
     }
 
     record TestCase(String name, int exitCode, String... args) implements BaseTestCase {
