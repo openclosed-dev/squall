@@ -19,13 +19,13 @@ package dev.openclosed.squall.api.sql.spec;
 import java.util.Objects;
 
 /**
- * A visitor of components in the database specification.
+ * Visitor of components in the database specification.
  */
 public interface SpecVisitor {
 
     /**
      * Visits a database.
-     * @param database the visited database.
+     * @param database the database to visit.
      */
     default void visit(Database database) {
         visitChildren(database);
@@ -33,7 +33,7 @@ public interface SpecVisitor {
 
     /**
      * Visits a schema.
-     * @param schema the visited schema.
+     * @param schema the schema to visit.
      */
     default void visit(Schema schema) {
         visitChildren(schema);
@@ -41,14 +41,14 @@ public interface SpecVisitor {
 
     /**
      * Visits a sequence.
-     * @param sequence the visited sequence.
+     * @param sequence the sequence to visit.
      */
     default void visit(Sequence sequence) {
     }
 
     /**
      * Visits a table.
-     * @param table the visited table.
+     * @param table the table to visit.
      */
     default void visit(Table table) {
         visitChildren(table);
@@ -56,15 +56,24 @@ public interface SpecVisitor {
 
     /**
      * Visits a column in a table.
-     * @param column the visited column.
+     * @param column the column to visit.
      */
     default void visit(Column column) {
     }
 
+    /**
+     * Visits the children of ths specified component, in the default order.
+     * @param component the parent component containing children to visit.
+     */
     default void visitChildren(Component component) {
         visitChildren(component, ComponentOrder.NAME);
     }
 
+    /**
+     * Visits the children of ths specified component.
+     * @param component the parent component containing children to visit.
+     * @param order the order in which the children will be visited.
+     */
     default void visitChildren(Component component, ComponentOrder order) {
         Objects.requireNonNull(component);
         Objects.requireNonNull(order);

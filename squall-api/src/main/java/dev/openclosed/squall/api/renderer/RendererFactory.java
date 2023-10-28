@@ -17,29 +17,60 @@
 package dev.openclosed.squall.api.renderer;
 
 import java.util.Locale;
-import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.ServiceLoader;
 
+/**
+ * Factory of renderers.
+ */
 public interface RendererFactory {
 
+    /**
+     * Returns the output format that this factory supports.
+     * @return the output format that this factory supports, such as "html".
+     */
     String format();
 
+    /**
+     * Creates a renderer.
+     * @param config the configuration for the renderer.
+     * @return the created renderer.
+     */
     default Renderer createRenderer(RenderConfig config) {
         return createRenderer(config, config.locale());
     }
 
+    /**
+     * Creates a renderer for the specified locale.
+     * @param config the configuration for the renderer.
+     * @param locale the locale by the renderer.
+     * @return the created renderer.
+     */
     default Renderer createRenderer(RenderConfig config, Locale locale) {
         return createRenderer(config, MessageBundle.forLocale(locale));
     }
 
+    /**
+     * Creates a renderer with the specified message bundle.
+     * @param config the configuration for the renderer.
+     * @param bundle the message bundle used by the renderer.
+     * @return the created renderer.
+     */
     Renderer createRenderer(RenderConfig config, MessageBundle bundle);
 
-    static RendererFactory get(String format) {
+    /**
+     * Creates a renderer factory for the specified format.
+     * @param format the output format.
+     * @return newly created factory.
+     * @throws IllegalArgumentException if appropriate factory was not found for the format.
+     */
+    static RendererFactory newFactory(String format) {
+        Objects.requireNonNull(format);
         for (var factory : ServiceLoader.load(RendererFactory.class)) {
             if (factory.format().equals(format)) {
                 return factory;
             }
         }
-        throw new NoSuchElementException("No renderer found for format: " + format);
+        throw new IllegalArgumentException("RendererFactory was not found for the format: " + format);
     }
 }

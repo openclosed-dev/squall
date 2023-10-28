@@ -17,13 +17,19 @@
 package dev.openclosed.squall.api.base;
 
 /**
- * A location in input source.
+ * Location in an input source text.
  * @param lineNo the line number, starting from 1.
  * @param columnNo the column number, starting from 1.
  * @param offset the offset in characters, starting from 0.
  */
 public record Location(int lineNo, int columnNo, long offset) {
 
+    /**
+     * Constructs a location.
+     * @param lineNo the line number, starting from 1.
+     * @param columnNo the column number, starting from 1.
+     * @param offset the offset in characters, starting from 0.
+     */
     public Location {
         if (lineNo <= 0) {
             throw new IllegalArgumentException("lineNo must be greater than zero");

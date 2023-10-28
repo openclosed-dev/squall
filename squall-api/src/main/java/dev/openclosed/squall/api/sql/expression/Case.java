@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * A CASE expression.
+ * SQL Case expression.
  * @param expression the expression to evaluate, if exists.
  * @param when one or more when clauses.
  * @param elseClause optional else clause.
@@ -35,18 +35,29 @@ public record Case(
     Optional<Expression> elseClause) implements Expression {
 
     /**
-     * WHEN clause.
-     * @param condition the condition or value part of the WHEN clause.
-     * @param result the result part of the WHEN clause.
+     * SQL When clause.
+     * @param condition the condition or value part of the When clause.
+     * @param result the result part of the When clause.
      */
     public record When(Expression condition, Expression result) {
 
+        /**
+         * Creates an instance of a {@code When} record class.
+         * @param condition the condition or value part of the When clause.
+         * @param result the result part of the When clause.
+         */
         public When {
             Objects.requireNonNull(condition);
             Objects.requireNonNull(result);
         }
     }
 
+    /**
+     * Creates an instance of a {@code Case} record class.
+     * @param expression the expression to evaluate, if exists.
+     * @param when one or more when clauses.
+     * @param elseClause optional else clause.
+     */
     public Case {
         Objects.requireNonNull(expression);
         Objects.requireNonNull(when);
@@ -55,9 +66,9 @@ public record Case(
     }
 
     /**
-     * Constructs a CASE expression.
+     * Creates an instance of a {@code Case} record class.
      * @param expression the expression to evaluate, may be {@code null}.
-     * @param whenClauses one or more WHEN clauses.
+     * @param whenClauses one or more When clauses.
      * @param elseClause the ELSE clause, may be {@code null}.
      */
     public Case(Expression expression, List<When> whenClauses, Expression elseClause) {

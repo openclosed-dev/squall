@@ -18,5 +18,8 @@ package dev.openclosed.squall.api.spi;
 
 import java.util.spi.ResourceBundleProvider;
 
+/**
+ * Provider of messages in resource bundles.
+ */
 public interface MessagesProvider extends ResourceBundleProvider {
 }

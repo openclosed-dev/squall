@@ -22,10 +22,17 @@ import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
 /**
- * A message in resource bundle.
+ * Message in a resource bundle.
  */
 public interface Message extends Supplier<String> {
 
+    /**
+     * Creates a message.
+     * @param key the unique identifier in a resource bundle.
+     * @param args the arguments used for formatting the message.
+     * @param bundle the resource bundle providing the message.
+     * @return created message.
+     */
     static Message of(String key, Object[] args, ResourceBundle bundle) {
         Objects.requireNonNull(key);
         Objects.requireNonNull(args);
@@ -35,28 +42,28 @@ public interface Message extends Supplier<String> {
     }
 
     /**
-     * Returns the unique identifier of this message.
-     * @return the unique identifier of this message.
+     * Returns the identifier of this message, that is unique in the resource bundle.
+     * @return the identifier of this message, that is unique in the resource bundle.
      */
     String key();
 
     /**
-     * Returns the arguments composing a message.
-     * @return the arguments composing a message.
+     * Returns the arguments given to this message.
+     * @return the arguments given to this message.
      */
     Object[] args();
 
     /**
-     * Returns the resource bundle for this message.
-     * @return the resource bundle found.
+     * Returns the resource bundle that provides this message.
+     * @return the resource bundle that provides this message.
      */
     ResourceBundle bundle();
 
     // Supplier
 
     /**
-     * Returns the formatted message.
-     * @return the formatted message.
+     * Returns the string formatted with arguments.
+     * @return the string formatted with arguments.
      */
     @Override
     default String get() {

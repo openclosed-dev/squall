@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A function call.
+ * Calling of a function.
  */
 public interface FunctionCall extends Expression {
 
@@ -36,8 +36,8 @@ public interface FunctionCall extends Expression {
     String name();
 
     /**
-     * Returns the argument given to the function.
-     * @return the argument given to the function.
+     * Returns the arguments passed to the function.
+     * @return the arguments passed to the function.
      */
     default List<Expression> arguments() {
         return Collections.emptyList();

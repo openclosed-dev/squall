@@ -15,6 +15,6 @@
  */
 
 /**
- * SQL specification models.
+ * Provides database specification and its components, including schema objects.
  */
 package dev.openclosed.squall.api.sql.spec;

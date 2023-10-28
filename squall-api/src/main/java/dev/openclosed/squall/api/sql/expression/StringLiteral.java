@@ -19,7 +19,7 @@ package dev.openclosed.squall.api.sql.expression;
 import java.util.Objects;
 
 /**
- * A literal expression of string type.
+ * Literal expression of string type.
  * @param value the string value.
  */
 public record StringLiteral(String value) implements Literal {
@@ -27,9 +27,9 @@ public record StringLiteral(String value) implements Literal {
     private static final StringLiteral EMPTY = new StringLiteral("");
 
     /**
-     * Creates a string literal.
+     * Creates a string literal of the specified value.
      * @param value the string value.
-     * @return created literal.
+     * @return created literal with the specified value.
      */
     public static StringLiteral of(String value) {
         Objects.requireNonNull(value);
@@ -40,6 +40,11 @@ public record StringLiteral(String value) implements Literal {
         }
     }
 
+    /**
+     *
+     Creates an instance of a {@code StringLiteral} record class.
+     * @param value the string value.
+     */
     public StringLiteral {
         Objects.requireNonNull(value);
     }

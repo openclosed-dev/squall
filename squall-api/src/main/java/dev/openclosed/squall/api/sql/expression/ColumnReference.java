@@ -19,11 +19,15 @@ package dev.openclosed.squall.api.sql.expression;
 import java.util.Objects;
 
 /**
- * A column reference.
- * @param name the name of the column.
+ * Column reference.
+ * @param name the name of the referenced column.
  */
 public record ColumnReference(String name) implements Expression {
 
+    /**
+     * Creates an instance of a {@code ColumnReference} record class.
+     * @param name the name of the referenced column.
+     */
     public ColumnReference {
         Objects.requireNonNull(name);
     }

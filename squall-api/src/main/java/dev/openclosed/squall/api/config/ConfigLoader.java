@@ -23,37 +23,43 @@ import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 
 /**
- * A loader of the configurations.
+ * Loader of configurations.
  */
 public interface ConfigLoader {
 
     /**
-     * Creates an instance of {@link RootConfig} from JSON document.
-     * @param text text containing a JSON document.
-     * @return created instance of {@link RootConfig}.
-     * @throws ConfigurationException if the input text is invalid.
+     * Loads a {@link RootConfig} from the input JSON text.
+     * @param text the input text in JSON object format.
+     * @return loaded {@link RootConfig}.
+     * @throws ConfigurationException if an error has occurred while loading The configuration.
      */
     RootConfig loadFromJson(String text);
 
+    /**
+     * Loads a {@link SpecMetadata} from the input JSON text.
+     * @param text the input text in JSON object format.
+     * @return loaded {@link SpecMetadata}.
+     * @throws ConfigurationException if an error has occurred while loading The configuration.
+     */
     SpecMetadata loadMetadataFromJson(String text);
 
     /**
-     * Creates an instance of {@link RenderConfig} from JSON document.
-     * @param text text containing a JSON document.
-     * @return created instance of {@link RenderConfig}.
-     * @throws ConfigurationException if the input text is invalid.
+     * Loads a {@link RenderConfig} from the input JSON text.
+     * @param text the input text in JSON object format.
+     * @return loaded {@link RenderConfig}.
+     * @throws ConfigurationException if an error has occurred while loading The configuration.
      */
     RenderConfig loadRenderConfigFromJson(String text);
 
     /**
      * Returns the problems found while loading the configuration.
-     * @return found problems, or empty if no problem was found.
+     * @return found problems, or empty if there are no problems.
      */
     List<Problem> getProblems();
 
     /**
-     * Creates a new instance of this type of loader.
-     * @return newly created instance of loader.
+     * Creates a new instance of configuration loader.
+     * @return newly created instance of configuration loader.
      */
     static ConfigLoader newLoader() {
         return new DefaultConfigLoader();

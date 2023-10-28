@@ -20,13 +20,23 @@ import java.util.Map;
 import java.util.ServiceLoader;
 
 /**
- * JSON writer.
+ * Writer of texts in JSON format.
  */
 public interface JsonWriter {
 
+    /**
+     * Writes a map into text in JSON format.
+     * @param object the map to write.
+     * @return generated text in JSON format.
+     * @throws JsonWritingException if an error has occurred white writing the text.
+     */
     String writeObject(Map<String, ?> object) throws JsonWritingException;
 
-    static JsonWriter get() {
+    /**
+     * Creates an instance of this type.
+     * @return newly created JSON writer.
+     */
+    static JsonWriter newWriter() {
         return ServiceLoader.load(JsonWriter.class).findFirst().get();
     }
 }

@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
- * A finder of code.
+ * Finder of code fragments.
  */
 public class CodeFinder {
 
@@ -31,7 +31,7 @@ public class CodeFinder {
     private final String[] split;
 
     /**
-     * Constructs this object.
+     * Constructs a finder.
      * @param text the whole text of source code.
      */
     public CodeFinder(CharSequence text) {
@@ -41,9 +41,9 @@ public class CodeFinder {
     }
 
     /**
-     * Finds code at the specified location.
-     * @param location the location to find code.
-     * @return the code found, or empty.
+     * Finds a code fragment at the specified location.
+     * @param location the location to find code fragment.
+     * @return the code found fragment, or empty if not exists.
      */
     public Optional<String> findCode(Location location) {
         String[] lines = this.split;

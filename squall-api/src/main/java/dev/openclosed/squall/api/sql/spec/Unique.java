@@ -22,12 +22,17 @@ import java.util.Optional;
 
 /**
  * Unique constraint.
- * @param constraintName the name of the constraint
- * @param columns the columns composing this unique key
+ * @param constraintName the name of the constraint, optional.
+ * @param columns the list of columns composing this unique key.
  */
 public record Unique(Optional<String> constraintName, List<String> columns)
     implements Constraint {
 
+    /**
+     * Creates an instance of a {@code Unique} record class.
+     * @param constraintName the name of the constraint, optional.
+     * @param columns the list of columns composing this unique key.
+     */
     public Unique {
         Objects.requireNonNull(columns);
         if (columns.isEmpty()) {
@@ -36,10 +41,20 @@ public record Unique(Optional<String> constraintName, List<String> columns)
         columns = List.copyOf(columns);
     }
 
+    /**
+     * Returns whether this constraint contains the specified column or not.
+     * @param name the name of the column to test.
+     * @return {@code true} if this constraint contains the specified column, {@code false} otherwise.
+     */
     public boolean containsColumn(String name) {
         return columns.contains(name);
     }
 
+    /**
+     * Returns whether this constraint contains multiple columns or not.
+     * @return {@code true} if this constraint contains multiple columns,
+     *         {@code false} if this constraint contains a single column.
+     */
     public boolean isComposite() {
         return columns.size() > 1;
     }

@@ -19,6 +19,17 @@ package dev.openclosed.squall.api.sql.spec;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Sequence in a database schema..
+ * @param name the name of this sequence.
+ * @param parents the parents of this sequence.
+ * @param typeName the data type of this sequence.
+ * @param start the staring value.
+ * @param increment the increment value.
+ * @param maxValue the maximum value.
+ * @param minValue the minimum value.
+ * @param annotations the annotations attached to the sequence.
+ */
 public record Sequence(
     String name,
     List<String> parents,
@@ -30,6 +41,17 @@ public record Sequence(
     List<DocAnnotation> annotations
     ) implements SchemaObject {
 
+    /**
+     * Creates an instance of a {@code Sequence} record class.
+     * @param name the name of this sequence.
+     * @param parents the parents of this sequence.
+     * @param typeName the data type of this sequence.
+     * @param start the staring value.
+     * @param increment the increment value.
+     * @param maxValue the maximum value.
+     * @param minValue the minimum value.
+     * @param annotations the annotations attached to the sequence.
+     */
     public Sequence {
         Objects.requireNonNull(name);
         Objects.requireNonNull(typeName);

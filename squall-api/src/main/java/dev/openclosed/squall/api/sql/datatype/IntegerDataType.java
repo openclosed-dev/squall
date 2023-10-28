@@ -17,11 +17,20 @@
 package dev.openclosed.squall.api.sql.datatype;
 
 /**
- * Integer data types defined by SQL standard.
+ * Integer data types in the SQL standard.
  */
 public enum IntegerDataType implements DataType {
+    /**
+     * SQL integer data type.
+     */
     INTEGER(Integer.MIN_VALUE, Integer.MAX_VALUE),
+    /**
+     * SQL smallint data type.
+     */
     SMALLINT(Short.MIN_VALUE, Short.MAX_VALUE),
+    /**
+     * SQL bigint data type.
+     */
     BIGINT(Long.MIN_VALUE, Long.MAX_VALUE);
 
     private final long minValue;
@@ -37,11 +46,19 @@ public enum IntegerDataType implements DataType {
         return name().toLowerCase();
     }
 
+    /**
+     * Returns the minimum value this type can hold.
+     * @return the minimum value this type can hold.
+     */
     public long minValue() {
-        return minValue;
+        return this.minValue;
     }
 
+    /**
+     * Returns the maximum value this type can hold.
+     * @return the maximum value this type can hold.
+     */
     public long maxValue() {
-        return maxValue;
+        return this.maxValue;
     }
 }

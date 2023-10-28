@@ -16,9 +16,20 @@
 
 package dev.openclosed.squall.api.sql.spec;
 
+/**
+ * Annotation in doc comments.
+ */
 public interface DocAnnotation {
 
+    /**
+     * Returns the type of this annotation.
+     * @return the type of this annotation.
+     */
     DocAnnotationType type();
 
+    /**
+     * Returns the value of this annotation.
+     * @return the value of this annotation.
+     */
     String value();
 }

@@ -23,14 +23,17 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
- * A message bundle for SQL parsers.
+ * Message bundle for SQL parsers.
  */
 public interface MessageBundle {
 
+    /**
+     * The base name of the resource bundle.
+     */
     String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.Messages";
 
     /**
-     * Creates a message bundle.
+     * Creates a message bundle for the specified locale.
      * @param locale the locale of the message bundle.
      * @return newly created message bundle.
      */
@@ -42,20 +45,38 @@ public interface MessageBundle {
 
     //CHECKSTYLE:OFF
 
+    /**
+     * Message that unexpected end of input was reached.
+     * @return the message.
+     */
     default Message UNEXPECTED_END_OF_INPUT() {
         return of("UNEXPECTED_END_OF_INPUT");
     }
 
+    /**
+     * Message that invalid character was found.
+     * @param c the found character.
+     * @return the message.
+     */
     default Message INVALID_CHARACTER(char c) {
         return of("INVALID_CHARACTER", String.valueOf(c));
     }
 
+    /**
+     * Message that syntax error was detected.
+     * @param text the text containing the syntax error.
+     * @return the message.
+     */
     default Message SYNTAX_ERROR(CharSequence text) {
         return of("SYNTAX_ERROR", text);
     }
 
     //CHECKSTYLE:ON
 
+    /**
+     * Returns the resource bundle that provides messages.
+     * @return the resource bundle that provides messages.
+     */
     ResourceBundle getResourceBundle();
 
     private Message of(String key, Object... args) {

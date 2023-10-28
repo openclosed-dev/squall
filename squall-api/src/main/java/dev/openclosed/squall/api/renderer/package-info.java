@@ -15,6 +15,6 @@
  */
 
 /**
- * Package for specification renderer.
+ * Provides the renderer of database design documents.
  */
 package dev.openclosed.squall.api.renderer;

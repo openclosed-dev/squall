@@ -20,10 +20,16 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Utility class for records.
+ * Utility class for record classes.
  */
 public final class Records {
 
+    /**
+     * Converts an object to a map recursively.
+     * @param object the object to convert.
+     * @return a map converted from the object.
+     * @throws IllegalArgumentException if the converted result is not a map.
+     */
     @SuppressWarnings("unchecked")
     public static Map<String, Object> toMap(Object object) {
         Objects.requireNonNull(object);
@@ -35,6 +41,11 @@ public final class Records {
         }
     }
 
+    /**
+     * Converts a record to a map recursively.
+     * @param rec the record to convert.
+     * @return a map converted from the record.
+     */
     @SuppressWarnings("unchecked")
     public static Map<String, Object> toMap(Record rec) {
         Objects.requireNonNull(rec);

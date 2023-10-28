@@ -26,8 +26,8 @@ import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 
 /**
- * The top-level configuration.
- * @param metadata specification metadata.
+ * The top-level configuration containing child configurations.
+ * @param metadata the design specification metadata.
  * @param sources the SQL source files to be parsed.
  * @param outDir the output directory.
  * @param parser the configuration for the parser
@@ -42,7 +42,7 @@ public record RootConfig(
     ) {
 
     /**
-     * Create a configuration with default settings.
+     * Create a {@code RootConfig} with default settings.
      */
     public RootConfig() {
         this(Optional.empty(),

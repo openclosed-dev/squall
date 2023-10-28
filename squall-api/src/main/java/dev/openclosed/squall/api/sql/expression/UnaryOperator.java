@@ -17,7 +17,7 @@
 package dev.openclosed.squall.api.sql.expression;
 
 /**
- * An unary operator.
+ * Unary operator.
  * @param operator the operator.
  * @param operand the operand of the operator.
  */

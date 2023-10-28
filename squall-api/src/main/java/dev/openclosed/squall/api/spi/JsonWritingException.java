@@ -17,10 +17,14 @@
 package dev.openclosed.squall.api.spi;
 
 /**
- * An exception thrown while writing a JSON document.
+ * Exception thrown while writing a JSON document.
  */
 public class JsonWritingException extends RuntimeException {
 
+    /**
+     * Constructs an exception.
+     * @param cause the real cause of this exception.
+     */
     public JsonWritingException(Throwable cause) {
         super(cause);
     }

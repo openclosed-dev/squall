@@ -29,14 +29,14 @@ public interface SqlParser {
     /**
      * Parses SQL text.
      * @param text the text to parse.
-     * @return the number of errors detected.
+     * @return the number of problems detected.
      */
     int parse(CharSequence text);
 
     /**
-     * Parses SQL expression text.
+     * Parses SQL text into an expression.
      * @param text the text to parse.
-     * @return the parsed expression.
+     * @return the created expression.
      * @throws SqlSyntaxException if a syntax error was detected in the expression.
      */
     Expression parseExpression(CharSequence text) throws SqlSyntaxException;

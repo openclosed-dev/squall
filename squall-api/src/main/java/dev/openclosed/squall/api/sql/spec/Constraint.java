@@ -19,7 +19,7 @@ package dev.openclosed.squall.api.sql.spec;
 import java.util.Optional;
 
 /**
- * A constraint.
+ * Constraint on schema objects.
  */
 public interface Constraint {
 

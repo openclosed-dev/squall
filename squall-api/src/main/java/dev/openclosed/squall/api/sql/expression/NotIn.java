@@ -20,12 +20,17 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * NOT-IN expression.
+ * Negated form of {@link In} expression.
  * @param left the left expression.
  * @param right the right expression.
  */
 public record NotIn(Expression left, List<Expression> right) implements Expression {
 
+    /**
+     * Creates an instance of a {@code NotIn} record class.
+     * @param left the left expression.
+     * @param right the right expression.
+     */
     public NotIn {
         Objects.requireNonNull(left);
         Objects.requireNonNull(right);

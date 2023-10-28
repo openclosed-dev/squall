@@ -17,12 +17,17 @@
 package dev.openclosed.squall.api.sql.spec;
 
 /**
- * Annotations for doc comments.
+ * Types of doc annotations.
  */
 public enum DocAnnotationType {
+    /** Description of the component. */
     DESCRIPTION,
+    /** Logical name of the component. */
     LABEL,
+    /** Since. */
     SINCE,
+    /** Indicates that the component is deprecated. */
     DEPRECATED,
+    /** See. */
     SEE
 }

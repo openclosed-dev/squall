@@ -21,6 +21,16 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * Table in a database schema.
+ * @param name the name of this table.
+ * @param parents the parents of this table.
+ * @param columns the list of the columns in this table.
+ * @param primaryKey the primary key.
+ * @param foreignKeys the list of foreign keys.
+ * @param unique the list of unique constraints on this table.
+ * @param annotations the annotations attached to the table.
+ */
 public record Table(
     String name,
     List<String> parents,
@@ -31,6 +41,16 @@ public record Table(
     List<DocAnnotation> annotations
     ) implements SchemaObject {
 
+    /**
+     * Creates an instance of a {@code Table} record class.
+     * @param name the name of this table.
+     * @param parents the parents of this table.
+     * @param columns the list of the columns in this table.
+     * @param primaryKey the primary key.
+     * @param foreignKeys the list of foreign keys.
+     * @param unique the list of unique constraints on this table.
+     * @param annotations the annotations attached to the table.
+     */
     public Table {
         Objects.requireNonNull(name);
         parents = List.copyOf(parents);
@@ -49,10 +69,20 @@ public record Table(
         visitor.visit(this);
     }
 
+    /**
+     * Returns the foreign keys containing the specified column.
+     * @param column the name of the column.
+     * @return filtered foreign keys as a stream.
+     */
     public Stream<ForeignKey> foreignKeysContaining(String column) {
+        Objects.requireNonNull(column);
         return foreignKeys().stream().filter(fk -> fk.containsKey(column));
     }
 
+    /**
+     * Returns whether this table contains any columns or not.
+     * @return {@code true} if this table contains any columns, {@code false} if there exists no column.
+     */
     public boolean hasColumns() {
         return !columns.isEmpty();
     }

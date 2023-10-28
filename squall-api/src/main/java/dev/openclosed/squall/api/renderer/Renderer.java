@@ -21,7 +21,16 @@ import java.nio.file.Path;
 
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 
+/**
+ * Renderer for generating database design specification documents.
+ */
 public interface Renderer {
 
-    void render(DatabaseSpec spec, Path dir) throws IOException;
+    /**
+     * Renders a document from the input specification.
+     * @param spec the database design specification.
+     * @param directory the directory where output will be generated.
+     * @throws IOException if an I/O error has occurred while rendering the document.
+     */
+    void render(DatabaseSpec spec, Path directory) throws IOException;
 }

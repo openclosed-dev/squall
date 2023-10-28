@@ -15,6 +15,6 @@
  */
 
 /**
- * Package for SQL parser.
+ * Provides the SQL parser.
  */
 package dev.openclosed.squall.api.parser;

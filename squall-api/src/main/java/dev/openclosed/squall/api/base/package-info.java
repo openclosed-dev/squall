@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides basic components.
+ * Provides common functionality used by other packages.
  */
 package dev.openclosed.squall.api.base;

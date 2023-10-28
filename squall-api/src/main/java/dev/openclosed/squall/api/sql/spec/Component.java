@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * A component in the database specification.
+ * Component in a database design specification.
  */
 public interface Component {
 
@@ -32,21 +32,35 @@ public interface Component {
      * Type of the component.
      */
     enum Type {
+        /** The type is database. */
         DATABASE,
+        /** The type is schema. */
         SCHEMA,
+        /** The type is table. */
         TABLE,
+        /** The type is table column. */
         COLUMN,
+        /** The type is sequence. */
         SEQUENCE;
 
         private static final Set<Type> ALL = Set.of(Type.values());
 
+        /**
+         * Returns the set of values defined in this enum.
+         * @return the set of values defined in this enum.
+         */
         public static Set<Type> all() {
             return ALL;
         }
     };
 
+    /**
+     * The states of the component.
+     */
     enum State {
+        /** The component is defined explicitly. */
         DEFINED,
+        /** The component is not defined. */
         UNDEFINED
     };
 
@@ -122,18 +136,27 @@ public interface Component {
 
     /**
      * Returns the label of this component.
-     * @return the label of this component.
+     * @return the label of this component, or empty.
      */
     default Optional<String> label() {
         return getFirstAnnotation(DocAnnotationType.LABEL)
                 .map(DocAnnotation::value);
     }
 
+    /**
+     * Returns the description of this component.
+     * @return the description of this component, or empty.
+     */
     default Optional<String> description() {
         return getFirstAnnotation(DocAnnotationType.DESCRIPTION)
                 .map(DocAnnotation::value);
     }
 
+    /**
+     * Returns the first annotation of the specified type.
+     * @param type the type of the annotation.
+     * @return the first annotations of the specified type.
+     */
     default Optional<DocAnnotation> getFirstAnnotation(DocAnnotationType type) {
         return annotations().stream()
                 .filter(a -> a.type() == type)

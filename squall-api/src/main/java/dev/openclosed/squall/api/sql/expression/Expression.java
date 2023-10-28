@@ -17,7 +17,7 @@
 package dev.openclosed.squall.api.sql.expression;
 
 /**
- * An expression.
+ * Expression in SQL.
  */
 public interface Expression {
 
@@ -35,20 +35,27 @@ public interface Expression {
         BOOLEAN,
         /** NULL literal. */
         NULL,
+        /** Calling of a function. */
         FUNCTION,
+        /** Calling of sequence manipulation function. */
         SEQUENCE_FUNCTION,
+        /** Unary operator. */
         UNARY_OPERATOR,
+        /** Binary operator. */
         BINARY_OPERATOR,
+        /** Column reference. */
         COLUMN_REFERENCE,
         /** Typecasting. */
         TYPECAST,
-        /** IS predicate. */
+        /** Is predicate. */
         IS,
-        /** IN comparison. */
+        /** In comparison. */
         IN,
-        /** NOT IN comparison. */
+        /** Not In comparison. */
         NOT_IN,
+        /** Case expression. */
         CASE,
+        /** When clause. */
         WHEN
     }
 
@@ -67,13 +74,13 @@ public interface Expression {
     }
 
     /**
-     * Returns this expression as a SQL fragment.
-     * @return SQL fragment of this expression.
+     * Represents this expression in SQL notation.
+     * @return the string representation in SQL notation.
      */
     String toSql();
 
     /**
-     * NULL constant.
+     * NULL constant expression.
      */
     Expression NULL = new Null();
 }

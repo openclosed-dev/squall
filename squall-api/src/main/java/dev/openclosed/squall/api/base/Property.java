@@ -22,21 +22,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A property in JSON object.
+ * Property in a JSON object.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.RECORD_COMPONENT)
 public @interface Property {
 
     /**
-     * Returns the name of the property.
-     * @return the name of the property.
+     * Returns the name of this property.
+     * @return the name of this property.
      */
     String value();
 
     /**
-     * Returns whether the property can be omitted.
-     * @return {@code true} if the property can be omitted.
+     * Returns whether this property can be omitted or not.
+     * @return {@code true} if this property can be omitted, {@code false} otherwise.
      */
     boolean omit() default true;
 }

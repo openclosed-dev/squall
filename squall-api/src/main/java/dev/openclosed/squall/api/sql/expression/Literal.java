@@ -17,7 +17,7 @@
 package dev.openclosed.squall.api.sql.expression;
 
 /**
- * A literal expression.
+ * Literal expression.
  */
 public interface Literal extends Expression {
 

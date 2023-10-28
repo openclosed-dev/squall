@@ -115,7 +115,7 @@ public class AsciiDocRendererTest {
 
     static SqlParser createParser(Dialect dialect, DatabaseSpec.Builder builder) {
         var config = new ParserConfig(dialect.name(), dialect.defaultSchema());
-        return SqlParserFactory.get(dialect).createParser(
+        return SqlParserFactory.newFactory(dialect).createParser(
             config,
             builder,
             new DocCommentProcessor());

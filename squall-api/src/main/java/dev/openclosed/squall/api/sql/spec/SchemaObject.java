@@ -18,7 +18,7 @@ package dev.openclosed.squall.api.sql.spec;
 
 
 /**
- * An object in a schema.
+ * Object in a database schema.
  */
 public interface SchemaObject extends Component {
 

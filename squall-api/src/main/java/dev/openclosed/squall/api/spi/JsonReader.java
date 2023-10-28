@@ -21,21 +21,31 @@ import java.util.Map;
 import java.util.ServiceLoader;
 
 /**
- * JSON reader.
+ * Reader of texts in JSON format.
  */
 public interface JsonReader {
 
     /**
-     * Reads a JSON document into a map.
+     * Reads a JSON text into a map.
      * @param text the text to parse.
-     * @return a map generated from the document.
-     * @throws JsonReadingException if problem was detected while parsing the document.
+     * @return a map generated from the text.
+     * @throws JsonReadingException if an error has occurred while reading the text.
      */
     Map<String, ?> readObject(String text) throws JsonReadingException;
 
+    /**
+     * Reads a JSON text into an array.
+     * @param text the text to parse.
+     * @return an array generated from the text.
+     * @throws JsonReadingException if an error has occurred while reading the text.
+     */
     List<?> readArray(String text) throws JsonReadingException;
 
-    static JsonReader get() {
+    /**
+     * Creates an instance of this type.
+     * @return newly created JSON reader.
+     */
+    static JsonReader newReader() {
         return ServiceLoader.load(JsonReader.class).findFirst().get();
     }
 }

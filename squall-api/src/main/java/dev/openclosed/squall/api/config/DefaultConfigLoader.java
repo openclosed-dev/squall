@@ -47,7 +47,7 @@ final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem> {
     private List<Problem> problems;
 
     DefaultConfigLoader() {
-        this.reader = JsonReader.get();
+        this.reader = JsonReader.newReader();
         this.messageBundle = MessageBundle.forLocale(Locale.getDefault());
         this.typeResolver = TypeResolver.builder().build();
         this.objectFactory = new ObjectFactory(

@@ -46,8 +46,8 @@ public final class JsonRendererTest {
 
     @BeforeAll
     public static void setUpOnce() {
-        parserFactory = SqlParserFactory.get(Dialect.POSTGRESQL);
-        rendererFactory = RendererFactory.get("json");
+        parserFactory = SqlParserFactory.newFactory(Dialect.POSTGRESQL);
+        rendererFactory = RendererFactory.newFactory("json");
     }
 
     @ParameterizedTest

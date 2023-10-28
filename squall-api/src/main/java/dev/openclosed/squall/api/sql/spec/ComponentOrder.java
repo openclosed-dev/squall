@@ -23,15 +23,17 @@ import java.util.Comparator;
 import java.util.stream.Stream;
 
 /**
- * Order of specification components.
+ * Order of {@link Component}s.
  */
 public enum ComponentOrder {
+    /** Alphabetical order. */
     NAME {
         @Override
         protected Comparator<Component> comparator() {
             return Comparator.comparing(Component::name);
         }
     },
+    /** Definition order. */
     DEFINITION {
         @Override
         public <T extends Component> Collection<T> reorder(Collection<T> collection) {
@@ -56,10 +58,20 @@ public enum ComponentOrder {
         return list;
     }
 
+    /**
+     * Returns the components sorted in this order.
+     * @param stream the original stream of components.
+     * @return the sorted components.
+     * @param <T> the type of the components.
+     */
     public <T extends Component> Stream<T> reorder(Stream<T> stream) {
         return stream.sorted(comparator());
     }
 
+    /**
+     * Returns the comparator of components.
+     * @return the comparator of components.
+     */
     protected Comparator<Component> comparator() {
         throw new UnsupportedOperationException();
     }

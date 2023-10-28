@@ -19,8 +19,8 @@ package dev.openclosed.squall.api.parser;
 import dev.openclosed.squall.api.sql.spec.Dialect;
 
 /**
- * A configuration for SQL parsers.
- * @param dialect the dialect of the SQL.
+ * Configuration for SQL parsers.
+ * @param dialect the dialect of the SQL language.
  * @param defaultSchema the name of the default schema.
  */
 public record ParserConfig(
@@ -32,10 +32,18 @@ public record ParserConfig(
      */
     public static final ParserConfig DEFAULT = new ParserConfig();
 
+    /**
+     * Creates an instance of a {@code ParserConfig} record class with default settings.
+     */
     public ParserConfig() {
         this(Dialect.POSTGRESQL);
     }
 
+    /**
+     * Creates an instance of a {@code ParserConfig} record class
+     * with default settings for the specified dialect.
+     * @param dialect the dialect of the SQL language.
+     */
     public ParserConfig(Dialect dialect) {
         this(dialect.name(), dialect.defaultSchema());
     }

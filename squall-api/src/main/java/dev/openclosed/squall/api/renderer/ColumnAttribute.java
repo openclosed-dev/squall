@@ -19,7 +19,7 @@ package dev.openclosed.squall.api.renderer;
 import java.util.List;
 
 /**
- * Attributes of a column.
+ * Attributes of a column in a table.
  */
 public enum ColumnAttribute {
     /** Ordinal number in the table. */
@@ -28,17 +28,25 @@ public enum ColumnAttribute {
     NAME,
     /** Name for display purpose. */
     LABEL,
-    /** Type name with length, precision, and/or scale. */
+    /** Name of the data type with length, precision, and/or scale. */
     TYPE,
-    /** Type name only. */
+    /** Name of the data type. */
     TYPE_NAME,
+    /** Precision or length of the data type. */
     PRECISION_LENGTH,
+    /** Scale of the data type. */
     SCALE,
+    /** Whether the column is nullable or not. */
     NULLABLE,
+    /** Whether the column is required or not. */
     REQUIRED,
+    /** Unique constraint of the column. */
     UNIQUE,
+    /** Default value of the column. */
     DEFAULT_VALUE,
+    /** Foreign key constraints of the column. */
     FOREIGN_KEY,
+    /** Description of the column. */
     DESCRIPTION;
 
     private static final List<ColumnAttribute> DEFAULT_LIST = List.of(

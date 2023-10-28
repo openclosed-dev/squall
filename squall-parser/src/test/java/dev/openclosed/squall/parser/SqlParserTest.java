@@ -250,7 +250,7 @@ public abstract class SqlParserTest {
 
     private static JsonWriter getJsonWriter() {
         if (jsonWriter == null) {
-            jsonWriter = JsonWriter.get();
+            jsonWriter = JsonWriter.newWriter();
         }
         return jsonWriter;
     }

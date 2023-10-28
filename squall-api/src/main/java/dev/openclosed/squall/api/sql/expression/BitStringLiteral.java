@@ -19,7 +19,7 @@ package dev.openclosed.squall.api.sql.expression;
 import java.util.Objects;
 
 /**
- * Bit string.
+ * Literal expression of bit string type.
  * @param value the bit string value.
  */
 public record BitStringLiteral(String value) implements Literal {
@@ -27,9 +27,9 @@ public record BitStringLiteral(String value) implements Literal {
     private static final BitStringLiteral EMPTY = new BitStringLiteral("");
 
     /**
-     * Creates a bit string of the given value.
+     * Creates a bit string of the specified value.
      * @param value the bit string value.
-     * @return created bit string.
+     * @return created bit string of the specified value.
      */
     public static BitStringLiteral of(String value) {
         Objects.requireNonNull(value);
@@ -40,6 +40,10 @@ public record BitStringLiteral(String value) implements Literal {
         }
     }
 
+    /**
+     * Creates an instance of a {@code BitStringLiteral} record class.
+     * @param value the bit string value.
+     */
     public BitStringLiteral {
         Objects.requireNonNull(value);
     }

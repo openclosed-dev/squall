@@ -20,18 +20,18 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * IN expression.
+ * SQL In expression.
  * @param left the left expression.
  * @param right the right expression.
  */
 public record In(Expression left, List<Expression> right) implements Expression {
 
     /**
-     * Creates an IN expression.
+     * Creates an In expression.
      * @param left the left expression.
      * @param right the right expression.
-     * @param negated {@code true} for creating NOT-IN expression.
-     * @return created expression
+     * @param negated {@code true} for creating No-In expression.
+     * @return created expression.
      */
     public static Expression of(Expression left, List<Expression> right, boolean negated) {
         if (negated) {
@@ -41,6 +41,11 @@ public record In(Expression left, List<Expression> right) implements Expression 
         }
     }
 
+    /**
+     * Creates an instance of a {@code In} record class.
+     * @param left the left expression.
+     * @param right the right expression.
+     */
     public In {
         Objects.requireNonNull(left);
         Objects.requireNonNull(right);

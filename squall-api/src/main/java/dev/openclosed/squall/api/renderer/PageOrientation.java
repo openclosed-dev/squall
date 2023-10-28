@@ -20,6 +20,8 @@ package dev.openclosed.squall.api.renderer;
  * Page orientations.
  */
 public enum PageOrientation {
+    /** The page is vertically elongated. */
     PORTRAIT,
+    /** The page is horizontally elongated. */
     LANDSCAPE
 }

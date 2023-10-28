@@ -20,7 +20,7 @@ import java.lang.System.Logger.Level;
 import java.util.Optional;
 
 /**
- * A problem detected in the source files and/or the configuration.
+ * Problem found in the input text.
  */
 public interface Problem {
 
@@ -32,13 +32,13 @@ public interface Problem {
 
     /**
      * Returns the description of this problem.
-     * @return the description of this problem.
+     * @return the description of this problem as a {@link Message}.
      */
     Message message();
 
     /**
      * Returns the location where this problem has occurred.
-     * @return line and column numbers.
+     * @return the location including line and column numbers, may be empty.
      */
     default Optional<Location> location() {
         return Optional.empty();
@@ -46,12 +46,16 @@ public interface Problem {
 
     /**
      * Returns the location where this problem has occurred.
-     * @return the JSON pointer.
+     * @return the location as a JSON pointer, may be empty.
      */
     default Optional<JsonPointer> pointer() {
         return Optional.empty();
     }
 
+    /**
+     * Returns the text fragment where this problem has occurred.
+     * @return the text fragment as a string, may be empty.
+     */
     default Optional<String> source() {
         return Optional.empty();
     }

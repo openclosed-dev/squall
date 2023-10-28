@@ -22,26 +22,30 @@ import dev.openclosed.squall.api.base.Message;
 import dev.openclosed.squall.api.base.Problem;
 
 /**
- * An exception thrown if configuration is invalid.
+ * Exception thrown if there exist errors in configuration.
  */
 public final class ConfigurationException extends RuntimeException {
 
     private static final long serialVersionUID = -3054672590244440349L;
 
+    /**
+     * List of the found problems.
+     */
     private final List<Problem> problems;
 
-    public ConfigurationException(String message, List<Problem> problems) {
-        super(message);
-        this.problems = problems;
-    }
-
+    /**
+     * Constructs an exception.
+     * @param message the message describing the exception.
+     * @param problems the problems found while loading configuration.
+     */
     public ConfigurationException(Message message, List<Problem> problems) {
-        this(message.get(), problems);
+        super(message.get());
+        this.problems = problems;
     }
 
     /**
      * Returns the found problem.
-     * @return found problem.
+     * @return the problem found while loading configuration.
      */
     public List<Problem> getProblems() {
         return problems;

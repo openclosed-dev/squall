@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides base components.
+ * Provides Java SPI for extending this module.
  */
 package dev.openclosed.squall.api.spi;

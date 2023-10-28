@@ -19,12 +19,17 @@ package dev.openclosed.squall.api.sql.expression;
 import java.util.Objects;
 
 /**
- * IS expression.
+ * SQL Is expression.
  * @param subject the subject part of the expression.
  * @param predicate the predicate part of the expression.
  */
 public record Is(Expression subject, String predicate) implements Expression {
 
+    /**
+     * Creates an instance of a {@code Is} record class.
+     * @param subject the subject part of the expression.
+     * @param predicate the predicate part of the expression.
+     */
     public Is {
         Objects.requireNonNull(subject);
         Objects.requireNonNull(predicate);

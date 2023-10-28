@@ -20,6 +20,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+/**
+ * Schema in a database.
+ * @param name the name of this schema.
+ * @param parents the parents of this schema.
+ * @param sequences the list of sequences that this schema holds.
+ * @param tables the list of tables that this schema holds.
+ * @param annotations the annotations attached to the schema.
+ * @param state the state of the Schema.
+ */
 public record Schema(
     String name,
     List<String> parents,
@@ -29,6 +38,15 @@ public record Schema(
     Component.State state
     ) implements Component {
 
+    /**
+     * Creates an instance of a {@code Schema} record class.
+     * @param name the name of this schema.
+     * @param parents the parents of this schema.
+     * @param sequences the list of sequences that this schema holds.
+     * @param tables the list of tables that this schema holds.
+     * @param annotations the annotations attached to the schema.
+     * @param state the state of the Schema.
+     */
     public Schema {
         Objects.requireNonNull(name);
         Objects.requireNonNull(parents);

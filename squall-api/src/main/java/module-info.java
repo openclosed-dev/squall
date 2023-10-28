@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+/**
+ * Defines the Squall API and its default implementation.
+ */
 module dev.openclosed.squall.api {
 
     exports dev.openclosed.squall.api.base;

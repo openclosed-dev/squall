@@ -18,7 +18,15 @@ package dev.openclosed.squall.api.renderer;
 
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 
+/**
+ * Renderer for generating documents as string.
+ */
 public interface TextRenderer extends Renderer {
 
+    /**
+     * Renders a document as a string from the input specification.
+     * @param spec the database design specification.
+     * @return the string containing the rendered document.
+     */
     String renderToString(DatabaseSpec spec);
 }

@@ -15,6 +15,6 @@
  */
 
 /**
- * Package for configuration classes.
+ * Provides the configuration class and the loader interface.
  */
 package dev.openclosed.squall.api.config;

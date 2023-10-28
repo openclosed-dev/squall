@@ -25,11 +25,11 @@ import dev.openclosed.squall.api.sql.spec.Component;
 import dev.openclosed.squall.api.sql.spec.ComponentOrder;
 
 /**
- * A configuration for renderers.
+ * Configuration for renderers.
  * @param format the output file format.
  * @param basename the basename of the file.
  * @param locale the locale used while rendering messages.
- * @param numbering whether if numbering is enabled or not.
+ * @param numbering whether numbering is enabled or not.
  * @param order the rendering order of components.
  * @param show the components to render.
  * @param columnAttributes the attributes of columns to be rendered.
@@ -53,10 +53,17 @@ public record RenderConfig(
 
     private static final RenderConfig DEFAULT = new RenderConfig();
 
+    /**
+     * Returns the instance filled with default values.
+     * @return the instance filled with default values.
+     */
     public static RenderConfig getDefault() {
         return DEFAULT;
     }
 
+    /**
+     * Creates an instance of a {@code RenderConfig} record class with default settings.
+     */
     public RenderConfig() {
         this("markdown",
             "spec",
@@ -72,11 +79,27 @@ public record RenderConfig(
         );
     }
 
+    /**
+     * Creates an instance of a {@code RenderConfig} record class.
+     * @param format the output file format.
+     * @param basename the basename of the file.
+     * @param locale the locale used while rendering messages.
+     * @param numbering whether numbering is enabled or not.
+     * @param order the rendering order of components.
+     * @param show the components to render.
+     * @param columnAttributes the attributes of columns to be rendered.
+     * @param sequenceAttributes the attributes of sequences be rendered.
+     * @param pageSize the size of the page. Used for PDF format.
+     * @param pageOrientation the orientation of the page. Used for PDF format.
+     * @param pageMargin the margin of the page. Used for PDF format.
+     */
     public RenderConfig {
         Objects.requireNonNull(pageMargin);
         if (pageMargin.isEmpty() || pageMargin.size() > 4) {
             throw new IllegalArgumentException();
         }
+        columnAttributes = List.copyOf(columnAttributes);
+        sequenceAttributes = List.copyOf(sequenceAttributes);
         pageMargin = List.copyOf(pageMargin);
     }
 }

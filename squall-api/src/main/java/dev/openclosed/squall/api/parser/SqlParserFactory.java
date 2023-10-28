@@ -24,28 +24,36 @@ import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.Dialect;
 
 /**
- * A factory of SQL parsers.
+ * Factory of SQL parsers.
  */
 public interface SqlParserFactory {
 
+    /**
+     * Returns the SQL dialect for which this factory creates parsers.
+     * @return the SQL dialect.
+     */
     Dialect dialect();
 
+    /**
+     * Returns the name of the SQL dialect.
+     * @return the name of the SQL dialect.
+     */
     default String dialectName() {
         return dialect().name();
     }
 
     /**
-     * Create a new parser.
+     * Create a new SQL parser.
      * @param config the configuration for the parser.
      * @param builder the builder of the database specification.
      * @return newly created parser.
      */
     default SqlParser createParser(ParserConfig config, DatabaseSpec.Builder builder) {
-        return createParser(config, builder, CommentProcessor.empty());
+        return createParser(config, builder, CommentProcessor.noop());
     }
 
     /**
-     * Create a new parser.
+     * Create a new SQL parser with specified comment processor.
      * @param config the configuration for the parser.
      * @param builder the builder of the database specification.
      * @param commentProcessor the processor of comments.
@@ -60,11 +68,11 @@ public interface SqlParserFactory {
     }
 
     /**
-     * Create a new parser.
+     * Create a new SQL parser with specified comment processor and message bundle.
      * @param config the configuration for the parser.
      * @param builder the builder of the database specification.
      * @param commentProcessor the processor of comments.
-     * @param messageBundle the bundle of messages.
+     * @param messageBundle the message bundle.
      * @return newly created parser.
      */
     SqlParser createParser(
@@ -73,18 +81,30 @@ public interface SqlParserFactory {
         CommentProcessor commentProcessor,
         MessageBundle messageBundle);
 
-    static SqlParserFactory get(Dialect dialect) {
+    /**
+     * Creates a parser factory for the SQL dialect.
+     * @param dialect the SQL dialect for which the factory creates parsers.
+     * @return created parser factory.
+     * @throws IllegalArgumentException if appropriate factory was not found.
+     */
+    static SqlParserFactory newFactory(Dialect dialect) {
         Objects.requireNonNull(dialect);
-        return get(dialect.name());
+        return newFactory(dialect.name());
     }
 
-    static SqlParserFactory get(String dialectName) {
+    /**
+     * Creates a parser factory for the SQL dialect.
+     * @param dialectName the name of the SQL dialect for which the factory creates parsers.
+     * @return created parser factory.
+     * @throws IllegalArgumentException if appropriate factory was not found for the dialect.
+     */
+    static SqlParserFactory newFactory(String dialectName) {
         Objects.requireNonNull(dialectName);
         for (var factory : ServiceLoader.load(SqlParserFactory.class)) {
             if (factory.dialectName().equals(dialectName)) {
                 return factory;
             }
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("SqlParserFactory was not found for the dialect: " + dialectName);
     }
 }

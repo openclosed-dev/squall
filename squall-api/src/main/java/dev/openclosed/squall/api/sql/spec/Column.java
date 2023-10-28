@@ -25,18 +25,18 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 /**
- * A column in table.
- * @param name
- * @param parents
- * @param typeName
- * @param length
- * @param precision
- * @param scale
- * @param isRequired
- * @param isPrimaryKey
- * @param isUnique
- * @param defaultValue the default value for this column
- * @param annotations
+ * Column in a table.
+ * @param name the name of this column.
+ * @param parents the parent components of this column.
+ * @param typeName the name of the data type.
+ * @param length the length of the data type.
+ * @param precision the precision of the data type.
+ * @param scale the scale of the data type.
+ * @param isRequired {@code true} if the value is required for this column.
+ * @param isPrimaryKey  {@code true} if this column is one of primary keys.
+ * @param isUnique {@code true} if the value must be unique.
+ * @param defaultValue the default value for this column.
+ * @param annotations the annotations attached to this column.
  */
 public record Column(
     String name,
@@ -53,6 +53,20 @@ public record Column(
     )
     implements Component, DataType {
 
+    /**
+     * Constructs the column.
+     * @param name the name of this column.
+     * @param parents the parent components of this column.
+     * @param typeName the name of the data type.
+     * @param length the length of the data type.
+     * @param precision the precision of the data type.
+     * @param scale the scale of the data type.
+     * @param isRequired {@code true} if the value is required for this column.
+     * @param isPrimaryKey  {@code true} if this column is one of primary keys.
+     * @param isUnique {@code true} if the value must be unique.
+     * @param defaultValue the default value for this column.
+     * @param annotations the annotations attached to this column.
+     */
     public Column {
         Objects.requireNonNull(name);
         Objects.requireNonNull(parents);
@@ -76,6 +90,10 @@ public record Column(
         visitor.visit(this);
     }
 
+    /**
+     * Returns whether the value is nullable or not.
+     * @return {@code true} if null is allowed.
+     */
     public boolean isNullable() {
         return !isRequired();
     }

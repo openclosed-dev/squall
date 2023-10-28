@@ -20,12 +20,18 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+/**
+ * Message bundle for renderers.
+ */
 public interface MessageBundle {
 
+    /**
+     * The base name of the resource bundle.
+     */
     String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.Messages";
 
     /**
-     * Creates a message bundle.
+     * Creates a message bundle for the specified locale.
      * @param locale the locale of the message bundle.
      * @return newly created message bundle.
      */
@@ -35,14 +41,27 @@ public interface MessageBundle {
         return () -> resourceBundle;
     }
 
+    /**
+     * Returns the header title for a column.
+     * @param name the name of the column.
+     * @return the header title for a column.
+     */
     default String columnHeader(String name) {
         return get("column.header." + name);
     }
 
+    /**
+     * Returns thw word "deprecated" for the current locale.
+     * @return thw word "deprecated" for the current locale.
+     */
     default String deprecated() {
         return get("deprecated");
     }
 
+    /**
+     * Returns the resource bundle that provides messages.
+     * @return the resource bundle that provides messages.
+     */
     ResourceBundle getResourceBundle();
 
     private String get(String key) {

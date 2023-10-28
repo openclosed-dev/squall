@@ -27,6 +27,11 @@ import java.util.Objects;
 public record BasicFunctionCall(String name, List<Expression> arguments)
     implements FunctionCall {
 
+    /**
+     * Creates an instance of a {@code BasicFunctionCall} record class.
+     * @param name the name of the function.
+     * @param arguments the arguments passed to the function.
+     */
     public BasicFunctionCall {
         Objects.requireNonNull(name);
         Objects.requireNonNull(arguments);

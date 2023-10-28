@@ -22,14 +22,14 @@ import java.util.Objects;
 
 /**
  * JSON pointer.
- * @param tokens reference tokens of this JSON pointer.
+ * @param tokens the reference tokens of this JSON pointer.
  */
 public record JsonPointer(List<String> tokens) {
 
     private static final JsonPointer ROOT = new JsonPointer(Collections.emptyList());
 
     /**
-     * Creates an instance of {@link JsonPointer}.
+     * Creates an instance of {@link JsonPointer} from reference tokens.
      * @param tokens the reference tokens composing the pointer.
      * @return created instance of JSON pointer.
      */
@@ -42,14 +42,18 @@ public record JsonPointer(List<String> tokens) {
         }
     }
 
+    /**
+     * Constructs a JSON pointer.
+     * @param tokens the reference tokens of this JSON pointer.
+     */
     public JsonPointer {
         Objects.requireNonNull(tokens);
         tokens = List.copyOf(tokens);
     }
 
     /**
-     * Return the string representation of this pointer.
-     * @return the string representation of this pointer.
+     * Return the string representation of this JSON pointer.
+     * @return the string representation of this JSON pointer.
      */
     @Override
     public String toString() {

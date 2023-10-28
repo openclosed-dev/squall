@@ -23,9 +23,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * A foreign key constraint.
- * @param constraintName the name of the constraint.
- * @param tableName the name of the table including parents.
+ * Foreign key constraint.
+ * @param constraintName the name of the constraint, optional.
+ * @param tableName the name of the referenced table, including parents.
  * @param columnMapping the mapping of the columns.
  */
 public record ForeignKey(
@@ -34,6 +34,12 @@ public record ForeignKey(
     Map<String, String> columnMapping
     ) implements Constraint {
 
+    /**
+     * Creates an instance of a {@code ForeignKey} record class.
+     * @param constraintName the name of the constraint, optional.
+     * @param tableName the name of the referenced table, including parents.
+     * @param columnMapping the mapping of the columns.
+     */
     public ForeignKey {
         Objects.requireNonNull(tableName);
         Objects.requireNonNull(columnMapping);
@@ -45,8 +51,8 @@ public record ForeignKey(
     }
 
     /**
-     * Returns the referenced table name.
-     * @return the referenced table name.
+     * Returns the name of the referenced table.
+     * @return the name of the referenced table.
      */
     public String simpleTableName() {
         var name = tableName();
@@ -54,13 +60,18 @@ public record ForeignKey(
     }
 
     /**
-     * Returns the referenced table name in fully qualified form.
-     * @return the referenced table name in fully qualified form.
+     * Returns the fully qualified name of the referenced table.
+     * @return the fully qualified name of the referenced table.
      */
     public String fullTableName() {
         return tableName().stream().collect(Collectors.joining("."));
     }
 
+    /**
+     * Returns whether this foreign key contains the specified column or not.
+     * @param column the name of the column to test.
+     * @return {@code true} if this foreign key contains the column, {@code false} otherwise.
+     */
     public boolean containsKey(String column) {
         return columnMapping().containsKey(column);
     }

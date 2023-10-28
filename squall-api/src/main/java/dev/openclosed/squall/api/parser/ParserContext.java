@@ -28,12 +28,22 @@ import java.util.List;
 public interface ParserContext {
 
     /**
-     * Returns the configuration of this parser.
-     * @return the configuration of this parser.
+     * Returns the configuration of the current parser.
+     * @return the configuration of the current parser.
      */
     ParserConfig config();
 
+    /**
+     * Adds doc comment annotations for the following component.
+     * @param annotations the doc comment annotations to add.
+     */
     void addAnnotations(List<DocAnnotation> annotations);
 
+    /**
+     * Reports a problem found while parsing the SQL.
+     * @param severity the severity of the problem.
+     * @param message the message describing the problem.
+     * @param location the location where the problem has occurred.
+     */
     void reportProblem(System.Logger.Level severity, Message message, Location location);
 }

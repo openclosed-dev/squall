@@ -21,13 +21,16 @@ import java.util.ResourceBundle;
 import java.util.spi.AbstractResourceBundleProvider;
 
 /**
- * The default implementation of {@link MessagesProvider}.
+ * Default implementation of {@link MessagesProvider}.
  */
 public class DefaultMessagesProvider extends AbstractResourceBundleProvider
     implements MessagesProvider {
 
     private static final String BASE_NAME = "dev.openclosed.squall.api.Messages";
 
+    /**
+     * Constructs a provider.
+     */
     public DefaultMessagesProvider() {
         super("java.properties");
     }

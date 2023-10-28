@@ -17,7 +17,7 @@
 package dev.openclosed.squall.api.sql.spec;
 
 /**
- * A dialect of the SQL language.
+ * SQL Dialect.
  */
 public interface Dialect {
 
@@ -28,8 +28,8 @@ public interface Dialect {
     String name();
 
     /**
-     * Returns the default schema of this dialect.
-     * @return the default schema of this dialect.
+     * Returns the default schema in this dialect.
+     * @return the default schema in this dialect.
      */
     String defaultSchema();
 

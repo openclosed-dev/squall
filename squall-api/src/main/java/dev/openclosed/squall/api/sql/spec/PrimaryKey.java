@@ -22,12 +22,17 @@ import java.util.Optional;
 
 /**
  * Primary key constraint.
- * @param constraintName the name of the constraint
+ * @param constraintName the name of the constraint, optional.
  * @param columns the columns composing this primary key
  */
 public record PrimaryKey(Optional<String> constraintName, List<String> columns)
     implements Constraint {
 
+    /**
+     * Creates an instance of a {@code PrimaryKey} record class.
+     * @param constraintName the name of the constraint, optional.
+     * @param columns the columns composing this primary key
+     */
     public PrimaryKey {
         Objects.requireNonNull(columns);
         if (columns.isEmpty()) {
@@ -37,17 +42,17 @@ public record PrimaryKey(Optional<String> constraintName, List<String> columns)
     }
 
     /**
-     * Returns whether if this primary key is composed of the specified column.
+     * Returns whether this primary key is composed of the specified column.
      * @param name the name of the column to test.
-     * @return {@code true} if this primary key is composed of the specified column.
+     * @return {@code true} if this primary key is composed of the specified column, {@code false} otherwise.
      */
     public boolean containsColumn(String name) {
         return columns.contains(name);
     }
 
     /**
-     * Returns whether if this primary key is composite or not.
-     * @return {@code true} if this primary key is composite.
+     * Returns whether this primary key is composite or not.
+     * @return {@code true} if this primary key is composite, {@code false} if the primary has a single column.
      */
     public boolean isComposite() {
         return columns.size() > 1;

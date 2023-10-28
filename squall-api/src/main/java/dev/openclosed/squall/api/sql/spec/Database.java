@@ -20,6 +20,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+/**
+ * Database.
+ * @param name the name of the database.
+ * @param schemas the schemas in the database.
+ * @param annotations the annotations attached to the database.
+ * @param state the state of the database.
+ */
 public record Database(
     String name,
     List<Schema> schemas,
@@ -27,6 +34,13 @@ public record Database(
     Component.State state
     ) implements Component {
 
+    /**
+     * Constructs the database.
+     * @param name the name of the database.
+     * @param schemas the schemas in the database.
+     * @param annotations the annotations attached to the database.
+     * @param state the state of the database.
+     */
     public Database {
         Objects.requireNonNull(name);
         Objects.requireNonNull(schemas);

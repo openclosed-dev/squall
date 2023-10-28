@@ -20,13 +20,19 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A reference to a schema object.
+ * Reference to a schema object.
  * @param databaseName the name of the database, may be empty.
  * @param schemaName the name of the schema, may be empty.
  * @param objectName the name of the schema object, cannot be empty.
  */
 public record ObjectRef(String databaseName, String schemaName, String objectName) {
 
+    /**
+     * Creates an instance of a {@code ObjectRef} record class.
+     * @param databaseName the name of the database, may be empty.
+     * @param schemaName the name of the schema, may be empty.
+     * @param objectName the name of the schema object, cannot be empty.
+     */
     public ObjectRef {
         Objects.requireNonNull(databaseName);
         Objects.requireNonNull(schemaName);

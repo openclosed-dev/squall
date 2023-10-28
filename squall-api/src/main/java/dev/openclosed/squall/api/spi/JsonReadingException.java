@@ -19,14 +19,22 @@ package dev.openclosed.squall.api.spi;
 import dev.openclosed.squall.api.base.Location;
 
 /**
- * An exception thrown while reading a JSON document.
+ * Exception thrown while reading a JSON document.
  */
 public class JsonReadingException extends RuntimeException {
 
     private static final long serialVersionUID = -2756820567524391263L;
 
+    /**
+     * Location where this exception has occurred.
+     */
     private final Location location;
 
+    /**
+     * Constructs an exception.
+     * @param cause the real cause of this exception.
+     * @param location the location where this exception has occurred.
+     */
     public JsonReadingException(Throwable cause, Location location) {
         super(cause);
         this.location = location;
@@ -37,6 +45,6 @@ public class JsonReadingException extends RuntimeException {
      * @return the location where this exception has occurred.
      */
     public final Location getLocation() {
-        return location;
+        return this.location;
     }
 }

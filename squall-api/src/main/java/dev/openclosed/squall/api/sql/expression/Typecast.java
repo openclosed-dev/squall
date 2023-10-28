@@ -49,6 +49,14 @@ public record Typecast(
             dataType.typeName(), dataType.length(), dataType.precision(), dataType.scale());
     }
 
+    /**
+     * Creates an instance of a {@code Typecast} record class.
+     * @param source the source expression to be cast.
+     * @param typeName the name of the target type.
+     * @param length the maximum length of the target type, may be empty.
+     * @param precision the total number of digits, may be empty.
+     * @param scale the number of digits after the decimal point, may be empty.
+     */
     public Typecast {
         Objects.requireNonNull(source);
         Objects.requireNonNull(typeName);

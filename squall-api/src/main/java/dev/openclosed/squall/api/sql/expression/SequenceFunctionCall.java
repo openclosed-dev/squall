@@ -21,9 +21,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * A sequence manipulation function.
+ * Calling of a sequence manipulation function.
  * @param name the name of the function.
- * @param arguments the arguments given to the function.
+ * @param arguments the arguments passed to the function.
  * @param sequenceName the name of the sequence.
  */
 public record SequenceFunctionCall(
@@ -34,7 +34,7 @@ public record SequenceFunctionCall(
     /**
      * Creates a sequence manipulation function.
      * @param name the name of the function.
-     * @param arguments the arguments given to the function.
+     * @param arguments the arguments passed to the function.
      * @param sequenceRef the reference to the sequence.
      * @return newly created function.
      */
@@ -43,6 +43,12 @@ public record SequenceFunctionCall(
         return new SequenceFunctionCall(name, arguments, sequenceRef.toList());
     }
 
+    /**
+     * Creates an instance of a {@code SequenceFunctionCall} record class.
+     * @param name the name of the function.
+     * @param arguments the arguments passed to the function.
+     * @param sequenceName the reference to the sequence.
+     */
     public SequenceFunctionCall {
         Objects.requireNonNull(name);
         Objects.requireNonNull(arguments);

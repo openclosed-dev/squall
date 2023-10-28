@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public interface MessageBundle {
+interface MessageBundle {
 
     String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.Messages";
 

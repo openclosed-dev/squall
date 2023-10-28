@@ -19,11 +19,15 @@ package dev.openclosed.squall.api.sql.expression;
 import java.util.Objects;
 
 /**
- * A function call to retrieve value of a system variable.
- * @param name the name of the function.
+ * Special function call to retrieve value of a system variable.
+ * @param name the name of the system variable.
  */
 public record ValueFunctionCall(String name) implements FunctionCall {
 
+    /**
+     * Creates an instance of a {@code ValueFunctionCall} record class.
+     * @param name the name of the system variable.
+     */
     public ValueFunctionCall {
         Objects.requireNonNull(name);
         if (name.isBlank()) {

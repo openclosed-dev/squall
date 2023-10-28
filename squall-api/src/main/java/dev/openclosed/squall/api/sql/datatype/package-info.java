@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides basic data types in SQL language.
+ * Provides standard data types defined in the SQL language.
  */
 package dev.openclosed.squall.api.sql.datatype;

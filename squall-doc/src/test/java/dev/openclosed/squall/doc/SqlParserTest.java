@@ -46,7 +46,7 @@ public final class SqlParserTest {
 
     @BeforeAll
     public static void setUpOnce() {
-        parserFactory = SqlParserFactory.get(DIALECT);
+        parserFactory = SqlParserFactory.newFactory(DIALECT);
     }
 
     @BeforeEach
