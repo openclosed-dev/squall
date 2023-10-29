@@ -39,7 +39,7 @@ public interface JsonWriter {
      * @return newly created JSON writer.
      * @throws ServiceException if an error has occurred while loading the service.
      */
-    static JsonWriter newWriter() {
+    static JsonWriter newInstance() {
         try {
             return ServiceLoader.load(JsonWriter.class).findFirst().get();
         } catch (Exception e) {

@@ -48,7 +48,7 @@ public interface JsonReader {
      * @return newly created JSON reader.
      * @throws ServiceException if an error has occurred while loading the service.
      */
-    static JsonReader newReader() {
+    static JsonReader newInstance() {
         try {
             return ServiceLoader.load(JsonReader.class).findFirst().get();
         } catch (Exception e) {

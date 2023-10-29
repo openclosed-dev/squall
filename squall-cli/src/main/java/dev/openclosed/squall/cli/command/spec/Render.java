@@ -92,7 +92,7 @@ final class Render implements Subcommand {
         List<String> sources,
         ParserConfig parserConfig,
         DatabaseSpec.Builder specBuilder) {
-        var parserFactory = SqlParserFactory.newFactory(parserConfig.dialect());
+        var parserFactory = SqlParserFactory.newInstance(parserConfig.dialect());
         var parser = parserFactory.createParser(parserConfig,
             specBuilder,
             CommentProcessor.newDocCommentProcessor());
@@ -168,7 +168,7 @@ final class Render implements Subcommand {
 
     private RendererFactory getRendererFactory(String format) {
         try {
-            return RendererFactory.newFactory(format);
+            return RendererFactory.newInstance(format);
         } catch (Exception e) {
             throw new CommandException(messages().RENDERER_UNAVAILABLE(format), e);
         }

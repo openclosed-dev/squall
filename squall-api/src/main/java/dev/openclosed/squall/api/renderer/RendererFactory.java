@@ -66,7 +66,7 @@ public interface RendererFactory {
      * @return newly created renderer factory.
      * @throws ServiceException if an error has occurred while loading the service.
      */
-    static RendererFactory newFactory(String format) {
+    static RendererFactory newInstance(String format) {
         Objects.requireNonNull(format);
         try {
             return ServiceLoader.load(RendererFactory.class)

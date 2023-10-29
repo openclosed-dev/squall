@@ -104,7 +104,7 @@ public class MarkdownRendererTest {
 
     static SqlParser createParser(Dialect dialect, DatabaseSpec.Builder builder) {
         var config = new ParserConfig(dialect.name(), dialect.defaultSchema());
-        return SqlParserFactory.newFactory(dialect).createParser(
+        return SqlParserFactory.newInstance(dialect).createParser(
             config,
             builder,
             CommentProcessor.newDocCommentProcessor());

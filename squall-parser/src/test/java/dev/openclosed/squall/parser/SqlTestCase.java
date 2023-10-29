@@ -27,7 +27,7 @@ import dev.openclosed.squall.api.text.json.JsonReader;
 
 public record SqlTestCase(String title, List<String> sql, Map<String, String> expected, String output) {
 
-    private static final JsonReader JSON_READER = JsonReader.newReader();
+    private static final JsonReader JSON_READER = JsonReader.newInstance();
 
     public String firstSql() {
         return sql.get(0);

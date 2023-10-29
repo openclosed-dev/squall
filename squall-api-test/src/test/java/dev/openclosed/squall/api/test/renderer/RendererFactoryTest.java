@@ -27,7 +27,7 @@ public class RendererFactoryTest {
     @Test
     public void newFactoryShouldThrowServiceException() {
         assertThatThrownBy(() -> {
-            RendererFactory.newFactory("unsupported");
+            RendererFactory.newInstance("unsupported");
         }).isInstanceOf(ServiceException.class)
             .hasMessage("Unable to create requested service [dev.openclosed.squall.api.renderer.RendererFactory]");
     }

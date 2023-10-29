@@ -27,7 +27,7 @@ public class SqlParserFactoryTest {
     @Test
     public void newFactoryShouldThrowServiceException() {
         assertThatThrownBy(() -> {
-            SqlParserFactory.newFactory("unsupported");
+            SqlParserFactory.newInstance("unsupported");
         }).isInstanceOf(ServiceException.class)
             .hasMessage("Unable to create requested service [dev.openclosed.squall.api.parser.SqlParserFactory]");
     }

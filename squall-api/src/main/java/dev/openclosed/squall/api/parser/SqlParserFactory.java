@@ -88,9 +88,9 @@ public interface SqlParserFactory {
      * @return created parser factory.
      * @throws IllegalArgumentException if appropriate factory was not found.
      */
-    static SqlParserFactory newFactory(Dialect dialect) {
+    static SqlParserFactory newInstance(Dialect dialect) {
         Objects.requireNonNull(dialect);
-        return newFactory(dialect.name());
+        return newInstance(dialect.name());
     }
 
     /**
@@ -99,7 +99,7 @@ public interface SqlParserFactory {
      * @return newly created parser factory.
      * @throws ServiceException if an error has occurred while loading the service.
      */
-    static SqlParserFactory newFactory(String dialectName) {
+    static SqlParserFactory newInstance(String dialectName) {
         Objects.requireNonNull(dialectName);
         try {
             return ServiceLoader.load(SqlParserFactory.class)
