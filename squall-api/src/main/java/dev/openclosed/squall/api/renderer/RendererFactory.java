@@ -16,12 +16,14 @@
 
 package dev.openclosed.squall.api.renderer;
 
+import dev.openclosed.squall.api.spi.ServiceException;
+
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ServiceLoader;
 
 /**
- * Factory of renderers.
+ * Factory of {@link Renderer}s.
  */
 public interface RendererFactory {
 
@@ -61,16 +63,20 @@ public interface RendererFactory {
     /**
      * Creates a renderer factory for the specified format.
      * @param format the output format.
-     * @return newly created factory.
-     * @throws IllegalArgumentException if appropriate factory was not found for the format.
+     * @return newly created renderer factory.
+     * @throws ServiceException if an error has occurred while loading the service.
      */
     static RendererFactory newFactory(String format) {
         Objects.requireNonNull(format);
-        for (var factory : ServiceLoader.load(RendererFactory.class)) {
-            if (factory.format().equals(format)) {
-                return factory;
-            }
+        try {
+            return ServiceLoader.load(RendererFactory.class)
+                .stream()
+                .map(ServiceLoader.Provider::get)
+                .filter(factory -> format.equalsIgnoreCase(factory.format()))
+                .findFirst()
+                .get();
+        } catch (Exception e) {
+            throw new ServiceException(RendererFactory.class, e);
         }
-        throw new IllegalArgumentException("RendererFactory was not found for the format: " + format);
     }
 }

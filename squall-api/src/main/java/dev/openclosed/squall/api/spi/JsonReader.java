@@ -44,8 +44,13 @@ public interface JsonReader {
     /**
      * Creates an instance of this type.
      * @return newly created JSON reader.
+     * @throws ServiceException if an error has occurred while loading the service.
      */
     static JsonReader newReader() {
-        return ServiceLoader.load(JsonReader.class).findFirst().get();
+        try {
+            return ServiceLoader.load(JsonReader.class).findFirst().get();
+        } catch (Exception e) {
+            throw new ServiceException(JsonReader.class, e);
+        }
     }
 }

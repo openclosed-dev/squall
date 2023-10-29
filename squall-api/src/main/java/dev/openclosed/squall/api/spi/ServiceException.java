@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,20 @@
 package dev.openclosed.squall.api.spi;
 
 /**
- * Exception thrown while writing a JSON document.
+ * Exception thrown while loading a service.
  */
-public class JsonWritingException extends RuntimeException {
+public class ServiceException extends RuntimeException {
 
     /**
      * Constructs an exception.
+     * @param serviceClass the class of the service to load.
      * @param cause the cause of the exception.
      */
-    public JsonWritingException(Throwable cause) {
-        super(cause);
+    public ServiceException(Class<?> serviceClass, Throwable cause) {
+        super(buildMessage(serviceClass), cause);
+    }
+
+    private static String buildMessage(Class<?> serviceClass) {
+        return "Unable to create requested service " + '[' + serviceClass.getName() + ']';
     }
 }

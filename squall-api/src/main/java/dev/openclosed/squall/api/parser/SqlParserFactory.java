@@ -20,6 +20,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.ServiceLoader;
 
+import dev.openclosed.squall.api.spi.ServiceException;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.Dialect;
 
@@ -95,16 +96,20 @@ public interface SqlParserFactory {
     /**
      * Creates a parser factory for the SQL dialect.
      * @param dialectName the name of the SQL dialect for which the factory creates parsers.
-     * @return created parser factory.
-     * @throws IllegalArgumentException if appropriate factory was not found for the dialect.
+     * @return newly created parser factory.
+     * @throws ServiceException if an error has occurred while loading the service.
      */
     static SqlParserFactory newFactory(String dialectName) {
         Objects.requireNonNull(dialectName);
-        for (var factory : ServiceLoader.load(SqlParserFactory.class)) {
-            if (factory.dialectName().equals(dialectName)) {
-                return factory;
-            }
+        try {
+            return ServiceLoader.load(SqlParserFactory.class)
+                .stream()
+                .map(ServiceLoader.Provider::get)
+                .filter(factory -> dialectName.equalsIgnoreCase(factory.dialectName()))
+                .findFirst()
+                .get();
+        } catch (Exception e) {
+            throw new ServiceException(SqlParserFactory.class, e);
         }
-        throw new IllegalArgumentException("SqlParserFactory was not found for the dialect: " + dialectName);
     }
 }

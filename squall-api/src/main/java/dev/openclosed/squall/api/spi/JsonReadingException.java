@@ -32,7 +32,7 @@ public class JsonReadingException extends RuntimeException {
 
     /**
      * Constructs an exception.
-     * @param cause the real cause of this exception.
+     * @param cause the cause of the exception.
      * @param location the location where this exception has occurred.
      */
     public JsonReadingException(Throwable cause, Location location) {

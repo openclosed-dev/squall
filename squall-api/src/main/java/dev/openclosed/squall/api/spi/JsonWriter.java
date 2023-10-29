@@ -35,8 +35,13 @@ public interface JsonWriter {
     /**
      * Creates an instance of this type.
      * @return newly created JSON writer.
+     * @throws ServiceException if an error has occurred while loading the service.
      */
     static JsonWriter newWriter() {
-        return ServiceLoader.load(JsonWriter.class).findFirst().get();
+        try {
+            return ServiceLoader.load(JsonWriter.class).findFirst().get();
+        } catch (Exception e) {
+            throw new ServiceException(JsonWriter.class, e);
+        }
     }
 }
