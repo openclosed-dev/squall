@@ -17,16 +17,13 @@
 package dev.openclosed.squall.api.config;
 
 import dev.openclosed.squall.api.message.Message;
+import dev.openclosed.squall.api.message.BaseMessageBundle;
 
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
-import java.util.ResourceBundle;
 
-interface MessageBundle {
-
-    String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.message.Messages";
+interface MessageBundle extends BaseMessageBundle {
 
     /**
      * Creates a message bundle.
@@ -34,8 +31,7 @@ interface MessageBundle {
      * @return newly created message bundle.
      */
     static MessageBundle forLocale(Locale locale) {
-        Objects.requireNonNull(locale);
-        var resourceBundle = ResourceBundle.getBundle(BUNDLE_BASE_NAME, locale);
+        var resourceBundle = BaseMessageBundle.getResourceBundleForLocale(locale);
         return () -> resourceBundle;
     }
 
@@ -70,12 +66,6 @@ interface MessageBundle {
     }
 
     //CHECKSTYLE:ON
-
-    ResourceBundle getResourceBundle();
-
-    private Message of(String key, Object... args) {
-        return Message.of(key, args, getResourceBundle());
-    }
 
     private static String nameOf(Class<?> cls) {
         if (Map.class.isAssignableFrom(cls)) {

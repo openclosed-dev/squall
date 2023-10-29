@@ -16,6 +16,8 @@
 
 package dev.openclosed.squall.api.message.spi;
 
+import dev.openclosed.squall.api.message.BaseMessageBundle;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.spi.AbstractResourceBundleProvider;
@@ -24,8 +26,6 @@ import java.util.spi.AbstractResourceBundleProvider;
  * Default implementation of {@link MessagesProvider}.
  */
 final class DefaultMessagesProvider extends AbstractResourceBundleProvider implements MessagesProvider {
-
-    private static final String BASE_NAME = "dev.openclosed.squall.api.message.Messages";
 
     /**
      * Constructs a provider.
@@ -39,6 +39,6 @@ final class DefaultMessagesProvider extends AbstractResourceBundleProvider imple
         if (locale == Locale.ROOT) {
             locale = Locale.ENGLISH;
         }
-        return super.getBundle(BASE_NAME, locale);
+        return super.getBundle(BaseMessageBundle.BUNDLE_BASE_NAME, locale);
     }
 }

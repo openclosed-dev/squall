@@ -16,19 +16,14 @@
 
 package dev.openclosed.squall.api.renderer;
 
+import dev.openclosed.squall.api.message.BaseMessageBundle;
+
 import java.util.Locale;
-import java.util.Objects;
-import java.util.ResourceBundle;
 
 /**
  * Message bundle for renderers.
  */
-public interface MessageBundle {
-
-    /**
-     * The base name of the resource bundle.
-     */
-    String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.message.Messages";
+public interface MessageBundle extends BaseMessageBundle {
 
     /**
      * Creates a message bundle for the specified locale.
@@ -36,8 +31,7 @@ public interface MessageBundle {
      * @return newly created message bundle.
      */
     static MessageBundle forLocale(Locale locale) {
-        Objects.requireNonNull(locale);
-        var resourceBundle = ResourceBundle.getBundle(BUNDLE_BASE_NAME, locale);
+        var resourceBundle = BaseMessageBundle.getResourceBundleForLocale(locale);
         return () -> resourceBundle;
     }
 
@@ -47,7 +41,7 @@ public interface MessageBundle {
      * @return the header title for a column.
      */
     default String columnHeader(String name) {
-        return get("column.header." + name);
+        return getString("column.header." + name);
     }
 
     /**
@@ -55,16 +49,6 @@ public interface MessageBundle {
      * @return thw word "deprecated" for the current locale.
      */
     default String deprecated() {
-        return get("deprecated");
-    }
-
-    /**
-     * Returns the resource bundle that provides messages.
-     * @return the resource bundle that provides messages.
-     */
-    ResourceBundle getResourceBundle();
-
-    private String get(String key) {
-        return getResourceBundle().getString(key);
+        return getString("deprecated");
     }
 }
