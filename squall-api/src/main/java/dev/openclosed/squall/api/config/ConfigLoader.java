@@ -18,7 +18,7 @@ package dev.openclosed.squall.api.config;
 
 import java.util.List;
 
-import dev.openclosed.squall.api.base.Problem;
+import dev.openclosed.squall.api.text.Problem;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.sql.spec.SpecMetadata;
 

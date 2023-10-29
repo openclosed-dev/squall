@@ -16,8 +16,8 @@
 
 package dev.openclosed.squall.parser.basic;
 
-import dev.openclosed.squall.api.base.Location;
-import dev.openclosed.squall.api.base.Message;
+import dev.openclosed.squall.api.text.Location;
+import dev.openclosed.squall.api.message.Message;
 import dev.openclosed.squall.api.parser.MessageBundle;
 import dev.openclosed.squall.api.parser.SqlSyntaxException;
 

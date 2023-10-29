@@ -17,7 +17,7 @@
 package dev.openclosed.squall.api.test.parser;
 
 import dev.openclosed.squall.api.parser.SqlParserFactory;
-import dev.openclosed.squall.api.spi.ServiceException;
+import dev.openclosed.squall.api.ServiceException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

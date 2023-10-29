@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.api.parser;
 
-import dev.openclosed.squall.api.base.Message;
+import dev.openclosed.squall.api.message.Message;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -30,7 +30,7 @@ public interface MessageBundle {
     /**
      * The base name of the resource bundle.
      */
-    String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.Messages";
+    String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.message.Messages";
 
     /**
      * Creates a message bundle for the specified locale.

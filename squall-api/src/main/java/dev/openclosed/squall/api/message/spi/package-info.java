@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.spi;
-
 /**
- * Exception thrown while writing a JSON document.
+ * Provides message resource providers.
  */
-public class JsonWritingException extends RuntimeException {
-
-    /**
-     * Constructs an exception.
-     * @param cause the cause of the exception.
-     */
-    public JsonWritingException(Throwable cause) {
-        super(cause);
-    }
-}
+package dev.openclosed.squall.api.message.spi;

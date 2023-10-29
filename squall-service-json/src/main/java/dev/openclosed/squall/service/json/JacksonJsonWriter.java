@@ -19,8 +19,8 @@ package dev.openclosed.squall.service.json;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import dev.openclosed.squall.api.spi.JsonWriter;
-import dev.openclosed.squall.api.spi.JsonWritingException;
+import dev.openclosed.squall.api.text.json.JsonWriter;
+import dev.openclosed.squall.api.text.json.JsonWritingException;
 
 import java.util.Map;
 import java.util.Objects;

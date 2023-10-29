@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.base;
+package dev.openclosed.squall.api.text;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 /**
  * Finder of code fragments.
  */
-public class CodeFinder {
+public class CodeFragmentFinder {
 
     private static final Pattern LINE_TERMINATOR = Pattern.compile("\n");
 
@@ -34,7 +34,7 @@ public class CodeFinder {
      * Constructs a finder.
      * @param text the whole text of source code.
      */
-    public CodeFinder(CharSequence text) {
+    public CodeFragmentFinder(CharSequence text) {
         Objects.requireNonNull(text);
         this.text = text;
         this.split = LINE_TERMINATOR.split(text, -1);

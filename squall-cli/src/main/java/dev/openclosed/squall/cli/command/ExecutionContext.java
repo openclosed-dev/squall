@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.cli.command;
 
-import dev.openclosed.squall.api.base.Problem;
+import dev.openclosed.squall.api.text.Problem;
 import dev.openclosed.squall.api.config.ConfigLoader;
 import dev.openclosed.squall.api.config.ConfigurationException;
 import dev.openclosed.squall.api.config.RootConfig;

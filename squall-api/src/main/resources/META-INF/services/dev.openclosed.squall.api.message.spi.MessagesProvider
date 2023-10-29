@@ -14,4 +14,4 @@
 # limitations under the License.
 #
 
-dev.openclosed.squall.api.spi.DefaultMessagesProvider
+dev.openclosed.squall.api.message.spi.MessagesProvider

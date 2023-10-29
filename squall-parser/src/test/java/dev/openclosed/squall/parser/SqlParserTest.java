@@ -34,10 +34,10 @@ import dev.openclosed.squall.api.parser.SqlSyntaxException;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.expression.Expression;
 import dev.openclosed.squall.api.sql.spec.Table;
-import dev.openclosed.squall.api.spi.JsonWriter;
+import dev.openclosed.squall.api.text.json.JsonWriter;
 import org.junit.jupiter.api.BeforeEach;
 
-import dev.openclosed.squall.api.base.Problem;
+import dev.openclosed.squall.api.text.Problem;
 import dev.openclosed.squall.api.parser.SqlParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

@@ -26,14 +26,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import dev.openclosed.squall.api.base.Location;
-import dev.openclosed.squall.api.base.Message;
-import dev.openclosed.squall.api.base.Problem;
-import dev.openclosed.squall.api.base.CodeFinder;
+import dev.openclosed.squall.api.text.Location;
+import dev.openclosed.squall.api.message.Message;
+import dev.openclosed.squall.api.text.Problem;
+import dev.openclosed.squall.api.text.CodeFragmentFinder;
 import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.sql.spec.SpecMetadata;
-import dev.openclosed.squall.api.spi.JsonReader;
-import dev.openclosed.squall.api.spi.JsonReadingException;
+import dev.openclosed.squall.api.text.json.JsonReader;
+import dev.openclosed.squall.api.text.json.JsonReadingException;
 
 /**
  * The default implementation of {@link ConfigLoader}.
@@ -118,7 +118,7 @@ final class DefaultConfigLoader implements ConfigLoader, Consumer<Problem> {
             } catch (JsonReadingException e) {
                 var loc = e.getLocation();
                 if (loc.offset() < text.length()) {
-                    var source = new CodeFinder(text).findCode(e.getLocation());
+                    var source = new CodeFragmentFinder(text).findCode(e.getLocation());
                     addProblem(Level.ERROR, messages().JSON_ILL_FORMED(), e.getLocation(), source);
                 } else {
                     addProblem(Level.ERROR, messages().UNEXPECTED_END_OF_INPUT());

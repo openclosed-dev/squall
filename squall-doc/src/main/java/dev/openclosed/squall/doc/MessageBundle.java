@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.doc;
 
-import dev.openclosed.squall.api.base.Message;
+import dev.openclosed.squall.api.message.Message;
 
 import java.util.Locale;
 import java.util.Objects;

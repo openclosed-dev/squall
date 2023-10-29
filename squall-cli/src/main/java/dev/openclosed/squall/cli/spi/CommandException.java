@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.cli.spi;
 
-import dev.openclosed.squall.api.base.Message;
+import dev.openclosed.squall.api.message.Message;
 
 /**
  * An exception thrown while executing a command.

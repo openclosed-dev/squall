@@ -16,9 +16,9 @@
 
 package dev.openclosed.squall.api.config;
 
-import dev.openclosed.squall.api.base.JsonPointer;
-import dev.openclosed.squall.api.base.Message;
-import dev.openclosed.squall.api.base.Problem;
+import dev.openclosed.squall.api.text.json.JsonPointer;
+import dev.openclosed.squall.api.message.Message;
+import dev.openclosed.squall.api.text.Problem;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.RecordComponent;

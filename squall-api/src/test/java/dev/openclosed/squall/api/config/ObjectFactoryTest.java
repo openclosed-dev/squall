@@ -18,7 +18,7 @@ package dev.openclosed.squall.api.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import dev.openclosed.squall.api.base.Problem;
+import dev.openclosed.squall.api.text.Problem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

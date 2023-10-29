@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.parser.basic;
 
-import dev.openclosed.squall.api.base.Location;
+import dev.openclosed.squall.api.text.Location;
 
 /**
  * A tokenizer for SQL sources.

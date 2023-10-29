@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import dev.openclosed.squall.api.base.Problem;
+import dev.openclosed.squall.api.text.Problem;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
 import dev.openclosed.squall.api.renderer.RenderConfig;

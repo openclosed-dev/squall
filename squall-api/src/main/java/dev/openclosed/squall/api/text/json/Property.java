@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.base;
+package dev.openclosed.squall.api.text.json;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

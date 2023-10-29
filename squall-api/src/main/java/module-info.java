@@ -19,22 +19,25 @@
  */
 module dev.openclosed.squall.api {
 
-    exports dev.openclosed.squall.api.base;
+    exports dev.openclosed.squall.api;
+    exports dev.openclosed.squall.api.text;
     exports dev.openclosed.squall.api.config;
     exports dev.openclosed.squall.api.parser;
     exports dev.openclosed.squall.api.renderer;
-    exports dev.openclosed.squall.api.spi;
     exports dev.openclosed.squall.api.sql.spec;
     exports dev.openclosed.squall.api.sql.datatype;
     exports dev.openclosed.squall.api.sql.expression;
     exports dev.openclosed.squall.api.util;
+    exports dev.openclosed.squall.api.text.json;
+    exports dev.openclosed.squall.api.message.spi;
+    exports dev.openclosed.squall.api.message;
 
     uses dev.openclosed.squall.api.parser.SqlParserFactory;
     uses dev.openclosed.squall.api.renderer.RendererFactory;
-    uses dev.openclosed.squall.api.spi.JsonReader;
-    uses dev.openclosed.squall.api.spi.JsonWriter;
-    uses dev.openclosed.squall.api.spi.MessagesProvider;
+    uses dev.openclosed.squall.api.text.json.JsonReader;
+    uses dev.openclosed.squall.api.text.json.JsonWriter;
+    uses dev.openclosed.squall.api.message.spi.MessagesProvider;
 
-    provides dev.openclosed.squall.api.spi.MessagesProvider
-        with dev.openclosed.squall.api.spi.DefaultMessagesProvider;
+    provides dev.openclosed.squall.api.message.spi.MessagesProvider
+        with dev.openclosed.squall.api.message.spi.MessagesProvider;
 }

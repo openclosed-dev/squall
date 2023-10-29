@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.spi;
+package dev.openclosed.squall.api.text.json;
+
+import dev.openclosed.squall.api.ServiceException;
 
 import java.util.List;
 import java.util.Map;

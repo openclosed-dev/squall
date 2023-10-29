@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.doc;
 
-import dev.openclosed.squall.api.base.Problem;
+import dev.openclosed.squall.api.text.Problem;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlParserFactory;

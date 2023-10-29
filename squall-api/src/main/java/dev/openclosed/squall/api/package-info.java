@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.spi;
-
-import java.util.spi.ResourceBundleProvider;
-
 /**
- * Provider of messages in resource bundles.
+ * Provides common types for API packages.
  */
-public interface MessagesProvider extends ResourceBundleProvider {
-}
+package dev.openclosed.squall.api;

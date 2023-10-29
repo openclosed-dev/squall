@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.base;
+package dev.openclosed.squall.api.text;
 
 /**
  * Location in an input source text.

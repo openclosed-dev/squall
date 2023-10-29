@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.api.util;
 
-import dev.openclosed.squall.api.base.Property;
+import dev.openclosed.squall.api.text.json.Property;
 import dev.openclosed.squall.api.sql.expression.Expression;
 
 import java.util.Collection;

@@ -17,7 +17,7 @@
 package dev.openclosed.squall.api.test.renderer;
 
 import dev.openclosed.squall.api.renderer.RendererFactory;
-import dev.openclosed.squall.api.spi.ServiceException;
+import dev.openclosed.squall.api.ServiceException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

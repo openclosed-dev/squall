@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.cli.spi;
 
-import dev.openclosed.squall.api.base.Message;
+import dev.openclosed.squall.api.message.Message;
 
 import java.nio.file.Path;
 import java.util.Locale;

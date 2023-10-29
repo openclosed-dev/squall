@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides common functionality used by other packages.
+ * Provides types for basic text processing.
  */
-package dev.openclosed.squall.api.base;
+package dev.openclosed.squall.api.text;

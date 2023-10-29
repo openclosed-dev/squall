@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.api.config;
 
-import dev.openclosed.squall.api.base.Message;
+import dev.openclosed.squall.api.message.Message;
 
 import java.util.Collection;
 import java.util.Locale;
@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 
 interface MessageBundle {
 
-    String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.Messages";
+    String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.message.Messages";
 
     /**
      * Creates a message bundle.

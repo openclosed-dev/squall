@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.doc;
 
-import dev.openclosed.squall.api.spi.JsonReader;
+import dev.openclosed.squall.api.text.json.JsonReader;
 
 import java.io.InputStream;
 import java.util.ArrayList;

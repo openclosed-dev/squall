@@ -16,10 +16,10 @@
 
 package dev.openclosed.squall.parser.basic;
 
-import dev.openclosed.squall.api.base.Location;
-import dev.openclosed.squall.api.base.Message;
-import dev.openclosed.squall.api.base.Problem;
-import dev.openclosed.squall.api.base.CodeFinder;
+import dev.openclosed.squall.api.text.Location;
+import dev.openclosed.squall.api.message.Message;
+import dev.openclosed.squall.api.text.Problem;
+import dev.openclosed.squall.api.text.CodeFragmentFinder;
 import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.parser.MessageBundle;
 import dev.openclosed.squall.api.parser.ParserConfig;
@@ -51,7 +51,7 @@ public abstract class BaseSqlParser
     private final List<Problem> problems = new ArrayList<>();
     private int errorCount;
 
-    private CodeFinder codeFinder;
+    private CodeFragmentFinder codeFinder;
 
     protected BaseSqlParser(
         ParserConfig config,
@@ -202,9 +202,9 @@ public abstract class BaseSqlParser
         reportProblem(System.Logger.Level.ERROR, e.getBundledMessage(), e.getLocation());
     }
 
-    private CodeFinder getCodeFinder() {
+    private CodeFragmentFinder getCodeFinder() {
         if (this.codeFinder == null) {
-            this.codeFinder = new CodeFinder(this.text);
+            this.codeFinder = new CodeFragmentFinder(this.text);
         }
         return this.codeFinder;
     }

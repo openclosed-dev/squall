@@ -19,10 +19,10 @@ package dev.openclosed.squall.api.config;
 import java.lang.System.Logger.Level;
 import java.util.Optional;
 
-import dev.openclosed.squall.api.base.JsonPointer;
-import dev.openclosed.squall.api.base.Location;
-import dev.openclosed.squall.api.base.Message;
-import dev.openclosed.squall.api.base.Problem;
+import dev.openclosed.squall.api.text.json.JsonPointer;
+import dev.openclosed.squall.api.text.Location;
+import dev.openclosed.squall.api.message.Message;
+import dev.openclosed.squall.api.text.Problem;
 
 /**
  * A problem in the configuration.

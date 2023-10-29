@@ -29,9 +29,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
-import dev.openclosed.squall.api.base.Location;
-import dev.openclosed.squall.api.spi.JsonReader;
-import dev.openclosed.squall.api.spi.JsonReadingException;
+import dev.openclosed.squall.api.text.Location;
+import dev.openclosed.squall.api.text.json.JsonReader;
+import dev.openclosed.squall.api.text.json.JsonReadingException;
 
 /**
  * An implementation of {@link JsonReader}.

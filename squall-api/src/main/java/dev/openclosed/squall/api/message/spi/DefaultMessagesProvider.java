@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.spi;
+package dev.openclosed.squall.api.message.spi;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -23,15 +23,14 @@ import java.util.spi.AbstractResourceBundleProvider;
 /**
  * Default implementation of {@link MessagesProvider}.
  */
-public class DefaultMessagesProvider extends AbstractResourceBundleProvider
-    implements MessagesProvider {
+final class DefaultMessagesProvider extends AbstractResourceBundleProvider implements MessagesProvider {
 
-    private static final String BASE_NAME = "dev.openclosed.squall.api.Messages";
+    private static final String BASE_NAME = "dev.openclosed.squall.api.message.Messages";
 
     /**
      * Constructs a provider.
      */
-    public DefaultMessagesProvider() {
+    DefaultMessagesProvider() {
         super("java.properties");
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,20 @@
  * limitations under the License.
  */
 
+package dev.openclosed.squall.api.message.spi;
+
+import java.util.spi.ResourceBundleProvider;
+
 /**
- * Provides Java SPI for extending this module.
+ * Provider of messages in resource bundles.
  */
-package dev.openclosed.squall.api.spi;
+public interface MessagesProvider extends ResourceBundleProvider {
+
+    /**
+     * Provides the default implementation of {@code MessagesProvider}.
+     * @return the default implementation of {@code MessagesProvider}.
+     */
+    static MessagesProvider provider() {
+        return new DefaultMessagesProvider();
+    }
+}

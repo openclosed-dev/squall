@@ -28,7 +28,7 @@ public interface MessageBundle {
     /**
      * The base name of the resource bundle.
      */
-    String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.Messages";
+    String BUNDLE_BASE_NAME = "dev.openclosed.squall.api.message.Messages";
 
     /**
      * Creates a message bundle for the specified locale.

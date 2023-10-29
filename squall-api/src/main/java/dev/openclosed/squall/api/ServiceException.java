@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.spi;
+package dev.openclosed.squall.api;
 
 /**
  * Exception thrown while loading a service.

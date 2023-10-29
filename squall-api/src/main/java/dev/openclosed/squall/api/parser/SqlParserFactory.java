@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.ServiceLoader;
 
-import dev.openclosed.squall.api.spi.ServiceException;
+import dev.openclosed.squall.api.ServiceException;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.Dialect;
 

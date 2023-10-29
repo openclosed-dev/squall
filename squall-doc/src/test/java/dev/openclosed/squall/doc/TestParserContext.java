@@ -16,9 +16,9 @@
 
 package dev.openclosed.squall.doc;
 
-import dev.openclosed.squall.api.base.Location;
-import dev.openclosed.squall.api.base.Message;
-import dev.openclosed.squall.api.base.Problem;
+import dev.openclosed.squall.api.text.Location;
+import dev.openclosed.squall.api.message.Message;
+import dev.openclosed.squall.api.text.Problem;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.ParserContext;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import dev.openclosed.squall.api.spi.JsonReader;
+import dev.openclosed.squall.api.text.json.JsonReader;
 
 public record SqlTestCase(String title, List<String> sql, Map<String, String> expected, String output) {
 

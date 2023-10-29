@@ -18,8 +18,8 @@ package dev.openclosed.squall.api.config;
 
 import java.util.List;
 
-import dev.openclosed.squall.api.base.Message;
-import dev.openclosed.squall.api.base.Problem;
+import dev.openclosed.squall.api.message.Message;
+import dev.openclosed.squall.api.text.Problem;
 
 /**
  * Exception thrown if there exist errors in configuration.

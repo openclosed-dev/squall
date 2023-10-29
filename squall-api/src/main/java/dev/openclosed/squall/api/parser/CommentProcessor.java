@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.api.parser;
 
-import dev.openclosed.squall.api.base.Location;
+import dev.openclosed.squall.api.text.Location;
 
 /**
  * processor of comments in SQL language.

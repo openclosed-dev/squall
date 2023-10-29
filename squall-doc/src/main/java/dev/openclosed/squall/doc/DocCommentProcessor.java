@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.doc;
 
-import dev.openclosed.squall.api.base.Location;
+import dev.openclosed.squall.api.text.Location;
 import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.parser.ParserContext;
 import dev.openclosed.squall.api.sql.spec.DocAnnotation;

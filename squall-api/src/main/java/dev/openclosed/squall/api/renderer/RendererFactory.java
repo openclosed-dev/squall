@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.api.renderer;
 
-import dev.openclosed.squall.api.spi.ServiceException;
+import dev.openclosed.squall.api.ServiceException;
 
 import java.util.Locale;
 import java.util.Objects;
