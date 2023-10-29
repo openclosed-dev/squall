@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.doc;
+package dev.openclosed.squall.api.test.parser;
 
-import dev.openclosed.squall.api.sql.spec.DocAnnotation;
-import dev.openclosed.squall.api.sql.spec.DocAnnotationType;
+public interface TestCaseBuilder<T> {
 
-/**
- * Simple implementation of {@link DocAnnotation}.
- * @param type the type of the annotation.
- * @param value the value given for this annotation.
- */
-record SimpleDocAnnotation(DocAnnotationType type, String value) implements DocAnnotation {
+    void setTitle(String title);
+
+    void addCode(String code, String language);
+
+    T build();
 }

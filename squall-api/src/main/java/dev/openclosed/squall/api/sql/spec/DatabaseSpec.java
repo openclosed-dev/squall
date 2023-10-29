@@ -16,6 +16,7 @@
 
 package dev.openclosed.squall.api.sql.spec;
 
+import dev.openclosed.squall.api.sql.annotation.DocAnnotation;
 import dev.openclosed.squall.api.sql.datatype.DataType;
 import dev.openclosed.squall.api.sql.expression.Expression;
 import dev.openclosed.squall.api.sql.datatype.IntegerDataType;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.doc;
+package dev.openclosed.squall.api.test.parser;
 
 import dev.openclosed.squall.api.text.Location;
 import dev.openclosed.squall.api.message.Message;
@@ -22,7 +22,7 @@ import dev.openclosed.squall.api.text.Problem;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.ParserContext;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
-import dev.openclosed.squall.api.sql.spec.DocAnnotation;
+import dev.openclosed.squall.api.sql.annotation.DocAnnotation;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.doc;
+package dev.openclosed.squall.api.parser;
 
+import dev.openclosed.squall.api.sql.annotation.SimpleDocAnnotation;
 import dev.openclosed.squall.api.text.Location;
-import dev.openclosed.squall.api.parser.CommentProcessor;
-import dev.openclosed.squall.api.parser.ParserContext;
-import dev.openclosed.squall.api.sql.spec.DocAnnotation;
-import dev.openclosed.squall.api.sql.spec.DocAnnotationType;
+import dev.openclosed.squall.api.sql.annotation.DocAnnotation;
+import dev.openclosed.squall.api.sql.annotation.DocAnnotationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-public class DocCommentProcessor implements CommentProcessor {
+final class DocCommentProcessor implements CommentProcessor {
 
     private final MessageBundle messageBundle;
     private final List<DocAnnotation> annotations = new ArrayList<>();
@@ -56,7 +55,7 @@ public class DocCommentProcessor implements CommentProcessor {
     private DocAnnotationType annotationType;
     private boolean explicit;
 
-    public DocCommentProcessor() {
+    DocCommentProcessor() {
         this.messageBundle = MessageBundle.forLocale(Locale.getDefault());
     }
 

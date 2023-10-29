@@ -24,9 +24,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
 
+import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.Dialect;
-import dev.openclosed.squall.doc.DocCommentProcessor;
 import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -70,7 +70,7 @@ public final class JsonRendererTest {
         var parser = parserFactory.createParser(
             ParserConfig.DEFAULT,
             builder,
-            new DocCommentProcessor());
+            CommentProcessor.newDocCommentProcessor());
         parser.parse(sql);
         return builder.build();
     }

@@ -17,6 +17,7 @@
 package dev.openclosed.squall.renderer.asciidoc;
 
 import dev.openclosed.squall.api.config.ConfigLoader;
+import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
@@ -24,7 +25,6 @@ import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.Dialect;
 import dev.openclosed.squall.api.sql.spec.SpecMetadata;
-import dev.openclosed.squall.doc.DocCommentProcessor;
 import dev.openclosed.squall.renderer.asciidoc.html.HtmlRendererFactory;
 import dev.openclosed.squall.renderer.asciidoc.pdf.PdfRendererFactory;
 import org.apache.commons.io.file.PathUtils;
@@ -118,7 +118,7 @@ public class AsciiDocRendererTest {
         return SqlParserFactory.newFactory(dialect).createParser(
             config,
             builder,
-            new DocCommentProcessor());
+            CommentProcessor.newDocCommentProcessor());
     }
 
     static RenderConfig loadRenderConfig(Dialect dialect, String title) {

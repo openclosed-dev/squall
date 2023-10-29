@@ -26,7 +26,7 @@ import dev.openclosed.squall.api.sql.spec.Column;
 import dev.openclosed.squall.api.sql.spec.Component;
 import dev.openclosed.squall.api.sql.spec.Database;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
-import dev.openclosed.squall.api.sql.spec.DocAnnotationType;
+import dev.openclosed.squall.api.sql.annotation.DocAnnotationType;
 import dev.openclosed.squall.api.sql.spec.Schema;
 import dev.openclosed.squall.api.sql.spec.Sequence;
 import dev.openclosed.squall.api.sql.spec.SpecVisitor;

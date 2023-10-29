@@ -26,7 +26,7 @@ import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.ParserContext;
 import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlSyntaxException;
-import dev.openclosed.squall.api.sql.spec.DocAnnotation;
+import dev.openclosed.squall.api.sql.annotation.DocAnnotation;
 import dev.openclosed.squall.api.sql.expression.Expression;
 
 import java.util.ArrayList;

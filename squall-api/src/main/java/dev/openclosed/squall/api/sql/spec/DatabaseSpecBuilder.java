@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import dev.openclosed.squall.api.sql.annotation.DocAnnotation;
 import dev.openclosed.squall.api.sql.expression.ObjectRef;
 import dev.openclosed.squall.api.sql.expression.Typecast;
 import dev.openclosed.squall.api.sql.spec.Component.State;

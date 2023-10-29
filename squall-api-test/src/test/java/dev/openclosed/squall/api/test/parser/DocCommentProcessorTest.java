@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.doc;
+package dev.openclosed.squall.api.test.parser;
 
+import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.text.Location;
 import dev.openclosed.squall.api.util.Records;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,7 +37,7 @@ public final class DocCommentProcessorTest {
     @MethodSource
     public void testComments(SqlTestCase test) {
         var context = new TestParserContext();
-        var processor = new DocCommentProcessor();
+        var processor = CommentProcessor.newDocCommentProcessor();
         var sql = test.firstSql();
         int start = sql.indexOf("/**");
         int end = sql.lastIndexOf("*/");

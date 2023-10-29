@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,22 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.doc;
+package dev.openclosed.squall.api.sql.annotation;
 
-public interface TestCaseBuilder<T> {
+/**
+ * Annotation in doc comments.
+ */
+public interface DocAnnotation {
 
-    void setTitle(String title);
+    /**
+     * Returns the type of this annotation.
+     * @return the type of this annotation.
+     */
+    DocAnnotationType type();
 
-    void addCode(String code, String language);
-
-    T build();
+    /**
+     * Returns the value of this annotation.
+     * @return the value of this annotation.
+     */
+    String value();
 }

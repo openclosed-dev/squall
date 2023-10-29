@@ -31,6 +31,7 @@ module dev.openclosed.squall.api {
     exports dev.openclosed.squall.api.text.json;
     exports dev.openclosed.squall.api.message.spi;
     exports dev.openclosed.squall.api.message;
+    exports dev.openclosed.squall.api.sql.annotation;
 
     uses dev.openclosed.squall.api.parser.SqlParserFactory;
     uses dev.openclosed.squall.api.renderer.RendererFactory;

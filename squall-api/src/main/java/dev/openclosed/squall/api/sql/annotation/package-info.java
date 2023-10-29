@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The Squall Authors
+ * Copyright 2023 The Squall Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-module dev.openclosed.squall.doc {
-
-    requires dev.openclosed.squall.api;
-
-    exports dev.openclosed.squall.doc;
-
-    opens dev.openclosed.squall.doc to dev.openclosed.squall.api;
-}
-
+/**
+ * Provides annotations for doc comments.
+ */
+package dev.openclosed.squall.api.sql.annotation;

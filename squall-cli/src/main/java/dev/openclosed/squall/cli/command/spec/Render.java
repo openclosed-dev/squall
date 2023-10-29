@@ -16,6 +16,7 @@
 
 package dev.openclosed.squall.cli.command.spec;
 
+import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.text.Problem;
 import dev.openclosed.squall.api.config.RootConfig;
 import dev.openclosed.squall.api.parser.ParserConfig;
@@ -25,7 +26,6 @@ import dev.openclosed.squall.api.renderer.RendererFactory;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.cli.spi.CommandException;
 import dev.openclosed.squall.cli.spi.Subcommand;
-import dev.openclosed.squall.doc.DocCommentProcessor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Parameters;
@@ -95,7 +95,7 @@ final class Render implements Subcommand {
         var parserFactory = SqlParserFactory.newFactory(parserConfig.dialect());
         var parser = parserFactory.createParser(parserConfig,
             specBuilder,
-            new DocCommentProcessor());
+            CommentProcessor.newDocCommentProcessor());
         int failures = 0;
         for (String source : sources) {
             Path fullPath = resolvePath(source);

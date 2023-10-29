@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.sql.spec;
+package dev.openclosed.squall.api.sql.annotation;
 
 /**
  * Types of doc annotations.

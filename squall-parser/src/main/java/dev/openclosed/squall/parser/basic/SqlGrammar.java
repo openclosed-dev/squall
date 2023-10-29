@@ -34,7 +34,7 @@ import dev.openclosed.squall.api.sql.expression.In;
 import dev.openclosed.squall.api.sql.expression.ObjectRef;
 import dev.openclosed.squall.api.sql.expression.UnaryOperator;
 import dev.openclosed.squall.api.sql.expression.ValueFunctionCall;
-import dev.openclosed.squall.api.sql.spec.DocAnnotation;
+import dev.openclosed.squall.api.sql.annotation.DocAnnotation;
 import dev.openclosed.squall.api.sql.expression.Expression;
 import dev.openclosed.squall.api.sql.datatype.DataType;
 import dev.openclosed.squall.api.sql.datatype.IntegerDataType;

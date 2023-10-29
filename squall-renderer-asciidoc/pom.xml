@@ -62,12 +62,6 @@
         <!-- test dependencies -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>squall-doc</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>squall-parser</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

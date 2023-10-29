@@ -19,6 +19,7 @@ package dev.openclosed.squall.renderer.markdown;
 import static org.assertj.core.api.Assertions.*;
 
 import dev.openclosed.squall.api.config.ConfigLoader;
+import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
 import dev.openclosed.squall.api.parser.SqlParserFactory;
@@ -26,7 +27,6 @@ import dev.openclosed.squall.api.renderer.RenderConfig;
 import dev.openclosed.squall.api.renderer.RendererFactory;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
 import dev.openclosed.squall.api.sql.spec.Dialect;
-import dev.openclosed.squall.doc.DocCommentProcessor;
 import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -107,7 +107,7 @@ public class MarkdownRendererTest {
         return SqlParserFactory.newFactory(dialect).createParser(
             config,
             builder,
-            new DocCommentProcessor());
+            CommentProcessor.newDocCommentProcessor());
     }
 
     static RenderConfig loadRenderConfig(Dialect dialect, String title) {

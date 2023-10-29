@@ -20,7 +20,7 @@ import dev.openclosed.squall.api.sql.datatype.DataType;
 import dev.openclosed.squall.api.sql.expression.FunctionCall;
 import dev.openclosed.squall.api.sql.expression.SequenceFunctionCall;
 import dev.openclosed.squall.api.sql.expression.StringLiteral;
-import dev.openclosed.squall.api.sql.spec.DocAnnotation;
+import dev.openclosed.squall.api.sql.annotation.DocAnnotation;
 import dev.openclosed.squall.api.sql.expression.Expression;
 import dev.openclosed.squall.api.sql.expression.Typecast;
 import dev.openclosed.squall.parser.basic.IsPredicate;

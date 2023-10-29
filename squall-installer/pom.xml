@@ -39,7 +39,6 @@
             jackson-databind,
             squall-api,
             squall-cli,
-            squall-doc,
             squall-parser,
             squall-renderer-asciidoc,
             squall-renderer-json,

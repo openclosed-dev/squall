@@ -16,6 +16,8 @@
 
 package dev.openclosed.squall.api.sql.spec;
 
+import dev.openclosed.squall.api.sql.annotation.DocAnnotation;
+
 import java.util.List;
 import java.util.Objects;
 

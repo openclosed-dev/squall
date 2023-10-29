@@ -14,22 +14,12 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.sql.spec;
+package dev.openclosed.squall.api.sql.annotation;
 
 /**
- * Annotation in doc comments.
+ * Simple implementation of {@link DocAnnotation}.
+ * @param type the type of the annotation.
+ * @param value the value given for this annotation.
  */
-public interface DocAnnotation {
-
-    /**
-     * Returns the type of this annotation.
-     * @return the type of this annotation.
-     */
-    DocAnnotationType type();
-
-    /**
-     * Returns the value of this annotation.
-     * @return the value of this annotation.
-     */
-    String value();
+public record SimpleDocAnnotation(DocAnnotationType type, String value) implements DocAnnotation {
 }

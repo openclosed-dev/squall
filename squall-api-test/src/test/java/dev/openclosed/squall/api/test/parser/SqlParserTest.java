@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.doc;
+package dev.openclosed.squall.api.test.parser;
 
+import dev.openclosed.squall.api.parser.CommentProcessor;
 import dev.openclosed.squall.api.text.Problem;
 import dev.openclosed.squall.api.parser.ParserConfig;
 import dev.openclosed.squall.api.parser.SqlParser;
@@ -98,7 +99,7 @@ public final class SqlParserTest {
         return parserFactory.createParser(
             PARSER_CONFIG,
             builder,
-            new DocCommentProcessor());
+            CommentProcessor.newDocCommentProcessor());
     }
 
     static Stream<SqlTestCase> loadTests(String... names) {

@@ -18,7 +18,7 @@ package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
 import dev.openclosed.squall.api.sql.spec.Column;
-import dev.openclosed.squall.api.sql.spec.DocAnnotationType;
+import dev.openclosed.squall.api.sql.annotation.DocAnnotationType;
 import dev.openclosed.squall.api.sql.expression.Expression;
 import dev.openclosed.squall.api.sql.spec.ForeignKey;
 import dev.openclosed.squall.api.sql.spec.Table;

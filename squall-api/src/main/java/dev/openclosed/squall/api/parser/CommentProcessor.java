@@ -19,7 +19,7 @@ package dev.openclosed.squall.api.parser;
 import dev.openclosed.squall.api.text.Location;
 
 /**
- * processor of comments in SQL language.
+ * Processor of comments in SQL language.
  */
 public interface CommentProcessor {
 
@@ -40,26 +40,35 @@ public interface CommentProcessor {
     void processComment(CharSequence text, Location location, ParserContext context);
 
     /**
-     * A comment processor that ignores all incoming comments.
-     */
-    CommentProcessor NOOP = new CommentProcessor() {
-
-        @Override
-        public boolean canProcess(CharSequence text) {
-            return false;
-        }
-
-        @Override
-        public void processComment(CharSequence text, Location location, ParserContext context) {
-            // Does nothing
-        }
-    };
-
-    /**
      * Returns a comment processor that ignores all incoming comments.
      * @return a comment processor that ignores all incoming comments.
      */
     static CommentProcessor noop() {
-        return NOOP;
+        return NoopCommentProcessor.INSTANCE;
+    }
+
+    /**
+     * Creates a doc comment processor.
+     * @return newly created comment processor.
+     */
+    static CommentProcessor newDocCommentProcessor() {
+        return new DocCommentProcessor();
+    }
+}
+
+/*
+ * Implementation of Comment processor, who ignores all incoming comments.
+ */
+final class NoopCommentProcessor implements CommentProcessor {
+
+    static final NoopCommentProcessor INSTANCE = new NoopCommentProcessor();
+
+    @Override
+    public boolean canProcess(CharSequence text) {
+        return false;
+    }
+
+    @Override
+    public void processComment(CharSequence text, Location location, ParserContext context) {
     }
 }

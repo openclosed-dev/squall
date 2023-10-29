@@ -64,5 +64,14 @@ public interface MessageBundle extends BaseMessageBundle {
         return of("SYNTAX_ERROR", text);
     }
 
+    /**
+     * Message that unknown annotation was found.
+     * @param name the name of the annotation.
+     * @return the message.
+     */
+    default Message UNKNOWN_ANNOTATION(String name) {
+        return of("UNKNOWN_ANNOTATION", name);
+    }
+
     //CHECKSTYLE:ON
 }
