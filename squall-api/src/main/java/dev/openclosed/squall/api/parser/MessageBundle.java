@@ -73,5 +73,14 @@ public interface MessageBundle extends BaseMessageBundle {
         return of("UNKNOWN_ANNOTATION", name);
     }
 
+    /**
+     * Message that the value for the annotation was invalid.
+     * @param name the name of the annotation.
+     * @return the message.
+     */
+    default Message INVALID_ANNOTATION_VALUE(String name) {
+        return of("INVALID_ANNOTATION_VALUE", name);
+    }
+
     //CHECKSTYLE:ON
 }

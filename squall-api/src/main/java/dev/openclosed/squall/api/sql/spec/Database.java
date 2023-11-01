@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 public record Database(
     String name,
     List<Schema> schemas,
-    List<DocAnnotation> annotations,
+    List<DocAnnotation<?>> annotations,
     Component.State state
     ) implements Component {
 

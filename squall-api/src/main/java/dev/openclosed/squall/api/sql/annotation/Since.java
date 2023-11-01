@@ -17,9 +17,13 @@
 package dev.openclosed.squall.api.sql.annotation;
 
 /**
- * Simple implementation of {@link DocAnnotation}.
- * @param type the type of the annotation.
- * @param value the value given for this annotation.
+ * "since" annotation.
+ * @param value the value of the annotation.
  */
-public record SimpleDocAnnotation(DocAnnotationType type, String value) implements DocAnnotation {
+public record Since(String value) implements DocAnnotation<String> {
+
+    @Override
+    public String name() {
+        return "since";
+    }
 }

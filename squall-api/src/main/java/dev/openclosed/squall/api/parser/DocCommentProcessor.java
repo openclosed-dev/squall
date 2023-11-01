@@ -16,10 +16,9 @@
 
 package dev.openclosed.squall.api.parser;
 
-import dev.openclosed.squall.api.sql.annotation.SimpleDocAnnotation;
+import dev.openclosed.squall.api.sql.annotation.DocAnnotationFactory;
 import dev.openclosed.squall.api.text.Location;
 import dev.openclosed.squall.api.sql.annotation.DocAnnotation;
-import dev.openclosed.squall.api.sql.annotation.DocAnnotationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +28,11 @@ import java.util.Objects;
 
 final class DocCommentProcessor implements CommentProcessor {
 
+    private static final String DEFAULT_ANNOTATION = "description";
+
+    private final DocAnnotationFactory annotationFactory;
     private final MessageBundle messageBundle;
-    private final List<DocAnnotation> annotations = new ArrayList<>();
+    private final List<DocAnnotation<?>> annotations = new ArrayList<>();
     private final StringBuilder textBuilder = new StringBuilder();
 
     private CharSequence text;
@@ -52,10 +54,15 @@ final class DocCommentProcessor implements CommentProcessor {
     private int annotationColumnNo;
     private int annotationOffset;
 
-    private DocAnnotationType annotationType;
+    private int valueEndLineNo;
+    private int valueEndColumnNo;
+    private int valueEndOffset;
+
+    private String annotationName;
     private boolean explicit;
 
     DocCommentProcessor() {
+        this.annotationFactory = DocAnnotationFactory.newInstance();
         this.messageBundle = MessageBundle.forLocale(Locale.getDefault());
     }
 
@@ -95,7 +102,7 @@ final class DocCommentProcessor implements CommentProcessor {
 
     //
 
-    protected MessageBundle messages() {
+    private MessageBundle messages() {
         return this.messageBundle;
     }
 
@@ -116,7 +123,7 @@ final class DocCommentProcessor implements CommentProcessor {
         this.newLines = 0;
 
         this.annotations.clear();
-        this.annotationType = DocAnnotationType.DESCRIPTION;
+        this.annotationName = DEFAULT_ANNOTATION;
         this.explicit = false;
     }
 
@@ -136,7 +143,7 @@ final class DocCommentProcessor implements CommentProcessor {
         int lineStart;
         var c = nextChar();
         if (c == '@') {
-            handleAnnotation();
+            handleAnnotationTag();
             lineStart = this.current;
         } else {
             lineStart = detectLineStart(this.current);
@@ -168,17 +175,24 @@ final class DocCommentProcessor implements CommentProcessor {
         }
     }
 
-    private void handleAnnotation() {
+    private void handleAnnotationTag() {
         addLastAnnotation();
-        this.annotationType = parseAnnotation();
-        this.explicit = true;
+
+        annotationName = parseAnnotationTag();
+        explicit = true;
+
+        valueEndLineNo = lineNo;
+        valueEndColumnNo = columnNo;
+        valueEndOffset = current;
+
         skipWhitespaces();
     }
 
-    private DocAnnotationType parseAnnotation() {
+    private String parseAnnotationTag() {
         annotationLineNo = this.lineNo;
         annotationColumnNo = this.columnNo;
         annotationOffset = this.current;
+
         consumeChar();
         while (hasChar()) {
             var c = nextChar();
@@ -187,17 +201,7 @@ final class DocCommentProcessor implements CommentProcessor {
             }
             consumeChar();
         }
-        return mapToAnnotationType(text.subSequence(annotationOffset + 1, this.current).toString());
-    }
-
-    private DocAnnotationType mapToAnnotationType(String name) {
-        try {
-            return DocAnnotationType.valueOf(name.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            Location loc = new Location(annotationLineNo, annotationColumnNo, annotationOffset + textOffset);
-            context.reportProblem(System.Logger.Level.ERROR, messages().UNKNOWN_ANNOTATION(name.toLowerCase()), loc);
-            return null;
-        }
+        return text.subSequence(annotationOffset + 1, this.current).toString();
     }
 
     private boolean hasChar() {
@@ -250,20 +254,43 @@ final class DocCommentProcessor implements CommentProcessor {
         if (start < end) {
             flushNewLines();
             textBuilder.append(this.text, start, end);
+            // Updates value end
+            valueEndLineNo = lineNo;
+            valueEndColumnNo = columnNo;
+            valueEndOffset = current;
         }
     }
 
     private void addLastAnnotation() {
-        if (annotationType != null
-            && (explicit || !textBuilder.isEmpty())) {
-            annotations.add(createAnnotation(annotationType));
+        if (annotationName != null && (explicit || !textBuilder.isEmpty())) {
+            try {
+                annotations.add(createAnnotation(annotationName));
+            } catch (NoSuchElementException e) {
+                Location loc = new Location(
+                    annotationLineNo,
+                    annotationColumnNo,
+                    annotationOffset + textOffset);
+                context.reportProblem(System.Logger.Level.ERROR,
+                    messages().UNKNOWN_ANNOTATION(annotationName), loc);
+            } catch (IllegalArgumentException e) {
+                Location loc = new Location(
+                    valueEndLineNo,
+                    valueEndColumnNo,
+                    valueEndOffset + textOffset);
+                context.reportProblem(System.Logger.Level.ERROR,
+                    messages().INVALID_ANNOTATION_VALUE(annotationName), loc);
+            }
         }
         textBuilder.setLength(0);
-        annotationType = null;
+        annotationName = null;
     }
 
-    private DocAnnotation createAnnotation(DocAnnotationType type) {
-        return new SimpleDocAnnotation(type, textBuilder.toString());
+    private DocAnnotation<?> createAnnotation(String name) {
+        var annotation = annotationFactory.createAnnotation(name, textBuilder.toString());
+        if (annotation == null) {
+            throw new NoSuchElementException();
+        }
+        return annotation;
     }
 
     private static boolean isWhitespace(int c) {

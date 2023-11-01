@@ -104,10 +104,10 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
         }
     }
 
-    default void createUnknownSchemaObject(List<DocAnnotation> annotations) {
+    default void createUnknownSchemaObject(List<DocAnnotation<?>> annotations) {
     }
 
-    default void createDatabase(List<DocAnnotation> annotations) {
+    default void createDatabase(List<DocAnnotation<?>> annotations) {
         consume(); // DATABASE
         var databaseName = expectIdentifier(IdentifierType.OBJECT_NAME);
         consume();
@@ -115,7 +115,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
         resolver().setCurrentDatabase(databaseName);
     }
 
-    default void createSchema(List<DocAnnotation> annotations) {
+    default void createSchema(List<DocAnnotation<?>> annotations) {
         expect(StandardKeyword.SCHEMA);
         consume();
         if (next().isSameAs(StandardKeyword.IF)) {
@@ -145,7 +145,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
         consume();
     }
 
-    default void createSequence(List<DocAnnotation> annotations) {
+    default void createSequence(List<DocAnnotation<?>> annotations) {
         expect(StandardKeyword.SEQUENCE);
         consume();
         if (next().isSameAs(StandardKeyword.IF)) {
@@ -229,7 +229,7 @@ public interface SqlGrammar extends SqlGrammarEntry, SqlGrammarSupport, TokenPre
         builder().addSequenceMinValue(integerLiteral());
     }
 
-    default void createTable(List<DocAnnotation> annotations) {
+    default void createTable(List<DocAnnotation<?>> annotations) {
         expect(StandardKeyword.TABLE);
         consume();
         if (next().isSameAs(StandardKeyword.IF)) {

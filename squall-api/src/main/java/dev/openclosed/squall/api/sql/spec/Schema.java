@@ -36,7 +36,7 @@ public record Schema(
     List<String> parents,
     List<Sequence> sequences,
     List<Table> tables,
-    List<DocAnnotation> annotations,
+    List<DocAnnotation<?>> annotations,
     Component.State state
     ) implements Component {
 

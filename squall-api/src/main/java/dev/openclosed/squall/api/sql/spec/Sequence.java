@@ -40,7 +40,7 @@ public record Sequence(
     long increment,
     long maxValue,
     long minValue,
-    List<DocAnnotation> annotations
+    List<DocAnnotation<?>> annotations
     ) implements SchemaObject {
 
     /**

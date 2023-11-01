@@ -17,8 +17,8 @@
 package dev.openclosed.squall.renderer.markdown;
 
 import dev.openclosed.squall.api.renderer.ColumnAttribute;
+import dev.openclosed.squall.api.sql.annotation.Deprecated;
 import dev.openclosed.squall.api.sql.spec.Column;
-import dev.openclosed.squall.api.sql.annotation.DocAnnotationType;
 import dev.openclosed.squall.api.sql.expression.Expression;
 import dev.openclosed.squall.api.sql.spec.ForeignKey;
 import dev.openclosed.squall.api.sql.spec.Table;
@@ -170,7 +170,7 @@ enum ColumnAttributeWriter implements AttributeWriter<Column> {
 
         private void writeDeprecationNote(Column column, DocBuilder builder, WriterContext context) {
             builder.append("**").append(context.bundle().deprecated()).append("**");
-            String notice = column.getFirstAnnotation(DocAnnotationType.DEPRECATED).get().value();
+            String notice = column.getFirstAnnotationOf(Deprecated.class).get().value();
             if (!notice.isEmpty()) {
                 builder.appendSpace().append(notice);
             }

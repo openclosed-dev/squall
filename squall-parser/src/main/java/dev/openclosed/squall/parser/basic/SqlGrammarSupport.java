@@ -49,7 +49,7 @@ public interface SqlGrammarSupport {
 
     void consume();
 
-    List<DocAnnotation> captureAnnotations();
+    List<DocAnnotation<?>> captureAnnotations();
 
     default void find(Token token) {
         Token next;

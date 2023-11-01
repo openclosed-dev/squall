@@ -31,7 +31,7 @@ import java.util.Optional;
 class TestParserContext implements ParserContext {
     private final ParserConfig config;
     private final DatabaseSpec.Builder builder;
-    private final List<DocAnnotation> annotations = new ArrayList<>();
+    private final List<DocAnnotation<?>> annotations = new ArrayList<>();
     private final List<Problem> problems = new ArrayList<>();
 
     TestParserContext() {
@@ -45,7 +45,7 @@ class TestParserContext implements ParserContext {
     }
 
     @Override
-    public void addAnnotations(List<DocAnnotation> annotations) {
+    public void addAnnotations(List<DocAnnotation<?>> annotations) {
         this.annotations.addAll(annotations);
     }
 
@@ -54,7 +54,7 @@ class TestParserContext implements ParserContext {
         this.problems.add(new ReportedProblem(severity, message, Optional.of(location)));
     }
 
-    List<DocAnnotation> getAnnotations() {
+    List<DocAnnotation<?>> getAnnotations() {
         return annotations;
     }
 

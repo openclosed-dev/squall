@@ -37,7 +37,7 @@ public interface ParserContext {
      * Adds doc comment annotations for the following component.
      * @param annotations the doc comment annotations to add.
      */
-    void addAnnotations(List<DocAnnotation> annotations);
+    void addAnnotations(List<DocAnnotation<?>> annotations);
 
     /**
      * Reports a problem found while parsing the SQL.

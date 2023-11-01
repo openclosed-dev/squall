@@ -17,17 +17,13 @@
 package dev.openclosed.squall.api.sql.annotation;
 
 /**
- * Types of doc annotations.
+ * "see" annotation.
+ * @param value the value of the annotation.
  */
-public enum DocAnnotationType {
-    /** Description of the component. */
-    DESCRIPTION,
-    /** Logical name of the component. */
-    LABEL,
-    /** Since. */
-    SINCE,
-    /** Indicates that the component is deprecated. */
-    DEPRECATED,
-    /** See. */
-    SEE
+public record See(String value) implements DocAnnotation<String> {
+
+    @Override
+    public String name() {
+        return "see";
+    }
 }

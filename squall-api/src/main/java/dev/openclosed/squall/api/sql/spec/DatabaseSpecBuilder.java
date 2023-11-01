@@ -56,7 +56,7 @@ final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
     }
 
     @Override
-    public DatabaseSpec.Builder addDatabase(String name, List<DocAnnotation> annotations) {
+    public DatabaseSpec.Builder addDatabase(String name, List<DocAnnotation<?>> annotations) {
         Objects.requireNonNull(name);
         addAnnotatedDatabase(name, annotations, State.DEFINED);
         changeCurrentDatabase(name);
@@ -78,14 +78,14 @@ final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
     }
 
     @Override
-    public DatabaseSpec.Builder addSchema(String name, List<DocAnnotation> annotations) {
+    public DatabaseSpec.Builder addSchema(String name, List<DocAnnotation<?>> annotations) {
         Objects.requireNonNull(name);
         getCurrentDatabase().addSchema(name, annotations);
         return this;
     }
 
     @Override
-    public DatabaseSpec.Builder addTable(String schemaName, String tableName, List<DocAnnotation> annotations) {
+    public DatabaseSpec.Builder addTable(String schemaName, String tableName, List<DocAnnotation<?>> annotations) {
         Objects.requireNonNull(tableName);
         SchemaBuilder schema = getCurrentDatabase().getSchema(schemaName);
         TableBuilder tableBuilder = schema.addTable(tableName, annotations);
@@ -103,7 +103,8 @@ final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
     }
 
     @Override
-    public DatabaseSpec.Builder addTableColumn(String columnName, DataType dataType, List<DocAnnotation> annotations) {
+    public DatabaseSpec.Builder addTableColumn(
+        String columnName, DataType dataType, List<DocAnnotation<?>> annotations) {
         Objects.requireNonNull(columnName);
         Objects.requireNonNull(dataType);
         ColumnBuilder builder = requireCurrentTable().addColumn(columnName, dataType, annotations);
@@ -151,7 +152,8 @@ final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
     }
 
     @Override
-    public DatabaseSpec.Builder addSequence(String schemaName, String sequenceName, List<DocAnnotation> annotations) {
+    public DatabaseSpec.Builder addSequence(
+        String schemaName, String sequenceName, List<DocAnnotation<?>> annotations) {
         Objects.requireNonNull(sequenceName);
         SchemaBuilder schema = getCurrentDatabase().getSchema(schemaName);
         SequenceBuilder builder = schema.addSequence(sequenceName, annotations);
@@ -213,7 +215,7 @@ final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
         return addAnnotatedDatabase(name, Collections.emptyList(), State.UNDEFINED);
     }
 
-    private DatabaseBuilder addAnnotatedDatabase(String name, List<DocAnnotation> annotations, State state) {
+    private DatabaseBuilder addAnnotatedDatabase(String name, List<DocAnnotation<?>> annotations, State state) {
         var builder = new DatabaseBuilder(name, annotations, state);
         databaseBuilders.put(name, builder);
         return builder;
@@ -246,9 +248,9 @@ abstract class ComponentBuilder {
     private final String name;
     private final List<String> parents;
     private final List<String> parentsForChild;
-    private final List<DocAnnotation> annotations;
+    private final List<DocAnnotation<?>> annotations;
 
-    protected ComponentBuilder(String name, List<String> parents, List<DocAnnotation> annotations) {
+    protected ComponentBuilder(String name, List<String> parents, List<DocAnnotation<?>> annotations) {
         this.name = name;
         this.parents = parents;
         this.parentsForChild = concatNameList(parents, name);
@@ -267,7 +269,7 @@ abstract class ComponentBuilder {
         return parentsForChild;
     }
 
-    final List<DocAnnotation> annotations() {
+    final List<DocAnnotation<?>> annotations() {
         return annotations;
     }
 
@@ -285,7 +287,7 @@ final class DatabaseBuilder extends ComponentBuilder {
     private final Component.State state;
     private final Map<String, SchemaBuilder> schemaBuilders = new LinkedHashMap<>();
 
-    DatabaseBuilder(String name, List<DocAnnotation> annotations, Component.State state) {
+    DatabaseBuilder(String name, List<DocAnnotation<?>> annotations, Component.State state) {
         super(name, Collections.emptyList(), annotations);
         this.state = state;
     }
@@ -296,7 +298,7 @@ final class DatabaseBuilder extends ComponentBuilder {
         return new Database(name(), schemas, annotations(), state);
     }
 
-    void addSchema(String name, List<DocAnnotation> annotations) {
+    void addSchema(String name, List<DocAnnotation<?>> annotations) {
         addAnnotatedSchema(name, annotations, Component.State.DEFINED);
     }
 
@@ -308,7 +310,7 @@ final class DatabaseBuilder extends ComponentBuilder {
         return builder;
     }
 
-    private SchemaBuilder addAnnotatedSchema(String name, List<DocAnnotation> annotations, Component.State state) {
+    private SchemaBuilder addAnnotatedSchema(String name, List<DocAnnotation<?>> annotations, Component.State state) {
         var builder = new SchemaBuilder(name, parentsForChild(), annotations, state);
         schemaBuilders.put(name, builder);
         return builder;
@@ -321,7 +323,7 @@ final class SchemaBuilder extends ComponentBuilder {
     private final Map<String, TableBuilder> tableBuilders = new LinkedHashMap<>();
     private final Map<String, SequenceBuilder> sequenceBuilders = new LinkedHashMap<>();
 
-    SchemaBuilder(String name, List<String> parents, List<DocAnnotation> annotations, Component.State state) {
+    SchemaBuilder(String name, List<String> parents, List<DocAnnotation<?>> annotations, Component.State state) {
         super(name, parents, annotations);
         this.state = state;
     }
@@ -334,7 +336,7 @@ final class SchemaBuilder extends ComponentBuilder {
         return new Schema(name(), parents(), sequences, tables, annotations(), state);
     }
 
-    TableBuilder addTable(String tableName, List<DocAnnotation> annotations) {
+    TableBuilder addTable(String tableName, List<DocAnnotation<?>> annotations) {
         var builder = new TableBuilder(tableName, parentsForChild(), annotations);
         tableBuilders.put(tableName, builder);
         return builder;
@@ -344,7 +346,7 @@ final class SchemaBuilder extends ComponentBuilder {
         return tableBuilders.get(name);
     }
 
-    SequenceBuilder addSequence(String sequenceNmae, List<DocAnnotation> annotations) {
+    SequenceBuilder addSequence(String sequenceNmae, List<DocAnnotation<?>> annotations) {
         var builder = new SequenceBuilder(sequenceNmae, parentsForChild(), annotations);
         sequenceBuilders.put(sequenceNmae, builder);
         return builder;
@@ -359,7 +361,7 @@ final class SequenceBuilder extends ComponentBuilder {
     private Long maxValue;
     private Long minValue;
 
-    SequenceBuilder(String name, List<String> parents, List<DocAnnotation> annotations) {
+    SequenceBuilder(String name, List<String> parents, List<DocAnnotation<?>> annotations) {
         super(name, parents, annotations);
     }
 
@@ -436,7 +438,7 @@ final class TableBuilder extends ComponentBuilder {
     private final List<Unique> unique = new ArrayList<>();
     private final List<ForeignKey> foreignKeys = new ArrayList<>();
 
-    TableBuilder(String name, List<String> parents, List<DocAnnotation> annotations) {
+    TableBuilder(String name, List<String> parents, List<DocAnnotation<?>> annotations) {
         super(name, parents, annotations);
     }
 
@@ -453,7 +455,7 @@ final class TableBuilder extends ComponentBuilder {
 
     ColumnBuilder addColumn(String name,
                             DataType dataType,
-                            List<DocAnnotation> annotations) {
+                            List<DocAnnotation<?>> annotations) {
         var builder = new ColumnBuilder(name, parentsForChild(), dataType, annotations);
         this.columns.put(name, builder);
         return builder;
@@ -521,7 +523,7 @@ final class ColumnBuilder extends ComponentBuilder {
     private boolean isUnique = false;
     private Expression defaultValue;
 
-    ColumnBuilder(String name, List<String> parents, DataType dataType, List<DocAnnotation> annotations) {
+    ColumnBuilder(String name, List<String> parents, DataType dataType, List<DocAnnotation<?>> annotations) {
         super(name, parents, annotations);
         this.dataType = dataType;
     }

@@ -45,7 +45,7 @@ public abstract class BaseSqlParser
     private SqlTokenizer tokenizer;
     private int tokenNo;
 
-    private List<DocAnnotation> annotations;
+    private List<DocAnnotation<?>> annotations;
     private int annotationTokenNo;
 
     private final List<Problem> problems = new ArrayList<>();
@@ -96,7 +96,7 @@ public abstract class BaseSqlParser
     }
 
     @Override
-    public final void addAnnotations(List<DocAnnotation> annotations) {
+    public final void addAnnotations(List<DocAnnotation<?>> annotations) {
         this.annotations = List.copyOf(annotations);
         this.annotationTokenNo = this.tokenNo;
     }
@@ -162,8 +162,8 @@ public abstract class BaseSqlParser
     }
 
     @Override
-    public List<DocAnnotation> captureAnnotations() {
-        List<DocAnnotation> captured = this.annotations;
+    public List<DocAnnotation<?>> captureAnnotations() {
+        List<DocAnnotation<?>> captured = this.annotations;
         this.annotations = null;
         if (captured != null && this.tokenNo == this.annotationTokenNo + 1) {
             return captured;

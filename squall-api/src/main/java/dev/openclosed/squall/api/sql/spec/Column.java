@@ -50,7 +50,7 @@ public record Column(
     boolean isPrimaryKey,
     boolean isUnique,
     Optional<Expression> defaultValue,
-    List<DocAnnotation> annotations
+    List<DocAnnotation<?>> annotations
     )
     implements Component, DataType {
 

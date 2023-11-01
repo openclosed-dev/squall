@@ -93,7 +93,7 @@ public record DatabaseSpec(
          * @param annotations the annotations attached to the database.
          * @return this builder.
          */
-        default Builder addDatabase(String name, List<DocAnnotation> annotations) {
+        default Builder addDatabase(String name, List<DocAnnotation<?>> annotations) {
             return this;
         }
 
@@ -112,7 +112,7 @@ public record DatabaseSpec(
          * @param annotations the annotations attached to the schema.
          * @return this builder.
          */
-        default Builder addSchema(String name, List<DocAnnotation> annotations) {
+        default Builder addSchema(String name, List<DocAnnotation<?>> annotations) {
             return this;
         }
 
@@ -125,7 +125,7 @@ public record DatabaseSpec(
          * @param annotations the annotations attached to the table.
          * @return this builder.
          */
-        default Builder addTable(String schemaName, String tableName, List<DocAnnotation> annotations) {
+        default Builder addTable(String schemaName, String tableName, List<DocAnnotation<?>> annotations) {
             return this;
         }
 
@@ -146,7 +146,7 @@ public record DatabaseSpec(
          * @param annotations the annotations attached to the column.
          * @return this builder.
          */
-        default Builder addTableColumn(String columnName, DataType dataType, List<DocAnnotation> annotations) {
+        default Builder addTableColumn(String columnName, DataType dataType, List<DocAnnotation<?>> annotations) {
             return this;
         }
 
@@ -215,7 +215,7 @@ public record DatabaseSpec(
          * @param annotations the annotations attached to the sequence.
          * @return this builder.
          */
-        default Builder addSequence(String schemaName, String sequenceName, List<DocAnnotation> annotations) {
+        default Builder addSequence(String schemaName, String sequenceName, List<DocAnnotation<?>> annotations) {
             return this;
         }
 

@@ -40,7 +40,7 @@ interface PostgreSqlGrammar extends SqlGrammar, PostgreSqlPredicates {
     Map<String, DataType> SUPPORTED_DATA_TYPES = PostgreSqlDataType.valuesAsMap();
 
     @Override
-    default void createUnknownSchemaObject(List<DocAnnotation> annotations) {
+    default void createUnknownSchemaObject(List<DocAnnotation<?>> annotations) {
         if (next() == PostgreSqlKeyword.DATABASE) {
             createDatabase(annotations);
         }

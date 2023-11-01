@@ -16,11 +16,14 @@
 
 package dev.openclosed.squall.api.sql.spec;
 
+import dev.openclosed.squall.api.sql.annotation.Deprecated;
+import dev.openclosed.squall.api.sql.annotation.Description;
 import dev.openclosed.squall.api.sql.annotation.DocAnnotation;
-import dev.openclosed.squall.api.sql.annotation.DocAnnotationType;
+import dev.openclosed.squall.api.sql.annotation.Label;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,7 +58,7 @@ public interface Component {
         public static Set<Type> all() {
             return ALL;
         }
-    };
+    }
 
     /**
      * The states of the component.
@@ -65,7 +68,7 @@ public interface Component {
         DEFINED,
         /** The component is not defined. */
         UNDEFINED
-    };
+    }
 
     /**
      * Returns the type of this component.
@@ -117,7 +120,7 @@ public interface Component {
      * Returns the list of the annotations attached to this component.
      * @return the list of the annotations.
      */
-    default List<DocAnnotation> annotations() {
+    default List<DocAnnotation<?>> annotations() {
         return Collections.emptyList();
     }
 
@@ -134,7 +137,7 @@ public interface Component {
      * @return {@code true} if this component is deprecated, {@code false} otherwise.
      */
     default boolean isDeprecated() {
-        return getFirstAnnotation(DocAnnotationType.DEPRECATED).isPresent();
+        return getFirstAnnotationOf(Deprecated.class).isPresent();
     }
 
     /**
@@ -142,7 +145,7 @@ public interface Component {
      * @return the label of this component, or empty.
      */
     default Optional<String> label() {
-        return getFirstAnnotation(DocAnnotationType.LABEL)
+        return getFirstAnnotationOf(Label.class)
                 .map(DocAnnotation::value);
     }
 
@@ -151,19 +154,22 @@ public interface Component {
      * @return the description of this component, or empty.
      */
     default Optional<String> description() {
-        return getFirstAnnotation(DocAnnotationType.DESCRIPTION)
+        return getFirstAnnotationOf(Description.class)
                 .map(DocAnnotation::value);
     }
 
     /**
-     * Returns the first annotation of the specified type.
-     * @param type the type of the annotation.
-     * @return the first annotations of the specified type.
+     * Returns the first annotation of the specified class.
+     * @param clazz the class of the annotation, must not be {@code null}.
+     * @return the first annotation of the specified class, or empty if there is no such annotation.
+     * @param <T> the type of the annotation.
      */
-    default Optional<DocAnnotation> getFirstAnnotation(DocAnnotationType type) {
+    default <T extends DocAnnotation<?>> Optional<T> getFirstAnnotationOf(Class<T> clazz) {
+        Objects.requireNonNull(clazz);
         return annotations().stream()
-                .filter(a -> a.type() == type)
-                .findFirst();
+                .filter(clazz::isInstance)
+                .findFirst()
+                .map(clazz::cast);
     }
 
     /**

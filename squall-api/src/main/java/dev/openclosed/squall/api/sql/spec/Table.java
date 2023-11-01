@@ -40,7 +40,7 @@ public record Table(
     Optional<PrimaryKey> primaryKey,
     List<ForeignKey> foreignKeys,
     List<Unique> unique,
-    List<DocAnnotation> annotations
+    List<DocAnnotation<?>> annotations
     ) implements SchemaObject {
 
     /**

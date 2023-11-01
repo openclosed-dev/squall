@@ -36,11 +36,11 @@ CREATE TABLE customer(
                   "typeName": "integer",
                   "annotations": [
                     {
-                      "type": "description",
+                      "name": "description",
                       "value": "The identifier of the customer."
                     },
                     {
-                      "type": "label",
+                      "name": "label",
                       "value": "customer id"
                     }
                   ]
@@ -48,11 +48,11 @@ CREATE TABLE customer(
               ],
               "annotations": [
                 {
-                  "type": "description",
+                  "name": "description",
                   "value": "The customers in this system."
                 },
                 {
-                  "type": "label",
+                  "name": "label",
                   "value": "customer"
                 }
               ]
@@ -97,11 +97,11 @@ CREATE SEQUENCE customer_number;
               "maxValue": 9223372036854775807,
               "annotations": [
                 {
-                  "type": "description",
+                  "name": "description",
                   "value": "Customer number generator."
                 },
                 {
-                  "type": "label",
+                  "name": "label",
                   "value": "customer number"
                 }
               ]
@@ -141,7 +141,7 @@ CREATE TABLE t2();
               "parents": ["", ""],
               "annotations": [
                 {
-                  "type": "description",
+                  "name": "description",
                   "value": "table t2."
                 }
               ]

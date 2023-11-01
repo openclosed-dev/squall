@@ -22,11 +22,11 @@ import java.util.Set;
 
 import dev.openclosed.squall.api.renderer.MessageBundle;
 import dev.openclosed.squall.api.renderer.RenderConfig;
+import dev.openclosed.squall.api.sql.annotation.Deprecated;
 import dev.openclosed.squall.api.sql.spec.Column;
 import dev.openclosed.squall.api.sql.spec.Component;
 import dev.openclosed.squall.api.sql.spec.Database;
 import dev.openclosed.squall.api.sql.spec.DatabaseSpec;
-import dev.openclosed.squall.api.sql.annotation.DocAnnotationType;
 import dev.openclosed.squall.api.sql.spec.Schema;
 import dev.openclosed.squall.api.sql.spec.Sequence;
 import dev.openclosed.squall.api.sql.spec.SpecVisitor;
@@ -274,7 +274,7 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
     private void writeDeprecationNotice(Component component) {
         builder.appendNewLine()
             .append("**").append(bundle.deprecated()).append("**");
-        component.getFirstAnnotation(DocAnnotationType.DEPRECATED).ifPresent(a -> {
+        component.getFirstAnnotationOf(Deprecated.class).ifPresent(a -> {
             String text = a.value();
             if (!text.isEmpty()) {
                 builder.appendSpace().append(text);

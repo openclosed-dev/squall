@@ -17,20 +17,13 @@
 package dev.openclosed.squall.api.sql.annotation;
 
 /**
- * Annotation in doc comments.
- * @param <T> the type of the annotation value.
+ * "deprecated" annotation.
+ * @param value the value of the annotation.
  */
-public interface DocAnnotation<T> {
+public record Deprecated(String value) implements DocAnnotation<String> {
 
-    /**
-     * Returns the name of this annotation.
-     * @return the name of this annotation.
-     */
-    String name();
-
-    /**
-     * Returns the value of this annotation.
-     * @return the value of this annotation.
-     */
-    T value();
+    @Override
+    public String name() {
+        return "deprecated";
+    }
 }

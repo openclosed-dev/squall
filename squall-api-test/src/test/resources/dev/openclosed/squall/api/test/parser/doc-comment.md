@@ -7,7 +7,7 @@
 ```json
 [
   {
-    "type": "description",
+    "name": "description",
     "value": "Hello World"
   }
 ]
@@ -23,7 +23,7 @@
 ```json
 [
   {
-    "type": "description",
+    "name": "description",
     "value": "First line\nSecond line"
   }
 ]
@@ -42,7 +42,7 @@
 ```json
 [
   {
-    "type": "description",
+    "name": "description",
     "value": "This is a summary.\nSecond line\nThird line"
   }
 ]
@@ -62,7 +62,7 @@
 ```json
 [
   {
-    "type": "description",
+    "name": "description",
     "value": "This _table_ has **three** columns:\n1. x\n2. y\n3. z"
   }
 ]
@@ -81,7 +81,7 @@
 ```json
 [
   {
-    "type": "description",
+    "name": "description",
     "value": "1st paragraph\n\n2nd paragraph"
   }
 ]
@@ -102,7 +102,7 @@
 ```json
 [
   {
-    "type": "description",
+    "name": "description",
     "value": "1. 1st item\n2. 2nd item\n  1. 1st child item\n  2. 2nd child item\n3. 3rd item"
   }
 ]
@@ -119,7 +119,7 @@
 ```json
 [
   {
-    "type": "description",
+    "name": "description",
     "value": "This is a description."
   }
 ]
@@ -138,7 +138,7 @@
 ```json
 [
   {
-    "type": "description",
+    "name": "description",
     "value": "This is 1st line.\nThis is 2nd line.\nThis is 3rd line."
   }
 ]
@@ -155,7 +155,7 @@
 ```json
 [
   {
-    "type": "label",
+    "name": "label",
     "value": "name for display"
   }
 ]
@@ -172,7 +172,7 @@
 ```json
 [
   {
-    "type": "since",
+    "name": "since",
     "value": "v5.0"
   }
 ]
@@ -189,7 +189,7 @@
 ```json
 [
   {
-    "type": "deprecated",
+    "name": "deprecated",
     "value": "Do not use this column"
   }
 ]
@@ -206,7 +206,7 @@
 ```json
 [
   {
-    "type": "deprecated",
+    "name": "deprecated",
     "value": ""
   }
 ]
@@ -224,29 +224,12 @@
 ```json
 [
   {
-    "type": "description",
+    "name": "description",
     "value": "Order database."
   },
   {
-    "type": "label",
+    "name": "label",
     "value": "order database"
-  }
-]
-```
-
-# annotation without value
-
-```sql
-/**
- * @label
- */
-```
-
-```json
-[
-  {
-    "type": "label",
-    "value": ""
   }
 ]
 ```
@@ -284,11 +267,11 @@
 ```json
 [
   {
-    "type": "description",
+    "name": "description",
     "value": "The name of this customer."
   },
   {
-    "type": "label",
+    "name": "label",
     "value": "customer name"
   }
 ]
@@ -309,23 +292,23 @@
 ```json
 [
   {
-    "type": "description",
+    "name": "description",
     "value": "The name of the customer."
   },
   {
-    "type": "label",
+    "name": "label",
     "value": "customer name"
   },
   {
-    "type": "since",
+    "name": "since",
     "value": "v5"
   },
   {
-    "type": "deprecated",
+    "name": "deprecated",
     "value": "do not use"
   },
   {
-    "type": "see",
+    "name": "see",
     "value": "<a href=\"https://example.com/\">examnple</a>"
   }
 ]

@@ -16,6 +16,7 @@
 
 package dev.openclosed.squall.api.util;
 
+import dev.openclosed.squall.api.sql.annotation.DocAnnotation;
 import dev.openclosed.squall.api.text.json.Property;
 import dev.openclosed.squall.api.sql.expression.Expression;
 
@@ -124,10 +125,28 @@ enum TypeConverter {
             return value instanceof Expression;
         }
 
+        @Override
         Map<String, Object> convert(Object value) {
             var newMap = new LinkedHashMap<String, Object>();
             var expression = (Expression) value;
             newMap.put("type", expression.type().name().toLowerCase());
+            if (value instanceof Record rec) {
+                convertRecordToMap(rec, newMap);
+            }
+            return Collections.unmodifiableMap(newMap);
+        }
+    },
+    DOC_ANNOTATION {
+        @Override
+        boolean isTypeOf(Object value) {
+            return value instanceof DocAnnotation;
+        }
+
+        @Override
+        Map<String, Object> convert(Object value) {
+            var newMap = new LinkedHashMap<String, Object>();
+            var annotation = (DocAnnotation) value;
+            newMap.put("name", annotation.name());
             if (value instanceof Record rec) {
                 convertRecordToMap(rec, newMap);
             }
