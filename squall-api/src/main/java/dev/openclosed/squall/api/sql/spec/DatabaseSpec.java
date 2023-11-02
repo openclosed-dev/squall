@@ -22,6 +22,7 @@ import dev.openclosed.squall.api.sql.expression.Expression;
 import dev.openclosed.squall.api.sql.datatype.IntegerDataType;
 import dev.openclosed.squall.api.sql.expression.ObjectRef;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -74,6 +75,14 @@ public record DatabaseSpec(
     }
 
     /**
+     * Creates a builder of an empty spec.
+     * @return created builder instance.
+     */
+    public static Builder emptyBuilder() {
+        return EmptyDatabaseSpecBuilder.INSTANCE;
+    }
+
+    /**
      * Builder of a database specification.
      */
     public interface Builder {
@@ -83,9 +92,7 @@ public record DatabaseSpec(
          * @param metadata the metadata
          * @return this builder.
          */
-        default Builder setMetadata(SpecMetadata metadata) {
-            return this;
-        }
+        Builder setMetadata(SpecMetadata metadata);
 
         /**
          * Adds a database.
@@ -93,18 +100,14 @@ public record DatabaseSpec(
          * @param annotations the annotations attached to the database.
          * @return this builder.
          */
-        default Builder addDatabase(String name, List<DocAnnotation<?>> annotations) {
-            return this;
-        }
+        Builder addDatabase(String name, List<DocAnnotation<?>> annotations);
 
         /**
          * Changes the current database.
          * @param name the name ot the database.
          * @return this builder.
          */
-        default Builder changeCurrentDatabase(String name) {
-            return this;
-        }
+        Builder changeCurrentDatabase(String name);
 
         /**
          * Adds a schema.
@@ -112,9 +115,7 @@ public record DatabaseSpec(
          * @param annotations the annotations attached to the schema.
          * @return this builder.
          */
-        default Builder addSchema(String name, List<DocAnnotation<?>> annotations) {
-            return this;
-        }
+        Builder addSchema(String name, List<DocAnnotation<?>> annotations);
 
         // Table
 
@@ -125,9 +126,7 @@ public record DatabaseSpec(
          * @param annotations the annotations attached to the table.
          * @return this builder.
          */
-        default Builder addTable(String schemaName, String tableName, List<DocAnnotation<?>> annotations) {
-            return this;
-        }
+        Builder addTable(String schemaName, String tableName, List<DocAnnotation<?>> annotations);
 
         /**
          * Alters a table.
@@ -135,9 +134,7 @@ public record DatabaseSpec(
          * @param tableName the name of the table.
          * @return this builder.
          */
-        default Builder alterTable(String schemaName, String tableName) {
-            return this;
-        }
+        Builder alterTable(String schemaName, String tableName);
 
         /**
          * Adds a column in a table.
@@ -146,9 +143,7 @@ public record DatabaseSpec(
          * @param annotations the annotations attached to the column.
          * @return this builder.
          */
-        default Builder addTableColumn(String columnName, DataType dataType, List<DocAnnotation<?>> annotations) {
-            return this;
-        }
+        Builder addTableColumn(String columnName, DataType dataType, List<DocAnnotation<?>> annotations);
 
         /**
          * Adds a primary key to the current table.
@@ -156,9 +151,7 @@ public record DatabaseSpec(
          * @param columnNames the columns composing the primary key.
          * @return this builder.
          */
-        default Builder addTablePrimaryKey(String constraintName, List<String> columnNames) {
-            return this;
-        }
+        Builder addTablePrimaryKey(String constraintName, List<String> columnNames);
 
         /**
          * Adds a foreign key to the current table.
@@ -168,13 +161,11 @@ public record DatabaseSpec(
          * @param refColumns the referenced columns.
          * @return this builder.
          */
-        default Builder addTableForeignKey(
+        Builder addTableForeignKey(
             String constraintName,
             ObjectRef tableRef,
             List<String> columns,
-            List<String> refColumns) {
-            return this;
-        }
+            List<String> refColumns);
 
         /**
          * Adds a unique constraint to the current table.
@@ -182,9 +173,7 @@ public record DatabaseSpec(
          * @param columnNames the list of columns.
          * @return this builder.
          */
-        default Builder addTableUniqueConstraint(String constraintName, List<String> columnNames) {
-            return this;
-        }
+        Builder addTableUniqueConstraint(String constraintName, List<String> columnNames);
 
         // Column
 
@@ -193,18 +182,14 @@ public record DatabaseSpec(
          * @param isNullable {@code true} if the column is nullable, {@code false} otherwise.
          * @return this builder.
          */
-        default Builder addColumnNullable(boolean isNullable) {
-            return this;
-        }
+        Builder addColumnNullable(boolean isNullable);
 
         /**
          * Specifies default value to the current column.
          * @param defaultValue the expression representing the default value of the column.
          * @return this builder.
          */
-        default Builder addColumnDefaultValue(Expression defaultValue) {
-            return this;
-        }
+        Builder addColumnDefaultValue(Expression defaultValue);
 
         // Sequence
 
@@ -215,61 +200,150 @@ public record DatabaseSpec(
          * @param annotations the annotations attached to the sequence.
          * @return this builder.
          */
-        default Builder addSequence(String schemaName, String sequenceName, List<DocAnnotation<?>> annotations) {
-            return this;
-        }
+        Builder addSequence(String schemaName, String sequenceName, List<DocAnnotation<?>> annotations);
 
         /**
          * Specifies the data type of the current sequence.
          * @param dataType the data type of the sequence.
          * @return this builder.
          */
-        default Builder addSequenceDataType(IntegerDataType dataType) {
-            return this;
-        }
+        Builder addSequenceDataType(IntegerDataType dataType);
 
         /**
          * Specifies the staring value of the current sequence.
          * @param start the staring value.
          * @return this builder.
          */
-        default Builder addSequenceStart(long start) {
-            return this;
-        }
+        Builder addSequenceStart(long start);
 
         /**
          * Specifies the increment value of the current sequence.
          * @param increment the increment value.
          * @return this builder.
          */
-        default Builder addSequenceIncrement(long increment) {
-            return this;
-        }
+        Builder addSequenceIncrement(long increment);
 
         /**
          * Specifies the maximum value of the current sequence.
          * @param maxValue the maximum value.
          * @return this builder.
          */
-        default Builder addSequenceMaxValue(long maxValue) {
-            return this;
-        }
+        Builder addSequenceMaxValue(long maxValue);
 
         /**
          * Specifies the minimum value of the current sequence.
          * @param minValue the minimum value.
          * @return this builder.
          */
-        default Builder addSequenceMinValue(long minValue) {
-            return this;
-        }
+        Builder addSequenceMinValue(long minValue);
 
         /**
          * Builds a database specification.
          * @return built database specification.
          */
-        default DatabaseSpec build() {
-            throw new UnsupportedOperationException();
-        }
+        DatabaseSpec build();
+    }
+}
+
+final class EmptyDatabaseSpecBuilder implements DatabaseSpec.Builder {
+
+    static final EmptyDatabaseSpecBuilder INSTANCE = new EmptyDatabaseSpecBuilder();
+
+    @Override
+    public DatabaseSpec.Builder setMetadata(SpecMetadata metadata) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addDatabase(String name, List<DocAnnotation<?>> annotations) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder changeCurrentDatabase(String name) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addSchema(String name, List<DocAnnotation<?>> annotations) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addTable(String schemaName, String tableName, List<DocAnnotation<?>> annotations) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder alterTable(String schemaName, String tableName) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addTableColumn(
+        String columnName, DataType dataType, List<DocAnnotation<?>> annotations) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addTablePrimaryKey(String constraintName, List<String> columnNames) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addTableForeignKey(
+        String constraintName, ObjectRef tableRef, List<String> columns, List<String> refColumns) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addTableUniqueConstraint(String constraintName, List<String> columnNames) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addColumnNullable(boolean isNullable) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addColumnDefaultValue(Expression defaultValue) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addSequence(
+        String schemaName, String sequenceName, List<DocAnnotation<?>> annotations) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addSequenceDataType(IntegerDataType dataType) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addSequenceStart(long start) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addSequenceIncrement(long increment) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addSequenceMaxValue(long maxValue) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder addSequenceMinValue(long minValue) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec build() {
+        return new DatabaseSpec(Optional.empty(), Collections.emptyList());
     }
 }
