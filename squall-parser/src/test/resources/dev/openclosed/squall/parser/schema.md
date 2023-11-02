@@ -18,7 +18,10 @@ CREATE SCHEMA myschema;
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```
 
@@ -42,7 +45,10 @@ CREATE SCHEMA IF NOT EXISTS myschema;
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```
 
@@ -72,7 +78,10 @@ CREATE TABLE table1();
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```
 
@@ -103,6 +112,9 @@ CREATE TABLE schema1.table1();
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```

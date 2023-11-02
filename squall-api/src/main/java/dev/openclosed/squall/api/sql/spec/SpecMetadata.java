@@ -32,6 +32,8 @@ public record SpecMetadata(
     Optional<String> version,
     Optional<String> date) {
 
+    public static final String DEFAULT_TITLE = "Untitled";
+
     /**
      * {@code SpecMetadata} with default values.
      */
@@ -41,20 +43,23 @@ public record SpecMetadata(
      * Creates an instance of a {@code SpecMetadata} record class filled with default values.
      */
     public SpecMetadata() {
-        this("Untitled", Optional.empty(), Optional.empty(), Optional.empty());
+        this(DEFAULT_TITLE, Optional.empty(), Optional.empty(), Optional.empty());
     }
 
     /**
      * Creates an instance of a {@code SpecMetadata} record class.
-     * @param title the title of the specification.
-     * @param author the author of the specification.
-     * @param version the version of the specification.
-     * @param date the release date.
+     * @param title the title of the specification, can be {@code null}.
+     * @param author the author of the specification, or empty.
+     * @param version the version of the specification, or empty.
+     * @param date the release date, or empty.
      */
     public SpecMetadata {
-        Objects.requireNonNull(title);
         Objects.requireNonNull(author);
         Objects.requireNonNull(version);
         Objects.requireNonNull(date);
+
+        if (title == null) {
+            title = DEFAULT_TITLE;
+        }
     }
 }

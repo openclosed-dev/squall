@@ -39,7 +39,10 @@ import dev.openclosed.squall.api.sql.datatype.IntegerDataType;
 final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
 
     private final Map<String, DatabaseBuilder> databaseBuilders = new LinkedHashMap<>();
-    private SpecMetadata metadata;
+    private String title;
+    private String author;
+    private String version;
+    private String date;
     private DatabaseBuilder currentDatabaseBuilder;
     private TableBuilder currentTableBuilder;
     private ColumnBuilder currentColumnBuilder;
@@ -51,7 +54,35 @@ final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
     @Override
     public DatabaseSpec.Builder setMetadata(SpecMetadata metadata) {
         Objects.requireNonNull(metadata);
-        this.metadata = metadata;
+        this.title = metadata.title();
+        this.author = metadata.author().orElse(null);
+        this.version = metadata.version().orElse(null);
+        this.date = metadata.date().orElse(null);
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder setTitle(String title) {
+        Objects.requireNonNull(title);
+        this.title = title;
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder setAuthor(String author) {
+        this.author = author;
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder setVersion(String version) {
+        this.version = version;
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder setDate(String date) {
+        this.date = date;
         return this;
     }
 
@@ -196,9 +227,13 @@ final class DatabaseSpecBuilder implements DatabaseSpec.Builder {
     public DatabaseSpec build() {
         var databases = this.databaseBuilders.values().stream()
                 .map(DatabaseBuilder::build).toList();
-        return new DatabaseSpec(
-            Optional.ofNullable(metadata),
-            databases);
+        var metadata = new SpecMetadata(
+            this.title,
+            Optional.ofNullable(this.author),
+            Optional.ofNullable(this.version),
+            Optional.ofNullable(this.date)
+        );
+        return new DatabaseSpec(databases, metadata);
     }
 
     //

@@ -61,7 +61,10 @@ CREATE TABLE customer(
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```
 
@@ -110,7 +113,10 @@ CREATE SEQUENCE customer_number;
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```
 
@@ -150,7 +156,10 @@ CREATE TABLE t2();
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```
 
@@ -183,6 +192,9 @@ CREATE TABLE t2();
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```

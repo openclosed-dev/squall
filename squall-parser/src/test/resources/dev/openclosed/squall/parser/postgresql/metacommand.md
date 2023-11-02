@@ -6,6 +6,9 @@
 
 ```json
 {
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```
 
@@ -17,5 +20,8 @@
 
 ```json
 {
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```

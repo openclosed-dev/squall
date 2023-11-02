@@ -25,35 +25,26 @@ import dev.openclosed.squall.api.sql.expression.ObjectRef;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Database design specification.
- * @param metadata the metadata of the specification.
  * @param databases the list of the databases defined in this specification.
+ * @param metadata the metadata of the specification.
  */
 public record DatabaseSpec(
-    Optional<SpecMetadata> metadata,
-    List<Database> databases
+    List<Database> databases,
+    SpecMetadata metadata
     ) {
 
     /**
      * Constructs the specification.
-     * @param metadata the metadata of the specification.
      * @param databases the list of the databases defined in this specification.
+     * @param metadata the metadata of the specification.
      */
     public DatabaseSpec {
-        Objects.requireNonNull(metadata);
         Objects.requireNonNull(databases);
+        Objects.requireNonNull(metadata);
         databases = List.copyOf(databases);
-    }
-
-    /**
-     * Returns the metadata of the specification.
-     * @return the metadata of the specification, or default one.
-     */
-    public SpecMetadata getMetadataOrDefault() {
-        return metadata().orElse(SpecMetadata.DEFAULT);
     }
 
     /**
@@ -75,7 +66,7 @@ public record DatabaseSpec(
     }
 
     /**
-     * Creates a builder of an empty spec.
+     * Creates a builder of an empty specification.
      * @return created builder instance.
      */
     public static Builder emptyBuilder() {
@@ -89,10 +80,38 @@ public record DatabaseSpec(
 
         /**
          * Assigns metadata of the specification.
-         * @param metadata the metadata
+         * @param metadata the metadata, must not be {@code null}.
          * @return this builder.
          */
         Builder setMetadata(SpecMetadata metadata);
+
+        /**
+         * Assigns the title of the specification.
+         * @param title the title of the specification, must not be {@code null}.
+         * @return this builder.
+         */
+        Builder setTitle(String title);
+
+        /**
+         * Assigns the author of the specification.
+         * @param author the author of the specification, can be {@code null}.
+         * @return this builder.
+         */
+        Builder setAuthor(String author);
+
+        /**
+         * Assigns the version of the specification.
+         * @param version the version of the specification, can be {@code null}.
+         * @return this builder.
+         */
+        Builder setVersion(String version);
+
+        /**
+         * Assigns the release date of the specification.
+         * @param date the release date of the specification, can be {@code null}.
+         * @return this builder.
+         */
+        Builder setDate(String date);
 
         /**
          * Adds a database.
@@ -255,6 +274,27 @@ final class EmptyDatabaseSpecBuilder implements DatabaseSpec.Builder {
     }
 
     @Override
+    public DatabaseSpec.Builder setTitle(String title) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder setAuthor(String author) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder setVersion(String version) {
+        return this;
+    }
+
+    @Override
+    public DatabaseSpec.Builder setDate(String date) {
+        return this;
+    }
+
+
+    @Override
     public DatabaseSpec.Builder addDatabase(String name, List<DocAnnotation<?>> annotations) {
         return this;
     }
@@ -344,6 +384,8 @@ final class EmptyDatabaseSpecBuilder implements DatabaseSpec.Builder {
 
     @Override
     public DatabaseSpec build() {
-        return new DatabaseSpec(Optional.empty(), Collections.emptyList());
+        return new DatabaseSpec(
+            Collections.emptyList(),
+            SpecMetadata.DEFAULT);
     }
 }

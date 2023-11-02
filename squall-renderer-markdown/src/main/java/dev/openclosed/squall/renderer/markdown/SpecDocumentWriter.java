@@ -187,7 +187,7 @@ class SpecDocumentWriter implements SpecVisitor, WriterContext {
     //
 
     private void startSpec(DatabaseSpec spec) {
-        var metadata = spec.getMetadataOrDefault();
+        var metadata = spec.metadata();
         builder.append("# ").append(metadata.title()).appendNewLine();
 
         enterLevel();

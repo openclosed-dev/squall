@@ -62,7 +62,10 @@ CREATE TABLE customer(
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```
 
@@ -122,7 +125,10 @@ CREATE TABLE customer(
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```
 

@@ -6,11 +6,14 @@ CREATE DATABASE mydb;
 
 ```json
 {
-  "databases": [ 
+  "databases": [
     {
       "name": "mydb",
       "state": "defined"
-    } 
-  ]
+    }
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```

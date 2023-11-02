@@ -5,6 +5,9 @@
 
 ```json
 {
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```
 
@@ -49,7 +52,10 @@ CREATE TABLE example(
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```
 
@@ -97,7 +103,10 @@ CREATE TABLE example(
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```
 
@@ -153,6 +162,9 @@ CREATE TABLE table2(
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Untitled"
+  }
 }
 ```
