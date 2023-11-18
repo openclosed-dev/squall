@@ -1,5 +1,7 @@
 # Squall
 
+[![build](https://github.com/openclosed-dev/squall/actions/workflows/build.yml/badge.svg)](https://github.com/openclosed-dev/squall/actions/workflows/build.yml)
+
 Squall is a suite of tools and libraries for generating database design documents from DDL/SQL source code annotated with Javadoc/JSDoc-style comments.
 
 ## Features

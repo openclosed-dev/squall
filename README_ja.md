@@ -1,5 +1,7 @@
 # Squall
 
+[![build](https://github.com/openclosed-dev/squall/actions/workflows/build.yml/badge.svg)](https://github.com/openclosed-dev/squall/actions/workflows/build.yml)
+
 Squall は、Javadoc/JSDoc スタイルのコメントが付けられた DDL/SQL ソースコードからデータベース設計書を生成するためのツールとライブラリのスイートです。
 
 ## 機能
