@@ -17,7 +17,6 @@
 package dev.openclosed.squall.api.text;
 
 import dev.openclosed.squall.api.message.Message;
-import dev.openclosed.squall.api.text.json.JsonPointer;
 
 import java.lang.System.Logger.Level;
 import java.util.Optional;

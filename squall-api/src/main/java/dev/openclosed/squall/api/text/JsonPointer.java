@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.openclosed.squall.api.text.json;
+package dev.openclosed.squall.api.text;
 
 import java.util.Collections;
 import java.util.List;

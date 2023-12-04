@@ -16,7 +16,7 @@
 
 package dev.openclosed.squall.api.config;
 
-import dev.openclosed.squall.api.text.json.JsonPointer;
+import dev.openclosed.squall.api.text.JsonPointer;
 import dev.openclosed.squall.api.message.Message;
 import dev.openclosed.squall.api.text.Problem;
 
