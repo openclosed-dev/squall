@@ -17,7 +17,7 @@
 module dev.openclosed.squall.renderer.asciidoc {
     requires dev.openclosed.squall.api;
 
-    requires asciidoctorj.api;
+    requires org.asciidoctor.asciidoctorj.api;
     requires org.commonmark;
 
     // AsciiDoctor reads special resources in runtime from the packages below.
